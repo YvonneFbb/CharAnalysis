@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# 虚拟环境
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# 数据目录
+data/raw/*
+data/results/*
+
+# 保留目录结构
+!data/raw/.gitkeep
+!data/results/.gitkeep
+!data/results/preprocessed/.gitkeep
+!data/results/ocr/.gitkeep
+
+# 保留标准字集
+!data/standard_chars.txt
+!data/standard_chars.json
+
+# 临时文件
+*.log
+*.tmp
