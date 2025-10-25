@@ -24,6 +24,9 @@ OCR_DIR = RESULTS_DIR / 'ocr'
 STANDARD_CHARS_JSON = DATA_DIR / 'standard_chars.json'
 STANDARD_CHARS_TXT = DATA_DIR / 'standard_chars.txt'
 
+# PDF 转换输出目录（默认在 raw 目录下）
+PDF_IMAGES_DIR = RESULTS_DIR / 'pdf_images'
+
 # ============================================================================
 # 预处理配置
 # ============================================================================
@@ -35,28 +38,18 @@ PREPROCESS_CLAHE_CONFIG = {
     'tile_size': (8, 8),   # 网格大小
 }
 
-# 墨色保持与增强
+# 对比度和亮度调整
+PREPROCESS_CONTRAST_CONFIG = {
+    'alpha': 1.5,  # 对比度控制 (1.0-3.0)
+    'beta': 10,    # 亮度控制 (0-100)
+}
+
+# 墨色保持/增强（关键！避免图像发灰）
 PREPROCESS_INK_PRESERVE_CONFIG = {
-    'enabled': True,
-    'blackhat_kernel': 9,       # 黑帽形态学核尺寸
-    'blackhat_strength': 0.6,   # 黑帽增强强度 [0.0-1.0]
-    'unsharp_amount': 0.2,      # 反锐化掩膜强度 [0.0-1.0]
-}
-
-# 双边滤波去噪（可选）
-PREPROCESS_DENOISE_CONFIG = {
-    'enabled': False,
-    'diameter': 9,         # 滤波直径
-    'sigma_color': 75,     # 颜色空间标准差
-    'sigma_space': 75,     # 坐标空间标准差
-}
-
-# 断笔修补（可选）
-PREPROCESS_STROKE_HEAL_CONFIG = {
-    'enabled': False,
-    'kernel': 3,           # 闭运算核尺寸
-    'iterations': 1,       # 迭代次数
-    'directions': ['iso', 'h', 'v'],  # 方向：iso(各向同性), h(水平), v(垂直)
+    'enabled': True,            # 是否启用回墨增强
+    'blackhat_kernel': 9,       # 黑帽核尺寸（必须为奇数）
+    'blackhat_strength': 0.6,   # 黑帽增强强度 (0.0-1.0)
+    'unsharp_amount': 0.2,      # 反锐化系数 (0.0-1.0)
 }
 
 # ============================================================================
@@ -81,12 +74,16 @@ def validate_config():
     if PREPROCESS_CLAHE_CONFIG['clip_limit'] <= 0:
         errors.append("CLAHE clip_limit 必须大于 0")
 
-    # 校验墨色增强参数
-    if not (0.0 <= PREPROCESS_INK_PRESERVE_CONFIG['blackhat_strength'] <= 1.0):
-        errors.append("blackhat_strength 必须在 [0.0, 1.0] 范围内")
+    # 校验对比度参数
+    if PREPROCESS_CONTRAST_CONFIG['alpha'] <= 0:
+        errors.append("对比度 alpha 必须大于 0")
 
-    if not (0.0 <= PREPROCESS_INK_PRESERVE_CONFIG['unsharp_amount'] <= 1.0):
-        errors.append("unsharp_amount 必须在 [0.0, 1.0] 范围内")
+    # 校验墨色保持参数
+    if PREPROCESS_INK_PRESERVE_CONFIG['enabled']:
+        if PREPROCESS_INK_PRESERVE_CONFIG['blackhat_kernel'] % 2 == 0:
+            errors.append("黑帽核 blackhat_kernel 必须为奇数")
+        if PREPROCESS_INK_PRESERVE_CONFIG['blackhat_kernel'] <= 0:
+            errors.append("黑帽核 blackhat_kernel 必须大于 0")
 
     # 校验 OCR 参数
     if OCR_CONFIG['recognition_level'] not in ['fast', 'accurate']:
@@ -114,9 +111,13 @@ def config_summary():
         },
         'preprocess': {
             'clahe_enabled': PREPROCESS_CLAHE_CONFIG['enabled'],
+            'clahe_clip_limit': PREPROCESS_CLAHE_CONFIG['clip_limit'],
+            'contrast_alpha': PREPROCESS_CONTRAST_CONFIG['alpha'],
+            'contrast_beta': PREPROCESS_CONTRAST_CONFIG['beta'],
             'ink_preserve_enabled': PREPROCESS_INK_PRESERVE_CONFIG['enabled'],
-            'denoise_enabled': PREPROCESS_DENOISE_CONFIG['enabled'],
-            'stroke_heal_enabled': PREPROCESS_STROKE_HEAL_CONFIG['enabled'],
+            'blackhat_kernel': PREPROCESS_INK_PRESERVE_CONFIG['blackhat_kernel'],
+            'blackhat_strength': PREPROCESS_INK_PRESERVE_CONFIG['blackhat_strength'],
+            'unsharp_amount': PREPROCESS_INK_PRESERVE_CONFIG['unsharp_amount'],
         },
         'ocr': OCR_CONFIG,
     }

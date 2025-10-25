@@ -3,57 +3,38 @@
 
 对古籍图片进行增强处理：
 - CLAHE 对比度增强
-- 黑帽墨色保持
-- 可选的双边滤波去噪
-- 可选的断笔修补
+- 对比度/亮度调整
+- 墨色保持/增强（黑帽 + 反锐化）
 """
 import cv2
 import numpy as np
 import os
 from pathlib import Path
+from tqdm import tqdm
 
 from src.config import (
     PREPROCESS_CLAHE_CONFIG,
+    PREPROCESS_CONTRAST_CONFIG,
     PREPROCESS_INK_PRESERVE_CONFIG,
-    PREPROCESS_DENOISE_CONFIG,
-    PREPROCESS_STROKE_HEAL_CONFIG,
     PREPROCESSED_DIR
 )
 from src.utils.path import ensure_dir
+from src.utils.progress import ProgressTracker, get_default_progress_file, _get_relative_path
+from src.utils.file_filter import find_images_recursive, filter_files_by_max_volumes
 
 
-def _build_kernel(size: int, mode: str = 'iso') -> np.ndarray:
-    """
-    构建形态学核
-
-    Args:
-        size: 核尺寸
-        mode: 核类型 ('iso': 椭圆, 'h': 水平, 'v': 垂直)
-
-    Returns:
-        形态学核
-    """
-    size = max(1, int(size))
-    if size % 2 == 0:
-        size += 1
-
-    if mode == 'iso':
-        return cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (size, size))
-    elif mode == 'h':
-        return cv2.getStructuringElement(cv2.MORPH_RECT, (size, 1))
-    elif mode == 'v':
-        return cv2.getStructuringElement(cv2.MORPH_RECT, (1, size))
-    else:
-        return cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (size, size))
-
-
-def preprocess_image(input_path: str, output_path: str = None) -> bool:
+def preprocess_image(input_path: str, output_path: str = None,
+                     alpha: float = None, beta: float = None,
+                     verbose: bool = True) -> bool:
     """
     对输入的古籍图片进行预处理
 
     Args:
         input_path: 输入图片路径
         output_path: 输出路径（可选，默认保存到 PREPROCESSED_DIR）
+        alpha: 对比度控制 (1.0-3.0)，None 则使用配置文件默认值
+        beta: 亮度控制 (0-100)，None 则使用配置文件默认值
+        verbose: 是否输出详细信息
 
     Returns:
         是否处理成功
@@ -61,41 +42,14 @@ def preprocess_image(input_path: str, output_path: str = None) -> bool:
     # 1. 读取图片
     img = cv2.imread(input_path)
     if img is None:
-        print(f"错误：无法读取图片 {input_path}")
+        if verbose:
+            print(f"错误：无法读取图片 {input_path}")
         return False
 
     # 2. 转换为灰度图
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    # 3. 可选：双边滤波去纸纹
-    if PREPROCESS_DENOISE_CONFIG['enabled']:
-        cfg = PREPROCESS_DENOISE_CONFIG
-        gray = cv2.bilateralFilter(
-            gray,
-            d=cfg['diameter'],
-            sigmaColor=cfg['sigma_color'],
-            sigmaSpace=cfg['sigma_space']
-        )
-
-    # 4. 可选：断笔修补（闭运算填补断笔缝隙）
-    if PREPROCESS_STROKE_HEAL_CONFIG['enabled']:
-        cfg = PREPROCESS_STROKE_HEAL_CONFIG
-        # 取反使墨迹为白，再用闭运算填缝
-        inv = 255 - gray
-        healed = inv
-
-        for direction in cfg['directions']:
-            kernel = _build_kernel(cfg['kernel'], direction)
-            healed = cv2.morphologyEx(
-                healed,
-                cv2.MORPH_CLOSE,
-                kernel,
-                iterations=cfg['iterations']
-            )
-
-        gray = 255 - healed
-
-    # 5. CLAHE 对比度增强
+    # 3. 应用 CLAHE 增强局部对比度
     if PREPROCESS_CLAHE_CONFIG['enabled']:
         cfg = PREPROCESS_CLAHE_CONFIG
         clahe = cv2.createCLAHE(
@@ -104,29 +58,38 @@ def preprocess_image(input_path: str, output_path: str = None) -> bool:
         )
         gray = clahe.apply(gray)
 
-    # 6. 墨色保持与增强
-    if PREPROCESS_INK_PRESERVE_CONFIG['enabled']:
-        cfg = PREPROCESS_INK_PRESERVE_CONFIG
+    # 4. 对比度和亮度调整
+    if alpha is None:
+        alpha = PREPROCESS_CONTRAST_CONFIG['alpha']
+    if beta is None:
+        beta = PREPROCESS_CONTRAST_CONFIG['beta']
 
-        # 黑帽提取暗笔画分量
-        ksize = cfg['blackhat_kernel']
+    adjusted = cv2.convertScaleAbs(gray, alpha=alpha, beta=beta)
+
+    # 5. 墨色保持/增强：黑帽回墨 + 可选反锐化，避免整体发灰
+    if PREPROCESS_INK_PRESERVE_CONFIG['enabled']:
+        ink_cfg = PREPROCESS_INK_PRESERVE_CONFIG
+
+        # 黑帽增强
+        ksize = int(ink_cfg['blackhat_kernel'])
         if ksize % 2 == 0:
             ksize += 1
-
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (ksize, ksize))
-        blackhat = cv2.morphologyEx(gray, cv2.MORPH_BLACKHAT, kernel)
 
-        # 回墨：减去黑帽分量使笔画更黑
-        strength = cfg['blackhat_strength']
-        gray = cv2.subtract(gray, cv2.convertScaleAbs(blackhat, alpha=strength, beta=0))
+        # 黑帽提取"暗笔画相对亮背景"的分量
+        blackhat = cv2.morphologyEx(adjusted, cv2.MORPH_BLACKHAT, kernel)
+        strength = float(ink_cfg['blackhat_strength'])
 
-        # 可选反锐化掩膜
-        amount = cfg['unsharp_amount']
+        # 回墨：把黑帽分量按比例减回去，使笔画更黑
+        adjusted = cv2.subtract(adjusted, cv2.convertScaleAbs(blackhat, alpha=strength, beta=0))
+
+        # 可选反锐化（unsharp masking）
+        amount = float(ink_cfg['unsharp_amount'])
         if amount > 1e-6:
-            blur = cv2.GaussianBlur(gray, (0, 0), sigmaX=1.0)
-            gray = cv2.addWeighted(gray, 1 + amount, blur, -amount, 0)
+            blur = cv2.GaussianBlur(adjusted, (0, 0), sigmaX=1.0)
+            adjusted = cv2.addWeighted(adjusted, 1 + amount, blur, -amount, 0)
 
-    # 7. 确定输出路径
+    # 6. 确定输出路径
     if output_path is None:
         # 默认保存到 PREPROCESSED_DIR
         input_path_obj = Path(input_path)
@@ -136,71 +99,157 @@ def preprocess_image(input_path: str, output_path: str = None) -> bool:
     # 确保输出目录存在
     ensure_dir(os.path.dirname(output_path))
 
-    # 8. 保存处理后的图片
-    cv2.imwrite(output_path, gray)
-    print(f"✓ 图片已处理并保存至 {output_path}")
+    # 7. 保存处理后的图片
+    cv2.imwrite(output_path, adjusted)
+    if verbose:
+        print(f"✓ 图片已处理并保存至 {output_path}")
 
     return True
 
 
-def process_directory(input_dir: str, output_dir: str = None) -> tuple[int, int]:
+def process_directory(input_dir: str, output_dir: str = None,
+                      alpha: float = None, beta: float = None,
+                      force: bool = False, max_volumes: int = None) -> tuple[int, int]:
     """
     批量处理目录下的所有图片
 
     Args:
         input_dir: 输入目录
         output_dir: 输出目录（默认为 PREPROCESSED_DIR）
+        alpha: 对比度控制 (1.0-3.0)，None 则使用配置文件默认值
+        beta: 亮度控制 (0-100)，None 则使用配置文件默认值
+        force: 是否强制重新处理（忽略进度记录）
+        max_volumes: 最大册数限制（None 表示不限制）
 
     Returns:
         (成功数量, 总数量)
     """
+    # 确保路径是字符串
+    input_dir = str(input_dir)
+
     if output_dir is None:
-        output_dir = PREPROCESSED_DIR
+        output_dir = str(PREPROCESSED_DIR)
+    else:
+        output_dir = str(output_dir)
 
     ensure_dir(output_dir)
 
-    # 支持的图片格式
-    image_extensions = {'.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.tif'}
+    # 使用配置文件默认值
+    if alpha is None:
+        alpha = PREPROCESS_CONTRAST_CONFIG['alpha']
+    if beta is None:
+        beta = PREPROCESS_CONTRAST_CONFIG['beta']
 
-    # 获取所有图片文件
-    image_files = []
+    # 递归查找所有图片文件（支持子目录）
     if not os.path.exists(input_dir):
         print(f"错误：输入目录不存在 {input_dir}")
         return 0, 0
 
-    for filename in os.listdir(input_dir):
-        file_ext = os.path.splitext(filename)[1].lower()
-        if file_ext in image_extensions:
-            image_files.append(filename)
+    image_files = find_images_recursive(input_dir)
 
     if not image_files:
         print(f"警告：在 {input_dir} 中未找到任何图片文件")
         return 0, 0
 
+    # 根据最大册数过滤文件
+    filtered_files, volume_stats = filter_files_by_max_volumes(
+        image_files, max_volumes, base_dir=input_dir
+    )
+
+    # 初始化进度跟踪器
+    progress_file = get_default_progress_file(output_dir)
+    tracker = ProgressTracker(progress_file, 'preprocess')
+    tracker.init_session(input_dir, output_dir, force=force)
+
+    # 获取待处理的文件列表
+    pending_files = tracker.get_pending_files(filtered_files)
+    # 按文件名排序，确保处理顺序一致
+    pending_files = sorted(pending_files)
+    stats = tracker.get_stats()
+
     print(f"\n=== 开始批量预处理 ===")
     print(f"输入目录: {input_dir}")
     print(f"输出目录: {output_dir}")
-    print(f"找到 {len(image_files)} 个图片文件")
+
+    # 显示书籍和册数统计
+    if volume_stats.get('is_multi_book'):
+        # 多本书模式
+        print(f"发现书籍: {volume_stats['total_books']} 本")
+        if max_volumes:
+            print(f"册数限制: 每本书最多 {max_volumes} 册")
+        print(f"总文件数: {volume_stats['total_files']} -> {volume_stats['selected_files']} (过滤后)")
+        print("\n各书籍统计:")
+        for book_name, book_stat in volume_stats['books'].items():
+            if book_stat['total_volumes'] > 0:  # 只显示有册号的书籍
+                vol_info = f"{book_stat['selected_volumes']}/{book_stat['total_volumes']} 册"
+                file_info = f"{book_stat['selected_files']}/{book_stat['total_files']} 文件"
+                vol_list = book_stat['selected_volume_numbers'][:5]  # 只显示前5册
+                if len(book_stat['selected_volume_numbers']) > 5:
+                    vol_list_str = f"{vol_list}..."
+                else:
+                    vol_list_str = str(vol_list)
+                print(f"  {book_name}: {vol_info} | {file_info} | 册 {vol_list_str}")
+    else:
+        # 单本书模式
+        if volume_stats['books']:
+            book_stat = list(volume_stats['books'].values())[0]
+            if max_volumes:
+                print(f"册数限制: 最多 {max_volumes} 册")
+            print(f"发现册数: {book_stat['total_volumes']} 册")
+            if book_stat['total_volumes'] > 0:
+                print(f"选择册数: {book_stat['selected_volumes']} 册 {book_stat['selected_volume_numbers']}")
+                print(f"总文件数: {book_stat['total_files']} -> {book_stat['selected_files']} (过滤后)")
+        else:
+            print(f"总文件数: {len(filtered_files)}")
+
+    print(f"已完成: {stats['completed']} | 待处理: {len(pending_files)}")
+    print(f"参数: alpha={alpha}, beta={beta}")
+    if stats['completed'] > 0 and not force:
+        print(f"💡 继续上次进度 (最后更新: {stats['last_update']})")
+        print(f"💡 使用 --force 强制重新处理所有文件")
     print("-" * 50)
 
-    success_count = 0
-    for i, filename in enumerate(image_files, 1):
-        input_path = os.path.join(input_dir, filename)
+    if not pending_files:
+        print("所有文件已处理完成！")
+        return stats['completed'], len(filtered_files)
 
-        # 生成输出路径
-        file_name, file_ext = os.path.splitext(filename)
-        output_filename = f"{file_name}_preprocessed{file_ext}"
-        output_path = os.path.join(output_dir, output_filename)
+    success_count = stats['completed']  # 从已完成数量开始
+    # 使用 tqdm 显示进度条
+    for rel_filepath in tqdm(pending_files, desc="预处理进度", unit="file"):
+        input_path = os.path.join(input_dir, rel_filepath)
 
-        print(f"[{i}/{len(image_files)}] 处理: {filename}")
+        # 生成输出路径（保持目录结构）
+        output_path = os.path.join(output_dir, rel_filepath)
+        # 在文件名后添加 _preprocessed 后缀
+        output_dir_part, output_filename = os.path.split(output_path)
+        name, ext = os.path.splitext(output_filename)
+        output_filename = f"{name}_preprocessed{ext}"
+        output_path = os.path.join(output_dir_part, output_filename)
 
-        if preprocess_image(input_path, output_path):
-            success_count += 1
-        else:
-            print(f"失败: {filename}")
+        # 获取项目相对路径用于输出
+        project_rel_path = _get_relative_path(input_path)
+
+        try:
+            if preprocess_image(input_path, output_path, alpha=alpha, beta=beta, verbose=False):
+                success_count += 1
+                tracker.mark_completed(rel_filepath)
+            else:
+                tracker.mark_failed(rel_filepath)
+                tqdm.write(f"✗ 失败: {project_rel_path}")
+        except Exception as e:
+            tracker.mark_failed(rel_filepath)
+            tqdm.write(f"✗ 失败: {project_rel_path} - {str(e)}")
 
     print("-" * 50)
     print(f"=== 批量预处理完成 ===")
-    print(f"成功处理: {success_count}/{len(image_files)} 个文件")
+    print(f"成功处理: {success_count}/{len(filtered_files)} 个文件")
 
-    return success_count, len(image_files)
+    failed_files = tracker.get_failed_files()
+    if failed_files:
+        print(f"失败文件: {len(failed_files)} 个")
+        for f in failed_files[:5]:  # 只显示前5个
+            print(f"  - {f}")
+        if len(failed_files) > 5:
+            print(f"  ... 还有 {len(failed_files) - 5} 个")
+
+    return success_count, len(filtered_files)
