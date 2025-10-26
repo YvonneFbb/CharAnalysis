@@ -10,6 +10,8 @@ from src import config
 from src.preprocess import core as preprocess
 from src.ocr import livetext as ocr
 from src.utils import pdf_converter
+from src.filter import match_standard_chars
+from src.crop import crop_characters
 
 
 def cmd_preprocess(args):
@@ -17,6 +19,7 @@ def cmd_preprocess(args):
     input_path = args.input
     force = args.force if hasattr(args, 'force') else False
     max_volumes = args.max_volumes if hasattr(args, 'max_volumes') else None
+    workers = args.workers if hasattr(args, 'workers') else 1
 
     if os.path.isfile(input_path):
         # 单文件处理
@@ -28,7 +31,7 @@ def cmd_preprocess(args):
         # 目录批处理
         output_dir = args.output if args.output else str(config.PREPROCESSED_DIR)
         success_count, total_count = preprocess.process_directory(
-            input_path, output_dir, force=force, max_volumes=max_volumes
+            input_path, output_dir, force=force, max_volumes=max_volumes, workers=workers
         )
         return 0 if success_count == total_count else 1
 
@@ -42,6 +45,7 @@ def cmd_ocr(args):
     input_path = args.input
     force = args.force if hasattr(args, 'force') else False
     max_volumes = args.max_volumes if hasattr(args, 'max_volumes') else None
+    workers = args.workers if hasattr(args, 'workers') else 1
 
     if os.path.isfile(input_path):
         # 单文件处理
@@ -53,7 +57,7 @@ def cmd_ocr(args):
         # 目录批处理
         output_dir = args.output if args.output else str(config.OCR_DIR)
         success_count, total_count = ocr.process_directory(
-            input_path, output_dir, force=force, max_volumes=max_volumes
+            input_path, output_dir, force=force, max_volumes=max_volumes, workers=workers
         )
         return 0 if success_count == total_count else 1
 
@@ -67,6 +71,7 @@ def cmd_all(args):
     input_path = args.input
     force = args.force if hasattr(args, 'force') else False
     max_volumes = args.max_volumes if hasattr(args, 'max_volumes') else None
+    workers = args.workers if hasattr(args, 'workers') else 1
 
     print("\n" + "=" * 60)
     print("步骤 1/2: 预处理")
@@ -87,7 +92,7 @@ def cmd_all(args):
 
     elif os.path.isdir(input_path):
         success_count, total_count = preprocess.process_directory(
-            input_path, str(config.PREPROCESSED_DIR), force=force, max_volumes=max_volumes
+            input_path, str(config.PREPROCESSED_DIR), force=force, max_volumes=max_volumes, workers=workers
         )
         if success_count == 0:
             print("\n预处理失败，流程中止")
@@ -110,7 +115,7 @@ def cmd_all(args):
 
     else:
         success_count, total_count = ocr.process_directory(
-            preprocessed_input, str(config.OCR_DIR), force=force, max_volumes=max_volumes
+            preprocessed_input, str(config.OCR_DIR), force=force, max_volumes=max_volumes, workers=workers
         )
         return 0 if success_count == total_count else 1
 
@@ -164,6 +169,7 @@ def cmd_convert(args):
     dpi = args.dpi if hasattr(args, 'dpi') else 300
     force = args.force if hasattr(args, 'force') else False
     max_volumes = args.max_volumes if hasattr(args, 'max_volumes') else None
+    workers = args.workers if hasattr(args, 'workers') else 1
 
     if not os.path.isdir(input_dir):
         print(f"错误：输入路径必须是目录: {input_dir}")
@@ -174,11 +180,45 @@ def cmd_convert(args):
             input_dir,
             dpi=dpi,
             max_volumes=max_volumes,
-            force=force
+            force=force,
+            workers=workers
         )
         return 0 if success_count > 0 else 1
     except Exception as e:
         print(f"错误：批量转换失败: {e}")
+        return 1
+
+
+def cmd_match(args):
+    """匹配标准字命令"""
+    ocr_dir = args.ocr_dir
+    standard_chars_json = args.standard_chars if args.standard_chars else str(config.STANDARD_CHARS_JSON)
+    output = args.output if args.output else 'data/results/matched_chars.json'
+
+    try:
+        match_standard_chars.main(ocr_dir, standard_chars_json, output)
+        return 0
+    except Exception as e:
+        print(f"错误：匹配失败: {e}")
+        import traceback
+        traceback.print_exc()
+        return 1
+
+
+def cmd_crop(args):
+    """裁切字符命令"""
+    matched_chars_json = args.matched_chars_json
+    output_dir = args.output if args.output else 'data/results/chars'
+    padding = args.padding if args.padding else 5
+    book_name = args.book if args.book else None
+
+    try:
+        crop_characters.main(matched_chars_json, output_dir, padding, book_name)
+        return 0
+    except Exception as e:
+        print(f"错误：裁切失败: {e}")
+        import traceback
+        traceback.print_exc()
         return 1
 
 
@@ -247,6 +287,7 @@ def main():
     parser_convert.add_argument('--dpi', type=int, default=300, help='分辨率（默认 300）')
     parser_convert.add_argument('--max-volumes', type=int, metavar='N', help='限制每本书最多处理的册数（如 5）')
     parser_convert.add_argument('--force', action='store_true', help='强制重新处理所有文件（忽略进度记录）')
+    parser_convert.add_argument('--workers', type=int, default=1, metavar='N', help='并发线程数（默认 1）')
 
     # pdf2images 命令
     parser_pdf = subparsers.add_parser('pdf2images', help='PDF 转图片')
@@ -260,6 +301,7 @@ def main():
     parser_preprocess.add_argument('-o', '--output', help='输出路径（可选）')
     parser_preprocess.add_argument('--force', action='store_true', help='强制重新处理所有文件（忽略进度记录）')
     parser_preprocess.add_argument('--max-volumes', type=int, metavar='N', help='限制每本书最多处理的册数（如 5）')
+    parser_preprocess.add_argument('--workers', type=int, default=1, metavar='N', help='并发线程数（默认 1）')
 
     # ocr 命令
     parser_ocr = subparsers.add_parser('ocr', help='OCR 文字识别')
@@ -267,12 +309,27 @@ def main():
     parser_ocr.add_argument('-o', '--output', help='输出路径（可选）')
     parser_ocr.add_argument('--force', action='store_true', help='强制重新处理所有文件（忽略进度记录）')
     parser_ocr.add_argument('--max-volumes', type=int, metavar='N', help='限制每本书最多处理的册数（如 5）')
+    parser_ocr.add_argument('--workers', type=int, default=1, metavar='N', help='并发线程数（默认 1）')
 
     # all 命令
     parser_all = subparsers.add_parser('all', help='完整流程（预处理 + OCR）')
     parser_all.add_argument('input', help='输入图片或目录')
     parser_all.add_argument('--force', action='store_true', help='强制重新处理所有文件（忽略进度记录）')
     parser_all.add_argument('--max-volumes', type=int, metavar='N', help='限制每本书最多处理的册数（如 5）')
+    parser_all.add_argument('--workers', type=int, default=1, metavar='N', help='并发线程数（默认 1）')
+
+    # match 命令
+    parser_match = subparsers.add_parser('match', help='匹配标准字')
+    parser_match.add_argument('ocr_dir', help='OCR 结果目录')
+    parser_match.add_argument('-o', '--output', help='输出 JSON 路径（默认 data/results/matched_chars.json）')
+    parser_match.add_argument('--standard-chars', help='标准字 JSON 文件路径（可选）')
+
+    # crop 命令
+    parser_crop = subparsers.add_parser('crop', help='裁切字符图像')
+    parser_crop.add_argument('matched_chars_json', help='匹配结果 JSON 文件')
+    parser_crop.add_argument('-o', '--output', help='输出目录（默认 data/results/chars）')
+    parser_crop.add_argument('--padding', type=int, default=5, help='边界填充像素数（默认 5）')
+    parser_crop.add_argument('--book', help='指定书名（不指定则处理所有书籍）')
 
     # config 命令
     parser_config = subparsers.add_parser('config', help='显示配置信息')
@@ -294,6 +351,10 @@ def main():
         return cmd_ocr(args)
     elif args.command == 'all':
         return cmd_all(args)
+    elif args.command == 'match':
+        return cmd_match(args)
+    elif args.command == 'crop':
+        return cmd_crop(args)
     elif args.command == 'config':
         return cmd_config(args)
     else:

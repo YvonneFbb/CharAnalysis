@@ -7,8 +7,9 @@ import os
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Tuple
 from tqdm import tqdm
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 try:
     from ocrmac import ocrmac
@@ -24,6 +25,7 @@ from src.config import OCR_CONFIG, OCR_DIR
 from src.utils.path import ensure_dir
 from src.utils.progress import ProgressTracker, get_default_progress_file, _get_relative_path
 from src.utils.file_filter import find_images_recursive, filter_files_by_max_volumes
+
 
 
 def ocr_image(image_path: str, output_path: str = None, verbose: bool = True) -> Dict[str, Any]:
@@ -163,8 +165,39 @@ def ocr_image(image_path: str, output_path: str = None, verbose: bool = True) ->
         }
 
 
+def _ocr_worker(args: Tuple[str, str, str]) -> Dict:
+    """
+    多进程 worker 函数（需要在模块顶层定义以支持序列化）
+
+    Args:
+        args: (rel_filepath, input_dir, output_dir)
+
+    Returns:
+        {'success': bool, 'rel_path': str, 'error': str or None}
+    """
+    rel_filepath, input_dir, output_dir = args
+
+    input_path = os.path.join(input_dir, rel_filepath)
+    output_path = os.path.join(output_dir, rel_filepath)
+    output_dir_part, output_filename = os.path.split(output_path)
+    name, ext = os.path.splitext(output_filename)
+    output_filename = f"{name}_ocr.json"
+    output_path = os.path.join(output_dir_part, output_filename)
+
+    try:
+        result = ocr_image(input_path, output_path, verbose=False)
+        if result.get('success'):
+            return {'success': True, 'rel_path': rel_filepath, 'error': None}
+        else:
+            error_msg = result.get('error', 'OCR失败')
+            return {'success': False, 'rel_path': rel_filepath, 'error': error_msg}
+    except Exception as e:
+        return {'success': False, 'rel_path': rel_filepath, 'error': str(e)}
+
+
 def process_directory(input_dir: str, output_dir: str = None,
-                      force: bool = False, max_volumes: int = None) -> tuple[int, int]:
+                      force: bool = False, max_volumes: int = None,
+                      workers: int = 1) -> tuple[int, int]:
     """
     批量处理目录下的所有图片
 
@@ -173,6 +206,7 @@ def process_directory(input_dir: str, output_dir: str = None,
         output_dir: 输出目录（默认为 OCR_DIR）
         force: 是否强制重新处理（忽略进度记录）
         max_volumes: 最大册数限制（None 表示不限制）
+        workers: 并发线程数（默认1，即单线程）
 
     Returns:
         (成功数量, 总数量)
@@ -261,32 +295,64 @@ def process_directory(input_dir: str, output_dir: str = None,
 
     success_count = stats['completed']  # 从已完成数量开始
 
-    # 使用 tqdm 显示进度条
-    for rel_filepath in tqdm(pending_files, desc="OCR 进度", unit="file"):
-        input_path = os.path.join(input_dir, rel_filepath)
+    if workers == 1:
+        # 单进程模式
+        for rel_filepath in tqdm(pending_files, desc="OCR进度", unit="file"):
+            input_path = os.path.join(input_dir, rel_filepath)
+            output_path = os.path.join(output_dir, rel_filepath)
+            output_dir_part, output_filename = os.path.split(output_path)
+            name, ext = os.path.splitext(output_filename)
+            output_filename = f"{name}_ocr.json"
+            output_path = os.path.join(output_dir_part, output_filename)
+            project_rel_path = _get_relative_path(input_path)
 
-        # 生成输出路径（保持目录结构）
-        output_path = os.path.join(output_dir, rel_filepath)
-        # 将扩展名改为 .json
-        output_dir_part, output_filename = os.path.split(output_path)
-        name, _ = os.path.splitext(output_filename)
-        output_filename = f"{name}_ocr.json"
-        output_path = os.path.join(output_dir_part, output_filename)
-
-        # 获取项目相对路径用于输出
-        project_rel_path = _get_relative_path(input_path)
-
-        try:
-            result = ocr_image(input_path, output_path, verbose=False)
-            if result.get('success'):
-                success_count += 1
-                tracker.mark_completed(rel_filepath)
-            else:
+            try:
+                result = ocr_image(input_path, output_path, verbose=False)
+                if result.get('success'):
+                    success_count += 1
+                    tracker.mark_completed(rel_filepath)
+                else:
+                    tracker.mark_failed(rel_filepath)
+                    tqdm.write(f"✗ 失败: {project_rel_path}")
+            except Exception as e:
                 tracker.mark_failed(rel_filepath)
-                tqdm.write(f"✗ 失败: {project_rel_path} - {result.get('error', '未知错误')}")
-        except Exception as e:
-            tracker.mark_failed(rel_filepath)
-            tqdm.write(f"✗ 失败: {project_rel_path} - {str(e)}")
+                tqdm.write(f"✗ 失败: {project_rel_path} - {str(e)}")
+    else:
+        # 多进程模式
+        # 准备参数列表
+        task_args = [(rel_filepath, input_dir, output_dir) for rel_filepath in pending_files]
+
+        completed_files = []
+        failed_files = []
+
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            futures = {executor.submit(_ocr_worker, args): args[0] for args in task_args}
+            with tqdm(total=len(pending_files), desc=f"OCR进度 ({workers}进程)", unit="file") as pbar:
+                for future in as_completed(futures):
+                    try:
+                        result = future.result()
+                        if result['success']:
+                            success_count += 1
+                            completed_files.append(result['rel_path'])
+                        else:
+                            failed_files.append(result['rel_path'])
+                            project_rel_path = _get_relative_path(
+                                os.path.join(input_dir, result['rel_path'])
+                            )
+                            tqdm.write(f"✗ 失败: {project_rel_path} - {result['error']}")
+                    except Exception as e:
+                        rel_path = futures[future]
+                        failed_files.append(rel_path)
+                        project_rel_path = _get_relative_path(os.path.join(input_dir, rel_path))
+                        tqdm.write(f"✗ 失败: {project_rel_path} - {str(e)}")
+                    finally:
+                        pbar.update(1)
+
+        # 批量更新进度（避免文件锁竞争）
+        if completed_files:
+            tracker.mark_completed_batch(completed_files)
+        if failed_files:
+            tracker.mark_failed_batch(failed_files)
 
     print("-" * 50)
     print(f"=== 批量 OCR 完成 ===")

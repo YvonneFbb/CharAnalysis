@@ -11,6 +11,8 @@ import numpy as np
 import os
 from pathlib import Path
 from tqdm import tqdm
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from typing import Dict, Tuple, Optional
 
 from src.config import (
     PREPROCESS_CLAHE_CONFIG,
@@ -107,9 +109,39 @@ def preprocess_image(input_path: str, output_path: str = None,
     return True
 
 
+def _preprocess_worker(args: Tuple[str, str, str, Optional[float], Optional[float]]) -> Dict:
+    """
+    多进程 worker 函数（需要在模块顶层定义以支持序列化）
+
+    Args:
+        args: (rel_filepath, input_dir, output_dir, alpha, beta)
+
+    Returns:
+        {'success': bool, 'rel_path': str, 'error': str or None}
+    """
+    rel_filepath, input_dir, output_dir, alpha, beta = args
+
+    input_path = os.path.join(input_dir, rel_filepath)
+    output_path = os.path.join(output_dir, rel_filepath)
+    output_dir_part, output_filename = os.path.split(output_path)
+    name, ext = os.path.splitext(output_filename)
+    output_filename = f"{name}_preprocessed{ext}"
+    output_path = os.path.join(output_dir_part, output_filename)
+
+    try:
+        success = preprocess_image(input_path, output_path, alpha=alpha, beta=beta, verbose=False)
+        if success:
+            return {'success': True, 'rel_path': rel_filepath, 'error': None}
+        else:
+            return {'success': False, 'rel_path': rel_filepath, 'error': '处理失败'}
+    except Exception as e:
+        return {'success': False, 'rel_path': rel_filepath, 'error': str(e)}
+
+
 def process_directory(input_dir: str, output_dir: str = None,
                       alpha: float = None, beta: float = None,
-                      force: bool = False, max_volumes: int = None) -> tuple[int, int]:
+                      force: bool = False, max_volumes: int = None,
+                      workers: int = 1) -> tuple[int, int]:
     """
     批量处理目录下的所有图片
 
@@ -120,6 +152,7 @@ def process_directory(input_dir: str, output_dir: str = None,
         beta: 亮度控制 (0-100)，None 则使用配置文件默认值
         force: 是否强制重新处理（忽略进度记录）
         max_volumes: 最大册数限制（None 表示不限制）
+        workers: 并发线程数（默认1，即单线程）
 
     Returns:
         (成功数量, 总数量)
@@ -214,31 +247,64 @@ def process_directory(input_dir: str, output_dir: str = None,
         return stats['completed'], len(filtered_files)
 
     success_count = stats['completed']  # 从已完成数量开始
-    # 使用 tqdm 显示进度条
-    for rel_filepath in tqdm(pending_files, desc="预处理进度", unit="file"):
-        input_path = os.path.join(input_dir, rel_filepath)
 
-        # 生成输出路径（保持目录结构）
-        output_path = os.path.join(output_dir, rel_filepath)
-        # 在文件名后添加 _preprocessed 后缀
-        output_dir_part, output_filename = os.path.split(output_path)
-        name, ext = os.path.splitext(output_filename)
-        output_filename = f"{name}_preprocessed{ext}"
-        output_path = os.path.join(output_dir_part, output_filename)
+    if workers == 1:
+        # 单进程模式
+        for rel_filepath in tqdm(pending_files, desc="预处理进度", unit="file"):
+            input_path = os.path.join(input_dir, rel_filepath)
+            output_path = os.path.join(output_dir, rel_filepath)
+            output_dir_part, output_filename = os.path.split(output_path)
+            name, ext = os.path.splitext(output_filename)
+            output_filename = f"{name}_preprocessed{ext}"
+            output_path = os.path.join(output_dir_part, output_filename)
+            project_rel_path = _get_relative_path(input_path)
 
-        # 获取项目相对路径用于输出
-        project_rel_path = _get_relative_path(input_path)
-
-        try:
-            if preprocess_image(input_path, output_path, alpha=alpha, beta=beta, verbose=False):
-                success_count += 1
-                tracker.mark_completed(rel_filepath)
-            else:
+            try:
+                if preprocess_image(input_path, output_path, alpha=alpha, beta=beta, verbose=False):
+                    success_count += 1
+                    tracker.mark_completed(rel_filepath)
+                else:
+                    tracker.mark_failed(rel_filepath)
+                    tqdm.write(f"✗ 失败: {project_rel_path}")
+            except Exception as e:
                 tracker.mark_failed(rel_filepath)
-                tqdm.write(f"✗ 失败: {project_rel_path}")
-        except Exception as e:
-            tracker.mark_failed(rel_filepath)
-            tqdm.write(f"✗ 失败: {project_rel_path} - {str(e)}")
+                tqdm.write(f"✗ 失败: {project_rel_path} - {str(e)}")
+    else:
+        # 多进程模式
+        # 准备参数列表
+        task_args = [(rel_filepath, input_dir, output_dir, alpha, beta) for rel_filepath in pending_files]
+
+        completed_files = []
+        failed_files = []
+
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            futures = {executor.submit(_preprocess_worker, args): args[0] for args in task_args}
+            with tqdm(total=len(pending_files), desc=f"预处理进度 ({workers}进程)", unit="file") as pbar:
+                for future in as_completed(futures):
+                    try:
+                        result = future.result()
+                        if result['success']:
+                            success_count += 1
+                            completed_files.append(result['rel_path'])
+                        else:
+                            failed_files.append(result['rel_path'])
+                            project_rel_path = _get_relative_path(
+                                os.path.join(input_dir, result['rel_path'])
+                            )
+                            tqdm.write(f"✗ 失败: {project_rel_path} - {result['error']}")
+                    except Exception as e:
+                        rel_path = futures[future]
+                        failed_files.append(rel_path)
+                        project_rel_path = _get_relative_path(os.path.join(input_dir, rel_path))
+                        tqdm.write(f"✗ 失败: {project_rel_path} - {str(e)}")
+                    finally:
+                        pbar.update(1)
+
+        # 批量更新进度（避免文件锁竞争）
+        if completed_files:
+            tracker.mark_completed_batch(completed_files)
+        if failed_files:
+            tracker.mark_failed_batch(failed_files)
 
     print("-" * 50)
     print(f"=== 批量预处理完成 ===")

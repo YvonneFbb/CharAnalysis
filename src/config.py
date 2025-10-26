@@ -59,7 +59,7 @@ PREPROCESS_INK_PRESERVE_CONFIG = {
 OCR_CONFIG = {
     'framework': 'livetext',           # 使用 macOS LiveText
     'recognition_level': 'accurate',   # 识别级别: 'fast' 或 'accurate'
-    'language_preference': ['zh-Hans'], # 语言偏好：简体中文
+    'language_preference': ['zh-Hant'], # 语言偏好：繁体中文
 }
 
 # ============================================================================

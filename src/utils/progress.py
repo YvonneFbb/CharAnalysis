@@ -234,6 +234,58 @@ class ProgressTracker:
         stage_data['last_update'] = datetime.now().isoformat()
         self._save()
 
+    def mark_completed_batch(self, filenames: List[str]):
+        """
+        批量标记文件为已完成（优化多进程场景）
+
+        Args:
+            filenames: 文件路径列表（相对于 input_dir）
+        """
+        if not filenames:
+            return
+
+        stage_data = self._get_stage_data()
+        completed_set = set(stage_data.get('completed', []))
+        failed_set = set(stage_data.get('failed', []))
+
+        for filename in filenames:
+            project_rel_path = self._to_project_relative_path(filename)
+            # 从失败列表移除
+            failed_set.discard(project_rel_path)
+            # 添加到完成列表
+            completed_set.add(project_rel_path)
+
+        stage_data['completed'] = list(completed_set)
+        stage_data['failed'] = list(failed_set)
+        stage_data['last_update'] = datetime.now().isoformat()
+        self._save()
+
+    def mark_failed_batch(self, filenames: List[str]):
+        """
+        批量标记文件为处理失败（优化多进程场景）
+
+        Args:
+            filenames: 文件路径列表（相对于 input_dir）
+        """
+        if not filenames:
+            return
+
+        stage_data = self._get_stage_data()
+        completed_set = set(stage_data.get('completed', []))
+        failed_set = set(stage_data.get('failed', []))
+
+        for filename in filenames:
+            project_rel_path = self._to_project_relative_path(filename)
+            # 从完成列表移除
+            completed_set.discard(project_rel_path)
+            # 添加到失败列表
+            failed_set.add(project_rel_path)
+
+        stage_data['completed'] = list(completed_set)
+        stage_data['failed'] = list(failed_set)
+        stage_data['last_update'] = datetime.now().isoformat()
+        self._save()
+
     def get_completed_files(self) -> List[str]:
         """获取已完成的文件列表"""
         stage_data = self._get_stage_data()

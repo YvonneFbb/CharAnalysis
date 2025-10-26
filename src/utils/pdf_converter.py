@@ -1,13 +1,14 @@
 """
 PDF 转换模块
 
-将 PDF 文件转换为图片，便于后续的 OCR 处理
+将 PDF 文件转换为图片,便于后续的 OCR 处理
 """
 import os
 import fitz  # PyMuPDF
 from pathlib import Path
 from typing import List, Tuple, Dict, Optional
 from tqdm import tqdm
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 from src.utils.path import ensure_dir
 from src.utils.progress import ProgressTracker, get_default_progress_file, _get_relative_path
@@ -151,6 +152,32 @@ def convert_directory(
     return results
 
 
+def _process_pdf_worker(args: Tuple[str, str, int, str]) -> Dict:
+    """
+    多进程 worker 函数（需要在模块顶层定义以支持序列化）
+
+    Args:
+        args: (rel_pdf_path, input_dir, dpi, image_format)
+
+    Returns:
+        {'success': bool, 'rel_path': str, 'error': str or None}
+    """
+    rel_pdf_path, input_dir, dpi, image_format = args
+
+    pdf_path = os.path.join(input_dir, rel_pdf_path)
+    pdf_path_obj = Path(pdf_path)
+    output_dir = pdf_path_obj.parent / f"{pdf_path_obj.stem}_pages"
+
+    try:
+        image_paths = pdf_to_images(pdf_path, str(output_dir), dpi, image_format, verbose=False)
+        if image_paths:
+            return {'success': True, 'rel_path': rel_pdf_path, 'error': None}
+        else:
+            return {'success': False, 'rel_path': rel_pdf_path, 'error': '未生成图片'}
+    except Exception as e:
+        return {'success': False, 'rel_path': rel_pdf_path, 'error': str(e)}
+
+
 def get_pdf_info(pdf_path: str) -> dict:
     """
     获取 PDF 文件的基本信息
@@ -192,7 +219,8 @@ def convert_books_directory(
     dpi: int = 300,
     image_format: str = 'png',
     max_volumes: Optional[int] = None,
-    force: bool = False
+    force: bool = False,
+    workers: int = 1
 ) -> Tuple[int, int]:
     """
     批量转换多本书的 PDF（支持 max-volumes 限制和进度跟踪）
@@ -203,6 +231,7 @@ def convert_books_directory(
         image_format: 图片格式
         max_volumes: 每本书最多转换的册数（None 表示不限制）
         force: 是否强制重新转换（忽略进度记录）
+        workers: 并发线程数（默认1，即单线程）
 
     Returns:
         (成功转换的 PDF 数量, 总 PDF 数量)
@@ -301,29 +330,61 @@ def convert_books_directory(
 
     success_count = stats['completed']
 
-    # 批量转换（带进度条）
-    for rel_pdf_path in tqdm(pending_pdfs, desc="转换进度", unit="PDF"):
-        pdf_path = os.path.join(input_dir, rel_pdf_path)
+    if workers == 1:
+        # 单进程模式
+        for rel_pdf_path in tqdm(pending_pdfs, desc="转换进度", unit="PDF"):
+            pdf_path = os.path.join(input_dir, rel_pdf_path)
+            pdf_path_obj = Path(pdf_path)
+            output_dir = pdf_path_obj.parent / f"{pdf_path_obj.stem}_pages"
+            project_rel_path = _get_relative_path(pdf_path)
 
-        # 生成输出目录（与 PDF 同级）
-        pdf_path_obj = Path(pdf_path)
-        output_dir = pdf_path_obj.parent / f"{pdf_path_obj.stem}_pages"
-
-        # 获取项目相对路径用于输出
-        project_rel_path = _get_relative_path(pdf_path)
-
-        try:
-            # 转换 PDF（静默模式）
-            image_paths = pdf_to_images(pdf_path, str(output_dir), dpi, image_format, verbose=False)
-            if image_paths:
-                success_count += 1
-                tracker.mark_completed(rel_pdf_path)
-            else:
+            try:
+                image_paths = pdf_to_images(pdf_path, str(output_dir), dpi, image_format, verbose=False)
+                if image_paths:
+                    success_count += 1
+                    tracker.mark_completed(rel_pdf_path)
+                else:
+                    tracker.mark_failed(rel_pdf_path)
+                    tqdm.write(f"✗ 失败: {project_rel_path} - 未生成图片")
+            except Exception as e:
                 tracker.mark_failed(rel_pdf_path)
-                tqdm.write(f"✗ 失败: {project_rel_path} - 未生成图片")
-        except Exception as e:
-            tracker.mark_failed(rel_pdf_path)
-            tqdm.write(f"✗ 失败: {project_rel_path} - {str(e)}")
+                tqdm.write(f"✗ 失败: {project_rel_path} - {str(e)}")
+    else:
+        # 多进程模式
+        # 准备参数列表
+        task_args = [(rel_pdf_path, input_dir, dpi, image_format) for rel_pdf_path in pending_pdfs]
+
+        completed_files = []
+        failed_files = []
+
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            futures = {executor.submit(_process_pdf_worker, args): args[0] for args in task_args}
+            with tqdm(total=len(pending_pdfs), desc=f"转换进度 ({workers}进程)", unit="PDF") as pbar:
+                for future in as_completed(futures):
+                    try:
+                        result = future.result()
+                        if result['success']:
+                            success_count += 1
+                            completed_files.append(result['rel_path'])
+                        else:
+                            failed_files.append(result['rel_path'])
+                            project_rel_path = _get_relative_path(
+                                os.path.join(input_dir, result['rel_path'])
+                            )
+                            tqdm.write(f"✗ 失败: {project_rel_path} - {result['error']}")
+                    except Exception as e:
+                        rel_path = futures[future]
+                        failed_files.append(rel_path)
+                        project_rel_path = _get_relative_path(os.path.join(input_dir, rel_path))
+                        tqdm.write(f"✗ 失败: {project_rel_path} - {str(e)}")
+                    finally:
+                        pbar.update(1)
+
+        # 批量更新进度（避免文件锁竞争）
+        if completed_files:
+            tracker.mark_completed_batch(completed_files)
+        if failed_files:
+            tracker.mark_failed_batch(failed_files)
 
     print("-" * 50)
     print(f"=== 批量转换完成 ===")

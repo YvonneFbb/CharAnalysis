@@ -3,9 +3,16 @@ opencv-python-headless>=4.8.0
 numpy>=1.24.0
 Pillow>=10.0.0
 
-# OCR (macOS only)
-ocrmac>=0.1.0
+# OCR (macOS only) - 使用优化版本
+git+https://github.com/Yinwhe/ocrmac.git
 pyobjc-framework-Vision>=9.0
 
+# 进度条
+tqdm>=4.65.0
+
 # 文档处理
-python-docx>=1.0.0
+PyMuPDF>=1.23.0
+
+# Web 服务器（用于审查界面）
+Flask>=3.0.0
+Flask-CORS>=4.0.0
