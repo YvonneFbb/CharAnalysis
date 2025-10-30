@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block title %}系统首页{% endblock %}
+{% block content %}
+  <div class="container">
+    <h1>古籍字形审查系统</h1>
+    <div class="menu">
+      <a class="btn" href="{{ url_for('ocr_review_page') }}">第一轮审查（文字筛选）</a>
+      <a class="btn" href="{{ url_for('segment_review_page') }}">第二轮审查（字符切割）</a>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,3595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字符切割审查系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: 300;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 15px;
+        }
+
+        /* 控制面板 */
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+            font-size: 14px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background: white;
+        }
+
+        /* 统计信息 */
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            flex: 1;
+            min-width: 150px;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border-left: 3px solid #4CAF50;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* 字符列表 */
+        .char-list {
+            background: white;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .char-group {
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .char-group-header {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .char-group-header:hover {
+            background: #e9ecef;
+        }
+
+        .char-group-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .char-group-toggle {
+            color: #666;
+            transition: transform 0.2s;
+        }
+
+        .char-group.collapsed .char-group-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .char-group-content {
+            padding: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+        }
+
+        .char-group.collapsed .char-group-content {
+            display: none;
+        }
+
+        .char-item {
+            padding: 15px 10px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .char-item:hover {
+            border-color: #4CAF50;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .char-text {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .char-status {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .char-item.completed {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+        }
+
+        .char-item.partial {
+            background: #fff3e0;
+            border-color: #FF9800;
+        }
+
+        /* 模态窗口 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 1400px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .close-btn:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .modal-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 350px;
+            background: #f8f9fa;
+            border-left: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .sidebar-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #e0e0e0;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        /* 实例信息 */
+        .instance-info {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* 图片展示区域 */
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .image-box {
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .image-label {
+            background: #f8f9fa;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .image-container {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 250px;
+            background: #fafafa;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+        }
+
+        /* 图片放大150%的样式 */
+        .image-container.magnified {
+            max-height: 600px;
+            overflow: auto;
+        }
+
+        .image-container.magnified img {
+            max-width: 150%;
+            max-height: 600px;
+            object-fit: contain;
+        }
+
+        .loading-text {
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* 状态标签 */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.loading {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-badge.success {
+            background: #e8f5e9;
+            color: #4caf50;
+        }
+
+        .status-badge.error {
+            background: #ffebee;
+            color: #f44336;
+        }
+
+        /* 操作按钮组 */
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn:hover {
+            background: #f5f5f5;
+            border-color: #bbb;
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .btn-primary:hover {
+            background: #45a049;
+            border-color: #45a049;
+        }
+
+        .btn-warning {
+            background: #FF9800;
+            color: white;
+            border-color: #FF9800;
+        }
+
+        .btn-warning:hover {
+            background: #f57c00;
+            border-color: #f57c00;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+            border-color: #f44336;
+        }
+
+        .btn-danger:hover {
+            background: #e53935;
+            border-color: #e53935;
+        }
+
+        /* 侧边栏参数内容样式 */
+        .param-group {
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .param-group.disabled {
+            opacity: 0.6;
+            background: #f9f9f9;
+        }
+
+        .param-group-header {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s;
+        }
+
+        .param-group-header:hover {
+            background: #e9ecef;
+        }
+
+        .param-group-header label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .param-group-header h4 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .param-group-header input[type="checkbox"] {
+            margin: 0;
+            transform: scale(1.1);
+        }
+
+        .param-group-content {
+            padding: 15px;
+        }
+
+        .param-group.disabled .param-group-content {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .params-section {
+            margin-bottom: 25px;
+        }
+
+        .params-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .params-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .param-item {
+            margin-bottom: 15px;
+        }
+
+        .param-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .param-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .param-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .param-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        .param-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* 阶段开关控制样式 */
+        .stage-toggles-section {
+            background: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
+        .stage-toggles-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stage-toggles-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .stage-toggle {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            background: white;
+            border: 1px solid #a5d6a7;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .stage-toggle:hover {
+            background: #f1f8e9;
+            border-color: #81c784;
+        }
+
+        .stage-toggle label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            margin: 0;
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .stage-toggle input[type="checkbox"] {
+            margin: 0;
+            transform: scale(1.1);
+        }
+
+        .stage-toggle.disabled {
+            background: #f5f5f5;
+            border-color: #ccc;
+            opacity: 0.7;
+        }
+
+        .stage-toggle.disabled label {
+            color: #999;
+        }
+
+        /* 参数面板操作按钮区域 */
+        .params-actions {
+            padding: 15px 20px 20px 20px;
+            border-top: 1px solid #e0e0e0;
+            flex-shrink: 0;
+            display: flex;
+            gap: 10px;
+            background: #f8f9fa;
+            position: sticky;
+            bottom: 0;
+        }
+
+        .params-actions .btn {
+            flex: 1;
+            justify-content: center;
+            font-weight: 500;
+            min-height: 40px;
+        }
+
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .pagination button {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: #f5f5f5;
+            border-color: #bbb;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 响应式 */
+        @media (max-width: 1024px) {
+            .images-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .modal-body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #e0e0e0;
+            }
+
+            .stats {
+                flex-direction: column;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .bbox-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 手动调整面板布局 */
+        .manual-adjust-panel {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
+        .manual-adjust-content {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        .manual-slider-column {
+            flex: 0 0 260px;
+            background: #fffef9;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 12px 15px;
+        }
+
+        .manual-section-title {
+            margin: 0 0 10px;
+            font-size: 16px;
+            color: #856404;
+        }
+
+        .manual-slider-groups .bbox-slider-group {
+            margin-bottom: 12px;
+        }
+
+        .manual-slider-groups .bbox-slider-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .manual-preview-column {
+            flex: 1;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .manual-adjust-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+            width: 100%;
+            height: 5px;  /* 稍微减小高度 */
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+            margin-bottom: 2px;
+        }
+
+        .bbox-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.15s ease;
+        }
+
+        .bbox-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            background: #45a049;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .bbox-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.15s ease;
+        }
+
+        .bbox-slider::-moz-range-thumb:hover {
+            transform: scale(1.15);
+            background: #45a049;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .bbox-info-display {
+            margin-top: 15px;
+            padding: 12px;
+            background: #e9ecef;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #495057;
+            line-height: 1.4;
+        }
+
+        .bbox-preview-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .bbox-preview-loading::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-top: 2px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        /* 右侧预览区域 - 优化布局 */
+        .bbox-preview-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            min-height: 350px;
+        }
+
+        .bbox-preview-container canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            border-radius: 2px;
+        }
+
+        #bbox-base-canvas { z-index: 1; }
+        #bbox-overlay-canvas { z-index: 2; pointer-events: none; }
+        #brush-canvas { z-index: 3; }
+
+        #brush-canvas {
+            cursor: crosshair;
+        }
+
+        .bbox-info-display {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #495057;
+            line-height: 1.3;
+        }
+
+        .bbox-slider-error {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 3px;
+            min-height: 14px;
+        }
+
+        /* 标记功能样式 */
+        .marked-instance {
+            border: 2px solid #f44336 !important;
+            position: relative;
+        }
+
+        .marked-instance::after {
+            content: "★";
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #f44336;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .char-mark-count {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #f44336;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        /* 图片大小控制样式 */
+        .image-size-control {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .image-size-control label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #image-size-slider {
+            flex: 1;
+            max-width: 300px;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        #image-size-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        #image-size-slider::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        #image-size-value {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            min-width: 45px;
+            text-align: center;
+        }
+
+        /* 图片容器缩放样式 */
+        .image-container.scaled {
+            transform-origin: top left;
+        }
+
+        /* 加载动画 */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4CAF50;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        /* 画笔工具样式 */
+        .brush-controls {
+            background: #fffef9;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 12px 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .brush-tool-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .brush-tool-label {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .brush-btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .brush-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .brush-btn.active {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .brush-btn-black {
+            background: #333;
+            color: white;
+            border-color: #333;
+        }
+
+        .brush-btn-black:hover {
+            background: #555;
+        }
+
+        .brush-btn-white {
+            background: white;
+            color: #333;
+            border: 2px solid #333;
+        }
+
+        .brush-btn-white:hover {
+            background: #f5f5f5;
+        }
+
+        .brush-size-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* 移除旧版 brush-canvas 样式，避免覆盖 top/left:50% 居中定位 */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>字符切割审查系统</h1>
+
+        <!-- 控制面板 -->
+        <div class="controls">
+            <div class="control-group">
+                <label for="book-select">选择书籍：</label>
+                <select id="book-select">
+                    <option value="">-- 请选择书籍 --</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>进度统计：</label>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">总字符</div>
+                        <div class="stat-value" id="stat-total">0</div>
+                    </div>
+                    <div class="stat-item" style="border-left-color: #4CAF50;">
+                        <div class="stat-label">已确认</div>
+                        <div class="stat-value" id="stat-confirmed">0</div>
+                    </div>
+                    <div class="stat-item" style="border-left-color: #FF9800;">
+                        <div class="stat-label">待手动处理</div>
+                        <div class="stat-value" id="stat-pending">0</div>
+                    </div>
+                    <div class="stat-item" style="border-left-color: #999;">
+                        <div class="stat-label">未审查</div>
+                        <div class="stat-value" id="stat-unreviewed">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 字符列表 -->
+        <div class="char-list" id="char-list">
+            <p style="text-align: center; color: #999; padding: 40px 0;">请先选择书籍</p>
+        </div>
+    </div>
+
+    <!-- 审查模态窗口 -->
+    <div class="modal" id="review-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">审查切割结果</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- 主内容区 -->
+                <div class="main-content">
+                    <!-- 实例信息 -->
+                    <div class="instance-info" id="instance-info">
+                        <span class="status-badge loading">加载中...</span>
+                    </div>
+
+                    <!-- 图片展示 -->
+                    <div class="images-grid">
+                        <div class="image-box">
+                            <div class="image-label">原始 ROI</div>
+                            <div class="image-container" id="roi-container">
+                                <span class="loading-text">加载中...</span>
+                            </div>
+                        </div>
+                        <div class="image-box">
+                            <div class="image-label">切割结果</div>
+                            <div class="image-container" id="segmented-container">
+                                <span class="loading-text">加载中...</span>
+                            </div>
+                        </div>
+                        <div class="image-box">
+                            <div class="image-label">调试可视化</div>
+                            <div class="image-container" id="debug-container">
+                                <span class="loading-text">加载中...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 图片大小控制 -->
+                    <div class="image-size-control">
+                        <label for="image-size-slider">图片大小: <span id="image-size-value">200</span>%</label>
+                        <input type="range" id="image-size-slider" min="50" max="400" value="200" step="10">
+                    </div>
+
+                    <!-- 操作按钮 -->
+                    <div class="actions">
+                        <button class="btn btn-primary" onclick="confirmSegmentation()">
+                            ✓ 确认通过
+                        </button>
+                        <button class="btn" onclick="toggleManualAdjustPanel()">
+                            🛠️ 手动调整
+                        </button>
+                        <button class="btn btn-warning" onclick="exportToManual()">
+                            📤 导出到手动处理
+                        </button>
+                    </div>
+
+                    <!-- 手动调整面板（合并 Bbox + 画笔） -->
+                    <div class="manual-adjust-panel" id="manual-adjust-panel" style="display: none;">
+                        <div class="manual-adjust-content">
+                            <div class="manual-slider-column" id="bbox-slider-panel">
+                                <h4 class="manual-section-title">🎯 Bbox 边界框调整</h4>
+                                <div class="manual-slider-groups">
+                                    <div class="bbox-slider-group">
+                                        <div class="bbox-slider-label">
+                                            <span>Left（左边界）</span>
+                                            <span class="bbox-slider-value" id="bbox-left-value">0</span>
+                                        </div>
+                                        <input type="range" id="bbox-left-slider" class="bbox-slider" min="0" max="100" value="0" step="1">
+                                        <div class="bbox-slider-error" id="bbox-left-error"></div>
+                                    </div>
+
+                                    <div class="bbox-slider-group">
+                                        <div class="bbox-slider-label">
+                                            <span>Right（右边界）</span>
+                                            <span class="bbox-slider-value" id="bbox-right-value">100</span>
+                                        </div>
+                                        <input type="range" id="bbox-right-slider" class="bbox-slider" min="0" max="100" value="100" step="1">
+                                        <div class="bbox-slider-error" id="bbox-right-error"></div>
+                                    </div>
+
+                                    <div class="bbox-slider-group">
+                                        <div class="bbox-slider-label">
+                                            <span>Top（上边界）</span>
+                                            <span class="bbox-slider-value" id="bbox-top-value">0</span>
+                                        </div>
+                                        <input type="range" id="bbox-top-slider" class="bbox-slider" min="0" max="100" value="0" step="1">
+                                        <div class="bbox-slider-error" id="bbox-top-error"></div>
+                                    </div>
+
+                                    <div class="bbox-slider-group">
+                                        <div class="bbox-slider-label">
+                                            <span>Bottom（下边界）</span>
+                                            <span class="bbox-slider-value" id="bbox-bottom-value">100</span>
+                                        </div>
+                                        <input type="range" id="bbox-bottom-slider" class="bbox-slider" min="0" max="100" value="100" step="1">
+                                        <div class="bbox-slider-error" id="bbox-bottom-error"></div>
+                                    </div>
+                                </div>
+
+                                <div class="bbox-info-display">
+                                    <div>当前 Bbox:</div>
+                                    <div>x = <span id="bbox-x">0</span>, y = <span id="bbox-y">0</span></div>
+                                    <div>width = <span id="bbox-width">100</span>, height = <span id="bbox-height">100</span></div>
+                                </div>
+                            </div>
+
+                            <div class="manual-preview-column">
+                                <div class="bbox-preview-container">
+                                    <canvas id="bbox-base-canvas"></canvas>
+                                    <canvas id="bbox-overlay-canvas"></canvas>
+                                    <canvas id="brush-canvas"></canvas>
+                                </div>
+
+                                <div class="brush-controls" id="brush-panel">
+                                    <div class="brush-tool-group">
+                                        <span class="brush-tool-label">🖌️ 画笔颜色:</span>
+                                        <button class="brush-btn brush-btn-black active" onclick="setBrushColor('black')" id="brush-black">⬛ 黑色</button>
+                                        <button class="brush-btn brush-btn-white" onclick="setBrushColor('white')" id="brush-white">⬜ 白色</button>
+                                    </div>
+                                    <div class="brush-tool-group" style="align-items: center; gap: 10px;">
+                                        <span class="brush-tool-label">画笔粗细:</span>
+                                        <input type="range" id="brush-size-slider" min="1" max="20" step="1" value="2" oninput="setBrushSize(this.value)" style="width: 160px;">
+                                        <span id="brush-size-value">2</span> px
+                                    </div>
+                                    <div class="brush-tool-group">
+                                        <button class="brush-btn" onclick="undoBrush()" title="撤销">↶ 撤销</button>
+                                        <button class="brush-btn" onclick="redoBrush()" title="重做">↷ 重做</button>
+                                        <button class="brush-btn" onclick="clearBrush()" title="清空">🗑️ 清空</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="manual-adjust-actions">
+                            <button class="btn btn-primary" onclick="applyManualChanges()">✓ 应用</button>
+                            <button class="btn" onclick="cancelManualAdjustment()">✗ 取消</button>
+                        </div>
+                    </div>
+
+                    <!-- 分页导航 -->
+                    <div class="pagination">
+                        <button id="prev-btn" onclick="loadPrevInstance()">← 上一个实例</button>
+                        <span id="page-info">1 / 1</span>
+                        <button id="next-btn" onclick="loadNextInstance()">下一个实例 →</button>
+                    </div>
+                </div>
+
+                <!-- 左侧参数调整栏 -->
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <h3>⚙️ 参数调整</h3>
+                    </div>
+                    <div class="sidebar-content" id="params-content">
+                        <!-- 参数会通过 JS 动态生成 -->
+                    </div>
+                    <div class="sidebar-footer">
+                        <button class="btn btn-primary" onclick="applyCustomParams()" style="width: 100%;">
+                            🔄 应用参数并重新切割
+                        </button>
+                        <div style="margin-top: 8px;">
+                            <button class="btn" onclick="resetParams()" style="width: 100%;">
+                                ↺ 恢复默认参数
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = `${window.location.origin}/api`;
+
+        let currentBook = null;
+        let currentChar = null;
+        let currentInstances = [];
+        let currentInstanceIndex = 0;
+        let segmentationData = {};  // 切割结果缓存
+        let reviewStatus = {};      // 审查状态
+        let standardCharsData = null;  // 标准字数据（84法分类）
+        let markedInstances = {};   // 标记的实例
+        let currentOriginalBbox = null;  // 当前实例的原始 bbox
+        let currentCharElement = null;   // 当前选中的字符元素，用于滚动定位
+        let currentCharOrder = [];       // 当前书籍的字符顺序
+        let pendingAutoChar = null;      // 当前实例完成后需要自动打开的字符
+
+        // Bbox Slider 调整相关变量
+        let currentSliderBbox = {};       // 当前slider计算的bbox
+        let roiShape = { width: 100, height: 100 };  // ROI图片尺寸
+        let processedRoiImage = null;     // 处理后的ROI图片，用于bbox预览
+        let bboxBaseCanvas = null;        // Bbox 预览基础图层
+        let bboxOverlayCanvas = null;     // Bbox 辅助线图层
+        let bboxOverlayCtx = null;        // 辅助线图层上下文
+
+        // 画笔工具相关变量
+        let brushCanvas = null;         // 画笔 Canvas 元素
+        let brushCtx = null;            // 画笔 Canvas 上下文
+        let brushColor = 'black';       // 当前画笔颜色（默认黑色更明显）
+        let brushSize = 2;              // 当前画笔大小（S 更细）
+        let isDrawing = false;          // 是否正在绘制
+        let brushHistory = [];          // 画笔历史（撤销）
+        let brushHistoryStep = -1;     // 当前历史步骤
+        let currentSegmentedImage = null;  // 当前切割结果图片的 base64
+        let isImageMagnified = false;     // 图片是否已放大150%
+
+        // ==================== 初始化 ====================
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                await loadBooks();
+                await loadStandardChars();
+                await loadMarkedInstances();
+            } catch (error) {
+                console.error('初始化过程中出错:', error);
+            }
+
+            // 添加图片大小控制事件监听
+            document.getElementById('image-size-slider').addEventListener('input', (e) => {
+                updateImageSize(e.target.value);
+            });
+
+            // 添加键盘快捷键
+            document.addEventListener('keydown', function(e) {
+                const modal = document.getElementById('review-modal');
+                const isModalOpen = modal.classList.contains('active');
+
+                if (!isModalOpen) return;
+
+                // ESC: 关闭模态框
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+                // 左箭头: 上一个
+                else if (e.key === 'ArrowLeft') {
+                    loadPrevInstance();
+                }
+                // 右箭头: 下一个
+                else if (e.key === 'ArrowRight') {
+                    loadNextInstance();
+                }
+                // Enter: 确认通过
+                else if (e.key === 'Enter') {
+                    confirmSegmentation();
+                }
+            });
+        });
+
+        // ==================== 加载数据 ====================
+
+        async function loadBooks() {
+            try {
+                const response = await fetch(`${API_BASE}/books_simple`);
+                const data = await response.json();
+
+                const select = document.getElementById('book-select');
+                select.innerHTML = '<option value="">-- 请选择书籍 --</option>';
+
+                data.books.forEach(book => {
+                    const option = document.createElement('option');
+                    option.value = book.name;
+                    option.textContent = book.name;
+                    select.appendChild(option);
+                });
+
+                select.addEventListener('change', function() {
+                    if (this.value) {
+                        loadBook(this.value);
+                    }
+                });
+            } catch (error) {
+                console.error('加载书籍列表失败:', error);
+                alert('加载书籍列表失败');
+            }
+        }
+
+        async function loadStandardChars() {
+            try {
+                const response = await fetch(`${API_BASE}/characters_structure`);
+                const data = await response.json();
+                standardCharsData = data.structure;
+            } catch (error) {
+                console.error('加载标准字数据失败:', error);
+            }
+        }
+
+        async function loadMarkedInstances() {
+            try {
+                const response = await fetch(`${API_BASE}/marked_instances`);
+                const data = await response.json();
+                if (data.success) {
+                    markedInstances = data.marked_instances || {};
+                }
+            } catch (error) {
+                console.error('加载标记实例失败:', error);
+            }
+        }
+
+        async function loadBook(bookName) {
+            currentBook = bookName;
+            document.getElementById('char-list').innerHTML = '<div class="spinner"></div>';
+            currentCharOrder = [];
+
+            try {
+                // 从 lookup 文件获取字符列表和统计信息（O(1) 查询）
+                const response = await fetch(`${API_BASE}/segment_book_chars?book=${encodeURIComponent(bookName)}`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error || '加载失败');
+                }
+
+                const charsInfo = data.chars;
+
+                // 统计信息
+                let totalChars = 0;
+                let confirmedCount = 0;
+                let pendingCount = 0;
+                let unreviewedCount = 0;
+
+                const charList = document.getElementById('char-list');
+                charList.innerHTML = '';
+
+                // 按 84 法分组
+                if (!standardCharsData) {
+                    charList.innerHTML = '<p style="text-align: center; color: #999;">标准字数据加载失败</p>';
+                    return;
+                }
+
+                for (const [groupName, chars] of Object.entries(standardCharsData)) {
+                    const groupDiv = document.createElement('div');
+                    groupDiv.className = 'char-group';
+
+                    const header = document.createElement('div');
+                    header.className = 'char-group-header';
+                    header.innerHTML = `
+                        <span class="char-group-title">${groupName}</span>
+                        <span class="char-group-toggle">▼</span>
+                    `;
+                    header.onclick = () => groupDiv.classList.toggle('collapsed');
+
+                    const content = document.createElement('div');
+                    content.className = 'char-group-content';
+
+                    chars.forEach(char => {
+                        // 检查该字符是否在 lookup 文件中（已通过第一轮审查）
+                        const charInfo = charsInfo[char];
+                        if (!charInfo || charInfo.count === 0) return;
+
+                        totalChars++;
+
+                        const confirmed = charInfo.confirmed || 0;
+                        const pending = charInfo.pending || 0;
+                        const unreviewed = charInfo.count - confirmed - pending;
+
+                        confirmedCount += confirmed;
+                        pendingCount += pending;
+                        unreviewedCount += unreviewed;
+
+                        // 计算标记数量
+                        let markCount = 0;
+                        const instanceKeyPrefix = `${bookName}_${char}_`;
+                        for (const key in markedInstances) {
+                            if (key.startsWith(instanceKeyPrefix)) {
+                                markCount++;
+                            }
+                        }
+
+                        const charItem = document.createElement('div');
+                        charItem.className = 'char-item';
+                        charItem.style.position = 'relative';
+
+                        if (confirmed === charInfo.count) {
+                            charItem.classList.add('completed');
+                        } else if (confirmed > 0 || pending > 0) {
+                            charItem.classList.add('partial');
+                        }
+
+                        charItem.innerHTML = `
+                            <div class="char-text">${char}</div>
+                            <div class="char-status">${confirmed}/${charInfo.count}</div>
+                            ${markCount > 0 ? `<div class="char-mark-count">${markCount}</div>` : ''}
+                        `;
+
+                        charItem.onclick = () => openCharReview(char, charItem);
+
+                        content.appendChild(charItem);
+                        currentCharOrder.push(char);
+                    });
+
+                    if (content.children.length > 0) {
+                        groupDiv.appendChild(header);
+                        groupDiv.appendChild(content);
+                        charList.appendChild(groupDiv);
+                    }
+                }
+
+                // 更新统计
+                document.getElementById('stat-total').textContent = totalChars;
+                document.getElementById('stat-confirmed').textContent = confirmedCount;
+                document.getElementById('stat-pending').textContent = pendingCount;
+                document.getElementById('stat-unreviewed').textContent = unreviewedCount;
+
+                if (charList.children.length === 0) {
+                    charList.innerHTML = '<p style="text-align: center; color: #999; padding: 40px 0;">该书籍没有通过第一轮审查的字符</p>';
+                }
+            } catch (error) {
+                console.error('加载书籍数据失败:', error);
+                document.getElementById('char-list').innerHTML = '<p style="text-align: center; color: #f44336; padding: 40px 0;">加载失败</p>';
+            }
+        }
+
+        // ==================== 打开字符审查 ====================
+
+        async function openCharReview(char, charElement) {
+            currentChar = char;
+            currentCharElement = charElement;  // 保存字符元素引用，用于关闭时滚动定位
+
+            try {
+                // 从 lookup 文件获取该字符的所有 instance_id（O(1) 查询）
+                const response = await fetch(`${API_BASE}/segment_instance_ids?book=${encodeURIComponent(currentBook)}&char=${encodeURIComponent(char)}`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    alert(data.error || '加载实例列表失败');
+                    return;
+                }
+
+                currentInstances = data.instance_ids;
+
+                if (currentInstances.length === 0) {
+                    alert('该字符没有通过第一轮审查的实例');
+                    return;
+                }
+
+                // 打开模态窗口
+                document.getElementById('review-modal').classList.add('active');
+                // 锁定 body 滚动，防止滚动穿透
+                document.body.style.overflow = 'hidden';
+                currentInstanceIndex = 0;
+
+                // 初始化参数面板（如果还没有初始化）
+                initParamsPanel();
+
+                await loadInstance();
+
+            } catch (error) {
+                console.error('打开字符审查失败:', error);
+                alert('加载失败');
+            }
+        }
+
+        // ==================== 加载实例 ====================
+
+        async function loadInstance() {
+            if (currentInstanceIndex < 0 || currentInstanceIndex >= currentInstances.length) {
+                return;
+            }
+
+            const instanceId = currentInstances[currentInstanceIndex];
+            document.getElementById('modal-title').textContent = `审查 "${currentChar}" - ${instanceId}`;
+            document.getElementById('page-info').textContent = `${currentInstanceIndex + 1} / ${currentInstances.length}`;
+
+            // 更新分页按钮状态
+            document.getElementById('prev-btn').disabled = currentInstanceIndex === 0;
+            document.getElementById('next-btn').disabled = currentInstanceIndex === currentInstances.length - 1;
+
+            // 显示加载状态，重置图片大小
+            document.getElementById('instance-info').innerHTML = '<span class="status-badge loading">加载中...</span>';
+            ['roi-container', 'segmented-container', 'debug-container'].forEach(id => {
+                const container = document.getElementById(id);
+                container.innerHTML = '<span class="loading-text">加载中...</span>';
+                container.style.transform = 'scale(1)';
+                container.classList.remove('scaled');
+            });
+
+            // 重置图片大小控制
+            document.getElementById('image-size-slider').value = 200;
+            document.getElementById('image-size-value').textContent = '200';
+
+            // 重置 bbox 预览图片大小
+            [document.getElementById('bbox-base-canvas'), document.getElementById('bbox-overlay-canvas'), document.getElementById('brush-canvas')].forEach(canvasEl => {
+                if (canvasEl) {
+                    canvasEl.style.transform = 'scale(1)';
+                }
+            });
+
+            try {
+                // 请求切割
+                
+                const response = await fetch(`${API_BASE}/segment_instances`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        book: currentBook,
+                        char: currentChar,
+                        instance_id: instanceId
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error);
+                }
+
+                // 缓存结果
+                segmentationData[instanceId] = data;
+
+                // 保存 segmented bbox（切割结果）和ROI形状
+                if (data.metadata && data.metadata.segmented_bbox) {
+                    currentSliderBbox = { ...data.metadata.segmented_bbox };
+                    // 同时保存作为参考的原始值（用于取消时恢复）
+                    if (data.metadata && data.metadata.original_bbox) {
+                        currentOriginalBbox = { ...data.metadata.original_bbox };
+                    }
+                }
+                if (data.metadata && data.metadata.roi_shape) {
+                    roiShape = {
+                        width: data.metadata.roi_shape[1],
+                        height: data.metadata.roi_shape[0]
+                    };
+                }
+
+                // 显示图片
+                document.getElementById('roi-container').innerHTML = `<img src="${data.roi_image}" alt="原始ROI">`;
+                document.getElementById('segmented-container').innerHTML = `<img src="${data.segmented_image}" alt="切割结果">`;
+                document.getElementById('debug-container').innerHTML = `<img src="${data.debug_image}" alt="调试图">`;
+
+                // 重新应用当前的图片缩放设置
+                const currentScale = document.getElementById('image-size-slider').value;
+                updateImageSize(currentScale);
+
+                // 保存processed_roi用于bbox预览（处理后的ROI图片）
+                if (data.processed_roi) {
+                    processedRoiImage = data.processed_roi;
+                } else {
+                    processedRoiImage = null;
+                }
+
+                // 如果slider面板处于活动状态，重新初始化
+                const sliderPanel = document.getElementById('bbox-slider-panel');
+                if (sliderPanel.classList.contains('active')) {
+                    initializeBboxSlider();
+                }
+
+                // 更新状态信息
+                const statusBadge = reviewStatus[currentChar]?.[instanceId];
+
+                let statusHtml = '';
+                if (statusBadge) {
+                    const statusMap = {
+                        'confirmed': '<span class="status-badge success">已确认</span>',
+                        'pending_manual': '<span class="status-badge error">待手动处理</span>'
+                    };
+                    statusHtml = statusMap[statusBadge.status] || '<span class="status-badge">未审查</span>';
+                } else {
+                    statusHtml = '<span class="status-badge">未审查</span>';
+                }
+                document.getElementById('instance-info').innerHTML = statusHtml;
+
+            } catch (error) {
+                console.error('加载实例失败:', error);
+                document.getElementById('instance-info').innerHTML = `<span class="status-badge error">加载失败: ${error.message}</span>`;
+            }
+        }
+
+        function loadPrevInstance() {
+            if (currentInstanceIndex > 0) {
+                currentInstanceIndex--;
+                loadInstance();
+            }
+        }
+
+        function loadNextInstance() {
+            if (currentInstanceIndex < currentInstances.length - 1) {
+                currentInstanceIndex++;
+                loadInstance();
+            }
+        }
+
+        function getNextCharName(charName) {
+            if (!currentCharOrder || currentCharOrder.length === 0) return null;
+            const index = currentCharOrder.indexOf(charName);
+            if (index === -1) return null;
+            for (let i = index + 1; i < currentCharOrder.length; i++) {
+                const candidate = currentCharOrder[i];
+                if (candidate) {
+                    return candidate;
+                }
+            }
+            return null;
+        }
+
+        async function openCharByName(charName) {
+            if (!charName) return;
+            const charItems = document.querySelectorAll('.char-item');
+            for (const item of charItems) {
+                const textEl = item.querySelector('.char-text');
+                if (textEl && textEl.textContent === charName) {
+                    await openCharReview(charName, item);
+                    return;
+                }
+            }
+        }
+
+        // ==================== 操作功能 ====================
+
+        async function confirmSegmentation() {
+            const instanceId = currentInstances[currentInstanceIndex];
+            const data = segmentationData[instanceId];
+
+            if (!data) {
+                alert('请先加载实例');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/save_segmentation`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        book: currentBook,
+                        char: currentChar,
+                        instance_id: instanceId,
+                        status: 'confirmed',
+                        method: 'auto',
+                        segmented_image_base64: data.segmented_image,
+                        debug_image_base64: data.debug_image,
+                        metadata: data.metadata
+                    })
+                });
+
+                const result = await response.json();
+                if (!result.success) {
+                    throw new Error(result.error);
+                }
+
+                // 更新状态
+                if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
+                reviewStatus[currentChar][instanceId] = { status: 'confirmed' };
+
+                if (currentInstanceIndex < currentInstances.length - 1) {
+                    loadNextInstance();
+                } else {
+                    pendingAutoChar = getNextCharName(currentChar);
+                    await closeModal();
+                }
+
+            } catch (error) {
+                console.error('保存失败:', error);
+                alert('保存失败: ' + error.message);
+            }
+        }
+
+        async function markPendingManual() {
+            const instanceId = currentInstances[currentInstanceIndex];
+
+            if (!confirm('确认标记为待手动处理吗？\n系统会自动导出原图 ROI 到 manual_todo 目录。')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/save_segmentation`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        book: currentBook,
+                        char: currentChar,
+                        instance_id: instanceId,
+                        status: 'pending_manual',
+                        method: 'pending_manual'
+                    })
+                });
+
+                const result = await response.json();
+                if (!result.success) {
+                    throw new Error(result.error);
+                }
+
+                // 更新状态
+                if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
+                reviewStatus[currentChar][instanceId] = { status: 'pending_manual' };
+
+                // 自动导出原图
+                await exportROI();
+
+                if (currentInstanceIndex < currentInstances.length - 1) {
+                    loadNextInstance();
+                } else {
+                    pendingAutoChar = getNextCharName(currentChar);
+                    await closeModal();
+                }
+
+            } catch (error) {
+                console.error('标记失败:', error);
+                alert('标记失败: ' + error.message);
+            }
+        }
+
+        async function exportROI() {
+            const instanceId = currentInstances[currentInstanceIndex];
+
+            try {
+                const url = `${API_BASE}/export_roi?book=${encodeURIComponent(currentBook)}&char=${encodeURIComponent(currentChar)}&instance_id=${encodeURIComponent(instanceId)}`;
+                window.open(url, '_blank');
+            } catch (error) {
+                console.error('导出失败:', error);
+                alert('导出失败');
+            }
+        }
+
+        // 图片大小控制功能
+        function updateImageSize(scale) {
+            document.getElementById('image-size-value').textContent = scale;
+
+            // 更新各种图片容器（不包括调试可视化）
+            ['roi-container', 'segmented-container'].forEach(id => {
+                const container = document.getElementById(id);
+                if (container) {
+                    container.style.transform = `scale(${scale/100})`;
+                    container.style.transformOrigin = 'center';
+                    container.classList.add('scaled');
+                }
+            });
+
+            // 更新 bbox 预览图片
+            const baseCanvas = document.getElementById('bbox-base-canvas');
+            const overlayCanvas = document.getElementById('bbox-overlay-canvas');
+            const brushCanvasEl = document.getElementById('brush-canvas');
+            [baseCanvas, overlayCanvas, brushCanvasEl].forEach(canvasEl => {
+                if (canvasEl) {
+                    canvasEl.style.transform = `translate(-50%, -50%) scale(${scale/100})`;
+                    canvasEl.style.transformOrigin = 'center';
+                }
+            });
+        }
+
+        // 在模态窗口打开时自动初始化参数面板
+        function initParamsPanel() {
+            const content = document.getElementById('params-content');
+            if (content.children.length > 1) return; // 已初始化（保留阶段控制部分）
+
+            fetch(`${API_BASE}/get_default_params`)
+                .then(response => response.json())
+                .then(data => {
+                    const params = data.params;
+
+                    // 1. 噪声去除参数（带开关）
+                    const noiseGroup = createParameterGroup('Noise Removal', 'toggle-noise', params.noise_removal, createNoiseRemovalParams);
+                    content.appendChild(noiseGroup);
+
+                    // 2. 连通组件过滤参数（带开关）
+                    const ccGroup = createParameterGroup('CC Filtering', 'toggle-cc', params.cc_filter, createCCFilterParams);
+                    content.appendChild(ccGroup);
+
+                    // 3. 投影修剪参数（带开关）
+                    const projGroup = createParameterGroup('Projection Trimming', 'toggle-projection', params.projection_trim, createProjectionTrimParams);
+                    content.appendChild(projGroup);
+
+                    // 4. 边框去除参数（带开关）
+                    const borderGroup = createParameterGroup('Border Removal', 'toggle-border', params.border_removal, createBorderRemovalParams);
+                    content.appendChild(borderGroup);
+                })
+                .catch(error => {
+                    console.error('加载参数失败:', error);
+                    content.innerHTML += '<p style="color: #f44336;">参数加载失败</p>';
+                });
+        }
+
+        function createParameterGroup(title, toggleId, params, createParamsFunc) {
+            const group = document.createElement('div');
+            group.className = 'param-group';
+            group.id = `param-group-${toggleId}`;
+
+            const header = document.createElement('div');
+            header.className = 'param-group-header';
+            header.innerHTML = `
+                <label>
+                    <input type="checkbox" id="${toggleId}" checked onchange="toggleParameterGroup('${toggleId}')">
+                    <h4>${title}</h4>
+                </label>
+            `;
+
+            const content = document.createElement('div');
+            content.className = 'param-group-content';
+            content.appendChild(createParamsFunc(params));
+
+            group.appendChild(header);
+            group.appendChild(content);
+
+            return group;
+        }
+
+        function toggleParameterGroup(toggleId) {
+            const isEnabled = document.getElementById(toggleId).checked;
+            const group = document.getElementById(`param-group-${toggleId}`);
+
+            if (isEnabled) {
+                group.classList.remove('disabled');
+            } else {
+                group.classList.add('disabled');
+            }
+        }
+
+        // Bbox 调整功能
+    
+        // Bbox Slider 调整相关函数
+        function initializeBboxSlider() {
+            if (!currentSliderBbox || !roiShape) return;
+
+            // 设置slider的最大值
+            document.getElementById('bbox-left-slider').max = roiShape.width;
+            document.getElementById('bbox-right-slider').max = roiShape.width;
+            document.getElementById('bbox-top-slider').max = roiShape.height;
+            document.getElementById('bbox-bottom-slider').max = roiShape.height;
+
+            // 设置初始值 - 使用 segmented bbox
+            const left = currentSliderBbox.x;
+            const right = currentSliderBbox.x + currentSliderBbox.width;
+            const top = currentSliderBbox.y;
+            const bottom = currentSliderBbox.y + currentSliderBbox.height;
+
+            document.getElementById('bbox-left-slider').value = left;
+            document.getElementById('bbox-right-slider').value = right;
+            document.getElementById('bbox-top-slider').value = top;
+            document.getElementById('bbox-bottom-slider').value = bottom;
+
+            // 更新显示值
+            updateSliderValues();
+
+            // 添加实时更新事件监听
+            ['bbox-left-slider', 'bbox-right-slider', 'bbox-top-slider', 'bbox-bottom-slider'].forEach(id => {
+                const slider = document.getElementById(id);
+                slider.removeEventListener('input', onSliderChange);
+                slider.addEventListener('input', onSliderChange);
+            });
+
+            // 初始化预览
+            updateBboxPreview();
+        }
+
+        function onSliderChange() {
+            updateSliderValues();
+            validateSliderConstraints();
+            // 实时更新预览
+            updateBboxPreview();
+        }
+
+        function loadImageElement(src) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = src;
+            });
+        }
+
+        // 绘制bbox边界框预览函数 - 优先使用 processed ROI
+        function updateBboxPreview() {
+            if (!currentSliderBbox) {
+                return;
+            }
+
+            const container = document.querySelector('.bbox-preview-container');
+            if (!container) return;
+
+            if (!bboxBaseCanvas) bboxBaseCanvas = document.getElementById('bbox-base-canvas');
+            if (!bboxOverlayCanvas) bboxOverlayCanvas = document.getElementById('bbox-overlay-canvas');
+            if (!bboxBaseCanvas || !bboxOverlayCanvas) return;
+
+            bboxOverlayCtx = bboxOverlayCanvas.getContext('2d');
+            if (!brushCanvas) {
+                brushCanvas = document.getElementById('brush-canvas');
+                if (brushCanvas) {
+                    brushCtx = brushCanvas.getContext('2d');
+                }
+            }
+
+            const segmentedContainer = document.getElementById('segmented-container');
+            const segmentedImg = segmentedContainer ? segmentedContainer.querySelector('img') : null;
+
+            let imageSource = null;
+            if (processedRoiImage) {
+                imageSource = processedRoiImage;
+            } else if (segmentedImg && segmentedImg.src) {
+                imageSource = segmentedImg.src;
+            }
+
+            if (!imageSource) {
+                return;
+            }
+
+            const img = new Image();
+            img.onload = function() {
+                const maxWidth = 500;
+                const maxHeight = 350;
+
+                let width = img.width;
+                let height = img.height;
+
+                const scale = Math.min(maxWidth / width, maxHeight / height, 1);
+                width *= scale;
+                height *= scale;
+
+                [bboxBaseCanvas, bboxOverlayCanvas, brushCanvas].forEach(canvasEl => {
+                    if (!canvasEl) return;
+                    canvasEl.width = width;
+                    canvasEl.height = height;
+                    canvasEl.style.width = `${width}px`;
+                    canvasEl.style.height = `${height}px`;
+                    canvasEl.style.display = 'block';
+                });
+
+                const baseCtx = bboxBaseCanvas.getContext('2d');
+                baseCtx.clearRect(0, 0, width, height);
+                baseCtx.drawImage(img, 0, 0, width, height);
+
+                if (bboxOverlayCtx) {
+                    bboxOverlayCtx.clearRect(0, 0, width, height);
+                }
+                if (brushCtx) {
+                    brushCtx.clearRect(0, 0, width, height);
+                    brushHistory = [];
+                    brushHistoryStep = -1;
+                }
+
+                const left = currentSliderBbox.x * scale;
+                const top = currentSliderBbox.y * scale;
+                const bboxWidth = currentSliderBbox.width * scale;
+                const bboxHeight = currentSliderBbox.height * scale;
+
+                if (bboxOverlayCtx) {
+                    bboxOverlayCtx.strokeStyle = '#ff4444';
+                    bboxOverlayCtx.lineWidth = 1;
+                    bboxOverlayCtx.setLineDash([6, 4]);
+                    bboxOverlayCtx.strokeRect(left, top, bboxWidth, bboxHeight);
+                    bboxOverlayCtx.fillStyle = 'rgba(255, 68, 68, 0.08)';
+                    bboxOverlayCtx.fillRect(left, top, bboxWidth, bboxHeight);
+
+                    bboxOverlayCtx.setLineDash([]);
+                    bboxOverlayCtx.fillStyle = '#ff4444';
+                    const cornerSize = 5;
+                    bboxOverlayCtx.fillRect(left - cornerSize/2, top - cornerSize/2, cornerSize, cornerSize);
+                    bboxOverlayCtx.fillRect(left + bboxWidth - cornerSize/2, top - cornerSize/2, cornerSize, cornerSize);
+                    bboxOverlayCtx.fillRect(left - cornerSize/2, top + bboxHeight - cornerSize/2, cornerSize, cornerSize);
+                    bboxOverlayCtx.fillRect(left + bboxWidth - cornerSize/2, top + bboxHeight - cornerSize/2, cornerSize, cornerSize);
+                }
+
+                currentSegmentedImage = imageSource;
+
+                // 确保画笔画布在底图尺寸就绪后正确初始化
+                try {
+                    initBrushCanvasOnBbox();
+                } catch (e) {
+                    console.warn('[Brush] init after preview failed:', e);
+                }
+            };
+
+            img.src = imageSource;
+        }
+
+        function updateSliderValues() {
+            const left = parseInt(document.getElementById('bbox-left-slider').value);
+            const right = parseInt(document.getElementById('bbox-right-slider').value);
+            const top = parseInt(document.getElementById('bbox-top-slider').value);
+            const bottom = parseInt(document.getElementById('bbox-bottom-slider').value);
+
+            // 更新显示值
+            document.getElementById('bbox-left-value').textContent = left;
+            document.getElementById('bbox-right-value').textContent = right;
+            document.getElementById('bbox-top-value').textContent = top;
+            document.getElementById('bbox-bottom-value').textContent = bottom;
+
+            // 计算bbox
+            const x = left;
+            const y = top;
+            const width = right - left;
+            const height = bottom - top;
+
+            // 更新bbox信息显示
+            document.getElementById('bbox-x').textContent = x;
+            document.getElementById('bbox-y').textContent = y;
+            document.getElementById('bbox-width').textContent = width;
+            document.getElementById('bbox-height').textContent = height;
+
+            // 更新当前slider bbox
+            currentSliderBbox = { x, y, width, height };
+        }
+
+        function validateSliderConstraints() {
+            let isValid = true;
+            let errors = {};
+
+            const left = parseInt(document.getElementById('bbox-left-slider').value);
+            const right = parseInt(document.getElementById('bbox-right-slider').value);
+            const top = parseInt(document.getElementById('bbox-top-slider').value);
+            const bottom = parseInt(document.getElementById('bbox-bottom-slider').value);
+
+            // 清除所有错误信息
+            ['bbox-left-error', 'bbox-right-error', 'bbox-top-error', 'bbox-bottom-error'].forEach(id => {
+                document.getElementById(id).textContent = '';
+            });
+
+            // 检查边界约束
+            if (left >= right) {
+                document.getElementById('bbox-left-error').textContent = '左边界必须在右边界左侧';
+                document.getElementById('bbox-right-error').textContent = '右边界必须在左边界右侧';
+                isValid = false;
+            }
+
+            if (top >= bottom) {
+                document.getElementById('bbox-top-error').textContent = '上边界必须在下边界上方';
+                document.getElementById('bbox-bottom-error').textContent = '下边界必须在上边界下方';
+                isValid = false;
+            }
+
+            // 检查最小尺寸
+            if (right - left < 10) {
+                document.getElementById('bbox-right-error').textContent = '宽度至少10像素';
+                isValid = false;
+            }
+
+            if (bottom - top < 10) {
+                document.getElementById('bbox-bottom-error').textContent = '高度至少10像素';
+                isValid = false;
+            }
+
+            // 检查不超出图片范围
+            if (left < 0 || right > roiShape.width) {
+                if (left < 0) document.getElementById('bbox-left-error').textContent = '超出左边界';
+                if (right > roiShape.width) document.getElementById('bbox-right-error').textContent = '超出右边界';
+                isValid = false;
+            }
+
+            if (top < 0 || bottom > roiShape.height) {
+                if (top < 0) document.getElementById('bbox-top-error').textContent = '超出上边界';
+                if (bottom > roiShape.height) document.getElementById('bbox-bottom-error').textContent = '超出下边界';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        async function applyBboxSliderAdjustment(options = {}) {
+            const { silent = false } = options;
+
+            if (!validateSliderConstraints()) {
+                if (silent) {
+                    alert('当前 Bbox 设置不合法，请检查边界。');
+                }
+                console.error('[Bbox Adjustment] 验证失败');
+                return false;
+            }
+
+            const instanceId = currentInstances[currentInstanceIndex];
+            const left = parseInt(document.getElementById('bbox-left-slider').value, 10);
+            const right = parseInt(document.getElementById('bbox-right-slider').value, 10);
+            const top = parseInt(document.getElementById('bbox-top-slider').value, 10);
+            const bottom = parseInt(document.getElementById('bbox-bottom-slider').value, 10);
+
+            const adjustedBbox = {
+                x: left,
+                y: top,
+                width: right - left,
+                height: bottom - top
+            };
+
+            console.log('[Bbox Adjustment] 应用调整:', {
+                book: currentBook,
+                char: currentChar,
+                instance_id: instanceId,
+                adjusted_bbox: adjustedBbox,
+                silent
+            });
+
+            const entry = segmentationData[instanceId] || {};
+
+            try {
+                if (processedRoiImage) {
+                    const img = await loadImageElement(processedRoiImage);
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = adjustedBbox.width;
+                    canvas.height = adjustedBbox.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(
+                        img,
+                        adjustedBbox.x,
+                        adjustedBbox.y,
+                        adjustedBbox.width,
+                        adjustedBbox.height,
+                        0,
+                        0,
+                        adjustedBbox.width,
+                        adjustedBbox.height
+                    );
+
+                    const segmentedDataUrl = canvas.toDataURL('image/png');
+
+                    entry.segmented_image = segmentedDataUrl;
+                    entry.debug_image = segmentedDataUrl;
+                    entry.processed_roi = segmentedDataUrl;
+                    entry.metadata = entry.metadata || {};
+                    entry.metadata.segmented_bbox = {
+                        x: 0,
+                        y: 0,
+                        width: adjustedBbox.width,
+                        height: adjustedBbox.height
+                    };
+                    entry.metadata.roi_shape = [adjustedBbox.height, adjustedBbox.width, 3];
+                    segmentationData[instanceId] = entry;
+
+                    processedRoiImage = segmentedDataUrl;
+                    currentSegmentedImage = segmentedDataUrl;
+                    currentSliderBbox = { x: 0, y: 0, width: adjustedBbox.width, height: adjustedBbox.height };
+                    roiShape = { width: adjustedBbox.width, height: adjustedBbox.height };
+
+                    document.getElementById('roi-container').innerHTML = `<img src="${segmentedDataUrl}" alt="原始ROI">`;
+                    document.getElementById('segmented-container').innerHTML = `<img src="${segmentedDataUrl}" alt="切割结果">`;
+                    document.getElementById('debug-container').innerHTML = `<img src="${segmentedDataUrl}" alt="调试图">`;
+
+                    const currentScale = document.getElementById('image-size-slider').value;
+                    updateImageSize(currentScale);
+
+                    if (!silent) {
+                        document.getElementById('bbox-slider-panel').classList.remove('active');
+                        document.getElementById('instance-info').innerHTML = '<span class="status-badge success">Bbox 调整完成</span>';
+                    }
+
+                    updateBboxPreview();
+                    return true;
+                }
+
+                const response = await fetch(`${API_BASE}/adjust_bbox`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        book: currentBook,
+                        char: currentChar,
+                        instance_id: instanceId,
+                        adjusted_bbox: adjustedBbox
+                    })
+                });
+
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.error || '未知错误');
+                }
+
+                entry.segmented_image = data.segmented_image;
+                entry.debug_image = data.debug_image;
+                entry.processed_roi = data.processed_roi || null;
+                entry.metadata = data.metadata || entry.metadata || {};
+                segmentationData[instanceId] = entry;
+
+                processedRoiImage = data.processed_roi || data.segmented_image;
+                currentSegmentedImage = processedRoiImage || data.segmented_image;
+
+                if (entry.metadata && entry.metadata.segmented_bbox) {
+                    currentSliderBbox = { ...entry.metadata.segmented_bbox };
+                } else {
+                    currentSliderBbox = { ...adjustedBbox };
+                }
+
+                if (entry.metadata && entry.metadata.roi_shape) {
+                    roiShape = {
+                        width: entry.metadata.roi_shape[1],
+                        height: entry.metadata.roi_shape[0]
+                    };
+                }
+
+                document.getElementById('segmented-container').innerHTML = `<img src="${data.segmented_image}" alt="切割结果">`;
+                document.getElementById('debug-container').innerHTML = `<img src="${data.debug_image}" alt="调试图">`;
+
+                const currentScale = document.getElementById('image-size-slider').value;
+                updateImageSize(currentScale);
+
+                if (!silent) {
+                    document.getElementById('bbox-slider-panel').classList.remove('active');
+                    document.getElementById('instance-info').innerHTML = '<span class="status-badge success">Bbox 调整完成</span>';
+                }
+
+                updateBboxPreview();
+                return true;
+
+            } catch (error) {
+                console.error('[Bbox Adjustment] 调整失败:', error);
+                if (!silent) {
+                    alert('Bbox 调整失败: ' + error.message);
+                }
+                return false;
+            }
+        }
+
+        function cancelBboxSliderAdjustment(suppressClose = false) {
+            const instanceId = currentInstances[currentInstanceIndex];
+            const data = segmentationData[instanceId];
+
+            if (data && data.metadata && data.metadata.segmented_bbox) {
+                currentSliderBbox = { ...data.metadata.segmented_bbox };
+            } else {
+                currentSliderBbox = { ...currentOriginalBbox };
+            }
+
+            initializeBboxSlider();
+            updateBboxPreview();
+
+            if (!suppressClose) {
+                document.getElementById('bbox-slider-panel').classList.remove('active');
+            }
+        }
+
+        async function applyManualChanges() {
+            try {
+                // 需要 processedRoiImage 或当前切割图作为底图
+                const baseSrc = processedRoiImage || currentSegmentedImage;
+                if (!baseSrc) {
+                    alert('当前没有可应用的底图');
+                    return;
+                }
+
+                // 读取原始 ROI 尺寸的底图
+                const roiImg = await loadImageElement(baseSrc);
+
+                // 计算从预览到原始 ROI 的缩放比例
+                const previewBase = document.getElementById('bbox-base-canvas');
+                let scaleX = 1, scaleY = 1;
+                if (previewBase && previewBase.width > 0 && previewBase.height > 0) {
+                    scaleX = roiImg.width / previewBase.width;
+                    scaleY = roiImg.height / previewBase.height;
+                }
+
+                // 将画笔层放大到 ROI 原始分辨率
+                const brushLayer = document.getElementById('brush-canvas');
+                const brushOnRoi = document.createElement('canvas');
+                brushOnRoi.width = roiImg.width;
+                brushOnRoi.height = roiImg.height;
+                const brushOnRoiCtx = brushOnRoi.getContext('2d');
+                if (brushLayer && brushLayer.width > 0 && brushLayer.height > 0) {
+                    brushOnRoiCtx.drawImage(
+                        brushLayer,
+                        0, 0, brushLayer.width, brushLayer.height,
+                        0, 0, Math.round(brushLayer.width * scaleX), Math.round(brushLayer.height * scaleY)
+                    );
+                }
+
+                // 依据当前 slider 的 bbox 裁切 ROI 与画笔层
+                const bbox = currentSliderBbox || { x: 0, y: 0, width: roiImg.width, height: roiImg.height };
+                const w = Math.max(1, Math.round(bbox.width));
+                const h = Math.max(1, Math.round(bbox.height));
+
+                const merged = document.createElement('canvas');
+                merged.width = w;
+                merged.height = h;
+                const mergedCtx = merged.getContext('2d');
+
+                // 绘制底图裁切
+                mergedCtx.drawImage(
+                    roiImg,
+                    Math.round(bbox.x), Math.round(bbox.y), w, h,
+                    0, 0, w, h
+                );
+                // 覆盖画笔裁切
+                mergedCtx.drawImage(
+                    brushOnRoi,
+                    Math.round(bbox.x), Math.round(bbox.y), w, h,
+                    0, 0, w, h
+                );
+
+                const appliedImage = merged.toDataURL('image/png');
+
+                // 更新本地缓存与界面（不保存到服务器）
+                const instanceId = currentInstances[currentInstanceIndex];
+                const entry = segmentationData[instanceId] || {};
+                entry.segmented_image = appliedImage;
+                entry.debug_image = appliedImage;
+                entry.processed_roi = appliedImage;
+                entry.metadata = entry.metadata || {};
+                entry.metadata.segmented_bbox = { x: 0, y: 0, width: w, height: h };
+                entry.metadata.roi_shape = [h, w, 3];
+                segmentationData[instanceId] = entry;
+
+                processedRoiImage = appliedImage;
+                currentSegmentedImage = appliedImage;
+                currentSliderBbox = { x: 0, y: 0, width: w, height: h };
+                roiShape = { width: w, height: h };
+
+                // 仅替换“切割结果”区域的展示
+                document.getElementById('segmented-container').innerHTML = `<img src="${appliedImage}" alt="切割结果">`;
+                const currentScale = document.getElementById('image-size-slider').value;
+                updateImageSize(currentScale);
+
+                // 关闭手动面板，恢复三图
+                document.getElementById('manual-adjust-panel').style.display = 'none';
+                document.getElementById('bbox-slider-panel').classList.remove('active');
+                deactivateBrushCanvas();
+                const imagesGrid = document.querySelector('.images-grid');
+                if (imagesGrid) imagesGrid.style.display = '';
+
+                // 刷新预览
+                updateBboxPreview();
+                document.getElementById('instance-info').innerHTML = '<span class="status-badge success">已应用（未保存）</span>';
+
+            } catch (e) {
+                console.error('应用失败:', e);
+                alert('应用失败: ' + e.message);
+            }
+        }
+
+        // 导出到手动处理
+        async function exportToManual() {
+            const instanceId = currentInstances[currentInstanceIndex];
+
+            if (!confirm(`确认导出 "${currentChar}" - ${instanceId} 到手动处理区？\n图片将保存到 segmented/manual/ 目录。`)) {
+                return;
+            }
+
+            try {
+                // 调用导出 ROI API
+                const url = `${API_BASE}/export_roi?book=${encodeURIComponent(currentBook)}&char=${encodeURIComponent(currentChar)}&instance_id=${encodeURIComponent(instanceId)}`;
+
+                // 打开新窗口下载文件
+                window.open(url, '_blank');
+
+                // 显示成功消息
+                alert('已导出到手动处理区！\n位置：data/results/segmented/manual/' + currentBook + '/' + currentChar + '/' + instanceId + '.png\n\n处理完成后请使用"导入手动处理结果"导入。');
+
+                // 自动跳转到下一个实例
+                if (currentInstanceIndex < currentInstances.length - 1) {
+                    loadNextInstance();
+                } else {
+                    closeModal();
+                    loadBook(currentBook);
+                }
+
+            } catch (error) {
+                console.error('导出失败:', error);
+                alert('导出失败: ' + error.message);
+            }
+        }
+
+      // 参数创建函数
+        function createNoiseRemovalParams(params) {
+            const container = document.createElement('div');
+
+            // 基础参数
+            const basicParams = [
+                { key: 'dark_stroke_threshold', desc: 'Values ≤ this are considered text strokes' },
+                { key: 'light_noise_threshold', desc: 'Areas > dark_stroke and < this are noise candidates' },
+                { key: 'min_stroke_area', desc: 'Filter dark spots smaller than this' },
+                { key: 'min_noise_area', desc: 'Preserve noise smaller than this' },
+                { key: 'max_noise_area', desc: 'Directly classify as noise if larger than this' },
+                { key: 'noise_threshold', desc: 'Classify as noise if score > this' },
+                { key: 'smart_removal_preserve_distance', desc: 'Pixels < this distance from stroke edge are preserved' }
+            ];
+
+            basicParams.forEach(param => {
+                const value = params[param.key];
+                if (typeof value === 'number') {
+                    const item = createParamSlider(`noise_removal.${param.key}`, value, value, param.key, param.desc);
+                    container.appendChild(item);
+                }
+            });
+
+            return container;
+        }
+
+        function createCCFilterParams(params) {
+            const container = document.createElement('div');
+
+            const ccParams = [
+                'border_touch_margin', 'edge_zone_margin', 'border_touch_min_area_ratio',
+                'edge_zone_min_area_ratio', 'interior_min_area_ratio', 'max_aspect_for_edge',
+                'min_dim_px', 'interior_min_dim_px'
+            ];
+
+            ccParams.forEach(key => {
+                const value = params[key];
+                if (typeof value === 'number') {
+                    const item = createParamSlider(`cc_filter.${key}`, value, value, key);
+                    container.appendChild(item);
+                }
+            });
+
+            return container;
+        }
+
+        function createProjectionTrimParams(params) {
+            const container = document.createElement('div');
+
+            // 基础参数
+            const basicParams = ['adaptive_block', 'adaptive_C', 'run_min_coverage_ratio', 'run_min_coverage_abs',
+                                'primary_run_min_mass_ratio', 'primary_run_min_length_ratio', 'tighten_min_coverage'];
+
+            basicParams.forEach(key => {
+                const value = params[key];
+                if (typeof value === 'number') {
+                    const item = createParamSlider(`projection_trim.${key}`, value, value, key);
+                    container.appendChild(item);
+                }
+            });
+
+            // 检测范围参数
+            if (params.detection_range) {
+                const detectionSection = document.createElement('div');
+                detectionSection.style.marginTop = '15px';
+                detectionSection.innerHTML = '<div style="font-size: 12px; font-weight: 600; color: #666; margin-bottom: 8px;">检测范围</div>';
+
+                for (const [subKey, subValue] of Object.entries(params.detection_range)) {
+                    if (typeof subValue === 'number') {
+                        const item = createParamSlider(`projection_trim.detection_range.${subKey}`, subValue, subValue, subKey);
+                        detectionSection.appendChild(item);
+                    }
+                }
+                container.appendChild(detectionSection);
+            }
+
+            // 切割限制参数
+            if (params.cut_limits) {
+                const cutLimitsSection = document.createElement('div');
+                cutLimitsSection.style.marginTop = '15px';
+                cutLimitsSection.innerHTML = '<div style="font-size: 12px; font-weight: 600; color: #666; margin-bottom: 8px;">切割限制</div>';
+
+                for (const [subKey, subValue] of Object.entries(params.cut_limits)) {
+                    if (typeof subValue === 'number') {
+                        const item = createParamSlider(`projection_trim.cut_limits.${subKey}`, subValue, subValue, subKey);
+                        cutLimitsSection.appendChild(item);
+                    }
+                }
+                container.appendChild(cutLimitsSection);
+            }
+
+            return container;
+        }
+
+        function createBorderRemovalParams(params) {
+            const container = document.createElement('div');
+
+            // 基础参数
+            const basicParams = ['max_iterations', 'border_max_width_ratio', 'border_threshold_ratio',
+                                'spike_min_length_ratio', 'spike_max_length_ratio', 'spike_gradient_threshold',
+                                'spike_prominence_ratio', 'edge_tolerance'];
+
+            basicParams.forEach(key => {
+                const value = params[key];
+                if (typeof value === 'number') {
+                    const item = createParamSlider(`border_removal.${key}`, value, value, key);
+                    container.appendChild(item);
+                }
+            });
+
+            // 垂直边框参数
+            if (params.vertical_detection_range || params.vertical_cut_limits) {
+                const verticalSection = document.createElement('div');
+                verticalSection.style.marginTop = '15px';
+                verticalSection.innerHTML = '<div style="font-size: 12px; font-weight: 600; color: #666; margin-bottom: 8px;">垂直边框参数</div>';
+
+                ['vertical_detection_range', 'vertical_cut_limits'].forEach(group => {
+                    if (params[group]) {
+                        for (const [subKey, subValue] of Object.entries(params[group])) {
+                            if (typeof subValue === 'number') {
+                                const item = createParamSlider(`border_removal.${group}.${subKey}`, subValue, subValue, subKey);
+                                verticalSection.appendChild(item);
+                            }
+                        }
+                    }
+                });
+
+                container.appendChild(verticalSection);
+            }
+
+            return container;
+        }
+
+        function createBorderRemovalSection(params) {
+            const section = document.createElement('div');
+            section.className = 'params-section';
+
+            const titleElem = document.createElement('div');
+            titleElem.className = 'params-section-title';
+            titleElem.textContent = '边框去除参数';
+            section.appendChild(titleElem);
+
+            // 基础参数
+            const basicParams = ['enabled', 'max_iterations', 'border_max_width_ratio', 'border_threshold_ratio',
+                                'spike_min_length_ratio', 'spike_max_length_ratio', 'spike_gradient_threshold',
+                                'spike_prominence_ratio', 'edge_tolerance'];
+
+            basicParams.forEach(key => {
+                const value = params[key];
+                if (typeof value === 'number') {
+                    const item = createParamSlider(`border_removal.${key}`, value, value, key);
+                    section.appendChild(item);
+                } else if (typeof value === 'boolean') {
+                    const item = createBooleanParam(`border_removal.${key}`, value, key);
+                    section.appendChild(item);
+                }
+            });
+
+            // 垂直检测参数
+            const verticalSection = document.createElement('div');
+            verticalSection.style.marginTop = '15px';
+            verticalSection.innerHTML = '<div style="font-size: 13px; font-weight: 600; color: #666; margin-bottom: 10px;">垂直边框参数</div>';
+
+            ['vertical_detection_range', 'vertical_cut_limits'].forEach(group => {
+                if (params[group]) {
+                    for (const [subKey, subValue] of Object.entries(params[group])) {
+                        if (typeof subValue === 'number') {
+                            const item = createParamSlider(`border_removal.${group}.${subKey}`, subValue, subValue, subKey);
+                            verticalSection.appendChild(item);
+                        }
+                    }
+                }
+            });
+
+            section.appendChild(verticalSection);
+
+            return section;
+        }
+
+        function createProjectionTrimSection(params) {
+            const section = document.createElement('div');
+            section.className = 'params-section';
+
+            const titleElem = document.createElement('div');
+            titleElem.className = 'params-section-title';
+            titleElem.textContent = '投影修剪参数';
+            section.appendChild(titleElem);
+
+            // 基础参数（排除复杂的嵌套对象）
+            const basicParams = ['adaptive_block', 'adaptive_C', 'run_min_coverage_ratio', 'run_min_coverage_abs',
+                                'primary_run_min_mass_ratio', 'primary_run_min_length_ratio', 'tighten_min_coverage'];
+
+            basicParams.forEach(key => {
+                const value = params[key];
+                if (typeof value === 'number') {
+                    const item = createParamSlider(`projection_trim.${key}`, value, value, key);
+                    section.appendChild(item);
+                }
+            });
+
+            // 检测范围参数
+            const detectionSection = document.createElement('div');
+            detectionSection.style.marginTop = '15px';
+            detectionSection.innerHTML = '<div style="font-size: 13px; font-weight: 600; color: #666; margin-bottom: 10px;">检测范围参数</div>';
+
+            if (params.detection_range) {
+                for (const [subKey, subValue] of Object.entries(params.detection_range)) {
+                    if (typeof subValue === 'number') {
+                        const item = createParamSlider(`projection_trim.detection_range.${subKey}`, subValue, subValue, subKey);
+                        detectionSection.appendChild(item);
+                    }
+                }
+            }
+
+            section.appendChild(detectionSection);
+
+            // 切割限制参数
+            const cutLimitsSection = document.createElement('div');
+            cutLimitsSection.style.marginTop = '15px';
+            cutLimitsSection.innerHTML = '<div style="font-size: 13px; font-weight: 600; color: #666; margin-bottom: 10px;">切割限制参数</div>';
+
+            if (params.cut_limits) {
+                for (const [subKey, subValue] of Object.entries(params.cut_limits)) {
+                    if (typeof subValue === 'number') {
+                        const item = createParamSlider(`projection_trim.cut_limits.${subKey}`, subValue, subValue, subKey);
+                        cutLimitsSection.appendChild(item);
+                    }
+                }
+            }
+
+            section.appendChild(cutLimitsSection);
+
+            return section;
+        }
+
+        function createParamsSection(title, params) {
+            const section = document.createElement('div');
+            section.className = 'params-section';
+
+            const titleElem = document.createElement('div');
+            titleElem.className = 'params-section-title';
+            titleElem.textContent = title;
+            section.appendChild(titleElem);
+
+            for (const [key, value] of Object.entries(params)) {
+                if (typeof value === 'object' && !Array.isArray(value)) {
+                    // 嵌套对象（如 detection_range）
+                    for (const [subKey, subValue] of Object.entries(value)) {
+                        if (typeof subValue === 'number') {
+                            const item = createParamSlider(`${key}.${subKey}`, subValue, subValue, subKey);
+                            section.appendChild(item);
+                        }
+                    }
+                } else if (typeof value === 'number') {
+                    const item = createParamSlider(key, value, value, key);
+                    section.appendChild(item);
+                }
+            }
+
+            return section;
+        }
+
+        function createParamSlider(name, value, defaultValue, label = null, description = null) {
+            const item = document.createElement('div');
+            item.className = 'param-item';
+
+            // 使用提供的标签或默认使用 name
+            const displayName = label || name;
+
+            // 根据 name 推断合适的范围
+            let min = 0;
+            let max = 10;
+            let step = 0.1;
+
+            if (name.includes('ratio')) {
+                max = 1;
+                step = 0.01;
+            } else if (name.includes('_px') || name.includes('block') || name.includes('threshold') || name.includes('area')) {
+                if (name.includes('area')) {
+                    max = 500;
+                    step = 1;
+                } else if (name.includes('block')) {
+                    max = 101;
+                    step = 2;
+                } else if (name.includes('threshold')) {
+                    max = 255;
+                    step = 1;
+                } else {
+                    max = 50;
+                    step = 1;
+                }
+            } else if (name.includes('distance')) {
+                max = 10;
+                step = 0.1;
+            } else if (name.includes('weight')) {
+                max = 1;
+                step = 0.01;
+            }
+
+            item.innerHTML = `
+                <div class="param-label">
+                    <span>${displayName}</span>
+                    <span class="param-value" id="param-value-${name}">${value}</span>
+                </div>
+                ${description ? `<div style="font-size: 11px; color: #888; margin-bottom: 5px;">${description}</div>` : ''}
+                <input type="range"
+                       class="param-slider"
+                       id="param-${name}"
+                       min="${min}"
+                       max="${max}"
+                       step="${step}"
+                       value="${value}"
+                       oninput="document.getElementById('param-value-${name}').textContent = this.value">
+            `;
+
+            return item;
+        }
+
+        function createBooleanParam(name, value, label) {
+            const item = document.createElement('div');
+            item.className = 'param-item';
+
+            item.innerHTML = `
+                <div class="param-label">
+                    <span>${label}</span>
+                </div>
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox"
+                           id="param-${name}"
+                           ${value ? 'checked' : ''}
+                           onchange="document.getElementById('param-value-${name}').textContent = this.checked ? 'true' : 'false'">
+                    <span id="param-value-${name}" style="font-weight: 600; color: #333;">${value ? 'true' : 'false'}</span>
+                </label>
+            `;
+
+            return item;
+        }
+
+        async function applyCustomParams() {
+            // 完整的默认参数模板（从 src/segment/config.py 复制）
+            const defaultParams = {
+                noise_removal: {
+                    'enabled': true,
+                    'dark_stroke_threshold': 60,
+                    'light_noise_threshold': 240,
+                    'min_stroke_area': 6,
+                    'min_noise_area': 2,
+                    'max_noise_area': 200000,
+                    'noise_threshold': 0.4,
+                    'smart_removal_preserve_distance': 1.0,
+
+                    // 形态特征详细参数
+                    'morphology': {
+                        'aspect_ratio': {
+                            'edge_threshold': 5.0,
+                            'noise_threshold': 2.0,
+                            'weight': 0.4,
+                        },
+                        'solidity': {
+                            'edge_threshold': 0.8,
+                            'noise_threshold': 0.5,
+                            'weight': 0.3,
+                        },
+                        'perimeter_area': {
+                            'edge_threshold': 50.0,
+                            'noise_threshold': 20.0,
+                            'weight': 0.3,
+                        },
+                    },
+
+                    // 距离特征详细参数
+                    'distance': {
+                        'mean_distance': {
+                            'edge_threshold': 1.5,
+                            'noise_threshold': 2.0,
+                            'weight': 0.5,
+                        },
+                        'distance_cv': {
+                            'edge_threshold': 0.2,
+                            'noise_threshold': 0.25,
+                            'weight': 0.5,
+                        },
+                    },
+
+                    // 特征权重
+                    'feature_weights': {
+                        'morphology': 0.4,
+                        'distance': 0.6,
+                    },
+
+                    'debug_features': false,
+                    'debug_visualize': true,
+                },
+
+                projection_trim: {
+                    'enabled': true,
+                    'binarize': 'otsu',
+                    'adaptive_block': 31,
+                    'adaptive_C': 3,
+                    'run_min_coverage_ratio': 0.01,
+                    'run_min_coverage_abs': 0.005,
+                    'primary_run_min_mass_ratio': 0.5,
+                    'primary_run_min_length_ratio': 0.3,
+                    'tighten_min_coverage': 0.01,
+
+                    // 检测范围参数
+                    'detection_range': {
+                        'left_ratio': 0.3,
+                        'right_ratio': 0.3,
+                        'top_ratio': 0.3,
+                        'bottom_ratio': 0.5,
+                    },
+
+                    // 切割限制参数
+                    'cut_limits': {
+                        'left_max_ratio': 0.25,
+                        'right_max_ratio': 0.25,
+                        'top_max_ratio': 0.25,
+                        'bottom_max_ratio': 0.3,
+                    },
+                },
+
+                cc_filter: {
+                    'enabled': true,
+                    'border_touch_margin': 1,
+                    'edge_zone_margin': 2,
+                    'border_touch_min_area_ratio': 0.04,
+                    'edge_zone_min_area_ratio': 0.01,
+                    'interior_min_area_ratio': 0.002,
+                    'max_aspect_for_edge': 6.0,
+                    'min_dim_px': 2,
+                    'interior_min_dim_px': 1,
+                    'debug_visualize': true,
+                },
+
+                border_removal: {
+                    'enabled': true,
+                    'max_iterations': 5,
+                    'border_max_width_ratio': 0.15,
+                    'border_threshold_ratio': 0.35,
+                    'spike_min_length_ratio': 0.02,
+                    'spike_max_length_ratio': 0.1,
+                    'spike_gradient_threshold': 0.4,
+                    'spike_prominence_ratio': 0.5,
+                    'edge_tolerance': 2,
+
+                    // 垂直边框处理参数
+                    'vertical_detection_range': {
+                        'top_ratio': 0.3,
+                        'bottom_ratio': 0.3,
+                    },
+
+                    'vertical_cut_limits': {
+                        'top_max_ratio': 0.2,
+                        'bottom_max_ratio': 0.2,
+                    },
+
+                    'debug_verbose': true,
+                }
+            };
+
+            // 深拷贝默认参数作为自定义参数的基础
+            const customParams = JSON.parse(JSON.stringify(defaultParams));
+
+            // 收集阶段开关状态
+            const noiseToggle = document.getElementById('toggle-noise');
+            const ccToggle = document.getElementById('toggle-cc');
+            const projToggle = document.getElementById('toggle-projection');
+            const borderToggle = document.getElementById('toggle-border');
+
+            console.log('[Apply Custom Params] 查找开关状态:', {
+                'noise-toggle-exists': !!noiseToggle,
+                'cc-toggle-exists': !!ccToggle,
+                'projection-toggle-exists': !!projToggle,
+                'border-toggle-exists': !!borderToggle
+            });
+
+            if (noiseToggle) {
+                customParams.noise_removal.enabled = noiseToggle.checked;
+                console.log('[Apply Custom Params] Noise Removal 开关状态:', noiseToggle.checked);
+            }
+            if (ccToggle) {
+                customParams.cc_filter.enabled = ccToggle.checked;
+                console.log('[Apply Custom Params] CC Filtering 开关状态:', ccToggle.checked);
+            }
+            if (projToggle) {
+                customParams.projection_trim.enabled = projToggle.checked;
+                console.log('[Apply Custom Params] Projection Trimming 开关状态:', projToggle.checked);
+            }
+            if (borderToggle) {
+                customParams.border_removal.enabled = borderToggle.checked;
+                console.log('[Apply Custom Params] Border Removal 开关状态:', borderToggle.checked);
+            }
+
+            console.log('[Apply Custom Params] 阶段开关状态:', {
+                'noise_removal': customParams.noise_removal.enabled,
+                'cc_filter': customParams.cc_filter.enabled,
+                'projection_trim': customParams.projection_trim.enabled,
+                'border_removal': customParams.border_removal.enabled
+            });
+
+            // 处理滑块参数 - 只更新界面有滑块的参数，其他保持默认值
+            document.querySelectorAll('.param-slider').forEach(slider => {
+                const name = slider.id.replace('param-', '');
+                const value = parseFloat(slider.value);
+
+                // 解析嵌套路径，如 "noise_removal.dark_stroke_threshold" 或 "border_removal.vertical_detection_range.top_ratio"
+                const parts = name.split('.');
+                if (parts.length >= 2) {
+                    const category = parts[0];
+                    const paramPath = parts.slice(1);
+
+                    if (customParams[category]) {
+                        let current = customParams[category];
+
+                        // 处理嵌套路径 - 因为默认参数模板已经包含了完整的嵌套结构，所以直接导航到目标位置
+                        for (let i = 0; i < paramPath.length - 1; i++) {
+                            if (current[paramPath[i]] !== undefined) {
+                                current = current[paramPath[i]];
+                            } else {
+                                console.warn(`参数路径 ${name} 在默认模板中不存在: ${paramPath[i]}`);
+                                break;
+                            }
+                        }
+
+                        // 更新最终的参数值
+                        const finalKey = paramPath[paramPath.length - 1];
+                        if (current[finalKey] !== undefined) {
+                            current[finalKey] = value;
+                        } else {
+                            console.warn(`参数 ${name} 在默认模板中不存在: ${finalKey}`);
+                        }
+                    }
+                }
+            });
+
+            // 处理布尔参数
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                const name = checkbox.id.replace('param-', '');
+                const value = checkbox.checked;
+
+                const parts = name.split('.');
+                if (parts.length >= 2) {
+                    const category = parts[0];
+                    const paramPath = parts.slice(1);
+
+                    if (customParams[category]) {
+                        let current = customParams[category];
+
+                        // 处理嵌套路径 - 因为默认参数模板已经包含了完整的嵌套结构，所以直接导航到目标位置
+                        for (let i = 0; i < paramPath.length - 1; i++) {
+                            if (current[paramPath[i]] !== undefined) {
+                                current = current[paramPath[i]];
+                            } else {
+                                console.warn(`布尔参数路径 ${name} 在默认模板中不存在: ${paramPath[i]}`);
+                                break;
+                            }
+                        }
+
+                        // 更新最终的参数值
+                        const finalKey = paramPath[paramPath.length - 1];
+                        if (current[finalKey] !== undefined) {
+                            current[finalKey] = value;
+                        } else {
+                            console.warn(`布尔参数 ${name} 在默认模板中不存在: ${finalKey}`);
+                        }
+                    }
+                }
+            });
+
+            // 重新请求切割
+            const instanceId = currentInstances[currentInstanceIndex];
+            document.getElementById('instance-info').innerHTML = '<span class="status-badge loading">重新切割中...</span>';
+
+            try {
+                console.log('[Apply Custom Params] 请求切割实例:', { book: currentBook, char: currentChar, instance_id: instanceId, custom_params: customParams });
+                const response = await fetch(`${API_BASE}/segment_instances`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        book: currentBook,
+                        char: currentChar,
+                        instance_id: instanceId,
+                        custom_params: customParams
+                    })
+                });
+
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.error);
+                }
+
+                segmentationData[instanceId] = data;
+
+                if (data.metadata && data.metadata.segmented_bbox) {
+                    currentSliderBbox = { ...data.metadata.segmented_bbox };
+                }
+                if (data.metadata && data.metadata.original_bbox) {
+                    currentOriginalBbox = { ...data.metadata.original_bbox };
+                }
+                if (data.metadata && data.metadata.roi_shape) {
+                    roiShape = {
+                        width: data.metadata.roi_shape[1],
+                        height: data.metadata.roi_shape[0]
+                    };
+                }
+
+                if (data.roi_image) {
+                    document.getElementById('roi-container').innerHTML = `<img src="${data.roi_image}" alt="原始ROI">`;
+                }
+
+                processedRoiImage = data.processed_roi || null;
+                currentSegmentedImage = processedRoiImage || data.segmented_image;
+
+                document.getElementById('segmented-container').innerHTML = `<img src="${data.segmented_image}" alt="切割结果">`;
+                document.getElementById('debug-container').innerHTML = `<img src="${data.debug_image}" alt="调试图">`;
+
+                const currentScale = document.getElementById('image-size-slider').value;
+                updateImageSize(currentScale);
+                document.getElementById('instance-info').innerHTML = '<span class="status-badge success">切割完成</span>';
+
+                const manualPanel = document.getElementById('manual-adjust-panel');
+                if (manualPanel && manualPanel.style.display !== 'none') {
+                    initializeBboxSlider();
+                    updateBboxPreview();
+                }
+
+            } catch (error) {
+                console.error('重新切割失败:', error);
+                document.getElementById('instance-info').innerHTML = `<span class="status-badge error">切割失败: ${error.message}</span>`;
+            }
+        }
+
+        async function resetParams() {
+            // 保存当前滚动位置
+            const sidebar = document.querySelector('.sidebar-content');
+            const scrollTop = sidebar ? sidebar.scrollTop : 0;
+
+            // 清空并重新初始化参数面板
+            const content = document.getElementById('params-content');
+            content.innerHTML = ''; // 清空所有内容，这样 initParamsPanel 才会重新生成
+
+            // 重新生成参数面板，这会重置所有滑块和开关到默认值
+            initParamsPanel();
+
+            // 恢复滚动位置
+            if (sidebar) {
+                // 使用 requestAnimationFrame 确保 DOM 更新完成
+                requestAnimationFrame(() => {
+                    sidebar.scrollTop = scrollTop;
+                });
+            }
+
+            // 重新请求切割，不传 custom_params，让后端使用完整的默认配置
+            const instanceId = currentInstances[currentInstanceIndex];
+            document.getElementById('instance-info').innerHTML = '<span class="status-badge loading">重新切割中...</span>';
+
+            try {
+                console.log('[Reset Params] 请求切割实例:', { book: currentBook, char: currentChar, instance_id: instanceId, custom_params: null });
+                const response = await fetch(`${API_BASE}/segment_instances`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        book: currentBook,
+                        char: currentChar,
+                        instance_id: instanceId
+                        // 注意：不传 custom_params，让后端使用完整的默认配置
+                    })
+                });
+
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.error);
+                }
+
+                // 更新显示
+                segmentationData[instanceId] = data;
+                document.getElementById('segmented-container').innerHTML = `<img src="${data.segmented_image}" alt="切割结果">`;
+                document.getElementById('debug-container').innerHTML = `<img src="${data.debug_image}" alt="调试图">`;
+
+                // 重新应用当前的图片缩放设置
+                const currentScale = document.getElementById('image-size-slider').value;
+                updateImageSize(currentScale);
+                document.getElementById('instance-info').innerHTML = '<span class="status-badge success">切割完成</span>';
+
+            } catch (error) {
+                console.error('重新切割失败:', error);
+                document.getElementById('instance-info').innerHTML = `<span class="status-badge error">切割失败: ${error.message}</span>`;
+            }
+        }
+
+        async function closeModal() {
+            document.getElementById('review-modal').classList.remove('active');
+            // 解锁 body 滚动
+            document.body.style.overflow = '';
+            // 关闭所有面板
+            document.getElementById('bbox-slider-panel').classList.remove('active');
+            const manualPanel = document.getElementById('manual-adjust-panel');
+            if (manualPanel) manualPanel.style.display = 'none';
+            deactivateBrushCanvas();
+
+            const imagesGrid = document.querySelector('.images-grid');
+            if (imagesGrid) imagesGrid.style.display = '';
+
+            // 重置图片大小
+            ['roi-container', 'segmented-container', 'debug-container'].forEach(id => {
+                const container = document.getElementById(id);
+                if (container) {
+                    container.style.transform = 'scale(1)';
+                    container.classList.remove('scaled');
+                }
+            });
+
+            // 重置图片大小控制
+            document.getElementById('image-size-slider').value = 200;
+            document.getElementById('image-size-value').textContent = '200';
+
+            // 重置 bbox 预览图片大小
+            [document.getElementById('bbox-base-canvas'), document.getElementById('bbox-overlay-canvas'), document.getElementById('brush-canvas')].forEach(canvasEl => {
+                if (canvasEl) {
+                    canvasEl.style.transform = 'scale(1)';
+                }
+            });
+
+            // 保存当前字符，因为 loadBook 会重新生成 DOM
+            const savedChar = currentChar;
+
+            // 刷新书籍列表以更新统计
+            if (currentBook) {
+                await loadBook(currentBook);
+
+                // loadBook 完成后，重新找到当前字符元素并滚动
+                if (savedChar) {
+                    // 使用 requestAnimationFrame 确保 DOM 已更新
+                    requestAnimationFrame(() => {
+                        // 查找包含当前字符的元素
+                        const charItems = document.querySelectorAll('.char-item');
+                        for (const item of charItems) {
+                            const charText = item.querySelector('.char-text');
+                            if (charText && charText.textContent === savedChar) {
+                                item.scrollIntoView({ behavior: 'auto', block: 'center' });
+                                break;
+                            }
+                        }
+                    });
+                }
+            }
+
+            if (pendingAutoChar) {
+                requestAnimationFrame(() => {
+                    openCharByName(pendingAutoChar);
+                    pendingAutoChar = null;
+                });
+            }
+        }
+
+        // ==================== 手动调整功能（整合 Bbox + 画笔）====================
+
+        function toggleManualAdjustPanel() {
+            const panel = document.getElementById('manual-adjust-panel');
+            const bboxSliderPanel = document.getElementById('bbox-slider-panel');
+
+            if (panel.style.display === 'none') {
+              // 打开手动调整面板
+              panel.style.display = 'block';
+
+                  // 自动打开 Bbox Slider（用于显示预览图）
+                  bboxSliderPanel.classList.add('active');
+                  initializeBboxSlider();
+
+                  // 初始化画笔（在预览画布上）
+                  setTimeout(() => initBrushCanvasOnBbox(), 100);
+
+                  // 进入手动调整时，隐藏原/切割/调试三图，只显示正在处理的画布
+                  const imagesGrid = document.querySelector('.images-grid');
+                  if (imagesGrid) imagesGrid.style.display = 'none';
+              } else {
+                // 关闭手动调整面板
+                  panel.style.display = 'none';
+                  bboxSliderPanel.classList.remove('active');
+                  deactivateBrushCanvas();
+
+                  // 退出手动调整时，恢复三图显示
+                  const imagesGrid = document.querySelector('.images-grid');
+                  if (imagesGrid) imagesGrid.style.display = '';
+              }
+        }
+
+        function cancelManualAdjustment() {
+            cancelBboxSliderAdjustment(true);
+            document.getElementById('manual-adjust-panel').style.display = 'none';
+            document.getElementById('bbox-slider-panel').classList.remove('active');
+            deactivateBrushCanvas();
+            const imagesGrid = document.querySelector('.images-grid');
+            if (imagesGrid) imagesGrid.style.display = '';
+        }
+
+        function initBrushCanvasOnBbox() {
+            const baseCanvas = document.getElementById('bbox-base-canvas');
+            brushCanvas = document.getElementById('brush-canvas');
+
+            if (!baseCanvas || !brushCanvas) {
+                console.error('[画笔] 找不到预览画布');
+                return;
+            }
+
+            brushCanvas.width = baseCanvas.width;
+            brushCanvas.height = baseCanvas.height;
+            brushCanvas.style.width = baseCanvas.style.width || `${baseCanvas.width}px`;
+            brushCanvas.style.height = baseCanvas.style.height || `${baseCanvas.height}px`;
+
+            // 使用 willReadFrequently 提升 getImageData 的读回性能
+            brushCtx = brushCanvas.getContext('2d', { willReadFrequently: true });
+            // 确保可以接收指针事件
+            brushCanvas.style.pointerEvents = 'auto';
+            brushCanvas.style.touchAction = 'none';
+            // 轻微底色便于确认画布层可点（极淡，不影响观感）
+            brushCanvas.style.backgroundColor = 'rgba(0,0,0,0.01)';
+            if (brushCtx) {
+                brushCtx.clearRect(0, 0, brushCanvas.width, brushCanvas.height);
+            }
+
+            // 保存当前显示的图片（用于后续合并）
+            if (processedRoiImage) {
+                currentSegmentedImage = processedRoiImage;
+            } else {
+                const segmentedContainer = document.getElementById('segmented-container');
+                const segmentedImg = segmentedContainer ? segmentedContainer.querySelector('img') : null;
+                if (segmentedImg) {
+                    currentSegmentedImage = segmentedImg.src;
+                }
+            }
+
+            // 解除旧的事件监听器（如果有）
+            brushCanvas.removeEventListener('mousedown', startDrawing);
+            brushCanvas.removeEventListener('mousemove', draw);
+            brushCanvas.removeEventListener('mouseup', stopDrawing);
+            brushCanvas.removeEventListener('mouseout', stopDrawing);
+
+            // 绑定新的事件（鼠标 + 触摸 + 指针）
+            brushCanvas.addEventListener('mousedown', startDrawing, { passive: false });
+            brushCanvas.addEventListener('mousemove', draw, { passive: false });
+            brushCanvas.addEventListener('mouseup', stopDrawing, { passive: false });
+            brushCanvas.addEventListener('mouseleave', stopDrawing, { passive: false });
+            // pointer 事件（兼容性更好）
+            brushCanvas.addEventListener('pointerdown', startDrawing, { passive: false });
+            brushCanvas.addEventListener('pointermove', draw, { passive: false });
+            brushCanvas.addEventListener('pointerup', stopDrawing, { passive: false });
+            brushCanvas.addEventListener('pointerleave', stopDrawing, { passive: false });
+            
+            brushCanvas.addEventListener('touchstart', (e) => {
+                if (!brushCanvas) return;
+                const t = e.touches[0];
+                if (!t) return;
+                const rect = brushCanvas.getBoundingClientRect();
+                const scaleX = brushCanvas.width / rect.width;
+                const scaleY = brushCanvas.height / rect.height;
+                const x = (t.clientX - rect.left) * scaleX;
+                const y = (t.clientY - rect.top) * scaleY;
+                isDrawing = true;
+                brushCtx.fillStyle = brushColor;
+                brushCtx.beginPath();
+                brushCtx.arc(x, y, Math.max(1, brushSize / 2), 0, Math.PI * 2);
+                brushCtx.fill();
+                brushCtx.beginPath();
+                brushCtx.moveTo(x, y);
+                e.preventDefault();
+            }, { passive: false });
+            brushCanvas.addEventListener('touchmove', (e) => {
+                if (!isDrawing || !brushCanvas) return;
+                const t = e.touches[0];
+                if (!t) return;
+                const rect = brushCanvas.getBoundingClientRect();
+                const scaleX = brushCanvas.width / rect.width;
+                const scaleY = brushCanvas.height / rect.height;
+                const x = (t.clientX - rect.left) * scaleX;
+                const y = (t.clientY - rect.top) * scaleY;
+                brushCtx.strokeStyle = brushColor;
+                brushCtx.lineWidth = Math.max(1, brushSize);
+                brushCtx.lineCap = 'round';
+                brushCtx.lineJoin = 'round';
+                brushCtx.lineTo(x, y);
+                brushCtx.stroke();
+                e.preventDefault();
+            }, { passive: false });
+            brushCanvas.addEventListener('touchend', (e) => { stopDrawing(); e.preventDefault(); }, { passive: false });
+
+            // 改变光标样式
+            brushCanvas.style.cursor = 'crosshair';
+
+            // 初始化历史记录
+            brushHistory = [];
+            brushHistoryStep = -1;
+            saveHistory();
+
+            
+        }
+
+        function deactivateBrushCanvas() {
+            // 移除事件监听器，但不删除画布
+            if (brushCanvas) {
+                brushCanvas.removeEventListener('mousedown', startDrawing);
+                brushCanvas.removeEventListener('mousemove', draw);
+                brushCanvas.removeEventListener('mouseup', stopDrawing);
+                brushCanvas.removeEventListener('mouseout', stopDrawing);
+                brushCanvas.style.cursor = '';
+                brushCanvas = null;
+                brushCtx = null;
+            }
+            brushHistory = [];
+            brushHistoryStep = -1;
+        }
+
+        function startDrawing(e) {
+            if (!brushCanvas || !brushCtx) return;
+            isDrawing = true;
+            const rect = brushCanvas.getBoundingClientRect();
+            const scaleX = brushCanvas.width / rect.width;
+            const scaleY = brushCanvas.height / rect.height;
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+
+            // 先落一个点，避免只点击不移动时无反馈
+            brushCtx.fillStyle = brushColor;
+            brushCtx.beginPath();
+            brushCtx.arc(x, y, Math.max(1, brushSize / 2), 0, Math.PI * 2);
+            brushCtx.fill();
+
+            // 准备连续绘制
+            brushCtx.beginPath();
+            brushCtx.moveTo(x, y);
+            
+        }
+
+        function draw(e) {
+            if (!isDrawing || !brushCanvas || !brushCtx) return;
+
+            const rect = brushCanvas.getBoundingClientRect();
+            const scaleX = brushCanvas.width / rect.width;
+            const scaleY = brushCanvas.height / rect.height;
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+
+            brushCtx.strokeStyle = brushColor;
+            brushCtx.lineWidth = Math.max(1, brushSize);
+            brushCtx.lineCap = 'round';
+            brushCtx.lineJoin = 'round';
+            brushCtx.lineTo(x, y);
+            brushCtx.stroke();
+            
+        }
+
+        function stopDrawing() {
+            if (!brushCanvas || !brushCtx) return;
+            if (isDrawing) {
+                isDrawing = false;
+                try { saveHistory(); } catch (e) {}
+            }
+        }
+
+        function setBrushColor(color) {
+            brushColor = color;
+
+            // 更新按钮状态
+            document.getElementById('brush-black').classList.toggle('active', color === 'black');
+            document.getElementById('brush-white').classList.toggle('active', color === 'white');
+        }
+
+          function setBrushSize(size) {
+              brushSize = parseInt(size, 10) || 1;
+              const v = document.getElementById('brush-size-value');
+              if (v) v.textContent = brushSize;
+          }
+
+        function saveHistory() {
+            // 删除当前步骤之后的历史
+            brushHistory = brushHistory.slice(0, brushHistoryStep + 1);
+
+            // 保存当前 Canvas 状态
+            const imageData = brushCtx.getImageData(0, 0, brushCanvas.width, brushCanvas.height);
+            brushHistory.push(imageData);
+            brushHistoryStep++;
+
+            // 限制历史记录数量（最多 20 步）
+            if (brushHistory.length > 20) {
+                brushHistory.shift();
+                brushHistoryStep--;
+            }
+        }
+
+        function undoBrush() {
+            if (brushHistoryStep > 0) {
+                brushHistoryStep--;
+                const imageData = brushHistory[brushHistoryStep];
+                brushCtx.putImageData(imageData, 0, 0);
+            }
+        }
+
+        function redoBrush() {
+            if (brushHistoryStep < brushHistory.length - 1) {
+                brushHistoryStep++;
+                const imageData = brushHistory[brushHistoryStep];
+                brushCtx.putImageData(imageData, 0, 0);
+            }
+        }
+
+        function clearBrush() {
+            if (!confirm('确认清空所有画笔编辑？')) {
+                return;
+            }
+
+            brushCtx.clearRect(0, 0, brushCanvas.width, brushCanvas.height);
+            saveHistory();
+        }
+
+        async function saveManualAdjustment() {
+            const baseCanvas = document.getElementById('bbox-base-canvas');
+            const brushLayer = document.getElementById('brush-canvas');
+
+            if (!baseCanvas) {
+                alert('没有可保存的调整');
+                return;
+            }
+
+            if (!confirm('确认保存手动调整？\n这将保存 Bbox 调整和画笔修改。')) {
+                return;
+            }
+
+            try {
+                const mergeCanvas = document.createElement('canvas');
+                mergeCanvas.width = baseCanvas.width;
+                mergeCanvas.height = baseCanvas.height;
+                const mergeCtx = mergeCanvas.getContext('2d');
+
+                mergeCtx.drawImage(baseCanvas, 0, 0);
+                if (brushLayer) {
+                    mergeCtx.drawImage(brushLayer, 0, 0);
+                }
+
+                const adjustedImage = mergeCanvas.toDataURL('image/png');
+
+                // 保存到服务器
+                const instanceId = currentInstances[currentInstanceIndex];
+                const response = await fetch(`${API_BASE}/save_segmentation`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        book: currentBook,
+                        char: currentChar,
+                        instance_id: instanceId,
+                        status: 'confirmed',
+                        method: 'manual_adjust',
+                        segmented_image_base64: adjustedImage
+                    })
+                });
+
+                const result = await response.json();
+                if (!result.success) {
+                    throw new Error(result.error);
+                }
+
+                // 更新状态
+                if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
+                reviewStatus[currentChar][instanceId] = { status: 'confirmed', method: 'manual_adjust' };
+
+                const segmentationEntry = segmentationData[instanceId] || {};
+                segmentationEntry.segmented_image = adjustedImage;
+                segmentationEntry.processed_roi = adjustedImage;
+                segmentationEntry.debug_image = adjustedImage;
+                segmentationEntry.metadata = segmentationEntry.metadata || {};
+                segmentationEntry.metadata.segmented_bbox = {
+                    x: 0,
+                    y: 0,
+                    width: baseCanvas.width,
+                    height: baseCanvas.height
+                };
+                segmentationEntry.metadata.roi_shape = [baseCanvas.height, baseCanvas.width, 3];
+                segmentationData[instanceId] = segmentationEntry;
+
+                processedRoiImage = adjustedImage;
+                currentSegmentedImage = adjustedImage;
+                currentSliderBbox = { x: 0, y: 0, width: baseCanvas.width, height: baseCanvas.height };
+                roiShape = { width: baseCanvas.width, height: baseCanvas.height };
+
+                document.getElementById('roi-container').innerHTML = `<img src="${adjustedImage}" alt="原始ROI">`;
+                document.getElementById('segmented-container').innerHTML = `<img src="${adjustedImage}" alt="切割结果">`;
+                document.getElementById('debug-container').innerHTML = `<img src="${adjustedImage}" alt="调试图">`;
+
+                updateBboxPreview();
+
+                alert('保存成功！');
+
+                // 关闭手动调整面板
+                document.getElementById('manual-adjust-panel').style.display = 'none';
+                document.getElementById('bbox-slider-panel').classList.remove('active');
+                deactivateBrushCanvas();
+                const imagesGrid = document.querySelector('.images-grid');
+                if (imagesGrid) imagesGrid.style.display = '';
+
+                // 刷新显示
+                await loadInstance();
+
+            } catch (error) {
+                console.error('保存手动调整失败:', error);
+                alert('保存失败: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

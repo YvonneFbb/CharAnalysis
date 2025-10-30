@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古籍字形审查系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: #fafafa;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border: 1px solid #e0e0e0;
+            overflow: hidden;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #111;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .header-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn-header {
+            padding: 8px 20px;
+            background: white;
+            color: #333;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-header:hover {
+            background: #f5f5f5;
+            border-color: #999;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .book-selector {
+            margin-bottom: 30px;
+        }
+
+        .book-selector label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .book-selector select {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .book-selector select:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        .book-info {
+            background: #fafafa;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .book-info.active {
+            display: block;
+        }
+
+        .book-info .stat {
+            display: inline-block;
+            margin-right: 30px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .book-info .stat strong {
+            color: #111;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .methods-container {
+            display: none;
+        }
+
+        .methods-container.active {
+            display: block;
+        }
+
+        .method-section {
+            margin-bottom: 24px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .method-header {
+            background: #fafafa;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .method-header:hover {
+            background: #f0f0f0;
+        }
+
+        .method-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: #111;
+        }
+
+        .method-meta {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .method-chars {
+            padding: 20px;
+            display: none;
+        }
+
+        .method-section.expanded .method-chars {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 12px;
+        }
+
+        .char-item {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 16px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .char-item:hover {
+            border-color: #333;
+        }
+
+        .char-item.reviewed {
+            background: #f0fdf4;
+            border-color: #22c55e;
+        }
+
+        .reviewed-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            font-size: 10px;
+            color: #22c55e;
+        }
+
+        .char-text {
+            font-size: 28px;
+            font-weight: 400;
+            margin-bottom: 6px;
+            color: #111;
+        }
+
+        .char-count {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 1400px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ddd;
+        }
+
+        .modal-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 18px;
+            font-weight: 500;
+            color: #111;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 30px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .instances-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 16px;
+        }
+
+        .instance-item {
+            border: 2px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .instance-item:hover {
+            border-color: #333;
+        }
+
+        .instance-item.selected {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        .instance-item img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 8px;
+        }
+
+        .instance-loading {
+            width: 80px;
+            height: 80px;
+            background: #fafafa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 11px;
+            color: #999;
+        }
+
+        .instance-info {
+            font-size: 11px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .instance-status {
+            font-size: 12px;
+            font-weight: 500;
+            color: #999;
+        }
+
+        .instance-item.selected .instance-status {
+            color: #22c55e;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fafafa;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .pagination button {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .pagination button:not(:disabled):hover {
+            background: #f5f5f5;
+            border-color: #999;
+        }
+
+        .page-info {
+            font-size: 13px;
+            color: #666;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .actions button {
+            padding: 10px 24px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.2s;
+        }
+
+        .btn-select-all {
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-select-all:hover {
+            background: #e5e5e5;
+        }
+
+        .btn-save {
+            background: #111;
+            color: white;
+            border: 1px solid #111;
+        }
+
+        .btn-save:hover {
+            background: #333;
+        }
+
+        .modal-loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>古籍字形审查系统</h1>
+            <p>基于《大字结构八十四法》标准字集的字形审查工具</p>
+            <div class="header-actions">
+                <button class="btn-header" onclick="exportResults()">💾 导出审查结果</button>
+                <button class="btn-header" onclick="importResults()">📁 导入审查结果</button>
+                <input type="file" id="import-file" style="display:none" accept=".json" onchange="handleImport(event)">
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- 书籍选择器 -->
+            <div class="book-selector">
+                <label for="book-select">选择书籍：</label>
+                <select id="book-select">
+                    <option value="">-- 加载中... --</option>
+                </select>
+            </div>
+
+            <!-- 书籍信息 -->
+            <div class="book-info" id="book-info">
+                <span class="stat">标准字：<strong id="stat-chars">0</strong> 个</span>
+                <span class="stat">总实例：<strong id="stat-instances">0</strong> 个</span>
+                <span class="stat">已审查：<strong id="stat-reviewed">0</strong> 个字符</span>
+                <span class="stat">进度：<strong id="stat-progress">0%</strong></span>
+            </div>
+
+            <!-- 分类方法列表 -->
+            <div class="methods-container" id="methods-container">
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 审查模态窗口 -->
+    <div class="modal" id="review-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">审查字符</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="loading" id="modal-loading">加载中...</div>
+                <div class="instances-grid" id="instances-grid" style="display:none;"></div>
+            </div>
+            <div class="modal-footer">
+                <div class="pagination" id="pagination">
+                    <button id="prev-page" onclick="loadPage(currentPage - 1)">上一页</button>
+                    <span id="page-info">第 1/1 页</span>
+                    <button id="next-page" onclick="loadPage(currentPage + 1)">下一页</button>
+                </div>
+                <div class="actions">
+                    <button class="btn-select-all" onclick="selectAll()">全选</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = `${window.location.origin}/api`;
+        let currentBook = null;
+        let currentChar = null;
+        let currentPage = 1;
+        let totalPages = 1;
+        let instancesData = [];
+        let reviewResults = {};  // { bookName: { char: { index: true/false } } }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', async function() {
+            loadBooks();
+            loadReviewResults();
+
+            // 关键修复：先上传本地数据（可能有未同步的），再从服务器加载其他人的数据
+            console.log('正在上传本地数据到服务器...');
+            await saveToServer();
+
+            // 从服务器加载并合并审查结果
+            console.log('正在从服务器同步其他书籍的数据...');
+            await loadFromServer();
+
+            // 重新加载书籍以显示最新的审查进度
+            if (currentBook) {
+                loadBook(currentBook);
+            }
+
+            // 定期自动保存到服务器（每 30 秒）
+            setInterval(() => {
+                saveToServer();
+            }, 30000);
+
+            // 页面关闭前保存到服务器
+            window.addEventListener('beforeunload', function(e) {
+                // 检查数据大小
+                const jsonStr = JSON.stringify(reviewResults);
+                const dataSize = new Blob([jsonStr]).size;
+
+                // sendBeacon 限制约 64KB，如果数据太大则使用同步 fetch
+                if (dataSize < 60000) {
+                    // 小数据：使用 sendBeacon（更可靠）
+                    const blob = new Blob([jsonStr], { type: 'application/json' });
+                    navigator.sendBeacon(`${API_BASE}/save_review`, blob);
+                } else {
+                    // 大数据：使用同步 XMLHttpRequest（beforeunload 时 fetch 不可靠）
+                    try {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('POST', `${API_BASE}/save_review`, false); // false = 同步
+                        xhr.setRequestHeader('Content-Type', 'application/json');
+                        xhr.send(jsonStr);
+                        console.log('✓ 页面关闭前已保存大数据 (XHR同步)');
+                    } catch (error) {
+                        console.error('✗ 页面关闭前保存失败', error);
+                    }
+                }
+            });
+
+            // 添加键盘快捷键
+            document.addEventListener('keydown', function(e) {
+                const modal = document.getElementById('review-modal');
+                const isModalOpen = modal.classList.contains('active');
+
+                if (!isModalOpen) return;
+
+                // ESC 键：关闭模态框并自动保存
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    closeModal();
+                }
+
+                // 左方向键：上一页
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    if (currentPage > 1) {
+                        loadPage(currentPage - 1);
+                    }
+                }
+
+                // 右方向键：下一页
+                if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    if (currentPage < totalPages) {
+                        loadPage(currentPage + 1);
+                    }
+                }
+            });
+        });
+
+        // 加载书籍列表
+        async function loadBooks() {
+            try {
+                const response = await fetch(`${API_BASE}/books`);
+                const data = await response.json();
+
+                const select = document.getElementById('book-select');
+                select.innerHTML = '<option value="">-- 请选择一本书 --</option>';
+
+                data.books.forEach(book => {
+                    const option = document.createElement('option');
+                    option.value = book.name;
+                    option.textContent = `${book.name} (${book.total_chars}字, ${book.total_instances}实例)`;
+                    select.appendChild(option);
+                });
+
+                select.addEventListener('change', function() {
+                    loadBook(this.value);
+                });
+            } catch (error) {
+                console.error('加载书籍列表失败:', error);
+                alert('无法连接到服务器，请确保后端服务已启动');
+            }
+        }
+
+        // 加载书籍字符
+        async function loadBook(bookName) {
+            if (!bookName) {
+                document.getElementById('book-info').classList.remove('active');
+                document.getElementById('methods-container').classList.remove('active');
+                return;
+            }
+
+            // 关键修复：切换书籍前，先上传当前书籍的数据
+            if (currentBook && currentBook !== bookName) {
+                console.log(`切换书籍：从 "${currentBook}" 到 "${bookName}"，先上传当前数据...`);
+                await saveToServer();
+            }
+
+            currentBook = bookName;
+
+            // 然后从服务器同步新书籍的最新数据
+            await syncBookFromServer(bookName);
+
+            // 刷新显示
+            await refreshBookDisplay();
+        }
+
+        // 刷新书籍显示（不从服务器同步）
+        async function refreshBookDisplay() {
+            if (!currentBook) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/book/${encodeURIComponent(currentBook)}`);
+                const data = await response.json();
+
+                // 更新统计信息
+                document.getElementById('stat-chars').textContent = data.total_chars;
+                document.getElementById('stat-instances').textContent = data.total_instances;
+                document.getElementById('book-info').classList.add('active');
+
+                // 更新审查进度
+                updateReviewProgress();
+
+                // 渲染分类方法
+                renderMethods(data.methods);
+                document.getElementById('methods-container').classList.add('active');
+            } catch (error) {
+                console.error('刷新书籍显示失败:', error);
+            }
+        }
+
+        // 渲染分类方法
+        function renderMethods(methods) {
+            // 保存当前的展开状态
+            const container = document.getElementById('methods-container');
+            const expandedMethods = new Set();
+
+            if (container.querySelectorAll('.method-section').length > 0) {
+                container.querySelectorAll('.method-section.expanded').forEach(section => {
+                    const methodTitle = section.querySelector('.method-title').textContent;
+                    expandedMethods.add(methodTitle);
+                });
+            }
+
+            container.innerHTML = '';
+
+            methods.forEach(method => {
+                const section = document.createElement('div');
+                section.className = 'method-section';
+
+                // 检查这个方法是否之前是展开的
+                const methodTitle = `${method.id}. ${method.name}`;
+                if (expandedMethods.has(methodTitle)) {
+                    section.classList.add('expanded');
+                }
+
+                section.innerHTML = `
+                    <div class="method-header" onclick="toggleMethod(this)">
+                        <div>
+                            <span class="method-title">${method.id}. ${method.name}</span>
+                            <div class="method-meta">${method.description || ''}</div>
+                        </div>
+                        <div class="method-meta">${method.chars.length} 个字符</div>
+                    </div>
+                    <div class="method-chars">
+                        ${method.chars.map(char => {
+                            const reviewed = isCharReviewed(char.char);
+                            return `
+                                <div class="char-item ${reviewed ? 'reviewed' : ''}" onclick="openReviewModal('${char.char}', ${char.count})">
+                                    <div class="char-text">${char.char}</div>
+                                    <div class="char-count">${char.count} 个</div>
+                                    ${reviewed ? '<div class="reviewed-badge">✓ 已审查</div>' : ''}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+
+            // 只在第一次加载时展开所有（没有任何历史状态）
+            if (expandedMethods.size === 0 && methods.length > 0) {
+                container.querySelectorAll('.method-section').forEach(section => {
+                    section.classList.add('expanded');
+                });
+            }
+        }
+
+        // 切换分类方法展开/折叠
+        function toggleMethod(header) {
+            const section = header.parentElement;
+            section.classList.toggle('expanded');
+        }
+
+        // 打开审查模态窗口
+        function openReviewModal(char, totalCount) {
+            currentChar = char;
+            currentPage = 1;
+
+            document.getElementById('modal-title').textContent = `审查字符：${char} (${totalCount} 个实例)`;
+            document.getElementById('review-modal').classList.add('active');
+
+            loadPage(1);
+        }
+
+        // 加载指定页的实例
+        async function loadPage(page) {
+            if (page < 1 || (totalPages > 0 && page > totalPages)) return;
+
+            // 切换页面前，自动保存当前页的审查结果
+            if (currentChar && document.querySelectorAll('.instance-item').length > 0) {
+                saveReview();
+            }
+
+            currentPage = page;
+            document.getElementById('modal-loading').style.display = 'block';
+            document.getElementById('instances-grid').style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_BASE}/instances?book=${encodeURIComponent(currentBook)}&char=${encodeURIComponent(currentChar)}&page=${page}&page_size=20`);
+                const data = await response.json();
+
+                instancesData = data.instances;
+                totalPages = data.total_pages;
+
+                // 更新分页信息
+                document.getElementById('page-info').textContent = `第 ${currentPage}/${totalPages} 页`;
+                document.getElementById('prev-page').disabled = currentPage === 1;
+                document.getElementById('next-page').disabled = currentPage === totalPages;
+
+                // 渲染实例
+                await renderInstances(data.instances);
+
+                document.getElementById('modal-loading').style.display = 'none';
+                document.getElementById('instances-grid').style.display = 'grid';
+            } catch (error) {
+                console.error('加载实例失败:', error);
+                alert('加载实例失败');
+            }
+        }
+
+        // 渲染实例
+        async function renderInstances(instances) {
+            const grid = document.getElementById('instances-grid');
+            grid.innerHTML = '';
+
+            // 计算全局起始索引
+            const globalStartIndex = (currentPage - 1) * 20;
+
+            for (const [localIndex, instance] of instances.entries()) {
+                const globalIndex = globalStartIndex + localIndex;  // 全局数组索引
+                
+                const item = document.createElement('div');
+                item.className = 'instance-item';
+                item.dataset.arrayIndex = globalIndex;  // 保存全局数组索引
+
+                // 检查已保存的审查状态（使用v2格式）
+                const charInstances = getCharInstances(currentBook, currentChar);
+                if (charInstances[globalIndex] === true) {
+                    item.classList.add('selected');
+                }
+
+                item.innerHTML = `
+                    <div class="instance-loading">加载中...</div>
+                    <div class="instance-info">册${String(instance.volume).padStart(2, '0')} - ${instance.page}</div>
+                    <div class="instance-status">${item.classList.contains('selected') ? '✓ 已选择' : '未选择'}</div>
+                `;
+
+                item.addEventListener('click', function() {
+                    toggleInstance(this);
+                });
+
+                grid.appendChild(item);
+
+                // 异步裁切图片
+                cropImage(globalIndex, item);
+            }
+        }
+
+        // 裁切图片
+        async function cropImage(arrayIndex, itemElement) {
+            try {
+                const response = await fetch(`${API_BASE}/crop`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        book: currentBook,
+                        char: currentChar,
+                        index: arrayIndex,
+                        padding: 5
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const loadingDiv = itemElement.querySelector('.instance-loading');
+                    const img = document.createElement('img');
+                    img.src = data.image;
+                    img.alt = currentChar;
+                    loadingDiv.replaceWith(img);
+                }
+            } catch (error) {
+                console.error('裁切图片失败:', error);
+            }
+        }
+
+        // 切换实例状态（v2: 带时间戳更新）
+        function toggleInstance(item) {
+            if (item.classList.contains('selected')) {
+                item.classList.remove('selected');
+                item.querySelector('.instance-status').textContent = '未选择';
+            } else {
+                item.classList.add('selected');
+                item.querySelector('.instance-status').textContent = '✓ 已选择';
+            }
+
+            // 立即保存到 localStorage（使用新的时间戳更新函数）
+            const arrayIndex = item.dataset.arrayIndex;
+            const selected = item.classList.contains('selected');
+
+            updateCharInstance(currentBook, currentChar, arrayIndex, selected);
+            localStorage.setItem('reviewResults', JSON.stringify(reviewResults));
+        }
+
+        // 全选（v2: 带时间戳更新）
+        function selectAll() {
+            const items = document.querySelectorAll('.instance-item');
+
+            const instances = {};
+            items.forEach(item => {
+                item.classList.add('selected');
+                item.querySelector('.instance-status').textContent = '✓ 已选择';
+
+                // 收集所有实例索引
+                const arrayIndex = item.dataset.arrayIndex;
+                instances[arrayIndex] = true;
+            });
+
+            // 使用 setCharData 一次性更新（带时间戳）
+            setCharData(currentBook, currentChar, instances);
+
+            // 保存到 localStorage
+            localStorage.setItem('reviewResults', JSON.stringify(reviewResults));
+        }
+
+        // 保存审查结果（修复版：不删除未在当前页的数据）
+        function saveReview() {
+            // 关键修复：
+            // 之前的逻辑会删除"未选中"的实例，导致翻页时数据丢失
+            // 新逻辑：只在 toggleInstance() 中修改数据，这里仅负责同步和更新显示
+
+            // 确保 localStorage 是最新的（虽然 toggleInstance 已经保存了）
+            localStorage.setItem('reviewResults', JSON.stringify(reviewResults));
+
+            // 更新进度显示
+            updateReviewProgress();
+
+            // 注意：不能调用 loadBook()！
+            // 因为 loadBook() 会调用 syncBookFromServer()，从服务器覆盖本地数据
+            // 而用户刚选择的数据可能还没上传（30秒间隔），会导致数据丢失
+            // 字符列表的"已审查"标记会在关闭模态框时更新
+        }
+
+        // ============== 数据操作函数 ==============
+
+        // 获取字符的实例数据
+        function getCharInstances(bookName, char) {
+            if (!reviewResults.books || !reviewResults.books[bookName]) {
+                return {};
+            }
+            const charData = reviewResults.books[bookName][char];
+            return charData ? (charData.instances || {}) : {};
+        }
+
+        // 设置字符数据（带时间戳）
+        function setCharData(bookName, char, instances) {
+            if (!reviewResults.books) {
+                reviewResults.books = {};
+            }
+            if (!reviewResults.books[bookName]) {
+                reviewResults.books[bookName] = {};
+            }
+
+            reviewResults.books[bookName][char] = {
+                instances: instances,
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        // 更新单个实例（带时间戳更新）
+        function updateCharInstance(bookName, char, index, selected) {
+            if (!reviewResults.books) {
+                reviewResults.books = {};
+            }
+            if (!reviewResults.books[bookName]) {
+                reviewResults.books[bookName] = {};
+            }
+            if (!reviewResults.books[bookName][char]) {
+                reviewResults.books[bookName][char] = {
+                    instances: {},
+                    timestamp: new Date().toISOString()
+                };
+            }
+
+            // 更新实例
+            if (selected) {
+                reviewResults.books[bookName][char].instances[index] = true;
+            } else {
+                delete reviewResults.books[bookName][char].instances[index];
+            }
+
+            // 更新时间戳
+            reviewResults.books[bookName][char].timestamp = new Date().toISOString();
+        }
+
+        // 验证数据格式（严格校验）
+        function validateDataFormat(data) {
+            // 检查基本结构
+            if (!data || typeof data !== 'object') {
+                return { valid: false, error: '数据不是有效对象' };
+            }
+
+            if (data.version !== 2) {
+                return { valid: false, error: `不支持的数据版本: ${data.version}，期望版本 2` };
+            }
+
+            if (!data.books || typeof data.books !== 'object') {
+                return { valid: false, error: '缺少 books 字段' };
+            }
+
+            // 检查时间戳格式（必须是 UTC 格式）
+            const utcPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+
+            for (const bookName in data.books) {
+                const book = data.books[bookName];
+                for (const char in book) {
+                    const charData = book[char];
+
+                    // 检查字符数据结构
+                    if (!charData || typeof charData !== 'object') {
+                        return { valid: false, error: `无效的字符数据: ${bookName} - ${char}` };
+                    }
+
+                    if (!charData.instances || typeof charData.instances !== 'object') {
+                        return { valid: false, error: `缺少 instances 字段: ${bookName} - ${char}` };
+                    }
+
+                    if (!charData.timestamp) {
+                        return { valid: false, error: `缺少 timestamp 字段: ${bookName} - ${char}` };
+                    }
+
+                    // 严格检查时间戳格式（必须是 UTC 'Z' 格式）
+                    if (!utcPattern.test(charData.timestamp)) {
+                        return {
+                            valid: false,
+                            error: `无效的时间戳格式: ${bookName} - ${char}: ${charData.timestamp}（必须是 UTC 格式，如 "2025-10-27T13:50:12.804Z"）`
+                        };
+                    }
+                }
+            }
+
+            return { valid: true };
+        }
+
+        // 加载审查结果（从 localStorage，严格校验）
+        function loadReviewResults() {
+            const saved = localStorage.getItem('reviewResults');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+
+                    // 严格校验数据格式
+                    const validation = validateDataFormat(data);
+                    if (!validation.valid) {
+                        console.error('❌ localStorage 数据格式错误:', validation.error);
+                        console.warn('⚠️ 清除错误数据，重新初始化');
+                        localStorage.removeItem('reviewResults');
+                        reviewResults = { version: 2, books: {} };
+                        return;
+                    }
+
+                    reviewResults = data;
+                    console.log('✓ 成功加载 localStorage 数据');
+                } catch (e) {
+                    console.error('❌ 加载审查结果失败:', e);
+                    reviewResults = { version: 2, books: {} };
+                }
+            } else {
+                // 初始化为新格式
+                reviewResults = { version: 2, books: {} };
+                console.log('✓ 初始化新数据结构');
+            }
+        }
+
+        // 从服务器加载并合并审查结果
+        async function loadFromServer() {
+            try {
+                console.log('=== 开始从服务器同步数据 ===');
+                const response = await fetch(`${API_BASE}/load_review`);
+                const data = await response.json();
+
+                if (data.success && data.data) {
+                    // 严格校验服务器数据
+                    const validation = validateDataFormat(data.data);
+                    if (!validation.valid) {
+                        console.error('❌ 服务器数据格式错误:', validation.error);
+                        return;
+                    }
+
+                    // 合并服务器结果到本地
+                    mergeResults(data.data);
+                    console.log('✓ 从服务器同步审查结果成功');
+                }
+            } catch (error) {
+                console.error('✗ 从服务器加载审查结果失败', error);
+            }
+        }
+
+        // 合并结果：字符级别时间戳比较
+        function mergeResults(serverResults) {
+            console.log('  >> 开始合并服务器数据到本地');
+
+            // 直接使用 v2 格式（已在 loadFromServer 中校验）
+            const serverData = serverResults.books;
+
+            // 确保本地数据是 v2 格式
+            if (!reviewResults.version) {
+                reviewResults.version = 2;
+            }
+            if (!reviewResults.books) {
+                reviewResults.books = {};
+            }
+
+            // 字符级别合并
+            for (const bookName in serverData) {
+                const serverBook = serverData[bookName];
+
+                // 如果本地没有这本书的数据，直接使用服务器数据
+                if (!reviewResults.books[bookName]) {
+                    reviewResults.books[bookName] = serverBook;
+                    console.log(`新增书籍：${bookName}`);
+                    continue;
+                }
+
+                const localBook = reviewResults.books[bookName];
+
+                // 字符级别比较时间戳
+                for (const char in serverBook) {
+                    const serverCharData = serverBook[char];
+                    const localCharData = localBook[char];
+                    const serverInstanceCount = Object.keys(serverCharData.instances || {}).length;
+
+                    // 如果本地没有这个字符，直接使用服务器数据
+                    if (!localCharData) {
+                        localBook[char] = serverCharData;
+                        console.log(`  ${bookName}: 新增字符 "${char}" (${serverInstanceCount}个实例, 服务器)`);
+                        continue;
+                    }
+
+                    // 比较时间戳（服务器更新则覆盖本地）
+                    const serverTime = new Date(serverCharData.timestamp || 0).getTime();
+                    const localTime = new Date(localCharData.timestamp || 0).getTime();
+                    const localInstanceCount = Object.keys(localCharData.instances || {}).length;
+
+                    if (serverTime > localTime) {
+                        localBook[char] = serverCharData;
+                        console.log(`  ${bookName}: 更新字符 "${char}" (${localInstanceCount}→${serverInstanceCount}个实例, 服务器更新)`);
+                    } else {
+                        console.log(`  ${bookName}: 保留字符 "${char}" (${localInstanceCount}个实例, 本地更新)`);
+                    }
+                }
+
+                // 处理本地有但服务器没有的字符（保留本地数据）
+                for (const char in localBook) {
+                    if (!serverBook[char]) {
+                        console.log(`  ${bookName}: 保留字符 "${char}" (仅本地)`);
+                    }
+                }
+            }
+
+            // 处理本地有但服务器没有的书籍（保留本地数据）
+            for (const bookName in reviewResults.books) {
+                if (!serverData[bookName]) {
+                    console.log(`保留书籍：${bookName} (仅本地)`);
+                }
+            }
+
+            // 保存到 localStorage
+            localStorage.setItem('reviewResults', JSON.stringify(reviewResults));
+        }
+
+        // 从服务器同步指定书籍的数据（字符级别时间戳合并）
+        async function syncBookFromServer(bookName) {
+            try {
+                const response = await fetch(`${API_BASE}/load_review`);
+                const data = await response.json();
+
+                if (!data.success || !data.data) {
+                    console.log(`服务器无数据或请求失败`);
+                    return;
+                }
+
+                // 严格校验服务器数据
+                const validation = validateDataFormat(data.data);
+                if (!validation.valid) {
+                    console.error('❌ 服务器数据格式错误:', validation.error);
+                    return;
+                }
+
+                const serverData = data.data.books;
+
+                if (!serverData[bookName]) {
+                    console.log(`服务器没有书籍 "${bookName}" 的数据`);
+                    return;
+                }
+
+                const serverBook = serverData[bookName];
+
+                // 确保本地数据是 v2 格式
+                if (!reviewResults.version) {
+                    reviewResults.version = 2;
+                }
+                if (!reviewResults.books) {
+                    reviewResults.books = {};
+                }
+
+                // 如果本地没有这本书，直接使用服务器数据
+                if (!reviewResults.books[bookName]) {
+                    reviewResults.books[bookName] = serverBook;
+                    localStorage.setItem('reviewResults', JSON.stringify(reviewResults));
+                    console.log(`已同步书籍 "${bookName}" 的最新数据（新书）`);
+                    return;
+                }
+
+                const localBook = reviewResults.books[bookName];
+
+                // 字符级别比较时间戳
+                for (const char in serverBook) {
+                    const serverCharData = serverBook[char];
+                    const localCharData = localBook[char];
+
+                    // 如果本地没有这个字符，直接使用服务器数据
+                    if (!localCharData) {
+                        localBook[char] = serverCharData;
+                        console.log(`  ${bookName}: 同步字符 "${char}" (服务器)`);
+                        continue;
+                    }
+
+                    // 比较时间戳（服务器更新则覆盖本地）
+                    const serverTime = new Date(serverCharData.timestamp || 0).getTime();
+                    const localTime = new Date(localCharData.timestamp || 0).getTime();
+
+                    if (serverTime > localTime) {
+                        localBook[char] = serverCharData;
+                        console.log(`  ${bookName}: 更新字符 "${char}" (服务器更新)`);
+                    }
+                }
+
+                localStorage.setItem('reviewResults', JSON.stringify(reviewResults));
+                console.log(`已同步书籍 "${bookName}" 的最新数据（字符级别）`);
+
+            } catch (error) {
+                console.error(`同步书籍 "${bookName}" 失败:`, error);
+            }
+        }
+
+        // 保存到服务器（v2格式）
+        async function saveToServer() {
+            // 确保本地数据是 v2 格式
+            if (!reviewResults.version || reviewResults.version !== 2) {
+                reviewResults = { version: 2, books: reviewResults.books || {} };
+            }
+
+            // 如果没有任何书籍数据，跳过上传
+            if (!reviewResults.books || Object.keys(reviewResults.books).length === 0) {
+                console.log('本地无数据，跳过上传');
+                return;
+            }
+
+            // 详细日志：打印将要上传的数据摘要
+            console.log('=== 准备上传到服务器 ===');
+            for (const bookName in reviewResults.books) {
+                const book = reviewResults.books[bookName];
+                console.log(`  书籍: ${bookName}`);
+                for (const char in book) {
+                    const charData = book[char];
+                    const instanceCount = Object.keys(charData.instances || {}).length;
+                    console.log(`    字符 "${char}": ${instanceCount} 个实例, 时间戳: ${charData.timestamp}`);
+                }
+            }
+
+            try {
+                // 检查数据大小
+                const jsonStr = JSON.stringify(reviewResults);
+                const dataSize = new Blob([jsonStr]).size;
+                console.log(`数据大小: ${(dataSize / 1024).toFixed(2)} KB`);
+
+                // 设置超时（30秒）
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+                const response = await fetch(`${API_BASE}/save_review`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: jsonStr,
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                if (data.success) {
+                    console.log('✓ 审查结果已同步到服务器 (v2格式)');
+                } else {
+                    console.error('✗ 保存到服务器失败:', data.error);
+                }
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.error('✗ 保存到服务器超时（30秒）');
+                } else {
+                    console.error('✗ 保存到服务器失败:', error.message);
+                }
+            }
+        }
+
+        // 关闭模态窗口（自动保存）
+        async function closeModal() {
+            // 自动保存当前页的审查结果
+            if (currentChar) {
+                saveReview();
+
+                // 立即上传到服务器，避免数据丢失
+                await saveToServer();
+            }
+
+            document.getElementById('review-modal').classList.remove('active');
+            currentChar = null;
+
+            // 刷新字符列表以更新"已审查"标记
+            // 注意：不需要从服务器同步，因为刚刚已经上传了
+            if (currentBook) {
+                await refreshBookDisplay();
+            }
+        }
+
+        // 导出审查结果
+        function exportResults() {
+            const dataStr = JSON.stringify(reviewResults, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const timestamp = new Date().toISOString().slice(0,19).replace(/:/g,'-');
+            a.download = `review_results_${timestamp}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('审查结果已导出！');
+        }
+
+        // 导入审查结果
+        function importResults() {
+            document.getElementById('import-file').click();
+        }
+
+        // 处理导入的文件
+        function handleImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    reviewResults = imported;
+                    localStorage.setItem('reviewResults', JSON.stringify(reviewResults));
+                    alert('审查结果已导入！');
+
+                    // 如果当前有打开的书籍，刷新进度显示
+                    if (currentBook) {
+                        updateReviewProgress();
+                    }
+                } catch (error) {
+                    alert('导入失败：文件格式不正确');
+                    console.error('导入失败:', error);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // 更新审查进度
+        function updateReviewProgress() {
+            if (!currentBook) return;
+
+            const bookReview = reviewResults.books?.[currentBook] || {};
+            const reviewedChars = Object.keys(bookReview).filter(char => {
+                const charData = bookReview[char];
+                // v2格式：检查 instances 是否有数据
+                return charData && charData.instances && Object.keys(charData.instances).length > 0;
+            });
+
+            const totalChars = parseInt(document.getElementById('stat-chars').textContent) || 0;
+            const reviewedCount = reviewedChars.length;
+            const progress = totalChars > 0 ? Math.round((reviewedCount / totalChars) * 100) : 0;
+
+            document.getElementById('stat-reviewed').textContent = reviewedCount;
+            document.getElementById('stat-progress').textContent = progress + '%';
+        }
+
+        // 检查字符是否已审查（v2格式）
+        function isCharReviewed(char) {
+            if (!currentBook) return false;
+            const instances = getCharInstances(currentBook, char);
+            return instances && Object.keys(instances).length > 0;
+        }
+    </script>
+</body>
+</html>

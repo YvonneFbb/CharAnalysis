@@ -8,7 +8,8 @@
 4. 字符切割和审查
 """
 
-from flask import Flask, jsonify, send_file, request
+from flask import Flask, jsonify, send_file, request, render_template, redirect, url_for
+import logging
 from flask_cors import CORS
 import json
 import os
@@ -29,7 +30,18 @@ sys.path.insert(0, str(PROJECT_ROOT))
 # 导入切割模块
 from src.segment import segment_character, adjust_bbox, get_default_params
 
-app = Flask(__name__)
+TEMPLATE_DIR = PROJECT_ROOT / 'src/review/web/templates'
+STATIC_DIR = PROJECT_ROOT / 'src/review/web/static'
+
+app = Flask(
+    __name__,
+    template_folder=str(TEMPLATE_DIR),
+    static_folder=str(STATIC_DIR)
+)
+
+# Basic debug logging
+logging.basicConfig(level=logging.INFO)
+app.logger.setLevel(logging.INFO)
 CORS(app)  # 允许跨域请求
 
 # Flask 配置：支持大数据传输
@@ -47,7 +59,7 @@ REVIEW_RESULTS_PATH = PROJECT_ROOT / 'data/results/review_results.json'
 SEGMENTATION_REVIEW_PATH = PROJECT_ROOT / 'data/results/segmentation_review.json'
 SEGMENT_LOOKUP_PATH = PROJECT_ROOT / 'data/results/segment_lookup.json'
 SEGMENTED_DIR = PROJECT_ROOT / 'data/results/segmented'
-MANUAL_WORK_DIR = SEGMENTED_DIR / 'manual'  # 手动处理工作区（统一到 segmented 下）
+MANUAL_WORK_DIR = SEGMENTED_DIR / 'manual'  # 手动处理工作区（统一到 segmented 下，扁平：按书籍，不按字符）
 
 # 标记功能路径
 SEGMENT_MARKS_PATH = PROJECT_ROOT / 'data/results/segment_marks.json'
@@ -673,6 +685,8 @@ def api_segment_instances():
         char = data.get('char')
         instance_id = data.get('instance_id')
         custom_params = data.get('custom_params')
+        app.logger.info('[API] /segment_instances book=%s char=%s instance=%s custom=%s',
+                        book_name, char, instance_id, 'yes' if custom_params else 'no')
 
         if not all([book_name, char, instance_id]):
             return jsonify({'success': False, 'error': '缺少必要参数'}), 400
@@ -705,11 +719,38 @@ def api_segment_instances():
             custom_params=custom_params
         )
 
+        # 如果该实例已经有最终保存的切割图片，并且当前不是在应用自定义参数，
+        # 则优先使用已保存的图片作为 segmented_img（只在普通查看时覆盖）
+        try:
+            if not custom_params and SEGMENTATION_REVIEW_PATH.exists():
+                with open(SEGMENTATION_REVIEW_PATH, 'r', encoding='utf-8') as f:
+                    review_data = json.load(f)
+                saved = (
+                    review_data.get('books', {})
+                              .get(book_name, {})
+                              .get(char, {})
+                              .get(instance_id, {})
+                )
+                segmented_rel = saved.get('segmented_path') if isinstance(saved, dict) else None
+                saved_status = saved.get('status') if isinstance(saved, dict) else None
+                if segmented_rel:
+                    # 转换为绝对路径
+                    seg_abs = PROJECT_ROOT / segmented_rel
+                    if seg_abs.exists() and saved_status == 'confirmed':
+                        # 使用已保存图片替换 segmented_img
+                        saved_img = cv2.imread(str(seg_abs), cv2.IMREAD_UNCHANGED)
+                        if saved_img is not None:
+                            segmented_img = saved_img
+        except Exception as _e:
+            # 安静降级，不影响正常流程
+            pass
+
         # 将图片转为 base64
         def img_to_base64(img):
             _, buffer = cv2.imencode('.png', img)
             return base64.b64encode(buffer).decode('utf-8')
 
+        app.logger.info('[API] /segment_instances done: roi=%sx%s seg=%sx%s', roi_img.shape[1], roi_img.shape[0], segmented_img.shape[1], segmented_img.shape[0])
         return jsonify({
             'success': True,
             'roi_image': f"data:image/png;base64,{img_to_base64(roi_img)}",
@@ -748,19 +789,22 @@ def api_save_segmentation():
         status = data.get('status')
         method = data.get('method', 'auto')
         segmented_b64 = data.get('segmented_image_base64')
+        app.logger.info('[API] /save_segmentation book=%s char=%s instance=%s status=%s method=%s b64_len=%s',
+                        book_name, char, instance_id, status, method, (len(segmented_b64) if segmented_b64 else 0))
 
         if not all([book_name, char, instance_id, status]):
             return jsonify({'success': False, 'error': '缺少必要参数'}), 400
 
-        # 只保存切割后的图片
+        # 只保存切割后的图片（扁平结构：不使用字符子文件夹）
         segmented_path = None
         if segmented_b64:
-            book_dir = SEGMENTED_DIR / book_name / char
+            book_dir = SEGMENTED_DIR / book_name
             book_dir.mkdir(parents=True, exist_ok=True)
 
             # 解码 base64
             img_data = base64.b64decode(segmented_b64.split(',')[-1])
-            segmented_path = book_dir / f"{instance_id}.png"
+            # 文件名格式：{char}_{instance_id}.png
+            segmented_path = book_dir / f"{char}_{instance_id}.png"
             with open(segmented_path, 'wb') as f:
                 f.write(img_data)
 
@@ -777,8 +821,8 @@ def api_save_segmentation():
             review_data['books'][book_name][char] = {}
 
         from datetime import datetime, timezone
-        # 使用相对路径（相对于项目根目录）
-        rel_path = f"data/results/segmented/{book_name}/{char}/{instance_id}.png" if segmented_path else None
+        # 使用相对路径（相对于项目根目录，扁平结构）
+        rel_path = f"data/results/segmented/{book_name}/{char}_{instance_id}.png" if segmented_path else None
 
         review_data['books'][book_name][char][instance_id] = {
             'status': status,
@@ -790,6 +834,7 @@ def api_save_segmentation():
         with open(SEGMENTATION_REVIEW_PATH, 'w', encoding='utf-8') as f:
             json.dump(review_data, f, ensure_ascii=False, indent=2)
 
+        app.logger.info('[API] /save_segmentation saved: %s', rel_path)
         return jsonify({'success': True})
 
     except Exception as e:
@@ -817,6 +862,7 @@ def api_adjust_bbox():
         char = data.get('char')
         instance_id = data.get('instance_id')
         adjusted_bbox = data.get('adjusted_bbox')
+        app.logger.info('[API] /adjust_bbox book=%s char=%s instance=%s adjusted=%s', book_name, char, instance_id, adjusted_bbox)
 
         if not all([book_name, char, instance_id, adjusted_bbox]):
             return jsonify({'success': False, 'error': '缺少必要参数'}), 400
@@ -879,6 +925,7 @@ def api_adjust_bbox():
             'method': 'manual_bbox'
         }
 
+        app.logger.info('[API] /adjust_bbox done: seg=%sx%s', segmented_img.shape[1], segmented_img.shape[0])
         return jsonify({
             'success': True,
             'segmented_image': f"data:image/png;base64,{segmented_b64}",
@@ -919,6 +966,7 @@ def api_export_roi():
             return '未找到实例信息', 404
 
         instance_info = lookup_book[char][instance_id]
+        app.logger.info('[API] /export_roi book=%s char=%s instance=%s', book_name, char, instance_id)
 
         # 裁切 ROI
         source_image_path = instance_info['source_image']
@@ -939,12 +987,13 @@ def api_export_roi():
 
         roi = img[y:y2, x:x2]
 
-        # 保存到 manual 工作区（不需要 metadata.json，路径即包含所有信息）
-        manual_dir = MANUAL_WORK_DIR / book_name / char
+        # 保存到 manual 工作区（扁平：manual/{book}/{char}_{instance_id}.png）
+        manual_dir = MANUAL_WORK_DIR / book_name
         manual_dir.mkdir(parents=True, exist_ok=True)
 
-        roi_path = manual_dir / f"{instance_id}.png"
+        roi_path = manual_dir / f"{char}_{instance_id}.png"
         cv2.imwrite(str(roi_path), roi)
+        app.logger.info('[API] /export_roi saved ROI: %s size=%sx%s', str(roi_path), roi.shape[1], roi.shape[0])
 
         # 返回文件
         return send_file(roi_path, as_attachment=True, download_name=f"{book_name}_{char}_{instance_id}.png")
@@ -1264,7 +1313,7 @@ def api_list_manual_todo():
     try:
         todo_items = []
 
-        # 遍历 manual 工作区
+        # 遍历 manual 工作区（扁平：manual/{book}/{char}_{instance_id}.png）
         if not MANUAL_WORK_DIR.exists():
             return jsonify({
                 'success': True,
@@ -1278,23 +1327,24 @@ def api_list_manual_todo():
 
             book_name = book_dir.name
 
-            for char_dir in book_dir.iterdir():
-                if not char_dir.is_dir():
+            # 直接扫描该书籍目录下的 png 文件：{char}_{instance_id}.png
+            for img_file in book_dir.glob('*.png'):
+                stem = img_file.stem
+                # 拆分出 char 和 instance_id（按第一个下划线分割）
+                if '_' in stem:
+                    char, instance_id = stem.split('_', 1)
+                else:
+                    # 非法命名，跳过
                     continue
 
-                char = char_dir.name
+                todo_items.append({
+                    'book': book_name,
+                    'char': char,
+                    'instance_id': instance_id,
+                    'file_path': str(img_file.relative_to(PROJECT_ROOT))
+                })
 
-                # 查找所有 .png 文件
-                for img_file in char_dir.glob('*.png'):
-                    instance_id = img_file.stem
-
-                    todo_items.append({
-                        'book': book_name,
-                        'char': char,
-                        'instance_id': instance_id,
-                        'file_path': str(img_file.relative_to(PROJECT_ROOT))
-                    })
-
+        app.logger.info('[API] /list_manual_todo total=%d', len(todo_items))
         return jsonify({
             'success': True,
             'todo_items': todo_items,
@@ -1335,15 +1385,15 @@ def api_import_manual_results():
         else:
             review_data = {'version': 1, 'books': {}}
 
-        # 遍历 manual 工作区
+        import shutil
+
+        # 遍历 manual 工作区（扁平：manual/{book}/{char}_{instance_id}.png）
         if not MANUAL_WORK_DIR.exists():
             return jsonify({
                 'success': True,
                 'imported': 0,
                 'message': 'manual 工作区不存在'
             })
-
-        import shutil
 
         for book_dir in MANUAL_WORK_DIR.iterdir():
             if not book_dir.is_dir():
@@ -1353,53 +1403,45 @@ def api_import_manual_results():
             if filter_book and book_name != filter_book:
                 continue
 
-            for char_dir in book_dir.iterdir():
-                if not char_dir.is_dir():
+            # 查找所有 .png 文件：{char}_{instance_id}.png
+            for img_file in book_dir.glob('*.png'):
+                stem = img_file.stem
+                if '_' not in stem:
                     continue
+                char, instance_id = stem.split('_', 1)
 
-                char = char_dir.name
                 if filter_char and char != filter_char:
                     continue
 
-                # 查找所有 .png 文件
-                for img_file in char_dir.glob('*.png'):
-                    instance_id = img_file.stem
-
-                    try:
-                        # 移动文件到 segmented 目录
-                        target_dir = SEGMENTED_DIR / book_name / char
-                        target_dir.mkdir(parents=True, exist_ok=True)
-
-                        target_file = target_dir / f"{instance_id}.png"
-                        shutil.move(str(img_file), str(target_file))
-
-                        # 更新审查状态
-                        if book_name not in review_data['books']:
-                            review_data['books'][book_name] = {}
-                        if char not in review_data['books'][book_name]:
-                            review_data['books'][book_name][char] = {}
-
-                        rel_path = f"data/results/segmented/{book_name}/{char}/{instance_id}.png"
-
-                        review_data['books'][book_name][char][instance_id] = {
-                            'status': 'confirmed',
-                            'method': 'manual',
-                            'timestamp': datetime.now(timezone.utc).isoformat(),
-                            'segmented_path': rel_path
-                        }
-
-                        imported_count += 1
-
-                    except Exception as e:
-                        errors.append(f'{book_name}/{char}/{instance_id}: {str(e)}')
-                        continue
-
-                # 删除空目录
                 try:
-                    if not any(char_dir.iterdir()):
-                        char_dir.rmdir()
-                except:
-                    pass
+                    # 移动文件到 segmented 目录（扁平结构）
+                    target_dir = SEGMENTED_DIR / book_name
+                    target_dir.mkdir(parents=True, exist_ok=True)
+
+                    target_file = target_dir / f"{char}_{instance_id}.png"
+                    shutil.move(str(img_file), str(target_file))
+
+                    # 更新审查状态
+                    if book_name not in review_data['books']:
+                        review_data['books'][book_name] = {}
+                    if char not in review_data['books'][book_name]:
+                        review_data['books'][book_name][char] = {}
+
+                    rel_path = f"data/results/segmented/{book_name}/{char}_{instance_id}.png"
+
+                    review_data['books'][book_name][char][instance_id] = {
+                        'status': 'confirmed',
+                        'method': 'manual',
+                        'timestamp': datetime.now(timezone.utc).isoformat(),
+                        'segmented_path': rel_path
+                    }
+
+                    imported_count += 1
+                    app.logger.info('[API] /import_manual_results imported %s/%s/%s', book_name, char, instance_id)
+
+                except Exception as e:
+                    errors.append(f'{book_name}/{char}/{instance_id}: {str(e)}')
+                    continue
 
             # 删除空目录
             try:
@@ -1412,6 +1454,7 @@ def api_import_manual_results():
         with open(SEGMENTATION_REVIEW_PATH, 'w', encoding='utf-8') as f:
             json.dump(review_data, f, ensure_ascii=False, indent=2)
 
+        app.logger.info('[API] /import_manual_results done imported=%d errors=%d', imported_count, len(errors))
         return jsonify({
             'success': True,
             'imported': imported_count,
@@ -1429,36 +1472,54 @@ def api_import_manual_results():
 
 @app.route('/')
 def index():
-    """首页：审查系统入口"""
-    html_path = PROJECT_ROOT / 'data/results/index.html'
-    if html_path.exists():
-        with open(html_path, 'r', encoding='utf-8') as f:
-            return f.read()
-    else:
+    """首页：审查系统入口（优先模板，其次兼容旧文件）"""
+    try:
+        # 优先使用模板
+        return render_template('index.html')
+    except Exception:
+        # 回退到旧的静态文件
+        html_path = PROJECT_ROOT / 'data/results/index.html'
+        if html_path.exists():
+            with open(html_path, 'r', encoding='utf-8') as f:
+                return f.read()
         return '入口页面未生成', 404
 
 
-@app.route('/review')
-def review_page():
-    """第一轮审查界面"""
-    # 返回 HTML 文件
-    html_path = PROJECT_ROOT / 'data/results/review_app.html'
-    if html_path.exists():
-        with open(html_path, 'r', encoding='utf-8') as f:
+@app.route('/ocr_review')
+def ocr_review_page():
+    """第一轮审查界面（OCR/文字审查）——优先模板，其次兼容旧文件名"""
+    # 优先模板
+    tpl_path = TEMPLATE_DIR / 'ocr_review.html'
+    if tpl_path.exists():
+        return render_template('ocr_review.html')
+    # 兼容：优先新的磁盘文件名，其次旧文件名
+    new_path = PROJECT_ROOT / 'data/results/ocr_review.html'
+    if new_path.exists():
+        with open(new_path, 'r', encoding='utf-8') as f:
             return f.read()
-    else:
-        return '审查界面未生成，请先运行生成脚本', 404
+    old_path = PROJECT_ROOT / 'data/results/review_app.html'
+    if old_path.exists():
+        with open(old_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    return 'OCR 审查界面未生成', 404
+
+@app.route('/review')
+def review_page_compat():
+    """兼容旧路径，重定向到 /ocr_review"""
+    return redirect(url_for('ocr_review_page'))
 
 
 @app.route('/segment_review')
 def segment_review_page():
-    """第二轮切割审查界面"""
+    """第二轮切割审查界面（优先模板，其次兼容旧文件）"""
+    tpl_path = TEMPLATE_DIR / 'segment_review_app.html'
+    if tpl_path.exists():
+        return render_template('segment_review_app.html')
     html_path = PROJECT_ROOT / 'data/results/segment_review_app.html'
     if html_path.exists():
         with open(html_path, 'r', encoding='utf-8') as f:
             return f.read()
-    else:
-        return '切割审查界面未生成', 404
+    return '切割审查界面未生成', 404
 
 
 def main():
@@ -1511,9 +1572,9 @@ def main():
     print("  【系统首页】选择审查模式")
     print(f"    本机访问：http://localhost:5001/")
     print(f"    局域网访问：http://{local_ip}:5001/")
-    print("\n  【第一轮审查】文字筛选")
-    print(f"    本机访问：http://localhost:5001/review")
-    print(f"    局域网访问：http://{local_ip}:5001/review")
+    print("\n  【第一轮审查】文字筛选（OCR 审查）")
+    print(f"    本机访问：http://localhost:5001/ocr_review")
+    print(f"    局域网访问：http://{local_ip}:5001/ocr_review")
     print("\n  【第二轮审查】字符切割")
     print(f"    本机访问：http://localhost:5001/segment_review")
     print(f"    局域网访问：http://{local_ip}:5001/segment_review")
