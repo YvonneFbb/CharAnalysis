@@ -1181,21 +1181,16 @@
 
                     <!-- 图片大小控制 -->
                     <div class="image-size-control">
-                        <label for="image-size-slider">图片大小: <span id="image-size-value">200</span>%</label>
-                        <input type="range" id="image-size-slider" min="50" max="400" value="200" step="10">
+                        <label for="image-size-slider">图片大小: <span id="image-size-value">300</span>%</label>
+                        <input type="range" id="image-size-slider" min="50" max="600" value="300" step="10">
                     </div>
 
                     <!-- 操作按钮 -->
                     <div class="actions">
-                        <button class="btn btn-primary" onclick="confirmSegmentation()">
-                            ✓ 确认通过
-                        </button>
-                        <button class="btn" onclick="toggleManualAdjustPanel()">
-                            🛠️ 手动调整
-                        </button>
-                        <button class="btn btn-warning" onclick="exportToManual()">
-                            📤 导出到手动处理
-                        </button>
+                        <button class="btn btn-primary" onclick="confirmSegmentation()">✓ 确认通过</button>
+                        <button class="btn" onclick="toggleManualAdjustPanel()">🛠️ 手动调整</button>
+                        <button class="btn btn-warning" onclick="exportToManual()">📤 导出到手动处理</button>
+                        <button class="btn" onclick="unconfirmSegmentation()">↩︎ 取消通过</button>
                     </div>
 
                     <!-- 手动调整面板（合并 Bbox + 画笔） -->
@@ -1258,8 +1253,8 @@
                                 <div class="brush-controls" id="brush-panel">
                                     <div class="brush-tool-group">
                                         <span class="brush-tool-label">🖌️ 画笔颜色:</span>
-                                        <button class="brush-btn brush-btn-black active" onclick="setBrushColor('black')" id="brush-black">⬛ 黑色</button>
-                                        <button class="brush-btn brush-btn-white" onclick="setBrushColor('white')" id="brush-white">⬜ 白色</button>
+                                        <button class="brush-btn brush-btn-black" onclick="setBrushColor('black')" id="brush-black">⬛ 黑色</button>
+                                        <button class="brush-btn brush-btn-white active" onclick="setBrushColor('white')" id="brush-white">⬜ 白色</button>
                                     </div>
                                     <div class="brush-tool-group" style="align-items: center; gap: 10px;">
                                         <span class="brush-tool-label">画笔粗细:</span>
@@ -1325,8 +1320,10 @@
         let markedInstances = {};   // 标记的实例
         let currentOriginalBbox = null;  // 当前实例的原始 bbox
         let currentCharElement = null;   // 当前选中的字符元素，用于滚动定位
-        let currentCharOrder = [];       // 当前书籍的字符顺序
-        let pendingAutoChar = null;      // 当前实例完成后需要自动打开的字符
+        let currentCharOrder = [];       // 当前书籍的字符顺序（包含跨组重复）
+        let visitedChars = new Set();    // 本次会话已处理过的字符（按字形去重）
+        let pendingAutoChar = null;      // 兼容旧逻辑：按名称
+        let pendingAutoIndex = null;     // 新逻辑：按当前 DOM 全局索引跳转
 
         // Bbox Slider 调整相关变量
         let currentSliderBbox = {};       // 当前slider计算的bbox
@@ -1339,7 +1336,7 @@
         // 画笔工具相关变量
         let brushCanvas = null;         // 画笔 Canvas 元素
         let brushCtx = null;            // 画笔 Canvas 上下文
-        let brushColor = 'black';       // 当前画笔颜色（默认黑色更明显）
+        let brushColor = 'white';       // 当前画笔颜色（默认白色）
         let brushSize = 2;              // 当前画笔大小（S 更细）
         let isDrawing = false;          // 是否正在绘制
         let brushHistory = [];          // 画笔历史（撤销）
@@ -1439,10 +1436,14 @@
             }
         }
 
-        async function loadBook(bookName) {
+        async function loadBook(bookName, options = {}) {
+            const preserveVisited = !!options.preserveVisited;
             currentBook = bookName;
             document.getElementById('char-list').innerHTML = '<div class="spinner"></div>';
             currentCharOrder = [];
+            if (!preserveVisited) {
+                visitedChars = new Set();
+            }
 
             try {
                 // 从 lookup 文件获取字符列表和统计信息（O(1) 查询）
@@ -1558,6 +1559,8 @@
         async function openCharReview(char, charElement) {
             currentChar = char;
             currentCharElement = charElement;  // 保存字符元素引用，用于关闭时滚动定位
+            // 标记该字符已访问，用于自动跳过跨组重复
+            try { visitedChars.add(char); } catch (e) {}
 
             try {
                 // 从 lookup 文件获取该字符的所有 instance_id（O(1) 查询）
@@ -1617,9 +1620,9 @@
                 container.classList.remove('scaled');
             });
 
-            // 重置图片大小控制
-            document.getElementById('image-size-slider').value = 200;
-            document.getElementById('image-size-value').textContent = '200';
+            // 重置图片大小控制（默认 300%）
+            document.getElementById('image-size-slider').value = 300;
+            document.getElementById('image-size-value').textContent = '300';
 
             // 重置 bbox 预览图片大小
             [document.getElementById('bbox-base-canvas'), document.getElementById('bbox-overlay-canvas'), document.getElementById('brush-canvas')].forEach(canvasEl => {
@@ -1722,17 +1725,37 @@
             }
         }
 
-        function getNextCharName(charName) {
-            if (!currentCharOrder || currentCharOrder.length === 0) return null;
-            const index = currentCharOrder.indexOf(charName);
-            if (index === -1) return null;
-            for (let i = index + 1; i < currentCharOrder.length; i++) {
-                const candidate = currentCharOrder[i];
-                if (candidate) {
-                    return candidate;
+        function getNextCharIndex() {
+            // 基于当前字符元素在 DOM 中的位置，寻找后续第一个未访问的字符索引
+            const items = document.querySelectorAll('.char-item');
+            if (!items || items.length === 0 || !currentCharElement) return null;
+
+            let passedCurrent = false;
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                if (!passedCurrent) {
+                    if (item === currentCharElement) passedCurrent = true;
+                    continue;
                 }
+                const textEl = item.querySelector('.char-text');
+                const name = textEl ? textEl.textContent : null;
+                if (!name) continue;
+                if (visitedChars && visitedChars.has(name)) continue;
+                return i;
             }
             return null;
+        }
+
+        function openCharByIndex(index) {
+            const items = document.querySelectorAll('.char-item');
+            if (!items || index == null) return;
+            if (index < 0 || index >= items.length) return;
+            const item = items[index];
+            const textEl = item.querySelector('.char-text');
+            const name = textEl ? textEl.textContent : null;
+            if (name) {
+                openCharReview(name, item);
+            }
         }
 
         async function openCharByName(charName) {
@@ -1786,13 +1809,52 @@
                 if (currentInstanceIndex < currentInstances.length - 1) {
                     loadNextInstance();
                 } else {
-                    pendingAutoChar = getNextCharName(currentChar);
+                    // 记录基于当前元素位置的下一个字符索引，避免跨组重复导致跳回
+                    pendingAutoIndex = getNextCharIndex();
+                    pendingAutoChar = null; // 不再按名称自动跳转
                     await closeModal();
                 }
 
             } catch (error) {
                 console.error('保存失败:', error);
                 alert('保存失败: ' + error.message);
+            }
+        }
+
+        async function unconfirmSegmentation() {
+            const instanceId = currentInstances[currentInstanceIndex];
+            if (!confirm('确认取消通过该实例吗？')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/unconfirm_segmentation`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        book: currentBook,
+                        char: currentChar,
+                        instance_id: instanceId
+                    })
+                });
+                const ct = (response.headers.get('content-type') || '').toLowerCase();
+                let result = null;
+                if (ct.includes('application/json')) {
+                    result = await response.json();
+                } else {
+                    const text = await response.text();
+                    throw new Error(text || `HTTP ${response.status}`);
+                }
+                if (!response.ok || !result.success) throw new Error((result && result.error) || '取消失败');
+
+                // 更新前端状态与徽标
+                if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
+                reviewStatus[currentChar][instanceId] = { status: 'unreviewed' };
+                document.getElementById('instance-info').innerHTML = '<span class="status-badge">未审查</span>';
+
+                // 刷新外层统计
+                await loadBook(currentBook);
+
+            } catch (e) {
+                alert('取消失败: ' + e.message);
             }
         }
 
@@ -1831,7 +1893,8 @@
                 if (currentInstanceIndex < currentInstances.length - 1) {
                     loadNextInstance();
                 } else {
-                    pendingAutoChar = getNextCharName(currentChar);
+                    pendingAutoIndex = getNextCharIndex();
+                    pendingAutoChar = null;
                     await closeModal();
                 }
 
@@ -2209,13 +2272,7 @@
                 height: bottom - top
             };
 
-            console.log('[Bbox Adjustment] 应用调整:', {
-                book: currentBook,
-                char: currentChar,
-                instance_id: instanceId,
-                adjusted_bbox: adjustedBbox,
-                silent
-            });
+            // debug log removed
 
             const entry = segmentationData[instanceId] || {};
 
@@ -2953,36 +3010,26 @@
             const projToggle = document.getElementById('toggle-projection');
             const borderToggle = document.getElementById('toggle-border');
 
-            console.log('[Apply Custom Params] 查找开关状态:', {
-                'noise-toggle-exists': !!noiseToggle,
-                'cc-toggle-exists': !!ccToggle,
-                'projection-toggle-exists': !!projToggle,
-                'border-toggle-exists': !!borderToggle
-            });
+            // debug log removed
 
             if (noiseToggle) {
                 customParams.noise_removal.enabled = noiseToggle.checked;
-                console.log('[Apply Custom Params] Noise Removal 开关状态:', noiseToggle.checked);
+                // debug log removed
             }
             if (ccToggle) {
                 customParams.cc_filter.enabled = ccToggle.checked;
-                console.log('[Apply Custom Params] CC Filtering 开关状态:', ccToggle.checked);
+                // debug log removed
             }
             if (projToggle) {
                 customParams.projection_trim.enabled = projToggle.checked;
-                console.log('[Apply Custom Params] Projection Trimming 开关状态:', projToggle.checked);
+                // debug log removed
             }
             if (borderToggle) {
                 customParams.border_removal.enabled = borderToggle.checked;
-                console.log('[Apply Custom Params] Border Removal 开关状态:', borderToggle.checked);
+                // debug log removed
             }
 
-            console.log('[Apply Custom Params] 阶段开关状态:', {
-                'noise_removal': customParams.noise_removal.enabled,
-                'cc_filter': customParams.cc_filter.enabled,
-                'projection_trim': customParams.projection_trim.enabled,
-                'border_removal': customParams.border_removal.enabled
-            });
+            // debug log removed
 
             // 处理滑块参数 - 只更新界面有滑块的参数，其他保持默认值
             document.querySelectorAll('.param-slider').forEach(slider => {
@@ -3058,7 +3105,7 @@
             document.getElementById('instance-info').innerHTML = '<span class="status-badge loading">重新切割中...</span>';
 
             try {
-                console.log('[Apply Custom Params] 请求切割实例:', { book: currentBook, char: currentChar, instance_id: instanceId, custom_params: customParams });
+                // debug log removed
                 const response = await fetch(`${API_BASE}/segment_instances`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -3141,7 +3188,7 @@
             document.getElementById('instance-info').innerHTML = '<span class="status-badge loading">重新切割中...</span>';
 
             try {
-                console.log('[Reset Params] 请求切割实例:', { book: currentBook, char: currentChar, instance_id: instanceId, custom_params: null });
+                // debug log removed
                 const response = await fetch(`${API_BASE}/segment_instances`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -3196,9 +3243,9 @@
                 }
             });
 
-            // 重置图片大小控制
-            document.getElementById('image-size-slider').value = 200;
-            document.getElementById('image-size-value').textContent = '200';
+            // 重置图片大小控制（默认 300%）
+            document.getElementById('image-size-slider').value = 300;
+            document.getElementById('image-size-value').textContent = '300';
 
             // 重置 bbox 预览图片大小
             [document.getElementById('bbox-base-canvas'), document.getElementById('bbox-overlay-canvas'), document.getElementById('brush-canvas')].forEach(canvasEl => {
@@ -3212,7 +3259,8 @@
 
             // 刷新书籍列表以更新统计
             if (currentBook) {
-                await loadBook(currentBook);
+                // 刷新统计但保留已访问集合，保证自动跳过重复字
+                await loadBook(currentBook, { preserveVisited: true });
 
                 // loadBook 完成后，重新找到当前字符元素并滚动
                 if (savedChar) {
@@ -3231,7 +3279,13 @@
                 }
             }
 
-            if (pendingAutoChar) {
+            if (pendingAutoIndex != null) {
+                requestAnimationFrame(() => {
+                    openCharByIndex(pendingAutoIndex);
+                    pendingAutoIndex = null;
+                });
+            } else if (pendingAutoChar) {
+                // 兼容旧逻辑（不推荐）：按名称会选中第一个出现位置
                 requestAnimationFrame(() => {
                     openCharByName(pendingAutoChar);
                     pendingAutoChar = null;

@@ -843,6 +843,60 @@ def api_save_segmentation():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
+@app.route('/api/unconfirm_segmentation', methods=['POST'])
+def api_unconfirm_segmentation():
+    """
+    取消已确认的切割结果（将状态恢复为未审查）
+
+    Request body:
+    {
+        "book": "01_1127_尚书正义",
+        "char": "意",
+        "instance_id": "册02_page0031_idx501"
+    }
+    """
+    try:
+        data = request.get_json() or {}
+        book_name = data.get('book')
+        char = data.get('char')
+        instance_id = data.get('instance_id')
+
+        if not all([book_name, char, instance_id]):
+            return jsonify({'success': False, 'error': '缺少必要参数'}), 400
+
+        # 读取审查数据
+        if SEGMENTATION_REVIEW_PATH.exists():
+            with open(SEGMENTATION_REVIEW_PATH, 'r', encoding='utf-8') as f:
+                review_data = json.load(f)
+        else:
+            review_data = {'version': 1, 'books': {}}
+
+        # 如果不存在对应结构，直接返回成功（视为已取消）
+        books = review_data.setdefault('books', {})
+        book_obj = books.setdefault(book_name, {})
+        char_obj = book_obj.setdefault(char, {})
+
+        # 恢复为未审查
+        from datetime import datetime, timezone
+        char_obj[instance_id] = {
+            'status': 'unreviewed',
+            'method': None,
+            'timestamp': datetime.now(timezone.utc).isoformat(),
+            'segmented_path': None
+        }
+
+        with open(SEGMENTATION_REVIEW_PATH, 'w', encoding='utf-8') as f:
+            json.dump(review_data, f, ensure_ascii=False, indent=2)
+
+        app.logger.info('[API] /unconfirm_segmentation done: %s/%s/%s', book_name, char, instance_id)
+        return jsonify({'success': True})
+
+    except Exception as e:
+        print(f'❌ 取消确认失败: {str(e)}')
+        print(traceback.format_exc())
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 @app.route('/api/adjust_bbox', methods=['POST'])
 def api_adjust_bbox():
     """
