@@ -22,6 +22,7 @@ import base64
 import sys
 import traceback
 from datetime import datetime, timezone
+import time
 
 # 添加项目根目录到 sys.path
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -106,6 +107,56 @@ def ensure_segment_lookup_data():
             segment_lookup_data = json.load(f)
         print(f"[懒加载] 切割查找数据加载完成：{len(segment_lookup_data.get('books', {}))} 本书")
 
+
+# ==================== 切割审查状态：单文件加锁工具 ====================
+def _review_lock_path() -> Path:
+    return SEGMENTATION_REVIEW_PATH.with_suffix(SEGMENTATION_REVIEW_PATH.suffix + '.lock')
+
+def read_review_data() -> dict:
+    if not SEGMENTATION_REVIEW_PATH.exists():
+        return {'version': 1, 'books': {}}
+    try:
+        with open(SEGMENTATION_REVIEW_PATH, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return {'version': 1, 'books': {}}
+
+def write_review_data(data: dict):
+    """原子写：写临时文件后替换；在锁内执行，避免并发覆盖。"""
+    path = SEGMENTATION_REVIEW_PATH
+    tmp = path.with_suffix(path.suffix + f".tmp.{os.getpid()}-{int(time.time()*1000)}")
+    with open(tmp, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    os.replace(tmp, path)
+
+def update_review_entry(book_name: str, char: str, instance_id: str, entry: dict):
+    """对 segmentation_review.json 进行加锁的读-改-写更新。"""
+    try:
+        import fcntl  # POSIX
+    except Exception:
+        fcntl = None
+
+    lock_path = _review_lock_path()
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(lock_path, 'a+') as lock_fp:
+        if fcntl:
+            try:
+                fcntl.flock(lock_fp.fileno(), fcntl.LOCK_EX)
+            except Exception:
+                pass
+
+        data = read_review_data()
+        books = data.setdefault('books', {})
+        book_obj = books.setdefault(book_name, {})
+        char_obj = book_obj.setdefault(char, {})
+        char_obj[instance_id] = entry
+        write_review_data(data)
+
+        if fcntl:
+            try:
+                fcntl.flock(lock_fp.fileno(), fcntl.LOCK_UN)
+            except Exception:
+                pass
 
 def normalize_to_preprocessed_path(raw_or_mixed_path: str) -> str:
     """
@@ -722,9 +773,8 @@ def api_segment_instances():
         # 如果该实例已经有最终保存的切割图片，并且当前不是在应用自定义参数，
         # 则优先使用已保存的图片作为 segmented_img（只在普通查看时覆盖）
         try:
-            if not custom_params and SEGMENTATION_REVIEW_PATH.exists():
-                with open(SEGMENTATION_REVIEW_PATH, 'r', encoding='utf-8') as f:
-                    review_data = json.load(f)
+            if not custom_params:
+                review_data = read_review_data()
                 saved = (
                     review_data.get('books', {})
                               .get(book_name, {})
@@ -808,31 +858,15 @@ def api_save_segmentation():
             with open(segmented_path, 'wb') as f:
                 f.write(img_data)
 
-        # 更新审查状态
-        if SEGMENTATION_REVIEW_PATH.exists():
-            with open(SEGMENTATION_REVIEW_PATH, 'r', encoding='utf-8') as f:
-                review_data = json.load(f)
-        else:
-            review_data = {'version': 1, 'books': {}}
-
-        if book_name not in review_data['books']:
-            review_data['books'][book_name] = {}
-        if char not in review_data['books'][book_name]:
-            review_data['books'][book_name][char] = {}
-
+        # 更新审查状态（单文件加锁写入）
         from datetime import datetime, timezone
-        # 使用相对路径（相对于项目根目录，扁平结构）
         rel_path = f"data/results/segmented/{book_name}/{char}_{instance_id}.png" if segmented_path else None
-
-        review_data['books'][book_name][char][instance_id] = {
+        update_review_entry(book_name, char, instance_id, {
             'status': status,
             'method': method,
             'timestamp': datetime.now(timezone.utc).isoformat(),
             'segmented_path': rel_path
-        }
-
-        with open(SEGMENTATION_REVIEW_PATH, 'w', encoding='utf-8') as f:
-            json.dump(review_data, f, ensure_ascii=False, indent=2)
+        })
 
         app.logger.info('[API] /save_segmentation saved: %s', rel_path)
         return jsonify({'success': True})
@@ -864,29 +898,14 @@ def api_unconfirm_segmentation():
         if not all([book_name, char, instance_id]):
             return jsonify({'success': False, 'error': '缺少必要参数'}), 400
 
-        # 读取审查数据
-        if SEGMENTATION_REVIEW_PATH.exists():
-            with open(SEGMENTATION_REVIEW_PATH, 'r', encoding='utf-8') as f:
-                review_data = json.load(f)
-        else:
-            review_data = {'version': 1, 'books': {}}
-
-        # 如果不存在对应结构，直接返回成功（视为已取消）
-        books = review_data.setdefault('books', {})
-        book_obj = books.setdefault(book_name, {})
-        char_obj = book_obj.setdefault(char, {})
-
-        # 恢复为未审查
+        # 恢复为未审查（单文件加锁写入）
         from datetime import datetime, timezone
-        char_obj[instance_id] = {
+        update_review_entry(book_name, char, instance_id, {
             'status': 'unreviewed',
             'method': None,
             'timestamp': datetime.now(timezone.utc).isoformat(),
             'segmented_path': None
-        }
-
-        with open(SEGMENTATION_REVIEW_PATH, 'w', encoding='utf-8') as f:
-            json.dump(review_data, f, ensure_ascii=False, indent=2)
+        })
 
         app.logger.info('[API] /unconfirm_segmentation done: %s/%s/%s', book_name, char, instance_id)
         return jsonify({'success': True})
@@ -1078,11 +1097,7 @@ def api_segmentation_status():
     try:
         book_name = request.args.get('book')
 
-        if not SEGMENTATION_REVIEW_PATH.exists():
-            return jsonify({'success': True, 'data': {'version': 1, 'books': {}}})
-
-        with open(SEGMENTATION_REVIEW_PATH, 'r', encoding='utf-8') as f:
-            review_data = json.load(f)
+        review_data = read_review_data()
 
         if book_name:
             # 只返回指定书籍的数据
@@ -1161,15 +1176,9 @@ def api_segment_book_chars():
 
         lookup_book = segment_lookup_data['books'][book_name]
 
-        # 加载切割审查状态（如果存在）
-        review_status = {}
-        if SEGMENTATION_REVIEW_PATH.exists():
-            try:
-                with open(SEGMENTATION_REVIEW_PATH, 'r', encoding='utf-8') as f:
-                    review_data = json.load(f)
-                    review_status = review_data.get('books', {}).get(book_name, {})
-            except:
-                pass
+        # 加载切割审查状态（加锁读）
+        review_data = read_review_data()
+        review_status = review_data.get('books', {}).get(book_name, {})
 
         # 统计每个字符的实例数和审查状态
         chars_info = {}
@@ -1432,12 +1441,7 @@ def api_import_manual_results():
         imported_count = 0
         errors = []
 
-        # 加载审查数据
-        if SEGMENTATION_REVIEW_PATH.exists():
-            with open(SEGMENTATION_REVIEW_PATH, 'r', encoding='utf-8') as f:
-                review_data = json.load(f)
-        else:
-            review_data = {'version': 1, 'books': {}}
+        # 不再预读全量，逐实例更新（加锁）
 
         import shutil
 
@@ -1475,20 +1479,14 @@ def api_import_manual_results():
                     target_file = target_dir / f"{char}_{instance_id}.png"
                     shutil.move(str(img_file), str(target_file))
 
-                    # 更新审查状态
-                    if book_name not in review_data['books']:
-                        review_data['books'][book_name] = {}
-                    if char not in review_data['books'][book_name]:
-                        review_data['books'][book_name][char] = {}
-
+                    # 更新审查状态（加锁写入）
                     rel_path = f"data/results/segmented/{book_name}/{char}_{instance_id}.png"
-
-                    review_data['books'][book_name][char][instance_id] = {
+                    update_review_entry(book_name, char, instance_id, {
                         'status': 'confirmed',
                         'method': 'manual',
                         'timestamp': datetime.now(timezone.utc).isoformat(),
                         'segmented_path': rel_path
-                    }
+                    })
 
                     imported_count += 1
                     app.logger.info('[API] /import_manual_results imported %s/%s/%s', book_name, char, instance_id)
@@ -1504,9 +1502,7 @@ def api_import_manual_results():
             except:
                 pass
 
-        # 保存审查数据
-        with open(SEGMENTATION_REVIEW_PATH, 'w', encoding='utf-8') as f:
-            json.dump(review_data, f, ensure_ascii=False, indent=2)
+        # 已逐条更新，无需统一保存
 
         app.logger.info('[API] /import_manual_results done imported=%d errors=%d', imported_count, len(errors))
         return jsonify({

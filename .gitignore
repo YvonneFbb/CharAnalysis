@@ -24,8 +24,7 @@ ENV/
 .DS_Store
 
 # 数据目录
-data/raw/*
-data/results/*
+data/*
 
 # 保留目录结构
 !data/raw/.gitkeep

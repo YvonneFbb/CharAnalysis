@@ -1267,10 +1267,25 @@
                                         <button class="brush-btn" onclick="clearBrush()" title="清空">🗑️ 清空</button>
                                     </div>
                                 </div>
+
+                                <!-- 收边参数控制 -->
+                                <div class="brush-controls" id="shrink-panel" style="margin-top: 8px;">
+                                    <div class="brush-tool-group" style="align-items: center; gap: 10px;">
+                                        <span class="brush-tool-label">收边阈值(灰度≤阈值视为墨迹):</span>
+                                        <input type="range" id="shrink-threshold-slider" min="0" max="255" step="1" value="220" oninput="document.getElementById('shrink-threshold-value').textContent = this.value" style="width: 200px;">
+                                        <span id="shrink-threshold-value">220</span>
+                                    </div>
+                                    <div class="brush-tool-group" style="align-items: center; gap: 10px;">
+                                        <span class="brush-tool-label">留白像素:</span>
+                                        <input type="range" id="shrink-padding-slider" min="0" max="10" step="1" value="1" oninput="document.getElementById('shrink-padding-value').textContent = this.value" style="width: 200px;">
+                                        <span id="shrink-padding-value">1</span> px
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="manual-adjust-actions">
+                            <button class="btn" onclick="shrinkBboxToInk()" title="在当前框内自动收缩至墨迹">↘ 收边</button>
                             <button class="btn btn-primary" onclick="applyManualChanges()">✓ 应用</button>
                             <button class="btn" onclick="cancelManualAdjustment()">✗ 取消</button>
                         </div>
@@ -1337,11 +1352,12 @@
         let brushCanvas = null;         // 画笔 Canvas 元素
         let brushCtx = null;            // 画笔 Canvas 上下文
         let brushColor = 'white';       // 当前画笔颜色（默认白色）
-        let brushSize = 2;              // 当前画笔大小（S 更细）
+        let brushSize = 2;              // 当前画笔大小（单位：ROI 像素）
         let isDrawing = false;          // 是否正在绘制
         let brushHistory = [];          // 画笔历史（撤销）
         let brushHistoryStep = -1;     // 当前历史步骤
         let currentSegmentedImage = null;  // 当前切割结果图片的 base64
+        let roiToPreviewScale = 1;         // ROI→预览 缩放比例（用于将 ROI 像素换算为预览画布像素）
         let isImageMagnified = false;     // 图片是否已放大150%
 
         // ==================== 初始化 ====================
@@ -2053,6 +2069,127 @@
             updateBboxPreview();
         }
 
+        // 收边：在当前 bbox 内自动收缩到墨迹（黑色）区域
+        function shrinkBboxToInk() {
+            try {
+                if (!currentSliderBbox || !roiShape) {
+                    alert('预览未就绪');
+                    return;
+                }
+
+                const baseCanvas = document.getElementById('bbox-base-canvas');
+                if (!baseCanvas || baseCanvas.width === 0 || baseCanvas.height === 0) {
+                    alert('预览画布未就绪');
+                    return;
+                }
+
+                // 使用 ROI 尺寸进行计算，确保坐标精确
+                const baseSrc = processedRoiImage || currentSegmentedImage;
+                if (!baseSrc) {
+                    alert('缺少底图，无法收边');
+                    return;
+                }
+
+                // 1) 加载 ROI 尺寸的底图
+                const img = new Image();
+                img.onload = () => {
+                    const roiW = img.width;
+                    const roiH = img.height;
+
+                    // 2) 将画笔层放大到 ROI 尺寸
+                    const brushLayer = document.getElementById('brush-canvas');
+                    const brushOnRoi = document.createElement('canvas');
+                    brushOnRoi.width = roiW;
+                    brushOnRoi.height = roiH;
+                    const brushRoiCtx = brushOnRoi.getContext('2d');
+                    if (brushLayer && brushLayer.width > 0 && brushLayer.height > 0) {
+                        const scaleX = roiW / baseCanvas.width;
+                        const scaleY = roiH / baseCanvas.height;
+                        brushRoiCtx.drawImage(
+                            brushLayer,
+                            0, 0, brushLayer.width, brushLayer.height,
+                            0, 0, Math.round(brushLayer.width * scaleX), Math.round(brushLayer.height * scaleY)
+                        );
+                    }
+
+                    // 3) 合成 ROI 图（底图 + 画笔）
+                    const comp = document.createElement('canvas');
+                    comp.width = roiW;
+                    comp.height = roiH;
+                    const compCtx = comp.getContext('2d', { willReadFrequently: true });
+                    compCtx.drawImage(img, 0, 0);
+                    compCtx.drawImage(brushOnRoi, 0, 0);
+
+                    // 4) 在当前 bbox 内查找“黑色”像素的最小外接矩形
+                    const bbox = currentSliderBbox;
+                    const sx = Math.max(0, Math.floor(bbox.x));
+                    const sy = Math.max(0, Math.floor(bbox.y));
+                    const sw = Math.max(1, Math.min(roiW - sx, Math.floor(bbox.width)));
+                    const sh = Math.max(1, Math.min(roiH - sy, Math.floor(bbox.height)));
+
+                    let top = sh, left = sw, bottom = -1, right = -1;
+                    const thrEl = document.getElementById('shrink-threshold-slider');
+                    const padEl = document.getElementById('shrink-padding-slider');
+                    const threshold = thrEl ? Math.max(0, Math.min(255, parseInt(thrEl.value || '220', 10))) : 220;
+                    const pad = padEl ? Math.max(0, Math.min(20, parseInt(padEl.value || '1', 10))) : 1;
+
+                    const imgData = compCtx.getImageData(sx, sy, sw, sh);
+                    const data = imgData.data;
+                    for (let y = 0; y < sh; y++) {
+                        for (let x = 0; x < sw; x++) {
+                            const idx = (y * sw + x) * 4;
+                            const r = data[idx], g = data[idx + 1], b = data[idx + 2], a = data[idx + 3];
+                            if (a === 0) continue;
+                            const gray = (r + g + b) / 3;
+                            if (gray <= threshold) {
+                                if (x < left) left = x;
+                                if (x > right) right = x;
+                                if (y < top) top = y;
+                                if (y > bottom) bottom = y;
+                            }
+                        }
+                    }
+
+                    if (bottom === -1) {
+                        alert('未检测到墨迹，已保持不变');
+                        return;
+                    }
+
+                    left = Math.max(0, left - pad);
+                    top = Math.max(0, top - pad);
+                    right = Math.min(sw - 1, right + pad);
+                    bottom = Math.min(sh - 1, bottom + pad);
+
+                    const newX = sx + left;
+                    const newY = sy + top;
+                    const newW = right - left + 1;
+                    const newH = bottom - top + 1;
+
+                    // 5) 写回 slider 并刷新预览
+                    const leftSlider = document.getElementById('bbox-left-slider');
+                    const rightSlider = document.getElementById('bbox-right-slider');
+                    const topSlider = document.getElementById('bbox-top-slider');
+                    const bottomSlider = document.getElementById('bbox-bottom-slider');
+
+                    leftSlider.value = newX;
+                    rightSlider.value = newX + newW;
+                    topSlider.value = newY;
+                    bottomSlider.value = newY + newH;
+
+                    updateSliderValues();
+                    validateSliderConstraints();
+                    updateBboxPreview();
+
+                };
+                img.onerror = () => alert('底图加载失败，无法收边');
+                img.src = baseSrc;
+
+            } catch (e) {
+                console.error('收边失败:', e);
+                alert('收边失败: ' + e.message);
+            }
+        }
+
         function loadImageElement(src) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
@@ -2108,6 +2245,8 @@
                 const scale = Math.min(maxWidth / width, maxHeight / height, 1);
                 width *= scale;
                 height *= scale;
+                // 记录 ROI→预览 比例，便于将 ROI 像素的笔宽换算到预览画布
+                roiToPreviewScale = scale;
 
                 [bboxBaseCanvas, bboxOverlayCanvas, brushCanvas].forEach(canvasEl => {
                     if (!canvasEl) return;
@@ -3398,9 +3537,10 @@
                 const y = (t.clientY - rect.top) * scaleY;
                 isDrawing = true;
                 brushCtx.fillStyle = brushColor;
-                brushCtx.beginPath();
-                brushCtx.arc(x, y, Math.max(1, brushSize / 2), 0, Math.PI * 2);
-                brushCtx.fill();
+            brushCtx.beginPath();
+            const touchRadius = Math.max(0.5, (brushSize * roiToPreviewScale) / 2);
+            brushCtx.arc(x, y, touchRadius, 0, Math.PI * 2);
+            brushCtx.fill();
                 brushCtx.beginPath();
                 brushCtx.moveTo(x, y);
                 e.preventDefault();
@@ -3415,7 +3555,8 @@
                 const x = (t.clientX - rect.left) * scaleX;
                 const y = (t.clientY - rect.top) * scaleY;
                 brushCtx.strokeStyle = brushColor;
-                brushCtx.lineWidth = Math.max(1, brushSize);
+                const lw = Math.max(1, Math.round(brushSize * roiToPreviewScale));
+                brushCtx.lineWidth = lw;
                 brushCtx.lineCap = 'round';
                 brushCtx.lineJoin = 'round';
                 brushCtx.lineTo(x, y);
@@ -3462,7 +3603,8 @@
             // 先落一个点，避免只点击不移动时无反馈
             brushCtx.fillStyle = brushColor;
             brushCtx.beginPath();
-            brushCtx.arc(x, y, Math.max(1, brushSize / 2), 0, Math.PI * 2);
+            const initialRadius = Math.max(0.5, (brushSize * roiToPreviewScale) / 2);
+            brushCtx.arc(x, y, initialRadius, 0, Math.PI * 2);
             brushCtx.fill();
 
             // 准备连续绘制
@@ -3481,7 +3623,8 @@
             const y = (e.clientY - rect.top) * scaleY;
 
             brushCtx.strokeStyle = brushColor;
-            brushCtx.lineWidth = Math.max(1, brushSize);
+            const lw = Math.max(1, Math.round(brushSize * roiToPreviewScale));
+            brushCtx.lineWidth = lw;
             brushCtx.lineCap = 'round';
             brushCtx.lineJoin = 'round';
             brushCtx.lineTo(x, y);
