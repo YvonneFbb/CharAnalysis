@@ -390,6 +390,11 @@
             color: #f44336;
         }
 
+        .status-badge.warning {
+            background: #fff4e0;
+            color: #a25c00;
+        }
+
         /* 操作按钮组 */
         .actions {
             display: flex;
@@ -934,6 +939,26 @@
             font-weight: 600;
         }
 
+        .char-drop-badge {
+            margin-left: 6px;
+            padding: 1px 6px;
+            border-radius: 10px;
+            background: #fff4e0;
+            color: #a25c00;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .not-needed-placeholder {
+            padding: 32px;
+            text-align: center;
+            color: #a25c00;
+            background: #fff8eb;
+            border: 1px dashed #f4c27a;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
         /* 图片大小控制样式 */
         .image-size-control {
             background: #f8f9fa;
@@ -1188,6 +1213,7 @@
                     <!-- 操作按钮 -->
                     <div class="actions">
                         <button class="btn btn-primary" onclick="confirmSegmentation()">✓ 确认通过</button>
+                        <button class="btn btn-warning" onclick="markInstanceAsNotNeeded()">✗ 标记不需要</button>
                         <button class="btn" onclick="toggleManualAdjustPanel()">🛠️ 手动调整</button>
                         <button class="btn btn-warning" onclick="exportToManual()">📤 导出到手动处理</button>
                         <button class="btn" onclick="unconfirmSegmentation()">↩︎ 取消通过</button>
@@ -1367,6 +1393,7 @@
                 await loadBooks();
                 await loadStandardChars();
                 await loadMarkedInstances();
+                await handleDeepLink();
             } catch (error) {
                 console.error('初始化过程中出错:', error);
             }
@@ -1401,6 +1428,35 @@
                 }
             });
         });
+
+        async function handleDeepLink() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const book = params.get('book');
+                const ch = params.get('char');
+                const inst = params.get('instance_id');
+                if (!book) return;
+
+                // 选择书籍
+                const sel = document.getElementById('book-select');
+                if (sel) sel.value = book;
+                await loadBook(book);
+
+                if (!ch) return;
+                // 打开字符
+                await openCharByName(ch);
+
+                if (inst && Array.isArray(currentInstances)) {
+                    const idx = currentInstances.indexOf(inst);
+                    if (idx >= 0) {
+                        currentInstanceIndex = idx;
+                        await loadInstance();
+                    }
+                }
+            } catch (e) {
+                console.warn('DeepLink 处理失败：', e);
+            }
+        }
 
         // ==================== 加载数据 ====================
 
@@ -1669,6 +1725,15 @@
                 // 缓存结果
                 segmentationData[instanceId] = data;
 
+                if (data.review_entry) {
+                    if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
+                    reviewStatus[currentChar][instanceId] = {
+                        status: data.review_entry.status || 'unreviewed',
+                        method: data.review_entry.method,
+                        decision: data.review_entry.decision || 'unknown'
+                    };
+                }
+
                 // 保存 segmented bbox（切割结果）和ROI形状
                 if (data.metadata && data.metadata.segmented_bbox) {
                     currentSliderBbox = { ...data.metadata.segmented_bbox };
@@ -1708,18 +1773,22 @@
 
                 // 更新状态信息
                 const statusBadge = reviewStatus[currentChar]?.[instanceId];
+                const decision = statusBadge?.decision || 'unknown';
+                const badgeStatus = statusBadge?.status || 'unreviewed';
 
-                let statusHtml = '';
-                if (statusBadge) {
-                    const statusMap = {
-                        'confirmed': '<span class="status-badge success">已确认</span>',
-                        'pending_manual': '<span class="status-badge error">待手动处理</span>'
-                    };
-                    statusHtml = statusMap[statusBadge.status] || '<span class="status-badge">未审查</span>';
-                } else {
-                    statusHtml = '<span class="status-badge">未审查</span>';
+                let statusHtml = '<span class="status-badge">未审查</span>';
+                if (decision === 'drop' || badgeStatus === 'dropped') {
+                    statusHtml = '<span class="status-badge warning">已标记不需要</span>';
+                } else if (badgeStatus === 'confirmed') {
+                    statusHtml = '<span class="status-badge success">已确认</span>';
+                } else if (badgeStatus === 'pending_manual') {
+                    statusHtml = '<span class="status-badge error">待手动处理</span>';
                 }
                 document.getElementById('instance-info').innerHTML = statusHtml;
+
+                if (decision === 'drop' || badgeStatus === 'dropped') {
+                    document.getElementById('segmented-container').innerHTML = '<div class="not-needed-placeholder">该实例已被标记为不需要</div>';
+                }
 
             } catch (error) {
                 console.error('加载实例失败:', error);
@@ -1808,8 +1877,7 @@
                         status: 'confirmed',
                         method: 'auto',
                         segmented_image_base64: data.segmented_image,
-                        debug_image_base64: data.debug_image,
-                        metadata: data.metadata
+                        decision: 'need'
                     })
                 });
 
@@ -1820,7 +1888,7 @@
 
                 // 更新状态
                 if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
-                reviewStatus[currentChar][instanceId] = { status: 'confirmed' };
+                reviewStatus[currentChar][instanceId] = { status: 'confirmed', decision: 'need' };
 
                 if (currentInstanceIndex < currentInstances.length - 1) {
                     loadNextInstance();
@@ -1863,14 +1931,42 @@
 
                 // 更新前端状态与徽标
                 if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
-                reviewStatus[currentChar][instanceId] = { status: 'unreviewed' };
+                reviewStatus[currentChar][instanceId] = { status: 'unreviewed', decision: 'unknown' };
                 document.getElementById('instance-info').innerHTML = '<span class="status-badge">未审查</span>';
 
                 // 刷新外层统计
-                await loadBook(currentBook);
+                await loadBook(currentBook, { preserveVisited: true });
 
             } catch (e) {
                 alert('取消失败: ' + e.message);
+            }
+        }
+
+        async function markInstanceAsNotNeeded() {
+            const instanceId = currentInstances[currentInstanceIndex];
+            if (!confirm('确认将该实例标记为“不需要”？')) return;
+            try {
+                const response = await fetch(`${API_BASE}/mark_segmentation_decision`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        book: currentBook,
+                        char: currentChar,
+                        instance_id: instanceId,
+                        decision: 'drop'
+                    })
+                });
+                const result = await response.json();
+                if (!response.ok || !result.success) throw new Error(result.error || '标记失败');
+
+                if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
+                reviewStatus[currentChar][instanceId] = { status: 'dropped', decision: 'drop' };
+                document.getElementById('instance-info').innerHTML = '<span class="status-badge warning">已标记不需要</span>';
+                document.getElementById('segmented-container').innerHTML = '<div class="not-needed-placeholder">该实例已标记为不需要</div>';
+                delete segmentationData[instanceId];
+                await loadBook(currentBook, { preserveVisited: true });
+            } catch (e) {
+                alert('标记失败: ' + e.message);
             }
         }
 
@@ -1890,7 +1986,8 @@
                         char: currentChar,
                         instance_id: instanceId,
                         status: 'pending_manual',
-                        method: 'pending_manual'
+                        method: 'pending_manual',
+                        decision: 'need'
                     })
                 });
 
@@ -1901,7 +1998,7 @@
 
                 // 更新状态
                 if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
-                reviewStatus[currentChar][instanceId] = { status: 'pending_manual' };
+                reviewStatus[currentChar][instanceId] = { status: 'pending_manual', decision: 'need' };
 
                 // 自动导出原图
                 await exportROI();
@@ -3732,7 +3829,8 @@
                         instance_id: instanceId,
                         status: 'confirmed',
                         method: 'manual_adjust',
-                        segmented_image_base64: adjustedImage
+                        segmented_image_base64: adjustedImage,
+                        decision: 'need'
                     })
                 });
 
@@ -3743,7 +3841,7 @@
 
                 // 更新状态
                 if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
-                reviewStatus[currentChar][instanceId] = { status: 'confirmed', method: 'manual_adjust' };
+                reviewStatus[currentChar][instanceId] = { status: 'confirmed', method: 'manual_adjust', decision: 'need' };
 
                 const segmentationEntry = segmentationData[instanceId] || {};
                 segmentationEntry.segmented_image = adjustedImage;

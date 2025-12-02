@@ -33,6 +33,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 
 from PIL import Image, ImageDraw
+import numpy as np
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -122,6 +123,33 @@ def make_tile(img: Image.Image, tile_size: int, border: int, bg_color: Tuple[int
     return canvas
 
 
+def center_crop_fixed_box(img: Image.Image, Lb: int) -> Image.Image:
+    """以图像中心为锚点，截取 Lb×Lb 的固定框，越界用白色填充。"""
+    if Lb <= 0:
+        return img
+    gray = img.convert('L')
+    w, h = gray.size
+    cx, cy = w // 2, h // 2
+    half = Lb // 2
+    x0 = cx - half
+    y0 = cy - half
+    x1 = x0 + Lb
+    y1 = y0 + Lb
+    # 目标画布（白底）
+    out = Image.new('L', (Lb, Lb), 255)
+    # 源与目标重叠区域
+    sx0 = max(0, x0)
+    sy0 = max(0, y0)
+    sx1 = min(w, x1)
+    sy1 = min(h, y1)
+    if sx0 < sx1 and sy0 < sy1:
+        sub = gray.crop((sx0, sy0, sx1, sy1))
+        dx = sx0 - x0
+        dy = sy0 - y0
+        out.paste(sub, (dx, dy))
+    return out
+
+
 def build_montage(tiles: List[Image.Image], cols: int, tile_size: int, bg_color: Tuple[int, int, int]=(255, 255, 255)) -> Image.Image:
     if not tiles:
         return Image.new('RGB', (tile_size, tile_size), bg_color)
@@ -160,6 +188,7 @@ def main():
     ap.add_argument('--cols', type=int, default=50, help='Columns per row. Default 50')
     ap.add_argument('--border', type=int, default=1, help='Light border width in pixels. Default 1')
     ap.add_argument('--bg', type=str, default='#FFFFFF', help='Background color hex. Default #FFFFFF')
+    ap.add_argument('--use-fixed-box', action='store_true', help='Use per-book fixed box (P95 long side * 1.05) for montage display')
     args = ap.parse_args()
 
     tile_size: int = max(8, args.tile_size)
@@ -185,12 +214,34 @@ def main():
         # 如果用户限定了书名但该书没有已确认实例，仍生成一张空白提示？这里选择跳过并提示
         tiles: List[Image.Image] = []
         missing = 0
+        L_b = None
+        if args.use_fixed_box:
+            long_sides = []
+            for _, _, abs_path in items:
+                try:
+                    with Image.open(abs_path) as im:
+                        w, h = im.size
+                        long_sides.append(max(w, h))
+                except Exception:
+                    continue
+            if long_sides:
+                p95 = float(np.percentile(np.array(long_sides, dtype=float), 95))
+                L_b = int(np.ceil(p95 * 1.05))
+                print(f'  • Fixed box L_b={L_b} (P95 * 1.05)')
+            else:
+                L_b = 0
         for ch, inst_id, abs_path in items:
             img = open_confirmed_image(abs_path)
             if img is None:
                 missing += 1
                 continue
-            tile = make_tile(img, tile_size=tile_size, border=border, bg_color=bg_color)
+            if args.use_fixed_box and L_b and L_b > 0:
+                roi = center_crop_fixed_box(img, L_b)
+                # 将固定框 ROI 缩放到 tile（保持统一固定框视角，仅显示窗口，不改变字形与框的相对关系）
+                # 这里复用 make_tile 以统一边框与留白（roi 近似正方形，缩放效果一致）
+                tile = make_tile(roi, tile_size=tile_size, border=border, bg_color=bg_color)
+            else:
+                tile = make_tile(img, tile_size=tile_size, border=border, bg_color=bg_color)
             tiles.append(tile)
 
         if not tiles:

@@ -1,0 +1,309 @@
+{% extends "layout.html" %}
+{% block title %}问题集中处理（Fixing）{% endblock %}
+{% block content %}
+<style>
+  .fixing-wrap { display: flex; gap: 16px; }
+  .fixing-sidebar { width: 280px; flex: 0 0 auto; }
+  .fixing-main { flex: 1 1 auto; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
+  .card { border: 1px solid #dfe6ec; border-radius: 6px; padding: 0; background: #fff; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 2px 4px rgba(15,35,67,0.08); transition: box-shadow 0.15s ease; }
+  .card:hover { box-shadow: 0 4px 12px rgba(15,35,67,0.16); }
+  .thumb { width: 100%; display: block; background: #fff; border-radius: 4px; }
+  .card.dropped {
+    background: #f4f6f8;
+    border-color: #d8dfe5;
+  }
+  .card.dropped .thumb {
+    opacity: 0.35;
+    filter: grayscale(0.95);
+  }
+  .card.dropped .thumb-label { background: rgba(255,255,255,0.92); color: #6b737c; }
+  .card.pending {
+    background: #fff0d7;
+    border-color: #ebb05c;
+  }
+  .card.pending .thumb {
+    mix-blend-mode: multiply;
+  }
+  .card.pending .thumb-label { background: rgba(255, 240, 205, 0.95); color: #7a5200; }
+  .card.confirmed {
+    background: #f3fbf6;
+    border-color: #9ed3ac;
+  }
+  .card.confirmed .thumb-label { background: rgba(236, 250, 241, 0.95); color: #1f6a32; }
+  .card.unreviewed {
+    background: #ffffff;
+    border-color: #dfe6ec;
+  }
+  .card.unreviewed .thumb-label { background: rgba(248,249,250,0.92); color: #4c5868; }
+  .card.unreviewed::after {
+    content: "未处理";
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: rgba(226, 240, 255, 0.95);
+    color: #0f4c81;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+  .thumb-label { position: absolute; left: 6px; right: 6px; bottom: 6px; background: rgba(255,255,255,0.95); color: #2f3542; font-size: 12px; padding: 3px 6px; border-radius: 4px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 4px rgba(15,35,67,0.18); opacity: 0; transform: translateY(6px); transition: opacity 0.15s ease, transform 0.15s ease; pointer-events: none; }
+  .card:hover .thumb-label { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .thumb-label .char-name { font-weight: 600; cursor: pointer; }
+  .thumb-actions { display: flex; gap: 4px; }
+  .thumb-actions button { border: 1px solid #cfd8dc; background: #fff; color: #2f3542; padding: 1px 6px; border-radius: 3px; font-size: 11px; cursor: pointer; transition: all 0.15s ease; }
+  .thumb-actions button:hover, .thumb-label .char-name:hover { background: #f1f5f8; }
+  .meta { display:none; }
+  .toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  /* 移除右下角拼贴浮窗 */
+  .stat { font-size: 12px; color: #444; margin-left: auto; }
+  select, input[type="number"], input[type="text"] { padding: 4px; }
+
+  .ocr-segment-buttons { display: flex; gap: 12px; margin-top: 12px; }
+  .btn { padding: 6px 12px; border: 1px solid #d7dee4; background: #fff; border-radius: 20px; cursor: pointer; font-size: 13px; color: #2f3542; transition: background 0.15s ease, color 0.15s ease; }
+  .btn:hover { background: #f3f6f8; }
+  .btn-primary { border-color: #4f86c6; color: #4f86c6; background: #fff; }
+  .btn-primary:hover { background: #edf3fb; }
+  .btn-warning { border-color: #c9883a; color: #c9883a; background: #fff; }
+  .btn-link { background: none; border: none; color: #1769aa; cursor: pointer; text-decoration: underline; padding: 0; }
+  .modal-frame { width: 92vw; height: 92vh; border: none; background: #fff; }
+  .iframe-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 9999; }
+  .iframe-modal.active { display: flex; }
+  .iframe-container { width: 95vw; height: 95vh; background: #fff; border-radius: 8px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+  .iframe-header { padding: 8px 12px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 12px; }
+  .iframe-header .spacer { flex: 1 1 auto; }
+  .iframe-header .close-btn { font-size: 20px; border: none; background: none; cursor: pointer; }
+  .iframe-body { flex: 1 1 auto; }
+  .iframe-body iframe { width: 100%; height: 100%; border: none; }
+</style>
+
+<div class="container">
+  <h1>问题集中处理（Fixing）</h1>
+  <div class="fixing-wrap">
+    <aside class="fixing-sidebar">
+      <div>
+        <label>选择书籍：</label>
+        <select id="book-select"></select>
+      </div>
+      <div style="margin-top: 8px;">
+        <label>灰度阈值：</label>
+        <input id="bw-threshold" type="number" value="128" min="0" max="255"/>
+      </div>
+      <div style="margin-top: 8px;">
+        <button onclick="reloadFixing()">刷新</button>
+      </div>
+    </aside>
+    <main class="fixing-main">
+      <div class="toolbar">
+        <div id="summary">共 0 项</div>
+        <div class="stat" id="fixed-box-stat"></div>
+      </div>
+      <div class="ocr-segment-buttons">
+        <button class="btn" onclick="openOcrModal()">打开 OCR 筛选（当前书）</button>
+        <button class="btn btn-primary" onclick="openSegmentModalForBook()">打开切割审查列表</button>
+      </div>
+      <div id="grid" class="grid"></div>
+      
+    </main>
+  </div>
+  <!-- OCR / Segment 处理模态（嵌入原页面，功能完全一致） -->
+  <div class="iframe-modal" id="ocr-modal">
+    <div class="iframe-container">
+      <div class="iframe-header">
+        <strong>第一轮 OCR 筛选</strong>
+        <div class="spacer"></div>
+        <button class="btn" onclick="refreshOcrFrame()">刷新</button>
+        <button class="close-btn" onclick="closeOcrModal()">&times;</button>
+      </div>
+      <div class="iframe-body">
+        <iframe id="ocr-frame" src=""></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="iframe-modal" id="segment-modal">
+    <div class="iframe-container">
+      <div class="iframe-header">
+        <strong>第二轮切割审查</strong>
+        <div class="spacer"></div>
+        <button class="btn" onclick="refreshSegmentFrame()">刷新</button>
+        <button class="close-btn" onclick="closeSegmentModal()">&times;</button>
+      </div>
+      <div class="iframe-body">
+        <iframe id="segment-frame" src=""></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API_BASE = '';
+  let currentBook = null;
+  let lastClickedChar = null;
+  let lastClickedInstance = null;
+  const TILE = 96;
+
+  async function loadBooks() {
+    const sel = document.getElementById('book-select');
+    sel.innerHTML = '';
+    // 直接使用 /api/books_simple（来自切割页，读取 lookup 列表）。
+    const resp = await fetch(`${API_BASE}/api/books_simple`);
+    const data = await resp.json();
+    if (!data.success) return;
+    for (const b of data.books) {
+      const opt = document.createElement('option');
+      opt.value = b.name; opt.textContent = b.name;
+      sel.appendChild(opt);
+    }
+    if (data.books.length > 0) {
+      currentBook = data.books[0].name;
+      sel.value = currentBook;
+    }
+    sel.addEventListener('change', () => {
+      currentBook = sel.value;
+      reloadFixing();
+    });
+  }
+
+  async function reloadFixing() {
+    const grid = document.getElementById('grid');
+    const sumEl = document.getElementById('summary');
+    const thrEl = document.getElementById('bw-threshold');
+    const threshold = Math.max(0, Math.min(255, parseInt(thrEl.value||'128', 10)));
+
+    if (!currentBook) return;
+    const url = `${API_BASE}/api/fixing_items?book=${encodeURIComponent(currentBook)}&all=1&image=thumb&threshold=${threshold}&use_fixed_box=1&tile=${TILE}`;
+    const resp = await fetch(url);
+    const data = await resp.json();
+    if (!data.success) { grid.innerHTML = '<div>加载失败</div>'; return; }
+
+    sumEl.textContent = `共 ${data.total} 项`;
+    const Lb = (data.fixed_box && data.fixed_box.L_b) ? data.fixed_box.L_b : 0;
+    document.getElementById('fixed-box-stat').textContent = Lb ? `固定框 L_b=${Lb}` : '';
+
+    grid.innerHTML = '';
+    for (const it of data.items) {
+      const card = document.createElement('div'); card.className = 'card';
+      const decision = (it.decision || 'unknown');
+      const status = (it.status || 'unreviewed');
+      if (decision === 'drop') {
+        card.classList.add('dropped');
+      } else if (status === 'pending_manual') {
+        card.classList.add('pending');
+      } else if (status === 'confirmed') {
+        card.classList.add('confirmed');
+      } else {
+        card.classList.add('unreviewed');
+      }
+      if (it.decision === 'drop') {
+        card.classList.add('dropped');
+      }
+      if (it.thumb) {
+        const img = document.createElement('img'); img.className = 'thumb'; img.src = it.thumb; img.alt = `${it.char}-${it.instance_id}`; card.appendChild(img);
+      }
+
+      const label = document.createElement('div');
+      label.className = 'thumb-label';
+      label.innerHTML = `
+        <span class="char-name" title="打开 OCR">${it.char}</span>
+        <div class="thumb-actions">
+          <button type="button" data-action="segment">切割</button>
+          <button type="button" data-action="ocr">OCR</button>
+        </div>
+      `;
+      const charNameEl = label.querySelector('.char-name');
+      charNameEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openOcrModalForChar(it.char);
+      });
+      label.querySelector('[data-action="segment"]').addEventListener('click', (e) => {
+        e.stopPropagation();
+        openSegmentModal(it.char, it.instance_id);
+      });
+      label.querySelector('[data-action="ocr"]').addEventListener('click', (e) => {
+        e.stopPropagation();
+        openOcrModalForChar(it.char);
+      });
+      card.appendChild(label);
+
+      card.onclick = () => openSegmentModal(it.char, it.instance_id);
+      grid.appendChild(card);
+    }
+  }
+
+  (async function init(){
+    await loadBooks();
+    await reloadFixing();
+  })();
+
+  function openOcrModal(targetChar){
+    if (!currentBook) {
+      alert('请先选择书籍');
+      return;
+    }
+    const frame = document.getElementById('ocr-frame');
+    const params = new URLSearchParams({ book: currentBook });
+    if (targetChar) params.set('char', targetChar);
+    frame.src = `/ocr_review?${params.toString()}`;
+    document.getElementById('ocr-modal').classList.add('active');
+  }
+
+  function openOcrModalForChar(char){
+    openOcrModal(char);
+  }
+
+  function closeOcrModal(){
+    const modal = document.getElementById('ocr-modal');
+    const frame = document.getElementById('ocr-frame');
+    frame.src = 'about:blank';
+    modal.classList.remove('active');
+  }
+
+  function refreshOcrFrame(){
+    const frame = document.getElementById('ocr-frame');
+    if (frame.src) frame.src = frame.src;
+  }
+
+  function openSegmentModalForBook() {
+    if (!currentBook) {
+      alert('请先选择书籍');
+      return;
+    }
+    const frame = document.getElementById('segment-frame');
+    frame.src = `/segment_review?book=${encodeURIComponent(currentBook)}`;
+    document.getElementById('segment-modal').classList.add('active');
+  }
+
+  function openSegmentModal(char, inst){
+    if (!currentBook) {
+      alert('请先选择书籍');
+      return;
+    }
+    lastClickedChar = char;
+    lastClickedInstance = inst;
+    const params = new URLSearchParams({
+      book: currentBook,
+      char,
+      instance_id: inst
+    });
+    const frame = document.getElementById('segment-frame');
+    frame.src = `/segment_review?${params.toString()}`;
+    document.getElementById('segment-modal').classList.add('active');
+  }
+
+  function closeSegmentModal(){
+    const modal = document.getElementById('segment-modal');
+    const frame = document.getElementById('segment-frame');
+    frame.src = 'about:blank';
+    modal.classList.remove('active');
+  }
+
+  function refreshSegmentFrame(){
+    const frame = document.getElementById('segment-frame');
+    if (frame.src) frame.src = frame.src;
+  }
+
+  // 旧的内联面板逻辑已移除，全部功能通过原生页面完成
+</script>
+{% endblock %}

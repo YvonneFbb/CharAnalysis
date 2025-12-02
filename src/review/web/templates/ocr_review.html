@@ -465,6 +465,10 @@
                     <button id="prev-page" onclick="loadPage(currentPage - 1)">上一页</button>
                     <span id="page-info">第 1/1 页</span>
                     <button id="next-page" onclick="loadPage(currentPage + 1)">下一页</button>
+                    <label style="font-size: 12px; display:flex; align-items:center; gap:4px; margin-left:16px;">
+                        <input type="checkbox" id="sort-width-toggle" onchange="toggleWidthSort(this.checked)">
+                        按宽度排序
+                    </label>
                 </div>
                 <div class="actions">
                     <button class="btn-select-all" onclick="selectAll()">全选</button>
@@ -481,10 +485,11 @@
         let totalPages = 1;
         let instancesData = [];
         let reviewResults = {};  // { bookName: { char: { index: true/false } } }
+        let sortByWidth = false;
 
         // 初始化
         document.addEventListener('DOMContentLoaded', async function() {
-            loadBooks();
+            await loadBooks();
             loadReviewResults();
 
             // 关键修复：先上传本地数据（可能有未同步的），再从服务器加载其他人的数据
@@ -494,6 +499,8 @@
             // 从服务器加载并合并审查结果
             console.log('正在从服务器同步其他书籍的数据...');
             await loadFromServer();
+
+            await handleDeepLink();
 
             // 重新加载书籍以显示最新的审查进度
             if (currentBook) {
@@ -633,6 +640,31 @@
             }
         }
 
+        async function handleDeepLink() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const deepBook = params.get('book');
+                const deepChar = params.get('char');
+                if (!deepBook) return;
+                const select = document.getElementById('book-select');
+                if (select) {
+                    const option = Array.from(select.options).find(opt => opt.value === deepBook);
+                    if (option) select.value = deepBook;
+                }
+                await loadBook(deepBook);
+                if (deepChar) {
+                    const charItem = document.querySelector(`.char-item[data-char="${deepChar}"]`);
+                    if (charItem) {
+                        charItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        const count = parseInt(charItem.dataset.count || '0', 10);
+                        openReviewModal(deepChar, count || 0);
+                    }
+                }
+            } catch (error) {
+                console.warn('深链处理失败:', error);
+            }
+        }
+
         // 渲染分类方法
         function renderMethods(methods) {
             // 保存当前的展开状态
@@ -670,7 +702,7 @@
                         ${method.chars.map(char => {
                             const reviewed = isCharReviewed(char.char);
                             return `
-                                <div class="char-item ${reviewed ? 'reviewed' : ''}" onclick="openReviewModal('${char.char}', ${char.count})">
+                                <div class="char-item ${reviewed ? 'reviewed' : ''}" data-char="${char.char}" data-count="${char.count}" onclick="openReviewModal('${char.char}', ${char.count})">
                                     <div class="char-text">${char.char}</div>
                                     <div class="char-count">${char.count} 个</div>
                                     ${reviewed ? '<div class="reviewed-badge">✓ 已审查</div>' : ''}
@@ -721,7 +753,7 @@
             document.getElementById('instances-grid').style.display = 'none';
 
             try {
-                const response = await fetch(`${API_BASE}/instances?book=${encodeURIComponent(currentBook)}&char=${encodeURIComponent(currentChar)}&page=${page}&page_size=20`);
+                const response = await fetch(`${API_BASE}/instances?book=${encodeURIComponent(currentBook)}&char=${encodeURIComponent(currentChar)}&page=${page}&page_size=20&sort=${sortByWidth ? 'width_desc' : 'default'}`);
                 const data = await response.json();
 
                 instancesData = data.instances;
@@ -748,19 +780,18 @@
             const grid = document.getElementById('instances-grid');
             grid.innerHTML = '';
 
-            // 计算全局起始索引
-            const globalStartIndex = (currentPage - 1) * 20;
-
             for (const [localIndex, instance] of instances.entries()) {
-                const globalIndex = globalStartIndex + localIndex;  // 全局数组索引
+                const instanceIndex = (instance && typeof instance.instance_index === 'number')
+                    ? instance.instance_index
+                    : ((currentPage - 1) * 20 + localIndex);
                 
                 const item = document.createElement('div');
                 item.className = 'instance-item';
-                item.dataset.arrayIndex = globalIndex;  // 保存全局数组索引
+                item.dataset.arrayIndex = instanceIndex;  // 保存全局数组索引
 
                 // 检查已保存的审查状态（使用v2格式）
                 const charInstances = getCharInstances(currentBook, currentChar);
-                if (charInstances[globalIndex] === true) {
+                if (charInstances[instanceIndex] === true) {
                     item.classList.add('selected');
                 }
 
@@ -777,8 +808,13 @@
                 grid.appendChild(item);
 
                 // 异步裁切图片
-                cropImage(globalIndex, item);
+                cropImage(instanceIndex, item);
             }
+        }
+
+        function toggleWidthSort(checked) {
+            sortByWidth = !!checked;
+            loadPage(1);
         }
 
         // 裁切图片
