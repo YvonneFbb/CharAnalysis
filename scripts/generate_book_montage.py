@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """
-为每本书生成一个 PNG 拼贴图，严格只使用 segmentation_review.json 中“已确认”的最终切割图，
+为每本书生成一个 PNG 拼贴图，仅使用分书文件中的最终切割结果，
 并为每个小图添加淡色边框。
 
-数据来源（唯一）：data/results/segmentation_review.json
-  - 仅采集 status == "confirmed" 的实例
+数据来源（唯一）：data/results/review_books/*.json
+  - 仅采集 segments 中 status == "confirmed" 且 decision != "drop" 的实例
   - 使用其中的 segmented_path 加载图片（相对项目根目录）
 
 输出：data/exports/montage/{book}.png
@@ -37,19 +37,36 @@ import numpy as np
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-REVIEW_PATH = PROJECT_ROOT / 'data/results/segmentation_review.json'
+REVIEW_BOOKS_DIR = PROJECT_ROOT / 'data/results/review_books'
 EXPORT_DIR = PROJECT_ROOT / 'data/exports/montage'
 
 
-def load_review() -> Dict:
-    if REVIEW_PATH.exists():
-        with open(REVIEW_PATH, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return { 'version': 1, 'books': {} }
+def load_review_segments() -> Dict:
+    """返回切割状态视图（books->char->instance_id->entry），来自分片文件。"""
+    out = { 'version': 2, 'books': {} }
+    if not REVIEW_BOOKS_DIR.exists():
+        return out
+    for path in REVIEW_BOOKS_DIR.glob('*.json'):
+        try:
+            payload = json.load(open(path, 'r', encoding='utf-8'))
+        except Exception:
+            continue
+        book = payload.get('book') or path.stem
+        chars = payload.get('chars') or {}
+        book_out = {}
+        for char, char_obj in chars.items():
+            if not isinstance(char_obj, dict):
+                continue
+            seg_map = char_obj.get('segments', {})
+            if seg_map:
+                book_out[char] = seg_map
+        if book_out:
+            out['books'][book] = book_out
+    return out
 
 
 def iter_confirmed_instances(review_data: Dict, book: str) -> List[Tuple[str, str, Path]]:
-    """返回该书所有已确认的 (char, instance_id, abs_image_path)。"""
+    """返回该书所有已确认且非 drop 的 (char, instance_id, abs_image_path)。"""
     out: List[Tuple[str, str, Path]] = []
     books = review_data.get('books', {})
     if book not in books:
@@ -62,6 +79,8 @@ def iter_confirmed_instances(review_data: Dict, book: str) -> List[Tuple[str, st
             if not isinstance(entry, dict):
                 continue
             if entry.get('status') != 'confirmed':
+                continue
+            if entry.get('decision') == 'drop':
                 continue
             seg_rel = entry.get('segmented_path')
             if not seg_rel:
@@ -201,7 +220,7 @@ def main():
 
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
 
-    review = load_review()
+    review = load_review_segments()
     books = args.books if args.books else list_books(review)
 
     if not books:

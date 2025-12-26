@@ -36,18 +36,20 @@
     border-color: #dfe6ec;
   }
   .card.unreviewed .thumb-label { background: rgba(248,249,250,0.92); color: #4c5868; }
-  .card.unreviewed::after {
-    content: "未处理";
+  .status-badge {
     position: absolute;
     top: 6px;
     left: 6px;
-    background: rgba(226, 240, 255, 0.95);
-    color: #0f4c81;
     font-size: 11px;
     padding: 2px 8px;
     border-radius: 12px;
     font-weight: 600;
+    box-shadow: 0 2px 4px rgba(15,35,67,0.12);
   }
+  .status-unreviewed { background: rgba(226, 240, 255, 0.95); color: #0f4c81; }
+  .status-confirmed { background: rgba(220, 245, 230, 0.95); color: #1f6a32; }
+  .status-pending { background: rgba(255, 233, 194, 0.95); color: #7a5200; }
+  .status-drop { background: rgba(230, 233, 236, 0.95); color: #5b6470; }
   .thumb-label { position: absolute; left: 6px; right: 6px; bottom: 6px; background: rgba(255,255,255,0.95); color: #2f3542; font-size: 12px; padding: 3px 6px; border-radius: 4px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 4px rgba(15,35,67,0.18); opacity: 0; transform: translateY(6px); transition: opacity 0.15s ease, transform 0.15s ease; pointer-events: none; }
   .card:hover .thumb-label { opacity: 1; transform: translateY(0); pointer-events: auto; }
   .thumb-label .char-name { font-weight: 600; cursor: pointer; }
@@ -199,6 +201,24 @@
       if (it.decision === 'drop') {
         card.classList.add('dropped');
       }
+
+      // 状态角标（始终显示）
+      let statusText = '未处理';
+      let statusClass = 'status-unreviewed';
+      if (decision === 'drop') {
+        statusText = '不需要';
+        statusClass = 'status-drop';
+      } else if (status === 'confirmed') {
+        statusText = '已确认';
+        statusClass = 'status-confirmed';
+      } else if (status === 'pending_manual') {
+        statusText = '待手动';
+        statusClass = 'status-pending';
+      }
+      const badge = document.createElement('div');
+      badge.className = `status-badge ${statusClass}`;
+      badge.textContent = statusText;
+      card.appendChild(badge);
       if (it.thumb) {
         const img = document.createElement('img'); img.className = 'thumb'; img.src = it.thumb; img.alt = `${it.char}-${it.instance_id}`; card.appendChild(img);
       }
@@ -245,6 +265,9 @@
     const frame = document.getElementById('ocr-frame');
     const params = new URLSearchParams({ book: currentBook });
     if (targetChar) params.set('char', targetChar);
+    if (new URLSearchParams(window.location.search).has('debug')) {
+      params.set('debug', '1');
+    }
     frame.src = `/ocr_review?${params.toString()}`;
     document.getElementById('ocr-modal').classList.add('active');
   }
@@ -258,6 +281,10 @@
     const frame = document.getElementById('ocr-frame');
     frame.src = 'about:blank';
     modal.classList.remove('active');
+    // OCR 可能已更新选择，关闭后刷新 Fixing 列表
+    setTimeout(() => {
+      reloadFixing();
+    }, 500);
   }
 
   function refreshOcrFrame(){

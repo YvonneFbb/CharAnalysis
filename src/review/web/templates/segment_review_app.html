@@ -1561,7 +1561,8 @@
                     chars.forEach(char => {
                         // 检查该字符是否在 lookup 文件中（已通过第一轮审查）
                         const charInfo = charsInfo[char];
-                        if (!charInfo || charInfo.count === 0) return;
+                        const totalForChar = (charInfo && typeof charInfo.total === 'number') ? charInfo.total : 0;
+                        if (!charInfo || totalForChar === 0) return;
 
                         totalChars++;
 

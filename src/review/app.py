@@ -13,6 +13,7 @@ import logging
 from flask_cors import CORS
 import json
 import os
+import shutil
 from pathlib import Path
 import cv2
 import numpy as np
@@ -59,6 +60,9 @@ STANDARD_CHARS_JSON_PATH = PROJECT_ROOT / 'data/standard_chars.json'
 PREPROCESSED_DIR = PROJECT_ROOT / 'data/results/preprocessed'
 CROPPED_CACHE_DIR = PROJECT_ROOT / 'data/results/cropped_cache'
 REVIEW_RESULTS_PATH = PROJECT_ROOT / 'data/results/review_results.json'
+REVIEW_BOOKS_DIR = PROJECT_ROOT / 'data/results/review_books'
+REVIEW_BOOK_BACKUP_KEEP = 5
+REVIEW_BOOK_BACKUP_COOLDOWN = 60  # 秒，避免高频写入产生大量备份
 
 # 切割相关路径
 SEGMENTATION_REVIEW_PATH = PROJECT_ROOT / 'data/results/segmentation_review.json'
@@ -316,8 +320,69 @@ def _sync_lookup_for_char(book_name: str, char: str, char_obj: Dict) -> set:
     return removed_ids
 
 
+def _ensure_lookup_for_book(book_name: str) -> Dict:
+    """确保书内所有字符 lookup 可用（按需补齐），返回 lookup 映射。"""
+    ensure_segment_lookup_data()
+    book_obj = read_review_book(book_name) or {}
+    if not isinstance(book_obj, dict):
+        segment_lookup_data['books'][book_name] = {}
+        return segment_lookup_data['books'][book_name]
+
+    updated = False
+    removed_by_char: Dict[str, set] = {}
+    for char, char_obj in book_obj.items():
+        if not isinstance(char_obj, dict):
+            continue
+        lookup_map = char_obj.get('lookup') or {}
+        seg_map = char_obj.get('segments') or {}
+        instances = char_obj.get('instances') or {}
+        need_sync = char_obj.get('_lookup_dirty') or ('lookup' not in char_obj)
+        if not need_sync:
+            if instances and not lookup_map:
+                need_sync = True
+            elif lookup_map and not instances:
+                need_sync = True
+            elif seg_map and any(k not in lookup_map for k in seg_map.keys()):
+                need_sync = True
+        if not need_sync:
+            continue
+        removed_ids = _sync_lookup_for_char(book_name, char, char_obj)
+        lookup_ids = set((char_obj.get('lookup') or {}).keys())
+        if seg_map:
+            stale_ids = set(seg_map.keys()) - lookup_ids
+            if stale_ids:
+                for inst_id in stale_ids:
+                    seg_map.pop(inst_id, None)
+                if seg_map:
+                    char_obj['segments'] = seg_map
+                else:
+                    char_obj.pop('segments', None)
+                removed_ids = set(removed_ids) | stale_ids
+        char_obj.pop('_lookup_dirty', None)
+        book_obj[char] = char_obj
+        updated = True
+        if removed_ids:
+            removed_by_char[char] = removed_ids
+
+    if updated:
+        try:
+            write_review_book(book_name, book_obj, skip_backup=True)
+        except Exception:
+            pass
+        for char, removed_ids in removed_by_char.items():
+            _remove_segmentation_entries(book_name, char, removed_ids)
+
+    out_book = {}
+    for char, char_obj in book_obj.items():
+        if not isinstance(char_obj, dict):
+            continue
+        out_book[char] = char_obj.get('lookup') or {}
+    segment_lookup_data['books'][book_name] = out_book
+    return out_book
+
+
 def _remove_segmentation_entries(book_name: str, char: str, instance_ids: set):
-    """从 segmentation_review.json 中删除指定实例，并删除对应图片。"""
+    """删除指定实例的切割状态，并删除对应图片。"""
     if not instance_ids:
         return
     try:
@@ -325,7 +390,7 @@ def _remove_segmentation_entries(book_name: str, char: str, instance_ids: set):
     except Exception:
         fcntl = None
 
-    lock_path = _review_lock_path()
+    lock_path = _review_book_lock_path(book_name)
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     with open(lock_path, 'a+') as lock_fp:
         if fcntl:
@@ -334,34 +399,37 @@ def _remove_segmentation_entries(book_name: str, char: str, instance_ids: set):
             except Exception:
                 pass
 
-        data = read_review_data()
-        books = data.setdefault('books', {})
-        book_obj = books.get(book_name)
+        book_obj = read_review_book(book_name) or {}
         changed = False
 
         if book_obj and isinstance(book_obj, dict):
-            char_entries = book_obj.get(char)
-            if char_entries and isinstance(char_entries, dict):
-                for inst_id in instance_ids:
-                    entry = char_entries.pop(inst_id, None)
-                    if entry:
-                        seg_rel = entry.get('segmented_path')
-                        if seg_rel:
-                            seg_abs = PROJECT_ROOT / seg_rel
-                            try:
-                                if seg_abs.exists():
-                                    seg_abs.unlink()
-                            except Exception:
-                                pass
-                        changed = True
-                if not char_entries:
-                    book_obj.pop(char, None)
+            char_obj = book_obj.get(char) or {}
+            seg_map = char_obj.get('segments') or {}
+            for inst_id in instance_ids:
+                entry = seg_map.pop(inst_id, None)
+                if entry:
+                    seg_rel = entry.get('segmented_path')
+                    if seg_rel:
+                        seg_abs = PROJECT_ROOT / seg_rel
+                        try:
+                            if seg_abs.exists():
+                                seg_abs.unlink()
+                        except Exception:
+                            pass
                     changed = True
-            if book_obj is not None and not book_obj:
-                books.pop(book_name, None)
+            if seg_map:
+                char_obj['segments'] = seg_map
+                book_obj[char] = char_obj
+            else:
+                if 'segments' in char_obj:
+                    char_obj.pop('segments', None)
+                    book_obj[char] = char_obj
 
         if changed:
-            write_review_data(data)
+            try:
+                write_review_book(book_name, book_obj)
+            except Exception:
+                pass
 
         if fcntl:
             try:
@@ -376,132 +444,273 @@ def ensure_segment_lookup_data():
     if segment_lookup_data is None:
         segment_lookup_data = { 'version': 1, 'books': {} }
 
-def _read_review_results() -> Dict:
-    if REVIEW_RESULTS_PATH.exists():
+
+def _review_book_path(book_name: str) -> Path:
+    safe_name = book_name.replace('/', '_')
+    return REVIEW_BOOKS_DIR / f'{safe_name}.json'
+
+
+def _review_book_backup_dir(book_name: str) -> Path:
+    safe_name = book_name.replace('/', '_')
+    return REVIEW_BOOKS_DIR / '_backups' / safe_name
+
+
+def _read_review_payload(path: Path) -> Optional[Dict]:
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+
+def _extract_review_book_chars(payload: Dict, book_name: str) -> Optional[Dict]:
+    if not isinstance(payload, dict):
+        return None
+    if 'chars' in payload and isinstance(payload['chars'], dict):
+        return payload['chars']
+    if 'books' in payload and isinstance(payload['books'], dict):
+        return payload['books'].get(book_name)
+    return None
+
+
+def _read_latest_review_backup(book_name: str) -> Optional[Dict]:
+    backup_dir = _review_book_backup_dir(book_name)
+    if not backup_dir.exists():
+        return None
+    candidates = sorted(backup_dir.glob('*.json'), key=lambda p: p.stat().st_mtime, reverse=True)
+    for path in candidates:
+        payload = _read_review_payload(path)
+        if payload is not None:
+            print(f'⚠️  {book_name}: 主文件损坏，回退到备份 {path.name}')
+            return payload
+    return None
+
+
+def _rotate_review_backups(backup_dir: Path, keep: int):
+    try:
+        backups = sorted(backup_dir.glob('*.json'), key=lambda p: p.stat().st_mtime, reverse=True)
+        for old in backups[keep:]:
+            old.unlink(missing_ok=True)
+    except Exception:
+        pass
+
+
+def _maybe_backup_review_book(book_name: str, book_path: Path):
+    if not book_path.exists():
+        return
+    backup_dir = _review_book_backup_dir(book_name)
+    backup_dir.mkdir(parents=True, exist_ok=True)
+    backups = sorted(backup_dir.glob('*.json'), key=lambda p: p.stat().st_mtime)
+    if backups:
+        latest_mtime = backups[-1].stat().st_mtime
+        if time.time() - latest_mtime < REVIEW_BOOK_BACKUP_COOLDOWN:
+            return
+    ts = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
+    backup_path = backup_dir / f'{ts}.json'
+    try:
+        shutil.copy2(book_path, backup_path)
+    except Exception:
+        return
+    _rotate_review_backups(backup_dir, REVIEW_BOOK_BACKUP_KEEP)
+
+
+def _fsync_dir(path: Path):
+    try:
+        dir_fd = os.open(str(path), os.O_RDONLY)
         try:
-            with open(REVIEW_RESULTS_PATH, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception:
-            return { 'version': 2, 'books': {} }
-    return { 'version': 2, 'books': {} }
+            os.fsync(dir_fd)
+        finally:
+            os.close(dir_fd)
+    except Exception:
+        pass
+
+
+def read_review_book(book_name: str) -> Optional[Dict]:
+    """读取单本书的 OCR 数据（字符级），返回 {char: data}。"""
+    path = _review_book_path(book_name)
+    if not path.exists():
+        return None
+    payload = _read_review_payload(path)
+    if payload is None:
+        payload = _read_latest_review_backup(book_name)
+    if payload is None:
+        return None
+    return _extract_review_book_chars(payload, book_name)
+
+
+def write_review_book(book_name: str, book_data: Dict, skip_backup: bool = False):
+    """写入单本书的 OCR 数据（字符级）。"""
+    REVIEW_BOOKS_DIR.mkdir(parents=True, exist_ok=True)
+    book_path = _review_book_path(book_name)
+    if not skip_backup:
+        _maybe_backup_review_book(book_name, book_path)
+    payload = {
+        'version': 2,
+        'book': book_name,
+        'chars': book_data
+    }
+    tmp = book_path.with_suffix(f'.json.tmp.{os.getpid()}-{int(time.time()*1000)}')
+    with open(tmp, 'w', encoding='utf-8') as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp, book_path)
+    _fsync_dir(book_path.parent)
+
+
+def list_review_books() -> list:
+    if not REVIEW_BOOKS_DIR.exists():
+        return []
+    return sorted([p.stem for p in REVIEW_BOOKS_DIR.glob('*.json')])
+
+
+def read_all_review_books() -> Dict:
+    """聚合所有分片为 {version:2, books:{book: chars}} 的内存视图。"""
+    out = {'version': 2, 'books': {}}
+    for book_name in list_review_books():
+        chars = read_review_book(book_name)
+        if isinstance(chars, dict):
+            out['books'][book_name] = chars
+    return out
 
 def get_lookup_book(book_name: str) -> Optional[Dict]:
-    """返回某本书在内存中的 lookup 映射（OCR 保存时同步写入）。"""
+    """返回某本书在内存中的 lookup 映射（直接来自 OCR 结果，不再补齐切割实例）。"""
     ensure_segment_lookup_data()
     if not book_name:
         return None
     if book_name in segment_lookup_data['books']:
         return segment_lookup_data['books'][book_name]
-
-    review = _read_review_results()
-    book_obj = (review.get('books') or {}).get(book_name)
-    if not isinstance(book_obj, dict):
-        segment_lookup_data['books'][book_name] = {}
-        return segment_lookup_data['books'][book_name]
-
-    # 每次访问该书时，对所有字符强制同步一次 lookup，避免历史数据缺失导致 UI 看不到
-    write_back = False
-    for char, char_obj in book_obj.items():
-        if not isinstance(char_obj, dict):
-            continue
-        removed_ids = _sync_lookup_for_char(book_name, char, char_obj)
-        if removed_ids:
-            _remove_segmentation_entries(book_name, char, removed_ids)
-            write_back = True
-
-    # 将 segmentation_review 中存在但 review_results.lookup 缺失的实例补齐（仅非 dropped）
-    try:
-        seg_data = read_review_data()
-        seg_book = (seg_data.get('books') or {}).get(book_name, {})
-        matched_book = ensure_matched_book_data(book_name) or {}
-        matched_chars = matched_book.get('chars', {}) if isinstance(matched_book, dict) else {}
-
-        # 预建 inst_id -> (char, idx, inst) 映射，便于快速补齐
-        id_map = {}
-        for ch, inst_list in matched_chars.items():
-            for idx, inst in enumerate(inst_list):
-                inst_id = _make_instance_id(inst)
-                id_map[inst_id] = (ch, idx, inst)
-
-        for ch, inst_map in seg_book.items():
-            if not isinstance(inst_map, dict):
-                continue
-            for inst_id, entry in inst_map.items():
-                if not isinstance(entry, dict):
-                    continue
-                if entry.get('status') == 'dropped':
-                    continue
-                ch_lookup = book_obj.setdefault(ch, {}).setdefault('lookup', {})
-                if inst_id in ch_lookup:
-                    continue
-                info = id_map.get(inst_id)
-                if not info:
-                    continue
-                mch, midx, minst = info
-                if mch != ch:
-                    continue
-                # 写回 instances + lookup
-                char_obj = book_obj.setdefault(ch, {})
-                inst_dict = char_obj.setdefault('instances', {})
-                inst_dict[str(midx)] = True
-                ch_lookup[inst_id] = {
-                    'bbox': minst.get('bbox', {}),
-                    'source_image': normalize_to_preprocessed_path(minst.get('source_image', '')),
-                    'confidence': minst.get('confidence', 0.0),
-                    'volume': minst.get('volume'),
-                    'page': minst.get('page'),
-                    'char_index': minst.get('char_index'),
-                    'index': midx
-                }
-                write_back = True
-                # 同步内存缓存
-                book_cache = segment_lookup_data.setdefault('books', {}).setdefault(book_name, {})
-                book_cache.setdefault(ch, {})[inst_id] = ch_lookup[inst_id]
-    except Exception as _e:
-        pass
-
-    if write_back:
-        REVIEW_RESULTS_PATH.parent.mkdir(parents=True, exist_ok=True)
-        with open(REVIEW_RESULTS_PATH, 'w', encoding='utf-8') as f:
-            json.dump(review, f, ensure_ascii=False, indent=2)
-
-    out_book = {}
-    for char, char_obj in book_obj.items():
-        lookup = char_obj.get('lookup') or {}
-        out_book[char] = lookup
-    segment_lookup_data['books'][book_name] = out_book
-    return out_book
+    return _ensure_lookup_for_book(book_name)
 
 
-# ==================== 切割审查状态：单文件加锁工具 ====================
+# ==================== 切割审查状态：单文件加锁工具（统一存于 review_results.json） ====================
 def _review_lock_path() -> Path:
-    return SEGMENTATION_REVIEW_PATH.with_suffix(SEGMENTATION_REVIEW_PATH.suffix + '.lock')
+    # 兼容旧逻辑的全局锁（尽量避免使用）
+    return REVIEW_RESULTS_PATH.with_suffix(REVIEW_RESULTS_PATH.suffix + '.lock')
+
+
+def _review_book_lock_path(book_name: str) -> Path:
+    safe_name = book_name.replace('/', '_')
+    return REVIEW_BOOKS_DIR / f'{safe_name}.json.lock'
+
+
+def _acquire_book_lock(lock_fp, timeout_sec: float = 2.0) -> bool:
+    try:
+        import fcntl
+    except Exception:
+        return True
+    start = time.time()
+    while True:
+        try:
+            fcntl.flock(lock_fp.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return True
+        except BlockingIOError:
+            if time.time() - start >= timeout_sec:
+                return False
+            time.sleep(0.05)
+        except Exception:
+            return True
+def _read_review_results() -> Dict:
+    # 兼容旧逻辑：现在统一从分片读取
+    return read_all_review_books()
 
 def read_review_data() -> dict:
-    if not SEGMENTATION_REVIEW_PATH.exists():
-        return {'version': 1, 'books': {}}
-    try:
-        with open(SEGMENTATION_REVIEW_PATH, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except Exception:
-        return {'version': 1, 'books': {}}
+    """
+    兼容接口：返回切割状态视图（源自 review_results.json 的 segments 字段）。
+    结构与旧 segmentation_review.json 保持一致：{version, books{book{char{inst_id: entry}}}}
+    """
+    rr = read_all_review_books()
+    out = {'version': rr.get('version', 2), 'books': {}}
+    books = rr.get('books', {})
+    for book, chars in books.items():
+        if not isinstance(chars, dict):
+            continue
+        book_out = {}
+        for char, char_obj in chars.items():
+            if not isinstance(char_obj, dict):
+                continue
+            seg_map = char_obj.get('segments', {})
+            if seg_map:
+                book_out[char] = seg_map
+        if book_out:
+            out['books'][book] = book_out
+    return out
 
-def write_review_data(data: dict):
-    """原子写：写临时文件后替换；在锁内执行，避免并发覆盖。"""
-    path = SEGMENTATION_REVIEW_PATH
-    tmp = path.with_suffix(path.suffix + f".tmp.{os.getpid()}-{int(time.time()*1000)}")
-    with open(tmp, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-    os.replace(tmp, path)
+
+def build_combined_book(book_name: str) -> dict:
+    """
+    构建统一视图：以 OCR 选中的 lookup 为主，叠加切割状态。
+    返回结构：{ char: { inst_id: {selected, bbox, source_image, ...,
+                                 status, decision, segmented_path, method, timestamp} } }
+    """
+    lookup_book = get_lookup_book(book_name) or {}
+    seg_data = read_review_data()
+    seg_book = (seg_data.get('books') or {}).get(book_name, {})
+
+    combined = {}
+    for char, inst_map in lookup_book.items():
+        seg_char = seg_book.get(char, {})
+        combined_char = {}
+        for inst_id, info in inst_map.items():
+            seg_entry = seg_char.get(inst_id, {})
+            merged = {
+                'selected': True,
+                'bbox': info.get('bbox', {}),
+                'source_image': info.get('source_image'),
+                'confidence': info.get('confidence'),
+                'volume': info.get('volume'),
+                'page': info.get('page'),
+                'char_index': info.get('char_index'),
+                'index': info.get('index'),
+                'status': seg_entry.get('status', 'unreviewed'),
+                'decision': seg_entry.get('decision'),
+                'segmented_path': seg_entry.get('segmented_path'),
+                'method': seg_entry.get('method'),
+                'timestamp': seg_entry.get('timestamp')
+            }
+            combined_char[inst_id] = merged
+        combined[char] = combined_char
+    return combined
+
+def write_review_data(seg_view: dict):
+    """
+    将切割状态写回 review_results.json 的 segments 字段。
+    仅更新 segments，不改动 instances/lookup/timestamp。
+    同时写出兼容文件 segmentation_review.json（派生视图），便于旧脚本使用。
+    """
+    # 按书写入分片文件的 segments 字段
+    for book, chars in (seg_view.get('books') or {}).items():
+        if not isinstance(chars, dict):
+            continue
+        book_obj = read_review_book(book) or {}
+        for char, seg_map in chars.items():
+            if not isinstance(seg_map, dict):
+                continue
+            char_obj = book_obj.setdefault(char, {})
+            char_obj['segments'] = seg_map
+        try:
+            write_review_book(book, book_obj)
+        except Exception:
+            pass
+
+    # 同步输出派生视图 segmentation_review.json，保持兼容
+    try:
+        SEGMENTATION_REVIEW_PATH.parent.mkdir(parents=True, exist_ok=True)
+        tmp2 = SEGMENTATION_REVIEW_PATH.with_suffix(SEGMENTATION_REVIEW_PATH.suffix + f".tmp.{os.getpid()}-{int(time.time()*1000)}")
+        with open(tmp2, 'w', encoding='utf-8') as f:
+            json.dump(seg_view, f, ensure_ascii=False, indent=2)
+        os.replace(tmp2, SEGMENTATION_REVIEW_PATH)
+    except Exception:
+        pass
 
 def update_review_entry(book_name: str, char: str, instance_id: str, entry: dict):
-    """对 segmentation_review.json 进行加锁的读-改-写更新。"""
+    """对切割状态进行加锁的读-改-写更新（存于 review_results.json 的 segments）。"""
     try:
         import fcntl  # POSIX
     except Exception:
         fcntl = None
 
-    lock_path = _review_lock_path()
+    lock_path = _review_book_lock_path(book_name)
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     with open(lock_path, 'a+') as lock_fp:
         if fcntl:
@@ -510,12 +719,13 @@ def update_review_entry(book_name: str, char: str, instance_id: str, entry: dict
             except Exception:
                 pass
 
-        data = read_review_data()
-        books = data.setdefault('books', {})
-        book_obj = books.setdefault(book_name, {})
+        book_obj = read_review_book(book_name) or {}
         char_obj = book_obj.setdefault(char, {})
-        char_obj[instance_id] = entry
-        write_review_data(data)
+        seg_map = char_obj.setdefault('segments', {})
+        seg_map[instance_id] = entry
+        char_obj['segments'] = seg_map
+        book_obj[char] = char_obj
+        write_review_book(book_name, book_obj)
 
         if fcntl:
             try:
@@ -572,15 +782,8 @@ def get_books():
 @app.route('/api/books_simple', methods=['GET'])
 def get_books_simple():
     """获取书籍列表（轻量级，用于切割审查界面）"""
-    books = []
-    if REVIEW_RESULTS_PATH.exists():
-        try:
-            with open(REVIEW_RESULTS_PATH, 'r', encoding='utf-8') as f:
-                review = json.load(f)
-            books = sorted(list((review.get('books') or {}).keys()))
-        except Exception:
-            books = []
-    books_list = [ {'name': name} for name in books ]
+    books = list_review_books()
+    books_list = [{'name': name} for name in books]
     return jsonify({
         'success': True,
         'books': sorted(books_list, key=lambda x: x['name'])
@@ -797,14 +1000,32 @@ def validate_data_format(data):
     return True, None
 
 
+@app.route('/api/ping', methods=['GET'])
+def api_ping():
+    return jsonify({
+        'success': True,
+        'ts': datetime.now(timezone.utc).isoformat(),
+        'pid': os.getpid()
+    })
+
+
 @app.route('/api/save_review', methods=['POST'])
 def save_review():
     """保存审查结果到服务器（v2格式：字符级别时间戳合并）"""
     try:
         global segment_lookup_data
+        req_start = time.perf_counter()
         # 记录请求信息
         content_length = request.content_length
-        print(f'收到保存请求，数据大小: {content_length / 1024:.2f} KB' if content_length else '收到保存请求')
+        size_kb = (content_length / 1024.0) if content_length else 0
+        app.logger.info(
+            '[save_review] from=%s origin=%s referer=%s ua=%s size=%.2fKB',
+            request.remote_addr,
+            request.headers.get('Origin'),
+            request.headers.get('Referer'),
+            request.headers.get('User-Agent'),
+            size_kb
+        )
 
         # 解析 JSON（设置超时和大小限制）
         try:
@@ -828,98 +1049,109 @@ def save_review():
             print(f'❌ 客户端数据格式错误: {error}')
             return jsonify({'success': False, 'error': f'客户端数据格式错误: {error}'}), 400
 
-        # 加载现有结果
-        if REVIEW_RESULTS_PATH.exists():
-            try:
-                with open(REVIEW_RESULTS_PATH, 'r', encoding='utf-8') as f:
-                    content = f.read().strip()
-                    if not content:
-                        print('⚠️ 服务器文件为空，重新初始化')
-                        server_results = {'version': 2, 'books': {}}
-                    else:
-                        server_results = json.loads(content)
-
-                        # 严格校验服务器数据
-                        valid, error = validate_data_format(server_results)
-                        if not valid:
-                            print(f'⚠️ 服务器数据格式错误，重新初始化: {error}')
-                            server_results = {'version': 2, 'books': {}}
-            except json.JSONDecodeError as e:
-                print(f'⚠️ 服务器文件 JSON 解析失败，重新初始化: {e}')
-                server_results = {'version': 2, 'books': {}}
-            except Exception as e:
-                print(f'⚠️ 读取服务器文件失败，重新初始化: {e}')
-                server_results = {'version': 2, 'books': {}}
-        else:
-            server_results = {'version': 2, 'books': {}}
-
-        # 字符级别时间戳合并
+        # 逐书加锁写入，避免全局覆盖
         client_books = client_results.get('books', {})
-        server_books = server_results.get('books', {})
+        app.logger.info('[save_review] books=%s', ','.join(client_books.keys()))
+
+        def merge_char(server_char_data: dict, client_char_data: dict):
+            """返回合并后的字符数据，保留服务器 segments 与 lookup/instances 一致性。"""
+            merged = dict(client_char_data)
+            # 如果客户端没有 segments，则沿用服务器的 segments
+            if 'segments' not in merged and isinstance(server_char_data, dict):
+                if 'segments' in server_char_data:
+                    merged['segments'] = server_char_data['segments']
+            else:
+                # 双方都有时，合并（客户端覆盖同名实例）
+                if isinstance(server_char_data, dict):
+                    srv_seg = server_char_data.get('segments', {}) or {}
+                    cli_seg = merged.get('segments', {}) or {}
+                    merged['segments'] = {**srv_seg, **cli_seg}
+            return merged
 
         for book_name, client_book in client_books.items():
-            # 如果服务器没有这本书，直接添加
-            if book_name not in server_books:
-                server_books[book_name] = client_book
-                print(f'新增书籍：{book_name}')
-                for char, char_data in client_book.items():
-                    removed_ids = _sync_lookup_for_char(book_name, char, char_data)
-                    if removed_ids:
-                        _remove_segmentation_entries(book_name, char, removed_ids)
-                continue
+            lock_path = _review_book_lock_path(book_name)
+            lock_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(lock_path, 'a+') as lock_fp:
+                lock_ok = _acquire_book_lock(lock_fp, timeout_sec=2.0)
+                if not lock_ok:
+                    app.logger.warning('[save_review] lock busy book=%s', book_name)
+                    return jsonify({'success': False, 'error': f'书籍 "{book_name}" 正在被占用，稍后再试'}), 423
 
-            server_book = server_books[book_name]
+                book_start = time.perf_counter()
+                server_book = read_review_book(book_name) or {}
 
-            # 字符级别比较时间戳
-            for char, client_char_data in client_book.items():
-                server_char_data = server_book.get(char)
+                # 字符级别比较时间戳
+                for char, client_char_data in client_book.items():
+                    server_char_data = server_book.get(char)
 
-                # 如果服务器没有这个字符，直接添加
-                if not server_char_data:
-                    server_book[char] = client_char_data
-                    print(f'  {book_name}: 新增字符 "{char}"')
-                    removed_ids = _sync_lookup_for_char(book_name, char, client_char_data)
-                    if removed_ids:
-                        _remove_segmentation_entries(book_name, char, removed_ids)
-                    continue
+                    # 如果服务器没有这个字符，直接添加
+                    if not server_char_data:
+                        client_char_data['_lookup_dirty'] = True
+                        client_char_data.pop('lookup', None)
+                        server_book[char] = client_char_data
+                        print(f'  {book_name}: 新增字符 "{char}"')
+                        continue
 
-                # 比较时间戳（统一转换为 UTC 时间戳进行比较）
-                from datetime import datetime, timezone
+                    # 比较时间戳（统一转换为 UTC 时间戳进行比较）
+                    from datetime import datetime, timezone
 
-                def parse_timestamp(ts_str):
-                    """解析 ISO 格式时间戳，统一转换为 UTC 时间戳（秒）"""
-                    if not ts_str:
-                        return 0
-                    try:
-                        # 替换 'Z' 为 '+00:00' 以兼容 Python < 3.11
-                        ts_str = ts_str.replace('Z', '+00:00')
-                        dt = datetime.fromisoformat(ts_str)
-                        # 如果是 naive datetime，假定为 UTC
-                        if dt.tzinfo is None:
-                            dt = dt.replace(tzinfo=timezone.utc)
-                        return dt.timestamp()
-                    except Exception as e:
-                        print(f'    解析时间戳失败: {ts_str}, 错误: {e}')
-                        return 0
+                    def parse_timestamp(ts_str):
+                        """解析 ISO 格式时间戳，统一转换为 UTC 时间戳（秒）"""
+                        if not ts_str:
+                            return 0
+                        try:
+                            # 替换 'Z' 为 '+00:00' 以兼容 Python < 3.11
+                            ts_str = ts_str.replace('Z', '+00:00')
+                            dt = datetime.fromisoformat(ts_str)
+                            # 如果是 naive datetime，假定为 UTC
+                            if dt.tzinfo is None:
+                                dt = dt.replace(tzinfo=timezone.utc)
+                            return dt.timestamp()
+                        except Exception as e:
+                            print(f'    解析时间戳失败: {ts_str}, 错误: {e}')
+                            return 0
 
-                client_timestamp = parse_timestamp(client_char_data.get('timestamp', '1970-01-01T00:00:00'))
-                server_timestamp = parse_timestamp(server_char_data.get('timestamp', '1970-01-01T00:00:00'))
+                    client_timestamp = parse_timestamp(client_char_data.get('timestamp', '1970-01-01T00:00:00'))
+                    server_timestamp = parse_timestamp(server_char_data.get('timestamp', '1970-01-01T00:00:00'))
 
-                if client_timestamp > server_timestamp:
-                    server_book[char] = client_char_data
-                    removed_ids = _sync_lookup_for_char(book_name, char, client_char_data)
-                    if removed_ids:
-                        _remove_segmentation_entries(book_name, char, removed_ids)
-                    # print(f'  {book_name}: 更新字符 "{char}" (客户端更新)')
-                else:
-                    # print(f'  {book_name}: 保留字符 "{char}" (服务器更新)')
+                    # 如果实例集合有变化，优先接受客户端更新（避免时间戳漂移导致不更新）
+                    def instance_keys(data):
+                        inst = (data or {}).get('instances') or {}
+                        return {k for k, v in inst.items() if v}
+
+                    client_keys = instance_keys(client_char_data)
+                    server_keys = instance_keys(server_char_data)
+
+                    if client_keys != server_keys or client_timestamp > server_timestamp:
+                        merged_char = merge_char(server_char_data, client_char_data)
+                        if client_keys != server_keys:
+                            # 强制刷新时间戳，避免客户端时间戳未更新导致“看起来没保存”
+                            merged_char['timestamp'] = datetime.now(timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
+                            merged_char['_lookup_dirty'] = True
+                            merged_char.pop('lookup', None)
+                        server_book[char] = merged_char
+                    else:
+                        # 服务器更新较新，保留服务器；但可选择合并客户端 segments（此处保留服务器为准）
+                        pass
+
+                try:
+                    write_review_book(book_name, server_book)
+                except Exception:
                     pass
 
-        # 保存到文件
-        REVIEW_RESULTS_PATH.parent.mkdir(parents=True, exist_ok=True)
-        with open(REVIEW_RESULTS_PATH, 'w', encoding='utf-8') as f:
-            json.dump(server_results, f, ensure_ascii=False, indent=2)
+                try:
+                    import fcntl
+                    fcntl.flock(lock_fp.fileno(), fcntl.LOCK_UN)
+                except Exception:
+                    pass
+                app.logger.info('[save_review] book=%s done in %.2fms', book_name, (time.perf_counter() - book_start) * 1000)
 
+        # 刷新缓存：确保 OCR 修改立即反映到切割/修正界面
+        if segment_lookup_data is not None:
+            for book_name in client_books.keys():
+                segment_lookup_data.get('books', {}).pop(book_name, None)
+
+        app.logger.info('[save_review] total %.2fms', (time.perf_counter() - req_start) * 1000)
         return jsonify({
             'success': True,
             'message': '审查结果已保存 (v2格式)'
@@ -939,43 +1171,19 @@ def save_review():
 def load_review():
     """从服务器加载审查结果（v2格式，严格校验）"""
     try:
-        if REVIEW_RESULTS_PATH.exists():
-            try:
-                with open(REVIEW_RESULTS_PATH, 'r', encoding='utf-8') as f:
-                    content = f.read().strip()
-                    if not content:
-                        print('⚠️ 服务器文件为空，返回空数据')
-                        return jsonify({
-                            'success': True,
-                            'data': {'version': 2, 'books': {}}
-                        })
+        book_only = request.args.get('book')
+        if book_only:
+            # 优先读取单书分片文件
+            book_chars = read_review_book(book_only)
+            if book_chars is None:
+                return jsonify({'success': True, 'data': {'version': 2, 'books': {}}})
+            return jsonify({'success': True, 'data': {'version': 2, 'books': {book_only: book_chars}}})
 
-                    results = json.loads(content)
-
-                # 严格校验数据格式
-                valid, error = validate_data_format(results)
-                if not valid:
-                    print(f'⚠️ 服务器数据格式错误，返回空数据: {error}')
-                    return jsonify({
-                        'success': True,
-                        'data': {'version': 2, 'books': {}}
-                    })
-
-                return jsonify({
-                    'success': True,
-                    'data': results
-                })
-            except json.JSONDecodeError as e:
-                print(f'⚠️ 服务器文件 JSON 解析失败，返回空数据: {e}')
-                return jsonify({
-                    'success': True,
-                    'data': {'version': 2, 'books': {}}
-                })
-        else:
-            return jsonify({
-                'success': True,
-                'data': {'version': 2, 'books': {}}
-            })
+        results = read_all_review_books()
+        return jsonify({
+            'success': True,
+            'data': results
+        })
 
     except Exception as e:
         import traceback
@@ -1502,23 +1710,17 @@ def api_segment_book_chars():
         if not book_name:
             return jsonify({'success': False, 'error': '缺少必要参数'}), 400
 
-        lookup_book = get_lookup_book(book_name)
-        if not lookup_book:
+        combined_book = build_combined_book(book_name)
+        if combined_book is None:
             return jsonify({'success': False, 'error': f'书籍不存在: {book_name}'}), 404
-
-        # 加载切割审查状态（加锁读）
-        review_data = read_review_data()
-        review_status = review_data.get('books', {}).get(book_name, {})
 
         # 统计每个字符的实例数和审查状态
         chars_info = {}
-        for char, instances in lookup_book.items():
-            char_review = review_status.get(char, {})
-            char_review_values = list(char_review.values())
-            dropped = sum(1 for s in char_review_values if s.get('decision') == 'drop')
-            confirmed = sum(1 for s in char_review_values if s.get('status') == 'confirmed')
-            pending = sum(1 for s in char_review_values if s.get('status') == 'pending_manual')
-            total_instances = len(instances)
+        for char, inst_map in combined_book.items():
+            total_instances = len(inst_map)
+            confirmed = sum(1 for s in inst_map.values() if s.get('status') == 'confirmed')
+            pending = sum(1 for s in inst_map.values() if s.get('status') == 'pending_manual')
+            dropped = sum(1 for s in inst_map.values() if s.get('decision') == 'drop')
             effective = max(0, total_instances - dropped)
 
             chars_info[char] = {
