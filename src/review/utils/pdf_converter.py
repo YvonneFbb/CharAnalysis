@@ -10,9 +10,9 @@ from typing import List, Tuple, Dict, Optional
 from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
-from src.utils.path import ensure_dir
-from src.utils.progress import ProgressTracker, get_default_progress_file, _get_relative_path
-from src.utils.file_filter import extract_volume_number, extract_book_name
+from src.review.utils.path import ensure_dir
+from src.review.utils.progress import ProgressTracker, get_default_progress_file, _get_relative_path
+from src.review.utils.file_filter import extract_volume_number, extract_book_name
 
 
 def pdf_to_images(

@@ -31,7 +31,7 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 # 导入切割模块
-from src.segment import segment_character, adjust_bbox, get_default_params
+from src.review.segment import segment_character, adjust_bbox, get_default_params
 
 TEMPLATE_DIR = PROJECT_ROOT / 'src/review/web/templates'
 STATIC_DIR = PROJECT_ROOT / 'src/review/web/static'

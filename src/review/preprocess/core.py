@@ -1,201 +1,145 @@
 """
-OCR 模块 - 使用 macOS LiveText
+图像预处理模块
 
-对古籍图片进行整体 OCR 识别，获取文字和位置信息
+对古籍图片进行增强处理：
+- CLAHE 对比度增强
+- 对比度/亮度调整
+- 墨色保持/增强（黑帽 + 反锐化）
 """
+import cv2
+import numpy as np
 import os
-import json
-from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple
 from tqdm import tqdm
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from typing import Dict, Tuple, Optional
 
-try:
-    from ocrmac import ocrmac
-    LIVETEXT_AVAILABLE = True
-except ImportError:
-    ocrmac = None
-    LIVETEXT_AVAILABLE = False
-    OCRMAC_IMPORT_ERROR = "ocrmac 或相关依赖未安装。请在 macOS 上运行：pip install ocrmac"
-else:
-    OCRMAC_IMPORT_ERROR = None
-
-from src.config import OCR_CONFIG, OCR_DIR
-from src.utils.path import ensure_dir
-from src.utils.progress import ProgressTracker, get_default_progress_file, _get_relative_path
-from src.utils.file_filter import find_images_recursive, filter_files_by_max_volumes
+from src.review.config import (
+    PREPROCESS_CLAHE_CONFIG,
+    PREPROCESS_CONTRAST_CONFIG,
+    PREPROCESS_INK_PRESERVE_CONFIG,
+    PREPROCESSED_DIR
+)
+from src.review.utils.path import ensure_dir
+from src.review.utils.progress import ProgressTracker, get_default_progress_file, _get_relative_path
+from src.review.utils.file_filter import find_images_recursive, filter_files_by_max_volumes
 
 
-
-def ocr_image(image_path: str, output_path: str = None, verbose: bool = True) -> Dict[str, Any]:
+def preprocess_image(input_path: str, output_path: str = None,
+                     alpha: float = None, beta: float = None,
+                     verbose: bool = True) -> bool:
     """
-    对图片进行 OCR 识别
+    对输入的古籍图片进行预处理
 
     Args:
-        image_path: 输入图片路径
-        output_path: 输出 JSON 路径（可选，默认保存到 OCR_DIR）
+        input_path: 输入图片路径
+        output_path: 输出路径（可选，默认保存到 PREPROCESSED_DIR）
+        alpha: 对比度控制 (1.0-3.0)，None 则使用配置文件默认值
+        beta: 亮度控制 (0-100)，None 则使用配置文件默认值
         verbose: 是否输出详细信息
 
     Returns:
-        OCR 结果字典
+        是否处理成功
     """
-    # 检查依赖是否可用
-    if not LIVETEXT_AVAILABLE:
-        return {
-            'success': False,
-            'error': OCRMAC_IMPORT_ERROR,
-            'image_path': image_path,
-        }
-
-    # 检查图片是否存在
-    if not os.path.exists(image_path):
-        return {
-            'success': False,
-            'error': f'图片不存在: {image_path}',
-            'image_path': image_path,
-        }
-
-    try:
-        cfg = OCR_CONFIG
-
-        # 使用 ocrmac 库
-        ocr_obj = ocrmac.OCR(
-            image_path,
-            framework=cfg['framework'],
-            recognition_level=cfg['recognition_level'],
-            language_preference=cfg['language_preference'],
-            detail=True
-        )
-        results = ocr_obj.recognize()
-
-        # 获取图片尺寸
-        W, H = int(ocr_obj.image.width), int(ocr_obj.image.height)
-
-        # 解析结果
-        if not results:
-            return {
-                'success': False,
-                'error': 'LiveText 无检测结果',
-                'image_path': image_path,
-                'image_size': {'width': W, 'height': H},
-            }
-
-        # 处理每个检测到的文字
-        characters = []
-        for i, item in enumerate(results):
-            if not isinstance(item, (list, tuple)) or len(item) != 3:
-                continue
-
-            text, confidence, normalized_box = item
-
-            # 将归一化坐标转换为像素坐标
-            # normalized_box: [x, y_bottom, width, height] (归一化值 0-1)
-            # 注意：y 坐标系原点在左下角
-            x = int(round(normalized_box[0] * W))
-            y_bottom = normalized_box[1]
-            w = int(round(normalized_box[2] * W))
-            h = int(round(normalized_box[3] * H))
-
-            # 转换为左上角坐标
-            y_top = int(round((1.0 - y_bottom - normalized_box[3]) * H))
-
-            # 边界检查
-            x = max(0, min(W - 1, x))
-            y_top = max(0, min(H - 1, y_top))
-            w = max(1, min(W - x, w))
-            h = max(1, min(H - y_top, h))
-
-            characters.append({
-                'index': i,
-                'text': str(text),
-                'confidence': float(confidence),
-                'bbox': {
-                    'x': x,
-                    'y': y_top,
-                    'width': w,
-                    'height': h,
-                },
-                'normalized_bbox': {
-                    'x': float(normalized_box[0]),
-                    'y': float(normalized_box[1]),
-                    'width': float(normalized_box[2]),
-                    'height': float(normalized_box[3]),
-                },
-            })
-
-        # 按位置排序（从上到下，从左到右）
-        characters.sort(key=lambda c: (c['bbox']['y'], c['bbox']['x']))
-
-        # 构建结果
-        result = {
-            'success': True,
-            'image_path': image_path,
-            'image_size': {'width': W, 'height': H},
-            'timestamp': datetime.now().isoformat(),
-            'ocr_config': cfg,
-            'character_count': len(characters),
-            'characters': characters,
-            'full_text': ''.join([c['text'] for c in characters]),
-        }
-
-        # 保存结果
-        if output_path is None:
-            # 默认保存到 OCR_DIR
-            input_path_obj = Path(image_path)
-            output_filename = f"{input_path_obj.stem}_ocr.json"
-            output_path = os.path.join(OCR_DIR, output_filename)
-
-        ensure_dir(os.path.dirname(output_path))
-
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(result, f, ensure_ascii=False, indent=2)
-
+    # 1. 读取图片
+    img = cv2.imread(input_path)
+    if img is None:
         if verbose:
-            print(f"✓ OCR 完成，识别到 {len(characters)} 个字符")
-            print(f"✓ 结果已保存至 {output_path}")
+            print(f"错误：无法读取图片 {input_path}")
+        return False
 
-        return result
+    # 2. 转换为灰度图
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    except Exception as e:
-        return {
-            'success': False,
-            'error': f'OCR 执行失败: {str(e)}',
-            'image_path': image_path,
-        }
+    # 3. 应用 CLAHE 增强局部对比度
+    if PREPROCESS_CLAHE_CONFIG['enabled']:
+        cfg = PREPROCESS_CLAHE_CONFIG
+        clahe = cv2.createCLAHE(
+            clipLimit=cfg['clip_limit'],
+            tileGridSize=cfg['tile_size']
+        )
+        gray = clahe.apply(gray)
+
+    # 4. 对比度和亮度调整
+    if alpha is None:
+        alpha = PREPROCESS_CONTRAST_CONFIG['alpha']
+    if beta is None:
+        beta = PREPROCESS_CONTRAST_CONFIG['beta']
+
+    adjusted = cv2.convertScaleAbs(gray, alpha=alpha, beta=beta)
+
+    # 5. 墨色保持/增强：黑帽回墨 + 可选反锐化，避免整体发灰
+    if PREPROCESS_INK_PRESERVE_CONFIG['enabled']:
+        ink_cfg = PREPROCESS_INK_PRESERVE_CONFIG
+
+        # 黑帽增强
+        ksize = int(ink_cfg['blackhat_kernel'])
+        if ksize % 2 == 0:
+            ksize += 1
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (ksize, ksize))
+
+        # 黑帽提取"暗笔画相对亮背景"的分量
+        blackhat = cv2.morphologyEx(adjusted, cv2.MORPH_BLACKHAT, kernel)
+        strength = float(ink_cfg['blackhat_strength'])
+
+        # 回墨：把黑帽分量按比例减回去，使笔画更黑
+        adjusted = cv2.subtract(adjusted, cv2.convertScaleAbs(blackhat, alpha=strength, beta=0))
+
+        # 可选反锐化（unsharp masking）
+        amount = float(ink_cfg['unsharp_amount'])
+        if amount > 1e-6:
+            blur = cv2.GaussianBlur(adjusted, (0, 0), sigmaX=1.0)
+            adjusted = cv2.addWeighted(adjusted, 1 + amount, blur, -amount, 0)
+
+    # 6. 确定输出路径
+    if output_path is None:
+        # 默认保存到 PREPROCESSED_DIR
+        input_path_obj = Path(input_path)
+        output_filename = f"{input_path_obj.stem}_preprocessed{input_path_obj.suffix}"
+        output_path = os.path.join(PREPROCESSED_DIR, output_filename)
+
+    # 确保输出目录存在
+    ensure_dir(os.path.dirname(output_path))
+
+    # 7. 保存处理后的图片
+    cv2.imwrite(output_path, adjusted)
+    if verbose:
+        print(f"✓ 图片已处理并保存至 {output_path}")
+
+    return True
 
 
-def _ocr_worker(args: Tuple[str, str, str]) -> Dict:
+def _preprocess_worker(args: Tuple[str, str, str, Optional[float], Optional[float]]) -> Dict:
     """
     多进程 worker 函数（需要在模块顶层定义以支持序列化）
 
     Args:
-        args: (rel_filepath, input_dir, output_dir)
+        args: (rel_filepath, input_dir, output_dir, alpha, beta)
 
     Returns:
         {'success': bool, 'rel_path': str, 'error': str or None}
     """
-    rel_filepath, input_dir, output_dir = args
+    rel_filepath, input_dir, output_dir, alpha, beta = args
 
     input_path = os.path.join(input_dir, rel_filepath)
     output_path = os.path.join(output_dir, rel_filepath)
     output_dir_part, output_filename = os.path.split(output_path)
     name, ext = os.path.splitext(output_filename)
-    output_filename = f"{name}_ocr.json"
+    output_filename = f"{name}_preprocessed{ext}"
     output_path = os.path.join(output_dir_part, output_filename)
 
     try:
-        result = ocr_image(input_path, output_path, verbose=False)
-        if result.get('success'):
+        success = preprocess_image(input_path, output_path, alpha=alpha, beta=beta, verbose=False)
+        if success:
             return {'success': True, 'rel_path': rel_filepath, 'error': None}
         else:
-            error_msg = result.get('error', 'OCR失败')
-            return {'success': False, 'rel_path': rel_filepath, 'error': error_msg}
+            return {'success': False, 'rel_path': rel_filepath, 'error': '处理失败'}
     except Exception as e:
         return {'success': False, 'rel_path': rel_filepath, 'error': str(e)}
 
 
 def process_directory(input_dir: str, output_dir: str = None,
+                      alpha: float = None, beta: float = None,
                       force: bool = False, max_volumes: int = None,
                       workers: int = 1) -> tuple[int, int]:
     """
@@ -203,7 +147,9 @@ def process_directory(input_dir: str, output_dir: str = None,
 
     Args:
         input_dir: 输入目录
-        output_dir: 输出目录（默认为 OCR_DIR）
+        output_dir: 输出目录（默认为 PREPROCESSED_DIR）
+        alpha: 对比度控制 (1.0-3.0)，None 则使用配置文件默认值
+        beta: 亮度控制 (0-100)，None 则使用配置文件默认值
         force: 是否强制重新处理（忽略进度记录）
         max_volumes: 最大册数限制（None 表示不限制）
         workers: 并发线程数（默认1，即单线程）
@@ -215,11 +161,17 @@ def process_directory(input_dir: str, output_dir: str = None,
     input_dir = str(input_dir)
 
     if output_dir is None:
-        output_dir = str(OCR_DIR)
+        output_dir = str(PREPROCESSED_DIR)
     else:
         output_dir = str(output_dir)
 
     ensure_dir(output_dir)
+
+    # 使用配置文件默认值
+    if alpha is None:
+        alpha = PREPROCESS_CONTRAST_CONFIG['alpha']
+    if beta is None:
+        beta = PREPROCESS_CONTRAST_CONFIG['beta']
 
     # 递归查找所有图片文件（支持子目录）
     if not os.path.exists(input_dir):
@@ -239,7 +191,7 @@ def process_directory(input_dir: str, output_dir: str = None,
 
     # 初始化进度跟踪器
     progress_file = get_default_progress_file(output_dir)
-    tracker = ProgressTracker(progress_file, 'ocr')
+    tracker = ProgressTracker(progress_file, 'preprocess')
     tracker.init_session(input_dir, output_dir, force=force)
 
     # 获取待处理的文件列表
@@ -248,7 +200,7 @@ def process_directory(input_dir: str, output_dir: str = None,
     pending_files = sorted(pending_files)
     stats = tracker.get_stats()
 
-    print(f"\n=== 开始批量 OCR 识别 ===")
+    print(f"\n=== 开始批量预处理 ===")
     print(f"输入目录: {input_dir}")
     print(f"输出目录: {output_dir}")
 
@@ -284,6 +236,7 @@ def process_directory(input_dir: str, output_dir: str = None,
             print(f"总文件数: {len(filtered_files)}")
 
     print(f"已完成: {stats['completed']} | 待处理: {len(pending_files)}")
+    print(f"参数: alpha={alpha}, beta={beta}")
     if stats['completed'] > 0 and not force:
         print(f"💡 继续上次进度 (最后更新: {stats['last_update']})")
         print(f"💡 使用 --force 强制重新处理所有文件")
@@ -297,18 +250,17 @@ def process_directory(input_dir: str, output_dir: str = None,
 
     if workers == 1:
         # 单进程模式
-        for rel_filepath in tqdm(pending_files, desc="OCR进度", unit="file"):
+        for rel_filepath in tqdm(pending_files, desc="预处理进度", unit="file"):
             input_path = os.path.join(input_dir, rel_filepath)
             output_path = os.path.join(output_dir, rel_filepath)
             output_dir_part, output_filename = os.path.split(output_path)
             name, ext = os.path.splitext(output_filename)
-            output_filename = f"{name}_ocr.json"
+            output_filename = f"{name}_preprocessed{ext}"
             output_path = os.path.join(output_dir_part, output_filename)
             project_rel_path = _get_relative_path(input_path)
 
             try:
-                result = ocr_image(input_path, output_path, verbose=False)
-                if result.get('success'):
+                if preprocess_image(input_path, output_path, alpha=alpha, beta=beta, verbose=False):
                     success_count += 1
                     tracker.mark_completed(rel_filepath)
                 else:
@@ -320,14 +272,14 @@ def process_directory(input_dir: str, output_dir: str = None,
     else:
         # 多进程模式
         # 准备参数列表
-        task_args = [(rel_filepath, input_dir, output_dir) for rel_filepath in pending_files]
+        task_args = [(rel_filepath, input_dir, output_dir, alpha, beta) for rel_filepath in pending_files]
 
         completed_files = []
         failed_files = []
 
         with ProcessPoolExecutor(max_workers=workers) as executor:
-            futures = {executor.submit(_ocr_worker, args): args[0] for args in task_args}
-            with tqdm(total=len(pending_files), desc=f"OCR进度 ({workers}进程)", unit="file") as pbar:
+            futures = {executor.submit(_preprocess_worker, args): args[0] for args in task_args}
+            with tqdm(total=len(pending_files), desc=f"预处理进度 ({workers}进程)", unit="file") as pbar:
                 for future in as_completed(futures):
                     try:
                         result = future.result()
@@ -355,7 +307,7 @@ def process_directory(input_dir: str, output_dir: str = None,
             tracker.mark_failed_batch(failed_files)
 
     print("-" * 50)
-    print(f"=== 批量 OCR 完成 ===")
+    print(f"=== 批量预处理完成 ===")
     print(f"成功处理: {success_count}/{len(filtered_files)} 个文件")
 
     failed_files = tracker.get_failed_files()

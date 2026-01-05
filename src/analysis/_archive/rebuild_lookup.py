@@ -8,7 +8,7 @@
 3. 直接覆盖原文件（会生成 .bak 备份）。
 
 用法：
-    python scripts/rebuild_lookup.py
+    python src/analysis/_archive/rebuild_lookup.py
 """
 from __future__ import annotations
 

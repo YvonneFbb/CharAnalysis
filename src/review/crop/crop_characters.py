@@ -10,8 +10,8 @@ from typing import Dict, List, Optional
 import cv2
 from tqdm import tqdm
 
-from src.config import PROJECT_ROOT
-from src.utils.path import ensure_dir
+from src.review.config import PROJECT_ROOT
+from src.review.utils.path import ensure_dir
 
 
 def crop_character(source_image_path: str, bbox: Dict[str, int], output_path: str, padding: int = 5) -> bool:

@@ -958,6 +958,10 @@
             border-radius: 6px;
             font-size: 14px;
         }
+        .not-needed-image {
+            opacity: 0.45;
+            filter: grayscale(0.9);
+        }
 
         /* 图片大小控制样式 */
         .image-size-control {
@@ -1788,7 +1792,13 @@
                 document.getElementById('instance-info').innerHTML = statusHtml;
 
                 if (decision === 'drop' || badgeStatus === 'dropped') {
-                    document.getElementById('segmented-container').innerHTML = '<div class="not-needed-placeholder">该实例已被标记为不需要</div>';
+                    const segContainer = document.getElementById('segmented-container');
+                    const imgEl = segContainer ? segContainer.querySelector('img') : null;
+                    if (imgEl) {
+                        imgEl.classList.add('not-needed-image');
+                    } else if (segContainer) {
+                        segContainer.innerHTML = '<div class="not-needed-placeholder">该实例已被标记为不需要</div>';
+                    }
                 }
 
             } catch (error) {
@@ -1963,8 +1973,13 @@
                 if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
                 reviewStatus[currentChar][instanceId] = { status: 'dropped', decision: 'drop' };
                 document.getElementById('instance-info').innerHTML = '<span class="status-badge warning">已标记不需要</span>';
-                document.getElementById('segmented-container').innerHTML = '<div class="not-needed-placeholder">该实例已标记为不需要</div>';
-                delete segmentationData[instanceId];
+                const segContainer = document.getElementById('segmented-container');
+                const imgEl = segContainer ? segContainer.querySelector('img') : null;
+                if (imgEl) {
+                    imgEl.classList.add('not-needed-image');
+                } else if (segContainer) {
+                    segContainer.innerHTML = '<div class="not-needed-placeholder">该实例已标记为不需要</div>';
+                }
                 await loadBook(currentBook, { preserveVisited: true });
             } catch (e) {
                 alert('标记失败: ' + e.message);

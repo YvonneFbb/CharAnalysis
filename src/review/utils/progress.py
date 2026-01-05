@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Dict, List, Set, Optional
 
 # 导入项目根目录
-from src.config import PROJECT_ROOT
+from src.review.config import PROJECT_ROOT
 
 
 def _get_relative_path(path: str) -> str:

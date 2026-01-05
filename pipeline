@@ -19,5 +19,5 @@ if __name__ == '__main__':
         sys.path.insert(0, _REPO_ROOT)
 
     # 导入并运行主程序
-    from src.pipeline import main
+    from src.review.pipeline import main
     main()

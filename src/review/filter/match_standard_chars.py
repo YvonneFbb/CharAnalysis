@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Dict, List, Set, Tuple
 from tqdm import tqdm
 
-from src.config import PROJECT_ROOT
+from src.review.config import PROJECT_ROOT
 
 
 def load_standard_chars(json_path: str) -> Tuple[Set[str], Dict[str, str]]:

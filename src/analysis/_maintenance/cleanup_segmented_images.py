@@ -10,8 +10,8 @@
   - manual/ 目录默认跳过
 
 用法：
-  python scripts/cleanup_segmented_images.py
-  python scripts/cleanup_segmented_images.py --delete   # 直接删除，不移动
+  python src/analysis/_maintenance/cleanup_segmented_images.py
+  python src/analysis/_maintenance/cleanup_segmented_images.py --delete   # 直接删除，不移动
 """
 
 from __future__ import annotations

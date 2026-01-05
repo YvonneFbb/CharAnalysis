@@ -7,11 +7,11 @@ import sys
 from pathlib import Path
 
 from src import config
-from src.preprocess import core as preprocess
-from src.ocr import livetext as ocr
-from src.utils import pdf_converter
-from src.filter import match_standard_chars
-from src.crop import crop_characters
+from src.review.preprocess import core as preprocess
+from src.review.ocr import livetext as ocr
+from src.review.utils import pdf_converter
+from src.review.filter import match_standard_chars
+from src.review.crop import crop_characters
 
 
 def cmd_preprocess(args):

@@ -19,8 +19,8 @@
   --bg #RRGGBB                背景色（默认 #FFFFFF）
 
 用法示例：
-  python scripts/generate_book_montage.py
-  python scripts/generate_book_montage.py --books 01_1127_尚书正义 --tile-size 72 --cols 40
+  python src/analysis/generate_book_montage.py
+  python src/analysis/generate_book_montage.py --books 01_1127_尚书正义 --tile-size 72 --cols 40
 """
 
 from __future__ import annotations
@@ -207,7 +207,7 @@ def main():
     ap.add_argument('--cols', type=int, default=50, help='Columns per row. Default 50')
     ap.add_argument('--border', type=int, default=1, help='Light border width in pixels. Default 1')
     ap.add_argument('--bg', type=str, default='#FFFFFF', help='Background color hex. Default #FFFFFF')
-    ap.add_argument('--use-fixed-box', action='store_true', help='Use per-book fixed box (P95 long side * 1.05) for montage display')
+    ap.add_argument('--use-fixed-box', action='store_true', help='Use per-book fixed box (P90 long side * 1.05) for montage display')
     args = ap.parse_args()
 
     tile_size: int = max(8, args.tile_size)
@@ -244,9 +244,9 @@ def main():
                 except Exception:
                     continue
             if long_sides:
-                p95 = float(np.percentile(np.array(long_sides, dtype=float), 95))
-                L_b = int(np.ceil(p95 * 1.05))
-                print(f'  • Fixed box L_b={L_b} (P95 * 1.05)')
+                p90 = float(np.percentile(np.array(long_sides, dtype=float), 90))
+                L_b = int(np.ceil(p90 * 1.05))
+                print(f'  • Fixed box L_b={L_b} (P90 * 1.05)')
             else:
                 L_b = 0
         for ch, inst_id, abs_path in items:

@@ -13,8 +13,8 @@
 仅使用 status == 'confirmed' 的条目，并从 segmented_path 读取最终图片。
 
 用法：
-  python scripts/analyze_seg_review.py
-  python scripts/analyze_seg_review.py --books 01_1127_尚书正义 02_XXXX --output data/analysis
+  python src/analysis/_archive/analyze_seg_review.py
+  python src/analysis/_archive/analyze_seg_review.py --books 01_1127_尚书正义 02_XXXX --output data/analysis
 
 """
 
@@ -161,7 +161,7 @@ def analyze_book(book: str, review: Dict[str, Any]) -> Tuple[Dict[str, Any], Lis
     char_map: Dict[str, Dict[str, Any]] = {}
     missing = 0
 
-    # ==================== per-book Fixed Box 标定（P95 of long side）====================
+    # ==================== per-book Fixed Box 标定（P90 of long side）====================
     long_sides: List[int] = []
     paths: List[Tuple[str, str, Path]] = []
     for ch, inst_id, abs_path in items:
@@ -175,8 +175,8 @@ def analyze_book(book: str, review: Dict[str, Any]) -> Tuple[Dict[str, Any], Lis
             continue
 
     if long_sides:
-        p95 = float(np.percentile(np.array(long_sides, dtype=float), 95))
-        L_b = int(np.ceil(p95 * 1.05))  # 加 5% 安全边界
+        p90 = float(np.percentile(np.array(long_sides, dtype=float), 90))
+        L_b = int(np.ceil(p90 * 1.05))  # 加 5% 安全边界
     else:
         L_b = 0
 
@@ -289,7 +289,7 @@ def analyze_book(book: str, review: Dict[str, Any]) -> Tuple[Dict[str, Any], Lis
             'missing_images': missing,
             'source': str(REVIEW_JSON.relative_to(PROJECT_ROOT)),
             'fixed_box': {
-                'long_side_p95': L_b
+                'long_side_p90': L_b
             }
         },
         'characters': char_map

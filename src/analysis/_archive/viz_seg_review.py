@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-基于第二轮审查特征（scripts/analyze_seg_review.py 产物）进行可视化。
+基于第二轮审查特征（src/analysis/_archive/analyze_seg_review.py 产物）进行可视化。
 
 参考配置：ref/charsis/data/results/analysis/analysis_config.yaml
 
@@ -13,7 +13,7 @@
   - 粒度：默认“每字聚合（median）”，可通过 --per-char/--agg 调整
 
 用法：
-  python scripts/viz_seg_review.py \
+  python src/analysis/_archive/viz_seg_review.py \
     --config data/analysis/analysis_config.yaml \
     --features-dir data/analysis/features \
     --output data/analysis/visualizations \
@@ -457,7 +457,7 @@ def main():
     # 扫描可用书籍特征
     bookname_to_path = scan_features(features_dir)
     if not bookname_to_path:
-        raise RuntimeError(f'未在 {features_dir} 找到任何特征文件，请先运行 scripts/analyze_seg_review.py')
+        raise RuntimeError(f'未在 {features_dir} 找到任何特征文件，请先运行 src/analysis/_archive/analyze_seg_review.py')
 
     def process_dimension(prefix: str, dim_cfg: Dict[str, Any], color_key: str):
         groups = dim_cfg.get('groups', []) if isinstance(dim_cfg, dict) else []
