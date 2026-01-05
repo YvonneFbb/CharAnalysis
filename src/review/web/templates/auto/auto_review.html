@@ -1,0 +1,174 @@
+{% extends "layout.html" %}
+{% block title %}自动筛选复核{% endblock %}
+{% block content %}
+<style>
+  .auto-wrap { display: flex; gap: 16px; }
+  .auto-sidebar { width: 280px; flex: 0 0 auto; }
+  .auto-main { flex: 1 1 auto; }
+  .char-list { max-height: calc(100vh - 240px); overflow: auto; border: 1px solid #e1e6eb; border-radius: 8px; padding: 6px; background: #fff; }
+  .char-item { padding: 6px 8px; border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .char-item.active { background: #eef5ff; color: #1f4b99; }
+  .char-item:hover { background: #f5f7f9; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .card { border: 1px solid #dfe6ec; border-radius: 10px; padding: 8px; background: #fff; box-shadow: 0 2px 6px rgba(15,35,67,0.08); }
+  .thumb { width: 100%; display: block; border-radius: 6px; border: 1px solid #e5e7eb; background: #fff; }
+  .meta { font-size: 12px; color: #5b6470; margin-top: 6px; display: flex; justify-content: space-between; }
+  .actions { display: flex; gap: 6px; margin-top: 8px; }
+  .btn { padding: 4px 10px; border: 1px solid #d7dee4; background: #fff; border-radius: 16px; cursor: pointer; font-size: 12px; color: #2f3542; }
+  .btn.need { border-color: #2f7f4f; color: #2f7f4f; }
+  .btn.drop { border-color: #8b8f95; color: #8b8f95; }
+  .card.need { border-color: #2f7f4f; background: #f4fbf6; }
+  .card.drop { border-color: #a9b1b8; background: #f5f6f7; }
+  .toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .stat { font-size: 12px; color: #444; }
+</style>
+
+<div class="container">
+  <h1>自动筛选复核</h1>
+  <div class="auto-wrap">
+    <aside class="auto-sidebar">
+      <div>
+        <label>选择书籍：</label>
+        <select id="book-select"></select>
+      </div>
+      <div style="margin-top: 8px;">
+        <input id="char-filter" type="text" placeholder="过滤字符..." style="width: 100%; padding: 6px;"/>
+      </div>
+      <div style="margin-top: 8px;" class="char-list" id="char-list"></div>
+    </aside>
+    <main class="auto-main">
+      <div class="toolbar">
+        <div id="char-title">请选择一个字</div>
+        <div class="stat" id="char-stat"></div>
+      </div>
+      <div id="grid" class="grid"></div>
+    </main>
+  </div>
+</div>
+
+<script>
+  const API_BASE = '';
+  let currentBook = null;
+  let currentChar = null;
+  let charItems = [];
+
+  async function loadBooks() {
+    const sel = document.getElementById('book-select');
+    sel.innerHTML = '';
+    const resp = await fetch(`${API_BASE}/api/auto/books`);
+    const data = await resp.json();
+    if (!data.success) return;
+    for (const b of data.books) {
+      const opt = document.createElement('option');
+      opt.value = b.name; opt.textContent = b.name;
+      sel.appendChild(opt);
+    }
+    if (data.books.length > 0) {
+      currentBook = data.books[0].name;
+      sel.value = currentBook;
+      await loadCharList();
+    }
+    sel.addEventListener('change', async () => {
+      currentBook = sel.value;
+      currentChar = null;
+      await loadCharList();
+    });
+  }
+
+  async function loadCharList() {
+    const listEl = document.getElementById('char-list');
+    listEl.innerHTML = '';
+    if (!currentBook) return;
+    const resp = await fetch(`${API_BASE}/api/auto/char_list?book=${encodeURIComponent(currentBook)}`);
+    const data = await resp.json();
+    if (!data.success) return;
+    charItems = data.chars || [];
+    renderCharList();
+  }
+
+  function renderCharList() {
+    const listEl = document.getElementById('char-list');
+    const filter = (document.getElementById('char-filter').value || '').trim();
+    listEl.innerHTML = '';
+    for (const item of charItems) {
+      if (filter && !item.char.includes(filter)) continue;
+      const div = document.createElement('div');
+      div.className = 'char-item' + (item.char === currentChar ? ' active' : '');
+      div.innerHTML = `<span>${item.char}</span><span>${item.total}</span>`;
+      div.onclick = async () => {
+        currentChar = item.char;
+        renderCharList();
+        await loadItems();
+      };
+      listEl.appendChild(div);
+    }
+  }
+
+  async function loadItems() {
+    const grid = document.getElementById('grid');
+    const title = document.getElementById('char-title');
+    const stat = document.getElementById('char-stat');
+    grid.innerHTML = '';
+    if (!currentBook || !currentChar) {
+      title.textContent = '请选择一个字';
+      stat.textContent = '';
+      return;
+    }
+    const resp = await fetch(`${API_BASE}/api/auto/items?book=${encodeURIComponent(currentBook)}&char=${encodeURIComponent(currentChar)}`);
+    const data = await resp.json();
+    if (!data.success) { grid.innerHTML = '<div>加载失败</div>'; return; }
+    title.textContent = `字：${currentChar}`;
+    stat.textContent = `候选 ${data.items.length} 个`;
+    for (const it of data.items) {
+      const card = document.createElement('div');
+      card.className = 'card ' + (it.decision || 'pending');
+      const img = document.createElement('img');
+      img.className = 'thumb';
+      img.src = it.image || it.segmented_path;
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      const conf = (it.paddle_conf != null) ? Number(it.paddle_conf).toFixed(3) : '0.000';
+      meta.innerHTML = `<span>宽 ${it.width}</span><span>置信 ${conf}</span>`;
+      const actions = document.createElement('div');
+      actions.className = 'actions';
+      const btnNeed = document.createElement('button');
+      btnNeed.className = 'btn need';
+      btnNeed.textContent = '保留';
+      btnNeed.onclick = () => updateDecision(it.instance_id, 'need', card);
+      const btnDrop = document.createElement('button');
+      btnDrop.className = 'btn drop';
+      btnDrop.textContent = '不需要';
+      btnDrop.onclick = () => updateDecision(it.instance_id, 'drop', card);
+      actions.appendChild(btnNeed);
+      actions.appendChild(btnDrop);
+      card.appendChild(img);
+      card.appendChild(meta);
+      card.appendChild(actions);
+      grid.appendChild(card);
+    }
+  }
+
+  async function updateDecision(instanceId, decision, cardEl) {
+    const resp = await fetch(`${API_BASE}/api/auto/decision`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        book: currentBook,
+        char: currentChar,
+        instance_id: instanceId,
+        decision: decision
+      })
+    });
+    const data = await resp.json();
+    if (!data.success) {
+      alert('更新失败: ' + data.error);
+      return;
+    }
+    cardEl.classList.remove('need', 'drop');
+    cardEl.classList.add(decision);
+  }
+
+  document.getElementById('char-filter').addEventListener('input', renderCharList);
+  loadBooks();
+</script>
+{% endblock %}

@@ -21,8 +21,8 @@ from pathlib import Path
 from typing import Dict, Tuple, Optional
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-REVIEW_BOOKS_DIR = PROJECT_ROOT / 'data/results/review_books'
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+REVIEW_BOOKS_DIR = PROJECT_ROOT / 'data/results/manual/review_books'
 MATCHED_JSON_PATH = PROJECT_ROOT / 'data/results/matched_by_book.json'
 MATCHED_CACHE_DIR = PROJECT_ROOT / 'data/results/_cache'
 MATCHED_SHARDS_DIR = MATCHED_CACHE_DIR / 'matched_by_book_shards'

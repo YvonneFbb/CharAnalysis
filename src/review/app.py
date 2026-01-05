@@ -52,33 +52,38 @@ app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB
 app.config['JSON_AS_ASCII'] = False
 
 # 全局配置
-MATCHED_JSON_PATH = PROJECT_ROOT / 'data/results/matched_by_book.json'
-MATCHED_CACHE_DIR = PROJECT_ROOT / 'data/results/_cache'
+RESULTS_DIR = PROJECT_ROOT / 'data/results'
+MANUAL_RESULTS_DIR = RESULTS_DIR / 'manual'
+AUTO_RESULTS_DIR = RESULTS_DIR / 'auto'
+
+MATCHED_JSON_PATH = RESULTS_DIR / 'matched_by_book.json'
+MATCHED_CACHE_DIR = RESULTS_DIR / '_cache'
 MATCHED_SHARDS_DIR = MATCHED_CACHE_DIR / 'matched_by_book_shards'
 MATCHED_INDEX_PATH = MATCHED_CACHE_DIR / 'matched_books_index.json'
-STANDARD_CHARS_JSON_PATH = PROJECT_ROOT / 'data/standard_chars.json'
-PREPROCESSED_DIR = PROJECT_ROOT / 'data/results/preprocessed'
-CROPPED_CACHE_DIR = PROJECT_ROOT / 'data/results/cropped_cache'
-REVIEW_RESULTS_PATH = PROJECT_ROOT / 'data/results/review_results.json'
-REVIEW_BOOKS_DIR = PROJECT_ROOT / 'data/results/review_books'
+STANDARD_CHARS_JSON_PATH = PROJECT_ROOT / 'data/metadata/standard_chars.json'
+STANDARD_CHARS_FALLBACK_PATH = PROJECT_ROOT / 'src/standard_chars.json'
+PREPROCESSED_DIR = RESULTS_DIR / 'preprocessed'
+REVIEW_RESULTS_PATH = MANUAL_RESULTS_DIR / 'review_results.json'
+REVIEW_BOOKS_DIR = MANUAL_RESULTS_DIR / 'review_books'
 REVIEW_BOOK_BACKUP_KEEP = 5
 REVIEW_BOOK_BACKUP_COOLDOWN = 60  # 秒，避免高频写入产生大量备份
 
 # 切割相关路径
-SEGMENTATION_REVIEW_PATH = PROJECT_ROOT / 'data/results/segmentation_review.json'
-SEGMENT_LOOKUP_PATH = PROJECT_ROOT / 'data/results/segment_lookup.json'
-SEGMENTED_DIR = PROJECT_ROOT / 'data/results/segmented'
+SEGMENTATION_REVIEW_PATH = MANUAL_RESULTS_DIR / 'segmentation_review.json'
+SEGMENT_LOOKUP_PATH = MANUAL_RESULTS_DIR / 'segment_lookup.json'
+SEGMENTED_DIR = MANUAL_RESULTS_DIR / 'segmented'
 MANUAL_WORK_DIR = SEGMENTED_DIR / 'manual'  # 手动处理工作区（统一到 segmented 下，扁平：按书籍，不按字符）
 
 # 标记功能路径
-SEGMENT_MARKS_PATH = PROJECT_ROOT / 'data/results/segment_marks.json'
+SEGMENT_MARKS_PATH = MANUAL_RESULTS_DIR / 'segment_marks.json'
+
+# 自动筛选路径
+AUTO_REVIEW_BOOKS_DIR = AUTO_RESULTS_DIR / 'review_books'
+AUTO_SEGMENTED_DIR = AUTO_RESULTS_DIR / 'segmented'
 
 # 创建必要的目录
 SEGMENTED_DIR.mkdir(parents=True, exist_ok=True)
 MANUAL_WORK_DIR.mkdir(parents=True, exist_ok=True)
-
-# 创建缓存目录
-CROPPED_CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 # 加载数据（懒加载 / 分片缓存）
 matched_data = None  # 旧的整库加载（尽量避免使用）
@@ -86,6 +91,7 @@ matched_books_cache: Dict[str, dict] = {}
 matched_index_cache: Optional[Dict] = None
 standard_chars_data = None
 segment_lookup_data = None  # 内存中的查找索引（随 review_results.json 保存同步写入）
+_standard_char_order_map: Optional[Dict[str, int]] = None
 
 
 def _ensure_cache_dirs():
@@ -183,12 +189,21 @@ def ensure_matched_book_data(book_name: str) -> Optional[Dict]:
     return None
 
 
+def _resolve_standard_chars_path() -> Path:
+    if STANDARD_CHARS_JSON_PATH.exists():
+        return STANDARD_CHARS_JSON_PATH
+    if STANDARD_CHARS_FALLBACK_PATH.exists():
+        return STANDARD_CHARS_FALLBACK_PATH
+    return STANDARD_CHARS_JSON_PATH
+
+
 def ensure_standard_chars_data():
     """确保 standard_chars_data 已加载（懒加载）"""
     global standard_chars_data
     if standard_chars_data is None:
-        print(f"[懒加载] 加载标准字数据：{STANDARD_CHARS_JSON_PATH}")
-        with open(STANDARD_CHARS_JSON_PATH, 'r', encoding='utf-8') as f:
+        chars_path = _resolve_standard_chars_path()
+        print(f"[懒加载] 加载标准字数据：{chars_path}")
+        with open(chars_path, 'r', encoding='utf-8') as f:
             standard_chars_data = json.load(f)
         print(f"[懒加载] 标准字数据加载完成：{standard_chars_data['total_methods']} 个分类法")
 
@@ -572,6 +587,86 @@ def read_all_review_books() -> Dict:
         if isinstance(chars, dict):
             out['books'][book_name] = chars
     return out
+
+
+def _auto_book_path(book_name: str) -> Path:
+    safe_name = book_name.replace('/', '_')
+    return AUTO_REVIEW_BOOKS_DIR / f'{safe_name}.json'
+
+
+def _auto_book_lock_path(book_name: str) -> Path:
+    safe_name = book_name.replace('/', '_')
+    return AUTO_REVIEW_BOOKS_DIR / f'{safe_name}.json.lock'
+
+
+def list_auto_books() -> list:
+    if not AUTO_REVIEW_BOOKS_DIR.exists():
+        return []
+    return sorted([p.stem for p in AUTO_REVIEW_BOOKS_DIR.glob('*.json')])
+
+
+def read_auto_book(book_name: str) -> Optional[Dict]:
+    path = _auto_book_path(book_name)
+    if not path.exists():
+        return None
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+
+def write_auto_book(book_name: str, payload: Dict) -> bool:
+    AUTO_REVIEW_BOOKS_DIR.mkdir(parents=True, exist_ok=True)
+    book_path = _auto_book_path(book_name)
+    lock_path = _auto_book_lock_path(book_name)
+    with open(lock_path, 'a+', encoding='utf-8') as lock_fp:
+        if not _acquire_book_lock(lock_fp, timeout_sec=2.0):
+            return False
+        tmp = book_path.with_suffix(book_path.suffix + f'.tmp.{os.getpid()}-{int(time.time()*1000)}')
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(payload, f, ensure_ascii=False, indent=2)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, book_path)
+        _fsync_dir(book_path.parent)
+    return True
+
+
+def get_standard_char_order_map() -> Dict[str, int]:
+    global _standard_char_order_map
+    if _standard_char_order_map is not None:
+        return _standard_char_order_map
+    path = _resolve_standard_chars_path()
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except Exception:
+        _standard_char_order_map = {}
+        return _standard_char_order_map
+    order = {}
+    idx = 0
+    methods = data.get('methods') or {}
+    if isinstance(methods, list):
+        for method in methods:
+            chars = method.get('chars') if isinstance(method, dict) else None
+            if not chars:
+                continue
+            for ch in chars:
+                if ch not in order:
+                    order[ch] = idx
+                    idx += 1
+    elif isinstance(methods, dict):
+        for _, method in methods.items():
+            chars = method.get('chars') if isinstance(method, dict) else None
+            if not chars:
+                continue
+            for ch in chars:
+                if ch not in order:
+                    order[ch] = idx
+                    idx += 1
+    _standard_char_order_map = order
+    return _standard_char_order_map
 
 def get_lookup_book(book_name: str) -> Optional[Dict]:
     """返回某本书在内存中的 lookup 映射（直接来自 OCR 结果，不再补齐切割实例）。"""
@@ -1346,7 +1441,7 @@ def api_save_segmentation():
 
         # 更新审查状态（单文件加锁写入）
         from datetime import datetime, timezone
-        rel_path = f"data/results/segmented/{book_name}/{char}_{instance_id}.png" if segmented_path else None
+        rel_path = f"data/results/manual/segmented/{book_name}/{char}_{instance_id}.png" if segmented_path else None
         update_review_entry(book_name, char, instance_id, {
             'status': status,
             'method': method,
@@ -2020,7 +2115,7 @@ def api_import_manual_results():
                     shutil.move(str(img_file), str(target_file))
 
                     # 更新审查状态（加锁写入）
-                    rel_path = f"data/results/segmented/{book_name}/{char}_{instance_id}.png"
+                    rel_path = f"data/results/manual/segmented/{book_name}/{char}_{instance_id}.png"
                     update_review_entry(book_name, char, instance_id, {
                         'status': 'confirmed',
                         'method': 'manual',
@@ -2419,11 +2514,143 @@ def api_fixing_montage():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
+@app.route('/api/auto/books', methods=['GET'])
+def api_auto_books():
+    try:
+        books = []
+        for name in list_auto_books():
+            data = read_auto_book(name) or {}
+            chars = data.get('chars') or {}
+            books.append({
+                'name': name,
+                'chars': len(chars)
+            })
+        return jsonify({'success': True, 'books': books})
+    except Exception as e:
+        print(f'❌ /api/auto/books 失败: {e}')
+        print(traceback.format_exc())
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/auto/char_list', methods=['GET'])
+def api_auto_char_list():
+    try:
+        book_name = request.args.get('book')
+        if not book_name:
+            return jsonify({'success': False, 'error': '缺少参数 book'}), 400
+        data = read_auto_book(book_name) or {}
+        chars = data.get('chars') or {}
+        order_map = get_standard_char_order_map()
+        items = []
+        for ch, ch_data in chars.items():
+            item_map = (ch_data or {}).get('items') or {}
+            decisions = [v.get('decision', 'pending') for v in item_map.values() if isinstance(v, dict)]
+            items.append({
+                'char': ch,
+                'total': len(item_map),
+                'need': sum(1 for d in decisions if d == 'need'),
+                'drop': sum(1 for d in decisions if d == 'drop'),
+                'pending': sum(1 for d in decisions if d not in ('need', 'drop')),
+            })
+        items.sort(key=lambda x: (order_map.get(x['char'], 10**9), x['char']))
+        return jsonify({'success': True, 'book': book_name, 'chars': items})
+    except Exception as e:
+        print(f'❌ /api/auto/char_list 失败: {e}')
+        print(traceback.format_exc())
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/auto/items', methods=['GET'])
+def api_auto_items():
+    try:
+        book_name = request.args.get('book')
+        char = request.args.get('char')
+        include_image = (request.args.get('image', '1') or '1').lower() in ('1', 'true', 'yes')
+        if not book_name or not char:
+            return jsonify({'success': False, 'error': '缺少参数 book/char'}), 400
+        data = read_auto_book(book_name) or {}
+        chars = data.get('chars') or {}
+        ch_data = chars.get(char) or {}
+        items = ch_data.get('items') or {}
+        order = ch_data.get('top5') or list(items.keys())
+        out = []
+        for inst_id in order:
+            item = items.get(inst_id)
+            if not isinstance(item, dict):
+                continue
+            row = dict(item)
+            if include_image:
+                seg_rel = row.get('segmented_path')
+                if seg_rel:
+                    seg_abs = PROJECT_ROOT / seg_rel
+                    if seg_abs.exists():
+                        try:
+                            with open(seg_abs, 'rb') as f:
+                                row['image'] = 'data:image/png;base64,' + base64.b64encode(f.read()).decode('utf-8')
+                        except Exception:
+                            pass
+            out.append(row)
+        return jsonify({
+            'success': True,
+            'book': book_name,
+            'char': char,
+            'items': out
+        })
+    except Exception as e:
+        print(f'❌ /api/auto/items 失败: {e}')
+        print(traceback.format_exc())
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/auto/decision', methods=['POST'])
+def api_auto_decision():
+    try:
+        data = request.get_json() or {}
+        book = data.get('book')
+        char = data.get('char')
+        instance_id = data.get('instance_id')
+        decision = data.get('decision')
+        if not all([book, char, instance_id]):
+            return jsonify({'success': False, 'error': '缺少参数'}), 400
+        if decision not in ('need', 'drop', 'pending', None, ''):
+            return jsonify({'success': False, 'error': 'decision 非法'}), 400
+        payload = read_auto_book(book) or {}
+        chars = payload.get('chars') or {}
+        ch_data = chars.get(char)
+        if not isinstance(ch_data, dict):
+            return jsonify({'success': False, 'error': '找不到字符'}), 404
+        items = ch_data.get('items') or {}
+        item = items.get(instance_id)
+        if not isinstance(item, dict):
+            return jsonify({'success': False, 'error': '找不到实例'}), 404
+        item['decision'] = decision or 'pending'
+        items[instance_id] = item
+        ch_data['items'] = items
+        chars[char] = ch_data
+        payload['chars'] = chars
+        ok = write_auto_book(book, payload)
+        if not ok:
+            return jsonify({'success': False, 'error': '写入失败，请稍后重试'}), 500
+        return jsonify({'success': True})
+    except Exception as e:
+        print(f'❌ /api/auto/decision 失败: {e}')
+        print(traceback.format_exc())
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/auto_review')
+def auto_review_page():
+    try:
+        return render_template('auto/auto_review.html')
+    except Exception:
+        return 'Auto Review 页面未生成', 404
+
+
 @app.route('/fixing')
 def fixing_page():
     """Fixing 页面（问题集中处理，读取 segmentation_review.json）"""
     try:
-        return render_template('fixing.html')
+        return render_template('manual/fixing.html')
     except Exception:
         return 'Fixing 页面未生成', 404
 
@@ -2446,9 +2673,9 @@ def index():
 def ocr_review_page():
     """第一轮审查界面（OCR/文字审查）——优先模板，其次兼容旧文件名"""
     # 优先模板
-    tpl_path = TEMPLATE_DIR / 'ocr_review.html'
+    tpl_path = TEMPLATE_DIR / 'manual/ocr_review.html'
     if tpl_path.exists():
-        return render_template('ocr_review.html')
+        return render_template('manual/ocr_review.html')
     # 兼容：优先新的磁盘文件名，其次旧文件名
     new_path = PROJECT_ROOT / 'data/results/ocr_review.html'
     if new_path.exists():
@@ -2469,9 +2696,9 @@ def review_page_compat():
 @app.route('/segment_review')
 def segment_review_page():
     """第二轮切割审查界面（优先模板，其次兼容旧文件）"""
-    tpl_path = TEMPLATE_DIR / 'segment_review_app.html'
+    tpl_path = TEMPLATE_DIR / 'manual/segment_review_app.html'
     if tpl_path.exists():
-        return render_template('segment_review_app.html')
+        return render_template('manual/segment_review_app.html')
     html_path = PROJECT_ROOT / 'data/results/segment_review_app.html'
     if html_path.exists():
         with open(html_path, 'r', encoding='utf-8') as f:
@@ -2497,7 +2724,7 @@ def main():
     print("古籍字形审查系统 - 后端服务器")
     print("=" * 70)
     print(f"数据文件：{MATCHED_JSON_PATH}")
-    print(f"标准字文件：{STANDARD_CHARS_JSON_PATH}")
+    print(f"标准字文件：{_resolve_standard_chars_path()}")
     print(f"图片目录：{PREPROCESSED_DIR}")
     print(f"切割结果目录：{SEGMENTED_DIR}")
     print("查找索引：内存派生自 review_results.json（不再依赖独立文件）")
@@ -2514,6 +2741,9 @@ def main():
     print("\n  【第二轮审查】字符切割")
     print(f"    本机访问：http://localhost:5001/segment_review")
     print(f"    局域网访问：http://{local_ip}:5001/segment_review")
+    print("\n  【自动筛选复核】Paddle 自动筛选后复核")
+    print(f"    本机访问：http://localhost:5001/auto_review")
+    print(f"    局域网访问：http://{local_ip}:5001/auto_review")
     print("\n按 Ctrl+C 停止服务器")
     print("=" * 70 + "\n")
 

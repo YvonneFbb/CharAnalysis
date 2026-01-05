@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """
-清理 data/results/segmented 下不再需要的切割图片。
+清理 data/results/manual/segmented 下不再需要的切割图片。
 
 规则（默认）：
   - 仅保留 review_results.json 中 segments 里 status == "confirmed" 且有 segmented_path 的图片
-  - 其他图片移动到 data/results/segmented/_orphaned 下（不直接删除）
+  - 其他图片移动到 data/results/manual/segmented/_orphaned 下（不直接删除）
   - manual/ 目录默认跳过
 
 用法：
@@ -21,9 +21,9 @@ import json
 from pathlib import Path
 from typing import Set
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-REVIEW_PATH = PROJECT_ROOT / 'data/results/review_results.json'
-SEG_DIR = PROJECT_ROOT / 'data/results/segmented'
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+REVIEW_PATH = PROJECT_ROOT / 'data/results/manual/review_results.json'
+SEG_DIR = PROJECT_ROOT / 'data/results/manual/segmented'
 ORPHAN_DIR = SEG_DIR / '_orphaned'
 
 

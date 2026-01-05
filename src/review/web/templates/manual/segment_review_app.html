@@ -2764,7 +2764,7 @@
         async function exportToManual() {
             const instanceId = currentInstances[currentInstanceIndex];
 
-            if (!confirm(`确认导出 "${currentChar}" - ${instanceId} 到手动处理区？\n图片将保存到 segmented/manual/ 目录。`)) {
+            if (!confirm(`确认导出 "${currentChar}" - ${instanceId} 到手动处理区？\n图片将保存到 manual/segmented/manual/ 目录。`)) {
                 return;
             }
 
@@ -2776,7 +2776,7 @@
                 window.open(url, '_blank');
 
                 // 显示成功消息
-                alert('已导出到手动处理区！\n位置：data/results/segmented/manual/' + currentBook + '/' + currentChar + '/' + instanceId + '.png\n\n处理完成后请使用"导入手动处理结果"导入。');
+                alert('已导出到手动处理区！\n位置：data/results/manual/segmented/manual/' + currentBook + '/' + currentChar + '/' + instanceId + '.png\n\n处理完成后请使用"导入手动处理结果"导入。');
 
                 // 自动跳转到下一个实例
                 if (currentInstanceIndex < currentInstances.length - 1) {

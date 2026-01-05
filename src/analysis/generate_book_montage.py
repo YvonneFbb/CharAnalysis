@@ -5,7 +5,7 @@
 为每本书生成一个 PNG 拼贴图，仅使用分书文件中的最终切割结果，
 并为每个小图添加淡色边框。
 
-数据来源（唯一）：data/results/review_books/*.json
+数据来源（唯一）：data/results/manual/review_books/*.json
   - 仅采集 segments 中 status == "confirmed" 且 decision != "drop" 的实例
   - 使用其中的 segmented_path 加载图片（相对项目根目录）
 
@@ -36,8 +36,8 @@ from PIL import Image, ImageDraw
 import numpy as np
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-REVIEW_BOOKS_DIR = PROJECT_ROOT / 'data/results/review_books'
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+REVIEW_BOOKS_DIR = PROJECT_ROOT / 'data/results/manual/review_books'
 EXPORT_DIR = PROJECT_ROOT / 'data/exports/montage'
 
 

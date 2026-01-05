@@ -11,7 +11,7 @@ from pathlib import Path
 # ============================================================================
 
 # 项目根目录
-PROJECT_ROOT = Path(__file__).parent.parent.absolute()
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 # 数据目录
 DATA_DIR = PROJECT_ROOT / 'data'
@@ -21,8 +21,10 @@ PREPROCESSED_DIR = RESULTS_DIR / 'preprocessed'
 OCR_DIR = RESULTS_DIR / 'ocr'
 
 # 标准字集文件
-STANDARD_CHARS_JSON = DATA_DIR / 'standard_chars.json'
-STANDARD_CHARS_TXT = DATA_DIR / 'standard_chars.txt'
+STANDARD_CHARS_JSON = DATA_DIR / 'metadata' / 'standard_chars.json'
+if not STANDARD_CHARS_JSON.exists():
+    STANDARD_CHARS_JSON = PROJECT_ROOT / 'src' / 'standard_chars.json'
+STANDARD_CHARS_TXT = DATA_DIR / 'metadata' / 'standard_chars.txt'
 
 # PDF 转换输出目录（默认在 raw 目录下）
 PDF_IMAGES_DIR = RESULTS_DIR / 'pdf_images'
@@ -60,6 +62,17 @@ OCR_CONFIG = {
     'framework': 'livetext',           # 使用 macOS LiveText
     'recognition_level': 'accurate',   # 识别级别: 'fast' 或 'accurate'
     'language_preference': ['zh-Hant'], # 语言偏好：繁体中文
+}
+
+# ============================================================================
+# PaddleOCR 自动筛选配置
+# ============================================================================
+
+PADDLE_CONFIG = {
+    'url': 'http://172.16.1.154:8000',
+    'timeout': 20,
+    'topk': 5,
+    'min_conf': 0.8,
 }
 
 # ============================================================================
@@ -120,6 +133,7 @@ def config_summary():
             'unsharp_amount': PREPROCESS_INK_PRESERVE_CONFIG['unsharp_amount'],
         },
         'ocr': OCR_CONFIG,
+        'paddle': PADDLE_CONFIG,
     }
 
 # 启动时校验配置

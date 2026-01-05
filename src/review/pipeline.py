@@ -6,7 +6,8 @@ import os
 import sys
 from pathlib import Path
 
-from src import config
+from src.review import config
+from src.review.paddle import core as auto_core
 from src.review.preprocess import core as preprocess
 from src.review.ocr import livetext as ocr
 from src.review.utils import pdf_converter
@@ -242,8 +243,34 @@ def cmd_config(args):
     for key, value in summary['ocr'].items():
         print(f"  {key}: {value}")
 
+    print("\nPaddle 配置:")
+    for key, value in summary['paddle'].items():
+        print(f"  {key}: {value}")
+
     print("\n" + "=" * 60)
 
+    return 0
+
+
+def cmd_auto(args):
+    """自动筛选流程（PaddleOCR）"""
+    paddle_url = args.paddle_url or config.PADDLE_CONFIG.get('url')
+    if not paddle_url:
+        print("错误：缺少 PaddleOCR 服务地址")
+        return 1
+    books = args.books or auto_core.list_books()
+    if not books:
+        print("未找到可处理的书籍")
+        return 1
+    auto_core.run_auto_pipeline(
+        books=books,
+        paddle_url=paddle_url,
+        topk=args.topk,
+        timeout=args.timeout,
+        limit_chars=args.limit_chars,
+        limit_instances=args.limit_instances,
+        min_conf=args.min_conf,
+    )
     return 0
 
 
@@ -334,6 +361,16 @@ def main():
     # config 命令
     parser_config = subparsers.add_parser('config', help='显示配置信息')
 
+    # auto 命令
+    parser_auto = subparsers.add_parser('auto', help='自动筛选流程（PaddleOCR）')
+    parser_auto.add_argument('--paddle-url', default=None, help='PaddleOCR HTTP 服务地址（base 或 /ocr/predict_base64 完整地址）')
+    parser_auto.add_argument('--books', nargs='+', help='仅处理指定书籍')
+    parser_auto.add_argument('--topk', type=int, default=config.PADDLE_CONFIG.get('topk', 5), help='每字保留 TopK（默认 5）')
+    parser_auto.add_argument('--timeout', type=int, default=config.PADDLE_CONFIG.get('timeout', 20), help='PaddleOCR 超时（秒）')
+    parser_auto.add_argument('--min-conf', type=float, default=config.PADDLE_CONFIG.get('min_conf', 0.75), help='置信度阈值（默认 0.75，可输入 75）')
+    parser_auto.add_argument('--limit-chars', type=int, default=None, help='仅处理前 N 个字（调试用）')
+    parser_auto.add_argument('--limit-instances', type=int, default=None, help='每个字仅处理前 N 个实例（调试用）')
+
     args = parser.parse_args()
 
     if not args.command:
@@ -357,6 +394,8 @@ def main():
         return cmd_crop(args)
     elif args.command == 'config':
         return cmd_config(args)
+    elif args.command == 'auto':
+        return cmd_auto(args)
     else:
         parser.print_help()
         return 1

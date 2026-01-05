@@ -24,9 +24,9 @@ from typing import Dict, List, Tuple, Optional
 from PIL import Image, ImageDraw
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-REVIEW_BOOKS_DIR = PROJECT_ROOT / 'data/results/review_books'
-SEGMENTED_DIR = PROJECT_ROOT / 'data/results/segmented'
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+REVIEW_BOOKS_DIR = PROJECT_ROOT / 'data/results/manual/review_books'
+SEGMENTED_DIR = PROJECT_ROOT / 'data/results/manual/segmented'
 
 
 def list_review_books() -> List[str]:
