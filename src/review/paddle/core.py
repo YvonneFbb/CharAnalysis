@@ -7,10 +7,12 @@ import re
 import time
 import urllib.parse
 import urllib.request
+import uuid
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import cv2
+import numpy as np
 
 from src.review.segment import segment_character
 
@@ -80,6 +82,13 @@ def encode_png_b64(img_bgr) -> str:
     return base64.b64encode(buf.tobytes()).decode("ascii")
 
 
+def encode_png_bytes(img_bgr) -> bytes:
+    ok, buf = cv2.imencode(".png", img_bgr)
+    if not ok:
+        raise ValueError("PNG 编码失败")
+    return buf.tobytes()
+
+
 def parse_paddle_response(payload: Dict) -> Tuple[str, float]:
     if not isinstance(payload, dict):
         return ("", 0.0)
@@ -137,6 +146,71 @@ def call_paddle_ocr(img_bgr, paddle_url: str, timeout: int) -> Tuple[str, float]
     return parse_paddle_response(payload)
 
 
+def _resolve_paddle_batch_url(paddle_url: str) -> str:
+    url = paddle_url.strip()
+    if url.endswith("/ocr/batch"):
+        return url
+    if url.endswith("/ocr/predict_base64") or url.endswith("/ocr/predict"):
+        return url.rsplit("/", 1)[0] + "/batch"
+    if "/ocr/" in url:
+        base = url.split("/ocr/")[0]
+        return base.rstrip("/") + "/ocr/batch"
+    return url.rstrip("/") + "/ocr/batch"
+
+
+def _encode_multipart(files: List[bytes]) -> Tuple[str, bytes]:
+    boundary = "----PaddleBoundary" + uuid.uuid4().hex
+    body = bytearray()
+    for idx, data in enumerate(files):
+        body.extend(f"--{boundary}\r\n".encode("utf-8"))
+        body.extend(f'Content-Disposition: form-data; name="files"; filename="img_{idx}.png"\r\n'.encode("utf-8"))
+        body.extend(b"Content-Type: image/png\r\n\r\n")
+        body.extend(data)
+        body.extend(b"\r\n")
+    body.extend(f"--{boundary}--\r\n".encode("utf-8"))
+    return boundary, bytes(body)
+
+
+def _parse_batch_payload(payload: object, count: int) -> List[Tuple[str, float]]:
+    items = None
+    if isinstance(payload, dict):
+        if isinstance(payload.get("results"), list):
+            items = payload.get("results")
+        elif isinstance(payload.get("data"), list):
+            items = payload.get("data")
+    elif isinstance(payload, list):
+        items = payload
+    if not items:
+        items = [payload] if payload else []
+    results = [parse_paddle_response(item) for item in items]
+    if count and len(results) < count:
+        results.extend([("", 0.0)] * (count - len(results)))
+    return results[:count]
+
+
+def call_paddle_batch(images: List[bytes], paddle_url: str, timeout: int) -> List[Tuple[str, float]]:
+    if not images:
+        return []
+    if len(images) == 1:
+        dummy = cv2.imdecode(np.frombuffer(images[0], dtype=np.uint8), cv2.IMREAD_COLOR)
+        if dummy is None:
+            return [("", 0.0)]
+        return [call_paddle_ocr(dummy, paddle_url, timeout)]
+    boundary, body = _encode_multipart(images)
+    url = _resolve_paddle_batch_url(paddle_url)
+    req = urllib.request.Request(
+        url,
+        data=body,
+        headers={
+            "Content-Type": f"multipart/form-data; boundary={boundary}",
+            "Content-Length": str(len(body)),
+        },
+    )
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        data = resp.read()
+    payload = json.loads(data.decode("utf-8"))
+    return _parse_batch_payload(payload, len(images))
+
 def rank_candidates(candidates: List[Dict], topk: int) -> List[Dict]:
     candidates.sort(
         key=lambda x: (
@@ -180,7 +254,7 @@ def _is_single_char(text: str) -> bool:
     return len(cleaned) == 1
 
 
-def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_chars: Optional[int], limit_instances: Optional[int], min_conf: float) -> int:
+def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_chars: Optional[int], limit_instances: Optional[int], min_conf: float, batch_size: int, require_match: bool) -> int:
     matched = load_matched_book(book)
     if not matched:
         print(f"跳过 {book}：无 matched 数据")
@@ -199,60 +273,83 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
         instances = chars.get(ch) or []
         if limit_instances is not None:
             instances = instances[:limit_instances]
+        instances = sorted(instances, key=lambda inst: -int((inst.get("bbox") or {}).get("width") or 0))
         candidates: List[Dict] = []
 
-        for inst in instances:
-            bbox = inst.get("bbox") or {}
-            source_image = normalize_to_preprocessed_path(inst.get("source_image") or "")
-            if not source_image:
-                continue
-            preprocessed = PROJECT_ROOT / source_image
-            if not preprocessed.exists():
-                continue
-            try:
-                seg_out = segment_character(str(preprocessed), bbox)
-                if isinstance(seg_out, tuple) and len(seg_out) >= 2:
-                    segmented_img = seg_out[1]
-                else:
+        idx = 0
+        batch_size = max(1, int(batch_size or 1))
+        while idx < len(instances):
+            if len(candidates) >= topk:
+                break
+            batch_items = []
+            while idx < len(instances) and len(batch_items) < batch_size:
+                inst = instances[idx]
+                idx += 1
+                bbox = inst.get("bbox") or {}
+                source_image = normalize_to_preprocessed_path(inst.get("source_image") or "")
+                if not source_image:
                     continue
-            except Exception:
+                preprocessed = PROJECT_ROOT / source_image
+                if not preprocessed.exists():
+                    continue
+                try:
+                    seg_out = segment_character(str(preprocessed), bbox)
+                    if isinstance(seg_out, tuple) and len(seg_out) >= 2:
+                        segmented_img = seg_out[1]
+                    else:
+                        continue
+                except Exception:
+                    continue
+                try:
+                    img_bytes = encode_png_bytes(segmented_img)
+                except Exception:
+                    continue
+                h, w = segmented_img.shape[:2]
+                batch_items.append({
+                    "inst": inst,
+                    "bbox": bbox,
+                    "source_image": source_image,
+                    "img_bytes": img_bytes,
+                    "width": int(w),
+                    "height": int(h),
+                })
+
+            if not batch_items:
                 continue
 
             try:
-                paddle_text, paddle_conf = call_paddle_ocr(segmented_img, paddle_url, timeout=timeout)
+                results = call_paddle_batch([b["img_bytes"] for b in batch_items], paddle_url, timeout=timeout)
             except Exception:
-                paddle_text, paddle_conf = ("", 0.0)
+                results = [("", 0.0)] * len(batch_items)
 
-            if not _is_single_char(paddle_text):
-                continue
-            cleaned_text = _normalize_text(paddle_text)
-
-            instance_id = make_instance_id(inst)
-            seg_path = seg_dir / f"{ch}_{instance_id}.png"
-            try:
-                cv2.imwrite(str(seg_path), segmented_img)
-            except Exception:
-                continue
-
-            h, w = segmented_img.shape[:2]
-            candidates.append({
-                "instance_id": instance_id,
-                "bbox": bbox,
-                "source_image": source_image,
-                "segmented_path": f"data/results/auto/segmented/{book}/{ch}_{instance_id}.png",
-                "paddle_text": cleaned_text,
-                "paddle_conf": float(paddle_conf),
-                "width": int(w),
-                "height": int(h),
-                "decision": "pending",
-                "match": cleaned_text == ch,
-            })
+            for item, (paddle_text, paddle_conf) in zip(batch_items, results):
+                if not _is_single_char(paddle_text):
+                    continue
+                cleaned_text = _normalize_text(paddle_text)
+                if float(paddle_conf or 0.0) < min_conf:
+                    continue
+                inst = item["inst"]
+                instance_id = make_instance_id(inst)
+                match = cleaned_text == ch
+                if require_match and not match:
+                    continue
+                candidates.append({
+                    "instance_id": instance_id,
+                    "bbox": item["bbox"],
+                    "source_image": item["source_image"],
+                    "segmented_path": None,
+                    "paddle_text": cleaned_text,
+                    "paddle_conf": float(paddle_conf),
+                    "width": item["width"],
+                    "height": item["height"],
+                    "decision": "pending",
+                    "match": match,
+                    "png_bytes": item["img_bytes"],
+                })
+                if len(candidates) >= topk:
+                    break
 
         if not candidates:
-            continue
-
-        filtered = [c for c in candidates if float(c.get("paddle_conf") or 0.0) >= min_conf]
-        if not filtered:
             out_chars[ch] = {
                 "items": {},
                 "top5": [],
@@ -260,7 +357,21 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
             }
             continue
 
-        top_items = rank_candidates(filtered, topk=topk)
+        top_items = rank_candidates(candidates, topk=topk)
+        for item in top_items:
+            instance_id = item.get("instance_id")
+            png_bytes = item.pop("png_bytes", None)
+            if not instance_id or not png_bytes:
+                item["segmented_path"] = None
+                continue
+            seg_path = seg_dir / f"{ch}_{instance_id}.png"
+            try:
+                with open(seg_path, "wb") as f:
+                    f.write(png_bytes)
+                item["segmented_path"] = f"data/results/auto/segmented/{book}/{ch}_{instance_id}.png"
+            except Exception:
+                item["segmented_path"] = None
+
         out_chars[ch] = {
             "items": {it["instance_id"]: it for it in top_items},
             "top5": [it["instance_id"] for it in top_items],
@@ -280,7 +391,7 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
     return len(out_chars)
 
 
-def run_auto_pipeline(books: List[str], paddle_url: str, topk: int, timeout: int, limit_chars: Optional[int], limit_instances: Optional[int], min_conf: float) -> int:
+def run_auto_pipeline(books: List[str], paddle_url: str, topk: int, timeout: int, limit_chars: Optional[int], limit_instances: Optional[int], min_conf: float, batch_size: int, require_match: bool) -> int:
     count = 0
     for book in books:
         count += process_book(
@@ -291,5 +402,7 @@ def run_auto_pipeline(books: List[str], paddle_url: str, topk: int, timeout: int
             limit_chars=limit_chars,
             limit_instances=limit_instances,
             min_conf=min_conf,
+            batch_size=batch_size,
+            require_match=require_match,
         )
     return count

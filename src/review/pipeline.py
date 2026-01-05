@@ -9,7 +9,6 @@ from pathlib import Path
 from src.review import config
 from src.review.paddle import core as auto_core
 from src.review.preprocess import core as preprocess
-from src.review.ocr import livetext as ocr
 from src.review.utils import pdf_converter
 from src.review.filter import match_standard_chars
 from src.review.crop import crop_characters
@@ -43,6 +42,11 @@ def cmd_preprocess(args):
 
 def cmd_ocr(args):
     """OCR 识别命令"""
+    try:
+        from src.review.ocr import livetext as ocr
+    except Exception as e:
+        print(f"错误：OCR 模块不可用（可能仅支持 macOS LiveText）：{e}")
+        return 1
     input_path = args.input
     force = args.force if hasattr(args, 'force') else False
     max_volumes = args.max_volumes if hasattr(args, 'max_volumes') else None
@@ -69,6 +73,11 @@ def cmd_ocr(args):
 
 def cmd_all(args):
     """完整流程：预处理 + OCR"""
+    try:
+        from src.review.ocr import livetext as ocr
+    except Exception as e:
+        print(f"错误：OCR 模块不可用（可能仅支持 macOS LiveText）：{e}")
+        return 1
     input_path = args.input
     force = args.force if hasattr(args, 'force') else False
     max_volumes = args.max_volumes if hasattr(args, 'max_volumes') else None
@@ -270,6 +279,8 @@ def cmd_auto(args):
         limit_chars=args.limit_chars,
         limit_instances=args.limit_instances,
         min_conf=args.min_conf,
+        batch_size=args.batch_size,
+        require_match=config.PADDLE_CONFIG.get('require_match', False),
     )
     return 0
 
@@ -368,6 +379,7 @@ def main():
     parser_auto.add_argument('--topk', type=int, default=config.PADDLE_CONFIG.get('topk', 5), help='每字保留 TopK（默认 5）')
     parser_auto.add_argument('--timeout', type=int, default=config.PADDLE_CONFIG.get('timeout', 20), help='PaddleOCR 超时（秒）')
     parser_auto.add_argument('--min-conf', type=float, default=config.PADDLE_CONFIG.get('min_conf', 0.75), help='置信度阈值（默认 0.75，可输入 75）')
+    parser_auto.add_argument('--batch-size', type=int, default=config.PADDLE_CONFIG.get('batch_size', 8), help='Paddle 批处理大小（默认 8）')
     parser_auto.add_argument('--limit-chars', type=int, default=None, help='仅处理前 N 个字（调试用）')
     parser_auto.add_argument('--limit-instances', type=int, default=None, help='每个字仅处理前 N 个实例（调试用）')
 
