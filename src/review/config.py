@@ -83,7 +83,7 @@ PADDLE_CONFIG = {
     'topk': 15,
     'min_conf': 0.8,
     'batch_size': 16,
-    'workers': 3,
+    'workers': 1,
     'require_match': True,
 }
 

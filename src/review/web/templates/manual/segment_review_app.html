@@ -1152,10 +1152,6 @@
                         <div class="stat-label">已确认</div>
                         <div class="stat-value" id="stat-confirmed">0</div>
                     </div>
-                    <div class="stat-item" style="border-left-color: #FF9800;">
-                        <div class="stat-label">待手动处理</div>
-                        <div class="stat-value" id="stat-pending">0</div>
-                    </div>
                     <div class="stat-item" style="border-left-color: #999;">
                         <div class="stat-label">未审查</div>
                         <div class="stat-value" id="stat-unreviewed">0</div>
@@ -1219,7 +1215,6 @@
                         <button class="btn btn-primary" onclick="confirmSegmentation()">✓ 确认通过</button>
                         <button class="btn btn-warning" onclick="markInstanceAsNotNeeded()">✗ 标记不需要</button>
                         <button class="btn" onclick="toggleManualAdjustPanel()">🛠️ 手动调整</button>
-                        <button class="btn btn-warning" onclick="exportToManual()">📤 导出到手动处理</button>
                         <button class="btn" onclick="unconfirmSegmentation()">↩︎ 取消通过</button>
                     </div>
 
@@ -1543,7 +1538,6 @@
                 // 统计信息
                 let totalChars = 0;
                 let confirmedCount = 0;
-                let pendingCount = 0;
                 let unreviewedCount = 0;
 
                 const charList = document.getElementById('char-list');
@@ -1579,11 +1573,9 @@
                         totalChars++;
 
                         const confirmed = charInfo.confirmed || 0;
-                        const pending = charInfo.pending || 0;
-                        const unreviewed = charInfo.count - confirmed - pending;
+                        const unreviewed = charInfo.count - confirmed;
 
                         confirmedCount += confirmed;
-                        pendingCount += pending;
                         unreviewedCount += unreviewed;
 
                         // 计算标记数量
@@ -1601,7 +1593,7 @@
 
                         if (confirmed === charInfo.count) {
                             charItem.classList.add('completed');
-                        } else if (confirmed > 0 || pending > 0) {
+                        } else if (confirmed > 0) {
                             charItem.classList.add('partial');
                         }
 
@@ -1627,7 +1619,6 @@
                 // 更新统计
                 document.getElementById('stat-total').textContent = totalChars;
                 document.getElementById('stat-confirmed').textContent = confirmedCount;
-                document.getElementById('stat-pending').textContent = pendingCount;
                 document.getElementById('stat-unreviewed').textContent = unreviewedCount;
 
                 if (charList.children.length === 0) {
@@ -1794,8 +1785,6 @@
                     statusHtml = '<span class="status-badge warning">已标记不需要</span>';
                 } else if (badgeStatus === 'confirmed') {
                     statusHtml = '<span class="status-badge success">已确认</span>';
-                } else if (badgeStatus === 'pending_manual') {
-                    statusHtml = '<span class="status-badge error">待手动处理</span>';
                 }
                 document.getElementById('instance-info').innerHTML = statusHtml;
 
@@ -1991,65 +1980,6 @@
                 await loadBook(currentBook, { preserveVisited: true });
             } catch (e) {
                 alert('标记失败: ' + e.message);
-            }
-        }
-
-        async function markPendingManual() {
-            const instanceId = currentInstances[currentInstanceIndex];
-
-            if (!confirm('确认标记为待手动处理吗？\n系统会自动导出原图 ROI 到 manual_todo 目录。')) {
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE}/save_segmentation`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        book: currentBook,
-                        char: currentChar,
-                        instance_id: instanceId,
-                        status: 'pending_manual',
-                        method: 'pending_manual',
-                        decision: 'need'
-                    })
-                });
-
-                const result = await response.json();
-                if (!result.success) {
-                    throw new Error(result.error);
-                }
-
-                // 更新状态
-                if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
-                reviewStatus[currentChar][instanceId] = { status: 'pending_manual', decision: 'need' };
-
-                // 自动导出原图
-                await exportROI();
-
-                if (currentInstanceIndex < currentInstances.length - 1) {
-                    loadNextInstance();
-                } else {
-                    pendingAutoIndex = getNextCharIndex();
-                    pendingAutoChar = null;
-                    await closeModal();
-                }
-
-            } catch (error) {
-                console.error('标记失败:', error);
-                alert('标记失败: ' + error.message);
-            }
-        }
-
-        async function exportROI() {
-            const instanceId = currentInstances[currentInstanceIndex];
-
-            try {
-                const url = `${API_BASE}/export_roi?book=${encodeURIComponent(currentBook)}&char=${encodeURIComponent(currentChar)}&instance_id=${encodeURIComponent(instanceId)}`;
-                window.open(url, '_blank');
-            } catch (error) {
-                console.error('导出失败:', error);
-                alert('导出失败');
             }
         }
 
@@ -2765,38 +2695,6 @@
             } catch (e) {
                 console.error('应用失败:', e);
                 alert('应用失败: ' + e.message);
-            }
-        }
-
-        // 导出到手动处理
-        async function exportToManual() {
-            const instanceId = currentInstances[currentInstanceIndex];
-
-            if (!confirm(`确认导出 "${currentChar}" - ${instanceId} 到手动处理区？\n图片将保存到 manual/segmented/manual/ 目录。`)) {
-                return;
-            }
-
-            try {
-                // 调用导出 ROI API
-                const url = `${API_BASE}/export_roi?book=${encodeURIComponent(currentBook)}&char=${encodeURIComponent(currentChar)}&instance_id=${encodeURIComponent(instanceId)}`;
-
-                // 打开新窗口下载文件
-                window.open(url, '_blank');
-
-                // 显示成功消息
-                alert('已导出到手动处理区！\n位置：data/results/manual/segmented/manual/' + currentBook + '/' + currentChar + '/' + instanceId + '.png\n\n处理完成后请使用"导入手动处理结果"导入。');
-
-                // 自动跳转到下一个实例
-                if (currentInstanceIndex < currentInstances.length - 1) {
-                    loadNextInstance();
-                } else {
-                    closeModal();
-                    loadBook(currentBook);
-                }
-
-            } catch (error) {
-                console.error('导出失败:', error);
-                alert('导出失败: ' + error.message);
             }
         }
 

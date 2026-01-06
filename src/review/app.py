@@ -72,7 +72,6 @@ REVIEW_BOOK_BACKUP_COOLDOWN = 60  # 秒，避免高频写入产生大量备份
 SEGMENTATION_REVIEW_PATH = MANUAL_RESULTS_DIR / 'segmentation_review.json'
 SEGMENT_LOOKUP_PATH = MANUAL_RESULTS_DIR / 'segment_lookup.json'
 SEGMENTED_DIR = MANUAL_RESULTS_DIR / 'segmented'
-MANUAL_WORK_DIR = SEGMENTED_DIR / 'manual'  # 手动处理工作区（统一到 segmented 下，扁平：按书籍，不按字符）
 
 # 标记功能路径
 SEGMENT_MARKS_PATH = MANUAL_RESULTS_DIR / 'segment_marks.json'
@@ -83,11 +82,11 @@ PADDLE_SEGMENTED_DIR = PADDLE_RESULTS_DIR / 'segmented'
 
 # 创建必要的目录
 SEGMENTED_DIR.mkdir(parents=True, exist_ok=True)
-MANUAL_WORK_DIR.mkdir(parents=True, exist_ok=True)
 
 # 加载数据（懒加载 / 分片缓存）
 matched_data = None  # 旧的整库加载（尽量避免使用）
 matched_books_cache: Dict[str, dict] = {}
+matched_books_cache_mtime = 0.0
 matched_index_cache: Optional[Dict] = None
 standard_chars_data = None
 segment_lookup_data = None  # 内存中的查找索引（随 review_results.json 保存同步写入）
@@ -159,15 +158,25 @@ def _build_shards_once(full_data: Optional[Dict] = None):
 
 def ensure_matched_book_data(book_name: str) -> Optional[Dict]:
     """按需加载某本书的匹配数据（优先读取分片，缺失则一次性分片）。"""
+    global matched_books_cache_mtime
     if not book_name:
         return None
-    if book_name in matched_books_cache:
-        return matched_books_cache[book_name]
     _ensure_cache_dirs()
     shard_path = MATCHED_SHARDS_DIR / f"{book_name}.json"
     src_mtime = MATCHED_JSON_PATH.stat().st_mtime if MATCHED_JSON_PATH.exists() else 0
+    if src_mtime and src_mtime != matched_books_cache_mtime:
+        matched_books_cache.clear()
+        matched_books_cache_mtime = src_mtime
+    if book_name in matched_books_cache:
+        return matched_books_cache[book_name]
     # 如果分片存在且不过期，直接加载
+    shard_ok = False
     if shard_path.exists():
+        try:
+            shard_ok = (not src_mtime) or (shard_path.stat().st_mtime >= src_mtime)
+        except Exception:
+            shard_ok = False
+    if shard_ok:
         try:
             with open(shard_path, 'r', encoding='utf-8') as f:
                 shard = json.load(f)
@@ -1688,67 +1697,6 @@ def api_adjust_bbox():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-@app.route('/api/export_roi', methods=['GET'])
-def api_export_roi():
-    """
-    导出原图 ROI（供手动 PS 处理）
-
-    Query params: book, char, instance_id
-    """
-    try:
-        book_name = request.args.get('book')
-        char = request.args.get('char')
-        instance_id = request.args.get('instance_id')
-
-        if not all([book_name, char, instance_id]):
-            return jsonify({'success': False, 'error': '缺少必要参数'}), 400
-
-        # 从派生的 lookup 结构获取实例信息
-        lookup_book = get_lookup_book(book_name)
-        if not lookup_book:
-            return '书籍不存在', 404
-        if char not in lookup_book or instance_id not in lookup_book[char]:
-            return '未找到实例信息', 404
-
-        instance_info = lookup_book[char][instance_id]
-        app.logger.info('[API] /export_roi book=%s char=%s instance=%s', book_name, char, instance_id)
-
-        # 裁切 ROI
-        source_image_path = instance_info['source_image']
-
-        # 转换为绝对路径
-        if not os.path.isabs(source_image_path):
-            source_image_path = str(PROJECT_ROOT / source_image_path)
-
-        img = cv2.imread(source_image_path)
-        bbox = instance_info['bbox']
-        padding = 10
-
-        h, w = img.shape[:2]
-        x = max(0, bbox['x'] - padding)
-        y = max(0, bbox['y'] - padding)
-        x2 = min(w, bbox['x'] + bbox['width'] + padding)
-        y2 = min(h, bbox['y'] + bbox['height'] + padding)
-
-        roi = img[y:y2, x:x2]
-
-        # 保存到 manual 工作区（扁平：manual/{book}/{char}_{instance_id}.png）
-        manual_dir = MANUAL_WORK_DIR / book_name
-        manual_dir.mkdir(parents=True, exist_ok=True)
-
-        roi_path = manual_dir / f"{char}_{instance_id}.png"
-        cv2.imwrite(str(roi_path), roi)
-        app.logger.info('[API] /export_roi saved ROI: %s size=%sx%s', str(roi_path), roi.shape[1], roi.shape[0])
-
-        # 返回文件
-        return send_file(roi_path, as_attachment=True, download_name=f"{book_name}_{char}_{instance_id}.png")
-
-    except Exception as e:
-        print(f'❌ 导出 ROI 失败: {str(e)}')
-        print(traceback.format_exc())
-        return str(e), 500
-
-
 @app.route('/api/get_default_params', methods=['GET'])
 def api_get_default_params():
     """获取默认切割参数"""
@@ -1847,7 +1795,6 @@ def api_segment_book_chars():
         for char, inst_map in combined_book.items():
             total_instances = len(inst_map)
             confirmed = sum(1 for s in inst_map.values() if s.get('status') == 'confirmed')
-            pending = sum(1 for s in inst_map.values() if s.get('status') == 'pending_manual')
             dropped = sum(1 for s in inst_map.values() if s.get('decision') == 'drop')
             effective = max(0, total_instances - dropped)
 
@@ -1856,7 +1803,6 @@ def api_segment_book_chars():
                 'effective': effective,
                 'count': effective,
                 'confirmed': confirmed,
-                'pending': pending,
                 'not_needed': dropped
             }
 
@@ -2028,160 +1974,6 @@ def api_export_marked():
 
     except Exception as e:
         print(f'❌ 导出标记实例失败: {str(e)}')
-        print(traceback.format_exc())
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-
-# ==================== 手动处理工作流 API ====================
-
-@app.route('/api/list_manual_todo', methods=['GET'])
-def api_list_manual_todo():
-    """
-    列出手动处理工作区的所有项目
-
-    返回 manual/ 工作区中的所有文件（待处理或已处理）
-    """
-    try:
-        todo_items = []
-
-        # 遍历 manual 工作区（扁平：manual/{book}/{char}_{instance_id}.png）
-        if not MANUAL_WORK_DIR.exists():
-            return jsonify({
-                'success': True,
-                'todo_items': [],
-                'total': 0
-            })
-
-        for book_dir in MANUAL_WORK_DIR.iterdir():
-            if not book_dir.is_dir():
-                continue
-
-            book_name = book_dir.name
-
-            # 直接扫描该书籍目录下的 png 文件：{char}_{instance_id}.png
-            for img_file in book_dir.glob('*.png'):
-                stem = img_file.stem
-                # 拆分出 char 和 instance_id（按第一个下划线分割）
-                if '_' in stem:
-                    char, instance_id = stem.split('_', 1)
-                else:
-                    # 非法命名，跳过
-                    continue
-
-                todo_items.append({
-                    'book': book_name,
-                    'char': char,
-                    'instance_id': instance_id,
-                    'file_path': str(img_file.relative_to(PROJECT_ROOT))
-                })
-
-        app.logger.info('[API] /list_manual_todo total=%d', len(todo_items))
-        return jsonify({
-            'success': True,
-            'todo_items': todo_items,
-            'total': len(todo_items)
-        })
-
-    except Exception as e:
-        print(f'❌ 列出待处理项目失败: {str(e)}')
-        print(traceback.format_exc())
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-
-@app.route('/api/import_manual_results', methods=['POST'])
-def api_import_manual_results():
-    """
-    导入手动处理的结果（简化版）
-
-    扫描 manual/ 工作区，将图片移动到 segmented/ 目录并更新审查状态
-
-    Request body (可选):
-    {
-        "book": "...",  // 只导入指定书籍
-        "char": "..."   // 只导入指定字符
-    }
-    """
-    try:
-        data = request.get_json() or {}
-        filter_book = data.get('book')
-        filter_char = data.get('char')
-
-        imported_count = 0
-        errors = []
-
-        # 不再预读全量，逐实例更新（加锁）
-
-        import shutil
-
-        # 遍历 manual 工作区（扁平：manual/{book}/{char}_{instance_id}.png）
-        if not MANUAL_WORK_DIR.exists():
-            return jsonify({
-                'success': True,
-                'imported': 0,
-                'message': 'manual 工作区不存在'
-            })
-
-        for book_dir in MANUAL_WORK_DIR.iterdir():
-            if not book_dir.is_dir():
-                continue
-
-            book_name = book_dir.name
-            if filter_book and book_name != filter_book:
-                continue
-
-            # 查找所有 .png 文件：{char}_{instance_id}.png
-            for img_file in book_dir.glob('*.png'):
-                stem = img_file.stem
-                if '_' not in stem:
-                    continue
-                char, instance_id = stem.split('_', 1)
-
-                if filter_char and char != filter_char:
-                    continue
-
-                try:
-                    # 移动文件到 segmented 目录（扁平结构）
-                    target_dir = SEGMENTED_DIR / book_name
-                    target_dir.mkdir(parents=True, exist_ok=True)
-
-                    target_file = target_dir / f"{char}_{instance_id}.png"
-                    shutil.move(str(img_file), str(target_file))
-
-                    # 更新审查状态（加锁写入）
-                    rel_path = f"data/results/manual/segmented/{book_name}/{char}_{instance_id}.png"
-                    update_review_entry(book_name, char, instance_id, {
-                        'status': 'confirmed',
-                        'method': 'manual',
-                        'timestamp': datetime.now(timezone.utc).isoformat(),
-                        'segmented_path': rel_path
-                    })
-
-                    imported_count += 1
-                    app.logger.info('[API] /import_manual_results imported %s/%s/%s', book_name, char, instance_id)
-
-                except Exception as e:
-                    errors.append(f'{book_name}/{char}/{instance_id}: {str(e)}')
-                    continue
-
-            # 删除空目录
-            try:
-                if not any(book_dir.iterdir()):
-                    book_dir.rmdir()
-            except:
-                pass
-
-        # 已逐条更新，无需统一保存
-
-        app.logger.info('[API] /import_manual_results done imported=%d errors=%d', imported_count, len(errors))
-        return jsonify({
-            'success': True,
-            'imported': imported_count,
-            'errors': errors,
-            'error_count': len(errors)
-        })
-
-    except Exception as e:
-        print(f'❌ 导入手动处理结果失败: {str(e)}')
         print(traceback.format_exc())
         return jsonify({'success': False, 'error': str(e)}), 500
 

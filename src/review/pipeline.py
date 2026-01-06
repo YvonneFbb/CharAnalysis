@@ -467,7 +467,7 @@ def main():
     parser_paddle.add_argument('--batch-size', type=int, default=config.PADDLE_CONFIG.get('batch_size', 8), help='Paddle 批处理大小（默认 8）')
     parser_paddle.add_argument('--limit-chars', type=int, default=None, help='仅处理前 N 个字（调试用）')
     parser_paddle.add_argument('--limit-instances', type=int, default=None, help='每个字仅处理前 N 个实例（调试用）')
-    parser_paddle.add_argument('--workers', type=int, default=config.PADDLE_CONFIG.get('workers', 1), help='Paddle 并发进程数（默认 2）')
+    parser_paddle.add_argument('--workers', type=int, default=config.PADDLE_CONFIG.get('workers', 1), help='Paddle 并发进程数（默认 1）')
 
 
     args = parser.parse_args()

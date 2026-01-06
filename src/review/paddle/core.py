@@ -9,7 +9,7 @@ import urllib.parse
 import urllib.request
 import uuid
 from pathlib import Path
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from tqdm import tqdm
 from typing import Dict, List, Optional, Tuple
 
 import cv2
@@ -272,11 +272,36 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
     if limit_chars is not None:
         char_keys = char_keys[:limit_chars]
 
-    for ch in char_keys:
+    stats = {
+        "instances": 0,
+        "candidates": 0,
+        "saved": 0,
+        "skipped_source": 0,
+        "seg_fail": 0,
+        "encode_fail": 0,
+        "paddle_fail": 0,
+        "filtered_non_single": 0,
+        "filtered_low_conf": 0,
+        "filtered_mismatch": 0,
+    }
+    error_samples = {
+        "missing_source": [],
+        "seg_fail": [],
+        "encode_fail": [],
+        "paddle_fail": [],
+    }
+    sample_limit = 3
+    def _maybe_sample(bucket: List[str], msg: str):
+        if len(bucket) < sample_limit:
+            bucket.append(msg)
+    total_chars = len(char_keys)
+    progress = tqdm(char_keys, desc=f"Paddle {book}", unit="char")
+    for ch in progress:
         instances = chars.get(ch) or []
         if limit_instances is not None:
             instances = instances[:limit_instances]
         instances = sorted(instances, key=lambda inst: -int((inst.get("bbox") or {}).get("width") or 0))
+        stats["instances"] += len(instances)
         candidates: List[Dict] = []
 
         idx = 0
@@ -291,21 +316,31 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
                 bbox = inst.get("bbox") or {}
                 source_image = normalize_to_preprocessed_path(inst.get("source_image") or "")
                 if not source_image:
+                    stats["skipped_source"] += 1
+                    _maybe_sample(error_samples["missing_source"], f"{ch}:{make_instance_id(inst)} 缺少 source")
                     continue
                 preprocessed = PROJECT_ROOT / source_image
                 if not preprocessed.exists():
+                    stats["skipped_source"] += 1
+                    _maybe_sample(error_samples["missing_source"], f"{ch}:{make_instance_id(inst)} {source_image}")
                     continue
                 try:
                     seg_out = segment_character(str(preprocessed), bbox)
                     if isinstance(seg_out, tuple) and len(seg_out) >= 2:
                         segmented_img = seg_out[1]
                     else:
+                        stats["seg_fail"] += 1
+                        _maybe_sample(error_samples["seg_fail"], f"{ch}:{make_instance_id(inst)}")
                         continue
                 except Exception:
+                    stats["seg_fail"] += 1
+                    _maybe_sample(error_samples["seg_fail"], f"{ch}:{make_instance_id(inst)}")
                     continue
                 try:
                     img_bytes = encode_png_bytes(segmented_img)
                 except Exception:
+                    stats["encode_fail"] += 1
+                    _maybe_sample(error_samples["encode_fail"], f"{ch}:{make_instance_id(inst)}")
                     continue
                 h, w = segmented_img.shape[:2]
                 batch_items.append({
@@ -322,19 +357,25 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
 
             try:
                 results = call_paddle_batch([b["img_bytes"] for b in batch_items], paddle_url, timeout=timeout)
-            except Exception:
+            except Exception as e:
+                stats["paddle_fail"] += len(batch_items)
+                msg = f"{type(e).__name__}: {e}"
+                _maybe_sample(error_samples["paddle_fail"], f"{ch}:{msg}")
                 results = [("", 0.0)] * len(batch_items)
 
             for item, (paddle_text, paddle_conf) in zip(batch_items, results):
                 if not _is_single_char(paddle_text):
+                    stats["filtered_non_single"] += 1
                     continue
                 cleaned_text = _normalize_text(paddle_text)
                 if float(paddle_conf or 0.0) < min_conf:
+                    stats["filtered_low_conf"] += 1
                     continue
                 inst = item["inst"]
                 instance_id = make_instance_id(inst)
                 match = cleaned_text == ch
                 if require_match and not match:
+                    stats["filtered_mismatch"] += 1
                     continue
                 candidates.append({
                     "instance_id": instance_id,
@@ -363,6 +404,7 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
             continue
 
         sorted_all = rank_candidates(candidates, topk=None)
+        stats["candidates"] += len(sorted_all)
         top_items = sorted_all[:topk] if topk and topk > 0 else []
         top_ids = {it.get("instance_id") for it in top_items if it.get("instance_id")}
         for item in sorted_all:
@@ -379,6 +421,7 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
                 with open(seg_path, "wb") as f:
                     f.write(png_bytes)
                 item["segmented_path"] = f"data/results/paddle/segmented/{book}/{ch}_{instance_id}.png"
+                stats["saved"] += 1
             except Exception:
                 item["segmented_path"] = None
 
@@ -402,6 +445,12 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
             "scores": scores,
             "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         }
+        progress.set_postfix({
+            "saved": stats["saved"],
+            "cand": stats["candidates"],
+            "seg_fail": stats["seg_fail"],
+            "paddle_fail": stats["paddle_fail"],
+        })
 
     if not out_chars:
         return 0
@@ -412,48 +461,38 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
         "chars": out_chars,
     }
     write_book_paddle(book, payload)
-    print(f"✓ {book}: chars={len(out_chars)}")
+    print(
+        f"✓ {book}: chars={len(out_chars)}/{total_chars} "
+        f"instances={stats['instances']} saved={stats['saved']} "
+        f"candidates={stats['candidates']} skipped_src={stats['skipped_source']} "
+        f"seg_fail={stats['seg_fail']} paddle_fail={stats['paddle_fail']} "
+        f"filtered(non_single={stats['filtered_non_single']},low_conf={stats['filtered_low_conf']},mismatch={stats['filtered_mismatch']})"
+    )
+    if error_samples["missing_source"]:
+        print(f"  - 缺少图片样例: {', '.join(error_samples['missing_source'])}")
+    if error_samples["seg_fail"]:
+        print(f"  - 切割失败样例: {', '.join(error_samples['seg_fail'])}")
+    if error_samples["encode_fail"]:
+        print(f"  - 编码失败样例: {', '.join(error_samples['encode_fail'])}")
+    if error_samples["paddle_fail"]:
+        print(f"  - Paddle 失败样例: {', '.join(error_samples['paddle_fail'])}")
     return len(out_chars)
 
 
 def run_paddle_pipeline(books: List[str], paddle_url: str, topk: int, timeout: int, limit_chars: Optional[int], limit_instances: Optional[int], min_conf: float, batch_size: int, workers: int, require_match: bool) -> int:
     count = 0
-    workers = max(1, int(workers or 1))
-    if workers == 1 or len(books) <= 1:
-        for book in books:
-            count += process_book(
-                book,
-                paddle_url=paddle_url,
-                topk=topk,
-                timeout=timeout,
-                limit_chars=limit_chars,
-                limit_instances=limit_instances,
-                min_conf=min_conf,
-                batch_size=batch_size,
-                require_match=require_match,
-            )
-        return count
-
-    with ProcessPoolExecutor(max_workers=workers) as executor:
-        futures = {
-            executor.submit(
-                process_book,
-                book,
-                paddle_url,
-                topk,
-                timeout,
-                limit_chars,
-                limit_instances,
-                min_conf,
-                batch_size,
-                require_match,
-            ): book
-            for book in books
-        }
-        for future in as_completed(futures):
-            book = futures[future]
-            try:
-                count += future.result()
-            except Exception as e:
-                print(f"✗ {book}: Paddle 处理失败: {e}")
+    if workers and int(workers) != 1:
+        print("⚠️ Paddle 单 GPU：已强制 workers=1（顺序处理）")
+    for book in books:
+        count += process_book(
+            book,
+            paddle_url=paddle_url,
+            topk=topk,
+            timeout=timeout,
+            limit_chars=limit_chars,
+            limit_instances=limit_instances,
+            min_conf=min_conf,
+            batch_size=batch_size,
+            require_match=require_match,
+        )
     return count
