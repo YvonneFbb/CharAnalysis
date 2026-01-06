@@ -18,7 +18,8 @@ from src.review.config import (
     PREPROCESS_CLAHE_CONFIG,
     PREPROCESS_CONTRAST_CONFIG,
     PREPROCESS_INK_PRESERVE_CONFIG,
-    PREPROCESSED_DIR
+    PREPROCESSED_DIR,
+    RAW_DIR
 )
 from src.review.utils.path import ensure_dir
 from src.review.utils.progress import ProgressTracker, get_default_progress_file, _get_relative_path
@@ -141,7 +142,8 @@ def _preprocess_worker(args: Tuple[str, str, str, Optional[float], Optional[floa
 def process_directory(input_dir: str, output_dir: str = None,
                       alpha: float = None, beta: float = None,
                       force: bool = False, max_volumes: int = None,
-                      workers: int = 1) -> tuple[int, int]:
+                      workers: int = 1,
+                      volume_overrides: dict = None) -> tuple[int, int]:
     """
     批量处理目录下的所有图片
 
@@ -152,6 +154,7 @@ def process_directory(input_dir: str, output_dir: str = None,
         beta: 亮度控制 (0-100)，None 则使用配置文件默认值
         force: 是否强制重新处理（忽略进度记录）
         max_volumes: 最大册数限制（None 表示不限制）
+        volume_overrides: 每本书的册数起点与数量覆盖配置
         workers: 并发线程数（默认1，即单线程）
 
     Returns:
@@ -164,6 +167,12 @@ def process_directory(input_dir: str, output_dir: str = None,
         output_dir = str(PREPROCESSED_DIR)
     else:
         output_dir = str(output_dir)
+
+    input_dir_path = Path(input_dir).resolve()
+    output_dir_path = Path(output_dir).resolve()
+    raw_root = RAW_DIR.resolve()
+    if output_dir_path == PREPROCESSED_DIR.resolve() and input_dir_path.parent == raw_root:
+        output_dir = str(output_dir_path / input_dir_path.name)
 
     ensure_dir(output_dir)
 
@@ -186,7 +195,7 @@ def process_directory(input_dir: str, output_dir: str = None,
 
     # 根据最大册数过滤文件
     filtered_files, volume_stats = filter_files_by_max_volumes(
-        image_files, max_volumes, base_dir=input_dir
+        image_files, max_volumes, base_dir=input_dir, volume_overrides=volume_overrides
     )
 
     # 初始化进度跟踪器

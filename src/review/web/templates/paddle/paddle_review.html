@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}自动筛选复核{% endblock %}
+{% block title %}Paddle 复核{% endblock %}
 {% block content %}
 <style>
   .auto-wrap { display: flex; gap: 16px; }
@@ -24,7 +24,7 @@
 </style>
 
 <div class="container">
-  <h1>自动筛选复核</h1>
+  <h1>Paddle 复核</h1>
   <div class="auto-wrap">
     <aside class="auto-sidebar">
       <div>
@@ -51,11 +51,14 @@
   let currentBook = null;
   let currentChar = null;
   let charItems = [];
+  const urlParams = new URLSearchParams(window.location.search);
+  const presetBook = urlParams.get('book');
+  let presetChar = urlParams.get('char');
 
   async function loadBooks() {
     const sel = document.getElementById('book-select');
     sel.innerHTML = '';
-    const resp = await fetch(`${API_BASE}/api/auto/books`);
+    const resp = await fetch(`${API_BASE}/api/paddle/books`);
     const data = await resp.json();
     if (!data.success) return;
     for (const b of data.books) {
@@ -64,7 +67,11 @@
       sel.appendChild(opt);
     }
     if (data.books.length > 0) {
-      currentBook = data.books[0].name;
+      if (presetBook && data.books.some(b => b.name === presetBook)) {
+        currentBook = presetBook;
+      } else {
+        currentBook = data.books[0].name;
+      }
       sel.value = currentBook;
       await loadCharList();
     }
@@ -79,11 +86,19 @@
     const listEl = document.getElementById('char-list');
     listEl.innerHTML = '';
     if (!currentBook) return;
-    const resp = await fetch(`${API_BASE}/api/auto/char_list?book=${encodeURIComponent(currentBook)}`);
+    const resp = await fetch(`${API_BASE}/api/paddle/char_list?book=${encodeURIComponent(currentBook)}`);
     const data = await resp.json();
     if (!data.success) return;
     charItems = data.chars || [];
     renderCharList();
+    if (presetChar) {
+      if (charItems.some(item => item.char === presetChar)) {
+        currentChar = presetChar;
+        presetChar = null;
+        renderCharList();
+        await loadItems();
+      }
+    }
   }
 
   function renderCharList() {
@@ -114,7 +129,7 @@
       stat.textContent = '';
       return;
     }
-    const resp = await fetch(`${API_BASE}/api/auto/items?book=${encodeURIComponent(currentBook)}&char=${encodeURIComponent(currentChar)}`);
+    const resp = await fetch(`${API_BASE}/api/paddle/items?book=${encodeURIComponent(currentBook)}&char=${encodeURIComponent(currentChar)}`);
     const data = await resp.json();
     if (!data.success) { grid.innerHTML = '<div>加载失败</div>'; return; }
     title.textContent = `字：${currentChar}`;
@@ -149,7 +164,7 @@
   }
 
   async function updateDecision(instanceId, decision, cardEl) {
-    const resp = await fetch(`${API_BASE}/api/auto/decision`, {
+    const resp = await fetch(`${API_BASE}/api/paddle/decision`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

@@ -4,8 +4,8 @@ numpy>=1.24.0
 Pillow>=10.0.0
 
 # OCR (macOS only) - 使用优化版本
-git+https://github.com/Yinwhe/ocrmac.git
-pyobjc-framework-Vision>=9.0
+ocrmac @ git+https://github.com/Yinwhe/ocrmac.git ; platform_system == "Darwin"
+pyobjc-framework-Vision>=9.0 ; platform_system == "Darwin"
 
 # 进度条
 tqdm>=4.65.0

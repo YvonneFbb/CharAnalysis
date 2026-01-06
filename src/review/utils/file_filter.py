@@ -101,7 +101,8 @@ def group_files_by_book_and_volume(files: List[str], base_dir: str) -> Dict[str,
 
 
 def filter_files_by_max_volumes(files: List[str], max_volumes: Optional[int],
-                                 base_dir: str = None) -> Tuple[List[str], Dict]:
+                                 base_dir: str = None,
+                                 volume_overrides: Optional[Dict[str, Dict]] = None) -> Tuple[List[str], Dict]:
     """
     根据最大册数过滤文件列表（支持多本书自动识别）
 
@@ -129,11 +130,33 @@ def filter_files_by_max_volumes(files: List[str], max_volumes: Optional[int],
         # 获取所有册号（排除未识别的）
         volume_numbers = sorted([v for v in volume_groups.keys() if v > 0])
 
-        # 选择前 N 册
-        if max_volumes and max_volumes > 0:
-            selected_volumes = volume_numbers[:max_volumes]
+        # 选择前 N 册（支持 per-book 起始册数）
+        overrides = volume_overrides or {}
+        override_key = book_name if book_name else "(根目录)"
+        if override_key not in overrides and base_dir:
+            base_name = Path(base_dir).name
+            if base_name in overrides:
+                override_key = base_name
+        override = overrides.get(override_key)
+        start_volume = None
+        override_count = None
+        if isinstance(override, dict):
+            start_volume = override.get('start')
+            if start_volume is None:
+                start_volume = override.get('start_volume')
+            override_count = override.get('count')
+            if override_count is None:
+                override_count = override.get('max_volumes')
+
+        selected_source = volume_numbers
+        if start_volume and start_volume > 0:
+            selected_source = [v for v in selected_source if v >= start_volume]
+
+        selected_limit = override_count if override_count and override_count > 0 else max_volumes
+        if selected_limit and selected_limit > 0:
+            selected_volumes = selected_source[:selected_limit]
         else:
-            selected_volumes = volume_numbers
+            selected_volumes = selected_source
 
         # 收集选中的文件
         book_files = []
@@ -153,6 +176,8 @@ def filter_files_by_max_volumes(files: List[str], max_volumes: Optional[int],
             'selected_volumes': len(selected_volumes),
             'volume_numbers': volume_numbers,
             'selected_volume_numbers': selected_volumes,
+            'start_volume': start_volume,
+            'override_count': override_count,
             'total_files': sum(len(volume_groups[v]) for v in volume_groups),
             'selected_files': len(book_files),
         }

@@ -9,6 +9,7 @@ import urllib.parse
 import urllib.request
 import uuid
 from pathlib import Path
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Dict, List, Optional, Tuple
 
 import cv2
@@ -18,12 +19,12 @@ from src.review.segment import segment_character
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 RESULTS_DIR = PROJECT_ROOT / "data/results"
-AUTO_RESULTS_DIR = RESULTS_DIR / "auto"
+PADDLE_RESULTS_DIR = RESULTS_DIR / "paddle"
 MATCHED_JSON = RESULTS_DIR / "matched_by_book.json"
 MATCHED_SHARDS = RESULTS_DIR / "_cache/matched_by_book_shards"
 PREPROCESSED_DIR = RESULTS_DIR / "preprocessed"
-SEGMENTED_DIR = AUTO_RESULTS_DIR / "segmented"
-REVIEW_AUTO_DIR = AUTO_RESULTS_DIR / "review_books"
+SEGMENTED_DIR = PADDLE_RESULTS_DIR / "segmented"
+REVIEW_PADDLE_DIR = PADDLE_RESULTS_DIR / "review_books"
 
 
 def normalize_to_preprocessed_path(raw_or_mixed_path: str) -> str:
@@ -211,7 +212,7 @@ def call_paddle_batch(images: List[bytes], paddle_url: str, timeout: int) -> Lis
     payload = json.loads(data.decode("utf-8"))
     return _parse_batch_payload(payload, len(images))
 
-def rank_candidates(candidates: List[Dict], topk: int) -> List[Dict]:
+def rank_candidates(candidates: List[Dict], topk: int | None) -> List[Dict]:
     candidates.sort(
         key=lambda x: (
             -int(1 if x.get("match") else 0),
@@ -220,13 +221,15 @@ def rank_candidates(candidates: List[Dict], topk: int) -> List[Dict]:
             x.get("instance_id") or ""
         )
     )
+    if topk is None or topk <= 0:
+        return candidates
     return candidates[:topk]
 
 
-def write_book_auto(book: str, data: Dict) -> None:
-    REVIEW_AUTO_DIR.mkdir(parents=True, exist_ok=True)
+def write_book_paddle(book: str, data: Dict) -> None:
+    REVIEW_PADDLE_DIR.mkdir(parents=True, exist_ok=True)
     safe = book.replace("/", "_")
-    out_path = REVIEW_AUTO_DIR / f"{safe}.json"
+    out_path = REVIEW_PADDLE_DIR / f"{safe}.json"
     tmp = out_path.with_suffix(out_path.suffix + f".tmp.{os.getpid()}")
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
@@ -353,11 +356,18 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
             out_chars[ch] = {
                 "items": {},
                 "top5": [],
+                "order": [],
+                "scores": {},
                 "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             }
             continue
 
-        top_items = rank_candidates(candidates, topk=topk)
+        sorted_all = rank_candidates(candidates, topk=None)
+        top_items = sorted_all[:topk] if topk and topk > 0 else []
+        top_ids = {it.get("instance_id") for it in top_items if it.get("instance_id")}
+        for item in sorted_all:
+            if item.get("instance_id") not in top_ids:
+                item.pop("png_bytes", None)
         for item in top_items:
             instance_id = item.get("instance_id")
             png_bytes = item.pop("png_bytes", None)
@@ -368,13 +378,28 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
             try:
                 with open(seg_path, "wb") as f:
                     f.write(png_bytes)
-                item["segmented_path"] = f"data/results/auto/segmented/{book}/{ch}_{instance_id}.png"
+                item["segmented_path"] = f"data/results/paddle/segmented/{book}/{ch}_{instance_id}.png"
             except Exception:
                 item["segmented_path"] = None
+
+        order = [it.get("instance_id") for it in sorted_all if it.get("instance_id")]
+        scores = {
+            it["instance_id"]: {
+                "paddle_text": it.get("paddle_text", ""),
+                "paddle_conf": it.get("paddle_conf", 0.0),
+                "match": bool(it.get("match")),
+                "width": it.get("width"),
+                "height": it.get("height"),
+            }
+            for it in sorted_all
+            if it.get("instance_id")
+        }
 
         out_chars[ch] = {
             "items": {it["instance_id"]: it for it in top_items},
             "top5": [it["instance_id"] for it in top_items],
+            "order": order,
+            "scores": scores,
             "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         }
 
@@ -386,23 +411,49 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
         "book": book,
         "chars": out_chars,
     }
-    write_book_auto(book, payload)
+    write_book_paddle(book, payload)
     print(f"✓ {book}: chars={len(out_chars)}")
     return len(out_chars)
 
 
-def run_auto_pipeline(books: List[str], paddle_url: str, topk: int, timeout: int, limit_chars: Optional[int], limit_instances: Optional[int], min_conf: float, batch_size: int, require_match: bool) -> int:
+def run_paddle_pipeline(books: List[str], paddle_url: str, topk: int, timeout: int, limit_chars: Optional[int], limit_instances: Optional[int], min_conf: float, batch_size: int, workers: int, require_match: bool) -> int:
     count = 0
-    for book in books:
-        count += process_book(
-            book,
-            paddle_url=paddle_url,
-            topk=topk,
-            timeout=timeout,
-            limit_chars=limit_chars,
-            limit_instances=limit_instances,
-            min_conf=min_conf,
-            batch_size=batch_size,
-            require_match=require_match,
-        )
+    workers = max(1, int(workers or 1))
+    if workers == 1 or len(books) <= 1:
+        for book in books:
+            count += process_book(
+                book,
+                paddle_url=paddle_url,
+                topk=topk,
+                timeout=timeout,
+                limit_chars=limit_chars,
+                limit_instances=limit_instances,
+                min_conf=min_conf,
+                batch_size=batch_size,
+                require_match=require_match,
+            )
+        return count
+
+    with ProcessPoolExecutor(max_workers=workers) as executor:
+        futures = {
+            executor.submit(
+                process_book,
+                book,
+                paddle_url,
+                topk,
+                timeout,
+                limit_chars,
+                limit_instances,
+                min_conf,
+                batch_size,
+                require_match,
+            ): book
+            for book in books
+        }
+        for future in as_completed(futures):
+            book = futures[future]
+            try:
+                count += future.result()
+            except Exception as e:
+                print(f"✗ {book}: Paddle 处理失败: {e}")
     return count

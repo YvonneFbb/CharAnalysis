@@ -22,13 +22,13 @@ CharAnalysis/
 
 ### src/review（筛选/审查）
 - `app.py`：Flask 审查服务（OCR 审查、切割审查、Fixing 页面）
-- `pipeline.py`：批处理流程入口（预处理、OCR、匹配、裁切、自动筛选）
+- `pipeline.py`：批处理流程入口（预处理、OCR、匹配、裁切、Paddle 筛选）
 - `config.py`：路径与配置
 - `preprocess/`：图像预处理
 - `ocr/`：OCR 识别（macOS LiveText）
 - `filter/`：标准字匹配与筛选
 - `crop/`：字符裁切
-- `paddle/`：自动筛选流程（切割 + PaddleOCR + TopK）
+- `paddle/`：Paddle 筛选流程（切割 + PaddleOCR + TopK）
 - `segment/`：切割与参数调整
 - `utils/`：公共工具
 - `web/`：前端模板与静态资源
@@ -43,9 +43,9 @@ CharAnalysis/
 ## 数据真源与路径
 
 - 审查结果真源：`data/results/manual/review_books/*.json`
-- 自动筛选结果：`data/results/auto/review_books/*.json`
+- Paddle 结果：`data/results/paddle/review_books/*.json`
 - 切割图片：`data/results/manual/segmented/`
-- 自动切割图片：`data/results/auto/segmented/`
+- Paddle 切割图片：`data/results/paddle/segmented/`
 - 分析包输入：`data/analysis/`（由 collect 生成）
 - 书籍元数据：`data/metadata/books_metadata.csv`
 - 标准字：`data/metadata/standard_chars.json`

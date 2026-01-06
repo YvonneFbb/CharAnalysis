@@ -469,6 +469,10 @@
                         <input type="checkbox" id="sort-width-toggle" onchange="toggleWidthSort(this.checked)">
                         按宽度排序
                     </label>
+                    <label style="font-size: 12px; display:flex; align-items:center; gap:4px; margin-left:8px;">
+                        <input type="checkbox" id="sort-paddle-toggle" onchange="togglePaddleSort(this.checked)">
+                        按 Paddle 排序
+                    </label>
                 </div>
                 <div class="actions">
                     <button class="btn-clear-all" onclick="clearAllSelections()">取消全部选择</button>
@@ -501,6 +505,7 @@
         let instancesData = [];
         let reviewResults = { version: 2, books: {} };
         let sortByWidth = false;
+        let sortByPaddle = false;
         let saveTimer = null;
         const SAVE_DEBOUNCE_MS = 1500;
         const dirtyBooks = new Set(); // 记录有改动的书籍
@@ -595,13 +600,23 @@
                 const modal = document.getElementById('review-modal');
                 const isModalOpen = modal.classList.contains('active');
 
-                if (!isModalOpen) return;
-
-                // ESC 键：关闭模态框并自动保存
+                // ESC：优先关闭当前模态；如果未打开模态则通知父级关闭 iframe 弹窗
                 if (e.key === 'Escape') {
-                    e.preventDefault();
-                    closeModal();
+                    if (isModalOpen) {
+                        e.preventDefault();
+                        closeModal();
+                        return;
+                    }
+                    if (window.self !== window.top) {
+                        e.preventDefault();
+                        try {
+                            window.top.postMessage({ type: 'close-ocr-modal' }, window.location.origin);
+                        } catch (_) {}
+                    }
+                    return;
                 }
+
+                if (!isModalOpen) return;
 
                 // 左方向键：上一页
                 if (e.key === 'ArrowLeft') {
@@ -806,7 +821,7 @@
             document.getElementById('instances-grid').style.display = 'none';
 
             try {
-                const response = await fetch(`${API_BASE}/instances?book=${encodeURIComponent(currentBook)}&char=${encodeURIComponent(currentChar)}&page=${page}&page_size=20&sort=${sortByWidth ? 'width_desc' : 'default'}`);
+                const response = await fetch(`${API_BASE}/instances?book=${encodeURIComponent(currentBook)}&char=${encodeURIComponent(currentChar)}&page=${page}&page_size=20&sort=${getSortMode()}`);
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
                 }
@@ -873,8 +888,34 @@
         }
 
         function toggleWidthSort(checked) {
+            if (sortByPaddle) {
+                const toggle = document.getElementById('sort-width-toggle');
+                if (toggle) toggle.checked = false;
+                return;
+            }
             sortByWidth = !!checked;
             loadPage(1);
+        }
+
+        function togglePaddleSort(checked) {
+            sortByPaddle = !!checked;
+            const widthToggle = document.getElementById('sort-width-toggle');
+            if (sortByPaddle) {
+                sortByWidth = false;
+                if (widthToggle) {
+                    widthToggle.checked = false;
+                    widthToggle.disabled = true;
+                }
+            } else if (widthToggle) {
+                widthToggle.disabled = false;
+            }
+            loadPage(1);
+        }
+
+        function getSortMode() {
+            if (sortByPaddle) return 'paddle';
+            if (sortByWidth) return 'width_desc';
+            return 'default';
         }
 
         // 裁切图片

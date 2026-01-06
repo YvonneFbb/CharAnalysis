@@ -1412,14 +1412,22 @@
                 const modal = document.getElementById('review-modal');
                 const isModalOpen = modal.classList.contains('active');
 
+                // ESC：优先关闭当前模态；若未打开模态则通知父级关闭 iframe 弹窗
+                if (e.key === 'Escape') {
+                    if (isModalOpen) {
+                        closeModal();
+                    } else if (window.self !== window.top) {
+                        try {
+                            window.top.postMessage({ type: 'close-segment-modal' }, window.location.origin);
+                        } catch (_) {}
+                    }
+                    return;
+                }
+
                 if (!isModalOpen) return;
 
-                // ESC: 关闭模态框
-                if (e.key === 'Escape') {
-                    closeModal();
-                }
                 // 左箭头: 上一个
-                else if (e.key === 'ArrowLeft') {
+                if (e.key === 'ArrowLeft') {
                     loadPrevInstance();
                 }
                 // 右箭头: 下一个

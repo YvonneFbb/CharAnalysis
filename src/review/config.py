@@ -64,6 +64,15 @@ OCR_CONFIG = {
     'language_preference': ['zh-Hant'], # 语言偏好：繁体中文
 }
 
+# 预处理/OCR 册数覆盖配置（按书名）
+# 例：'04_1131_资治通鉴' 从第 11 册开始取 10 册
+VOLUME_OVERRIDES = {
+    '04_1131_资治通鉴': {
+        'start': 11,
+        'count': 10,
+    },
+}
+
 # ============================================================================
 # PaddleOCR 自动筛选配置
 # ============================================================================
@@ -71,9 +80,10 @@ OCR_CONFIG = {
 PADDLE_CONFIG = {
     'url': 'http://172.16.1.154:8000',
     'timeout': 20,
-    'topk': 5,
+    'topk': 15,
     'min_conf': 0.8,
-    'batch_size': 12,
+    'batch_size': 16,
+    'workers': 3,
     'require_match': True,
 }
 
@@ -135,6 +145,7 @@ def config_summary():
             'unsharp_amount': PREPROCESS_INK_PRESERVE_CONFIG['unsharp_amount'],
         },
         'ocr': OCR_CONFIG,
+        'volume_overrides': VOLUME_OVERRIDES,
         'paddle': PADDLE_CONFIG,
     }
 

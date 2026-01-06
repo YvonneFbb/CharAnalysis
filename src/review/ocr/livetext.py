@@ -21,7 +21,7 @@ except ImportError:
 else:
     OCRMAC_IMPORT_ERROR = None
 
-from src.review.config import OCR_CONFIG, OCR_DIR
+from src.review.config import OCR_CONFIG, OCR_DIR, PREPROCESSED_DIR
 from src.review.utils.path import ensure_dir
 from src.review.utils.progress import ProgressTracker, get_default_progress_file, _get_relative_path
 from src.review.utils.file_filter import find_images_recursive, filter_files_by_max_volumes
@@ -197,7 +197,8 @@ def _ocr_worker(args: Tuple[str, str, str]) -> Dict:
 
 def process_directory(input_dir: str, output_dir: str = None,
                       force: bool = False, max_volumes: int = None,
-                      workers: int = 1) -> tuple[int, int]:
+                      workers: int = 1,
+                      volume_overrides: dict = None) -> tuple[int, int]:
     """
     批量处理目录下的所有图片
 
@@ -206,6 +207,7 @@ def process_directory(input_dir: str, output_dir: str = None,
         output_dir: 输出目录（默认为 OCR_DIR）
         force: 是否强制重新处理（忽略进度记录）
         max_volumes: 最大册数限制（None 表示不限制）
+        volume_overrides: 每本书的册数起点与数量覆盖配置
         workers: 并发线程数（默认1，即单线程）
 
     Returns:
@@ -218,6 +220,12 @@ def process_directory(input_dir: str, output_dir: str = None,
         output_dir = str(OCR_DIR)
     else:
         output_dir = str(output_dir)
+
+    input_dir_path = Path(input_dir).resolve()
+    output_dir_path = Path(output_dir).resolve()
+    preprocessed_root = PREPROCESSED_DIR.resolve()
+    if output_dir_path == OCR_DIR.resolve() and input_dir_path.parent == preprocessed_root:
+        output_dir = str(output_dir_path / input_dir_path.name)
 
     ensure_dir(output_dir)
 
@@ -234,7 +242,7 @@ def process_directory(input_dir: str, output_dir: str = None,
 
     # 根据最大册数过滤文件
     filtered_files, volume_stats = filter_files_by_max_volumes(
-        image_files, max_volumes, base_dir=input_dir
+        image_files, max_volumes, base_dir=input_dir, volume_overrides=volume_overrides
     )
 
     # 初始化进度跟踪器

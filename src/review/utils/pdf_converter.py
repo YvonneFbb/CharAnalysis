@@ -14,6 +14,9 @@ from src.review.utils.path import ensure_dir
 from src.review.utils.progress import ProgressTracker, get_default_progress_file, _get_relative_path
 from src.review.utils.file_filter import extract_volume_number, extract_book_name
 
+# 兼容旧调用：避免 volume_overrides 未定义时报错
+volume_overrides = None
+
 
 def pdf_to_images(
     pdf_path: str,
@@ -93,7 +96,11 @@ def convert_directory(
     input_dir: str,
     output_parent_dir: str = None,
     dpi: int = 300,
-    image_format: str = 'png'
+    image_format: str = 'png',
+    max_volumes: Optional[int] = None,
+    force: bool = False,
+    volume_overrides: Optional[Dict[str, Dict]] = None,
+    book_name: Optional[str] = None,
 ) -> dict:
     """
     批量转换目录下的所有 PDF 文件
@@ -103,6 +110,10 @@ def convert_directory(
         output_parent_dir: 输出父目录（默认为输入目录）
         dpi: 分辨率
         image_format: 图片格式
+        max_volumes: 最大册数限制（None 表示不限制）
+        force: 是否强制重新处理已存在的输出
+        volume_overrides: 每本书的册数起点与数量覆盖配置
+        book_name: 单本书名（用于匹配 volume_overrides）
 
     Returns:
         转换结果字典 {pdf_path: [image_paths]}
@@ -117,11 +128,42 @@ def convert_directory(
     pdf_files = []
     for filename in os.listdir(input_dir):
         if filename.lower().endswith('.pdf'):
-            pdf_files.append(os.path.join(input_dir, filename))
+            pdf_path = os.path.join(input_dir, filename)
+            volume_num = extract_volume_number(pdf_path)
+            if volume_num is None:
+                volume_num = -1
+            pdf_files.append((volume_num, pdf_path))
 
     if not pdf_files:
         print(f"警告：在 {input_dir} 中未找到任何 PDF 文件")
         return {}
+
+    # 按册号排序并应用过滤
+    pdf_files.sort(key=lambda x: x[0])
+
+    overrides = volume_overrides or {}
+    override_key = book_name or Path(input_dir).name
+    override = overrides.get(override_key) if isinstance(overrides, dict) else None
+    start_volume = None
+    override_count = None
+    if isinstance(override, dict):
+        start_volume = override.get('start')
+        if start_volume is None:
+            start_volume = override.get('start_volume')
+        override_count = override.get('count')
+        if override_count is None:
+            override_count = override.get('max_volumes')
+
+    selected_source = [item for item in pdf_files if item[0] > 0]
+    if start_volume and start_volume > 0:
+        selected_source = [item for item in selected_source if item[0] >= start_volume]
+
+    selected_limit = override_count if override_count and override_count > 0 else max_volumes
+    if selected_limit and selected_limit > 0:
+        selected_source = selected_source[:selected_limit]
+
+    unknown_vols = [item for item in pdf_files if item[0] <= 0]
+    pdf_files = selected_source + unknown_vols
 
     print(f"\n=== 开始批量转换 PDF ===")
     print(f"输入目录: {input_dir}")
@@ -130,7 +172,7 @@ def convert_directory(
 
     results = {}
 
-    for i, pdf_path in enumerate(pdf_files, 1):
+    for i, (_, pdf_path) in enumerate(pdf_files, 1):
         print(f"\n[{i}/{len(pdf_files)}] 处理: {os.path.basename(pdf_path)}")
 
         # 生成输出目录
@@ -138,6 +180,14 @@ def convert_directory(
         output_dir = os.path.join(output_parent_dir, f"{pdf_name}_pages")
 
         try:
+            if not force and os.path.isdir(output_dir):
+                existing = [
+                    name for name in os.listdir(output_dir)
+                    if name.lower().endswith(('.png', '.jpg', '.jpeg'))
+                ]
+                if existing:
+                    results[pdf_path] = [os.path.join(output_dir, name) for name in existing]
+                    continue
             image_paths = pdf_to_images(pdf_path, output_dir, dpi, image_format)
             results[pdf_path] = image_paths
         except Exception as e:
@@ -220,7 +270,8 @@ def convert_books_directory(
     image_format: str = 'png',
     max_volumes: Optional[int] = None,
     force: bool = False,
-    workers: int = 1
+    workers: int = 1,
+    volume_overrides: Optional[Dict[str, Dict]] = None,
 ) -> Tuple[int, int]:
     """
     批量转换多本书的 PDF（支持 max-volumes 限制和进度跟踪）
@@ -232,6 +283,7 @@ def convert_books_directory(
         max_volumes: 每本书最多转换的册数（None 表示不限制）
         force: 是否强制重新转换（忽略进度记录）
         workers: 并发线程数（默认1，即单线程）
+        volume_overrides: 每本书的册数起点与数量覆盖配置
 
     Returns:
         (成功转换的 PDF 数量, 总 PDF 数量)
@@ -274,9 +326,24 @@ def convert_books_directory(
             # 按册号排序
             pdf_files.sort(key=lambda x: x[0])
 
-            # 应用 max_volumes 限制
-            if max_volumes and max_volumes > 0:
-                pdf_files = pdf_files[:max_volumes]
+            overrides = (locals().get('volume_overrides') or {})
+            override = overrides.get(book_name) if isinstance(overrides, dict) else None
+            start_volume = None
+            override_count = None
+            if isinstance(override, dict):
+                start_volume = override.get('start')
+                if start_volume is None:
+                    start_volume = override.get('start_volume')
+                override_count = override.get('count')
+                if override_count is None:
+                    override_count = override.get('max_volumes')
+
+            if start_volume and start_volume > 0:
+                pdf_files = [item for item in pdf_files if item[0] >= start_volume]
+
+            selected_limit = override_count if override_count and override_count > 0 else max_volumes
+            if selected_limit and selected_limit > 0:
+                pdf_files = pdf_files[:selected_limit]
 
             # 构建字典
             volume_dict = {}

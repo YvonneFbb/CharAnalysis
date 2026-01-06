@@ -7,11 +7,65 @@ import sys
 from pathlib import Path
 
 from src.review import config
-from src.review.paddle import core as auto_core
+from src.review.paddle import core as paddle_core
 from src.review.preprocess import core as preprocess
 from src.review.utils import pdf_converter
 from src.review.filter import match_standard_chars
 from src.review.crop import crop_characters
+
+
+def _maybe_convert_pdfs(input_path: str, max_volumes: int, force: bool,
+                        workers: int, volume_overrides: dict) -> bool:
+    if not os.path.isdir(input_path):
+        return True
+
+    has_pdf_in_root = any(
+        name.lower().endswith('.pdf')
+        for name in os.listdir(input_path)
+        if os.path.isfile(os.path.join(input_path, name))
+    )
+
+    has_pdf = has_pdf_in_root
+    if not has_pdf:
+        for root, _, files in os.walk(input_path):
+            if any(name.lower().endswith('.pdf') for name in files):
+                has_pdf = True
+                break
+
+    if not has_pdf:
+        return True
+
+    print("\n" + "=" * 60)
+    print("步骤 0/2: PDF 转图片")
+    print("=" * 60)
+
+    try:
+        if has_pdf_in_root:
+            book_name = Path(input_path).name
+            results = pdf_converter.convert_directory(
+                input_path,
+                output_parent_dir=input_path,
+                dpi=300,
+                max_volumes=max_volumes,
+                force=force,
+                volume_overrides=volume_overrides,
+                book_name=book_name,
+            )
+            success_count = sum(1 for paths in results.values() if paths)
+            return success_count > 0
+
+        success_count, total_count = pdf_converter.convert_books_directory(
+            input_path,
+            dpi=300,
+            max_volumes=max_volumes,
+            force=force,
+            workers=workers,
+            volume_overrides=volume_overrides,
+        )
+        return success_count > 0 or total_count == 0
+    except Exception as e:
+        print(f"错误：批量转换失败: {e}")
+        return False
 
 
 def cmd_preprocess(args):
@@ -20,6 +74,7 @@ def cmd_preprocess(args):
     force = args.force if hasattr(args, 'force') else False
     max_volumes = args.max_volumes if hasattr(args, 'max_volumes') else None
     workers = args.workers if hasattr(args, 'workers') else 1
+    volume_overrides = getattr(config, 'VOLUME_OVERRIDES', None)
 
     if os.path.isfile(input_path):
         # 单文件处理
@@ -29,9 +84,16 @@ def cmd_preprocess(args):
 
     elif os.path.isdir(input_path):
         # 目录批处理
+        if not _maybe_convert_pdfs(input_path, max_volumes, force, workers, volume_overrides):
+            return 1
         output_dir = args.output if args.output else str(config.PREPROCESSED_DIR)
         success_count, total_count = preprocess.process_directory(
-            input_path, output_dir, force=force, max_volumes=max_volumes, workers=workers
+            input_path,
+            output_dir,
+            force=force,
+            max_volumes=max_volumes,
+            workers=workers,
+            volume_overrides=volume_overrides,
         )
         return 0 if success_count == total_count else 1
 
@@ -51,6 +113,7 @@ def cmd_ocr(args):
     force = args.force if hasattr(args, 'force') else False
     max_volumes = args.max_volumes if hasattr(args, 'max_volumes') else None
     workers = args.workers if hasattr(args, 'workers') else 1
+    volume_overrides = getattr(config, 'VOLUME_OVERRIDES', None)
 
     if os.path.isfile(input_path):
         # 单文件处理
@@ -62,7 +125,12 @@ def cmd_ocr(args):
         # 目录批处理
         output_dir = args.output if args.output else str(config.OCR_DIR)
         success_count, total_count = ocr.process_directory(
-            input_path, output_dir, force=force, max_volumes=max_volumes, workers=workers
+            input_path,
+            output_dir,
+            force=force,
+            max_volumes=max_volumes,
+            workers=workers,
+            volume_overrides=volume_overrides,
         )
         return 0 if success_count == total_count else 1
 
@@ -82,6 +150,7 @@ def cmd_all(args):
     force = args.force if hasattr(args, 'force') else False
     max_volumes = args.max_volumes if hasattr(args, 'max_volumes') else None
     workers = args.workers if hasattr(args, 'workers') else 1
+    volume_overrides = getattr(config, 'VOLUME_OVERRIDES', None)
 
     print("\n" + "=" * 60)
     print("步骤 1/2: 预处理")
@@ -101,8 +170,15 @@ def cmd_all(args):
         preprocessed_input = preprocessed_file
 
     elif os.path.isdir(input_path):
+        if not _maybe_convert_pdfs(input_path, max_volumes, force, workers, volume_overrides):
+            return 1
         success_count, total_count = preprocess.process_directory(
-            input_path, str(config.PREPROCESSED_DIR), force=force, max_volumes=max_volumes, workers=workers
+            input_path,
+            str(config.PREPROCESSED_DIR),
+            force=force,
+            max_volumes=max_volumes,
+            workers=workers,
+            volume_overrides=volume_overrides,
         )
         if success_count == 0:
             print("\n预处理失败，流程中止")
@@ -125,7 +201,12 @@ def cmd_all(args):
 
     else:
         success_count, total_count = ocr.process_directory(
-            preprocessed_input, str(config.OCR_DIR), force=force, max_volumes=max_volumes, workers=workers
+            preprocessed_input,
+            str(config.OCR_DIR),
+            force=force,
+            max_volumes=max_volumes,
+            workers=workers,
+            volume_overrides=volume_overrides,
         )
         return 0 if success_count == total_count else 1
 
@@ -135,6 +216,7 @@ def cmd_pdf2images(args):
     input_path = args.input
     dpi = args.dpi if hasattr(args, 'dpi') else 300
     output_dir = args.output if args.output else None
+    volume_overrides = getattr(config, 'VOLUME_OVERRIDES', None)
 
     if os.path.isfile(input_path):
         # 单个 PDF 文件
@@ -180,6 +262,7 @@ def cmd_convert(args):
     force = args.force if hasattr(args, 'force') else False
     max_volumes = args.max_volumes if hasattr(args, 'max_volumes') else None
     workers = args.workers if hasattr(args, 'workers') else 1
+    volume_overrides = getattr(config, 'VOLUME_OVERRIDES', None)
 
     if not os.path.isdir(input_dir):
         print(f"错误：输入路径必须是目录: {input_dir}")
@@ -191,7 +274,8 @@ def cmd_convert(args):
             dpi=dpi,
             max_volumes=max_volumes,
             force=force,
-            workers=workers
+            workers=workers,
+            volume_overrides=volume_overrides,
         )
         return 0 if success_count > 0 else 1
     except Exception as e:
@@ -261,17 +345,17 @@ def cmd_config(args):
     return 0
 
 
-def cmd_auto(args):
-    """自动筛选流程（PaddleOCR）"""
+def cmd_paddle(args):
+    """Paddle 自动筛选流程"""
     paddle_url = args.paddle_url or config.PADDLE_CONFIG.get('url')
     if not paddle_url:
         print("错误：缺少 PaddleOCR 服务地址")
         return 1
-    books = args.books or auto_core.list_books()
+    books = args.books or paddle_core.list_books()
     if not books:
         print("未找到可处理的书籍")
         return 1
-    auto_core.run_auto_pipeline(
+    paddle_core.run_paddle_pipeline(
         books=books,
         paddle_url=paddle_url,
         topk=args.topk,
@@ -280,6 +364,7 @@ def cmd_auto(args):
         limit_instances=args.limit_instances,
         min_conf=args.min_conf,
         batch_size=args.batch_size,
+        workers=args.workers,
         require_match=config.PADDLE_CONFIG.get('require_match', False),
     )
     return 0
@@ -334,7 +419,7 @@ def main():
     parser_pdf.add_argument('--dpi', type=int, default=300, help='分辨率（默认 300）')
 
     # preprocess 命令
-    parser_preprocess = subparsers.add_parser('preprocess', help='图像预处理')
+    parser_preprocess = subparsers.add_parser('preprocess', help='图像预处理（如有 PDF 会先转换）')
     parser_preprocess.add_argument('input', help='输入图片或目录')
     parser_preprocess.add_argument('-o', '--output', help='输出路径（可选）')
     parser_preprocess.add_argument('--force', action='store_true', help='强制重新处理所有文件（忽略进度记录）')
@@ -372,16 +457,18 @@ def main():
     # config 命令
     parser_config = subparsers.add_parser('config', help='显示配置信息')
 
-    # auto 命令
-    parser_auto = subparsers.add_parser('auto', help='自动筛选流程（PaddleOCR）')
-    parser_auto.add_argument('--paddle-url', default=None, help='PaddleOCR HTTP 服务地址（base 或 /ocr/predict_base64 完整地址）')
-    parser_auto.add_argument('--books', nargs='+', help='仅处理指定书籍')
-    parser_auto.add_argument('--topk', type=int, default=config.PADDLE_CONFIG.get('topk', 5), help='每字保留 TopK（默认 5）')
-    parser_auto.add_argument('--timeout', type=int, default=config.PADDLE_CONFIG.get('timeout', 20), help='PaddleOCR 超时（秒）')
-    parser_auto.add_argument('--min-conf', type=float, default=config.PADDLE_CONFIG.get('min_conf', 0.75), help='置信度阈值（默认 0.75，可输入 75）')
-    parser_auto.add_argument('--batch-size', type=int, default=config.PADDLE_CONFIG.get('batch_size', 8), help='Paddle 批处理大小（默认 8）')
-    parser_auto.add_argument('--limit-chars', type=int, default=None, help='仅处理前 N 个字（调试用）')
-    parser_auto.add_argument('--limit-instances', type=int, default=None, help='每个字仅处理前 N 个实例（调试用）')
+    # paddle 命令
+    parser_paddle = subparsers.add_parser('paddle', help='Paddle 自动筛选流程')
+    parser_paddle.add_argument('--paddle-url', default=None, help='PaddleOCR HTTP 服务地址（base 或 /ocr/predict_base64 完整地址）')
+    parser_paddle.add_argument('--books', nargs='+', help='仅处理指定书籍')
+    parser_paddle.add_argument('--topk', type=int, default=config.PADDLE_CONFIG.get('topk', 5), help='每字保留 TopK（默认 5）')
+    parser_paddle.add_argument('--timeout', type=int, default=config.PADDLE_CONFIG.get('timeout', 20), help='PaddleOCR 超时（秒）')
+    parser_paddle.add_argument('--min-conf', type=float, default=config.PADDLE_CONFIG.get('min_conf', 0.75), help='置信度阈值（默认 0.75，可输入 75）')
+    parser_paddle.add_argument('--batch-size', type=int, default=config.PADDLE_CONFIG.get('batch_size', 8), help='Paddle 批处理大小（默认 8）')
+    parser_paddle.add_argument('--limit-chars', type=int, default=None, help='仅处理前 N 个字（调试用）')
+    parser_paddle.add_argument('--limit-instances', type=int, default=None, help='每个字仅处理前 N 个实例（调试用）')
+    parser_paddle.add_argument('--workers', type=int, default=config.PADDLE_CONFIG.get('workers', 1), help='Paddle 并发进程数（默认 2）')
+
 
     args = parser.parse_args()
 
@@ -406,8 +493,8 @@ def main():
         return cmd_crop(args)
     elif args.command == 'config':
         return cmd_config(args)
-    elif args.command == 'auto':
-        return cmd_auto(args)
+    elif args.command == 'paddle':
+        return cmd_paddle(args)
     else:
         parser.print_help()
         return 1

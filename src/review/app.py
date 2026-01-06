@@ -54,7 +54,7 @@ app.config['JSON_AS_ASCII'] = False
 # 全局配置
 RESULTS_DIR = PROJECT_ROOT / 'data/results'
 MANUAL_RESULTS_DIR = RESULTS_DIR / 'manual'
-AUTO_RESULTS_DIR = RESULTS_DIR / 'auto'
+PADDLE_RESULTS_DIR = RESULTS_DIR / 'paddle'
 
 MATCHED_JSON_PATH = RESULTS_DIR / 'matched_by_book.json'
 MATCHED_CACHE_DIR = RESULTS_DIR / '_cache'
@@ -77,9 +77,9 @@ MANUAL_WORK_DIR = SEGMENTED_DIR / 'manual'  # 手动处理工作区（统一到 
 # 标记功能路径
 SEGMENT_MARKS_PATH = MANUAL_RESULTS_DIR / 'segment_marks.json'
 
-# 自动筛选路径
-AUTO_REVIEW_BOOKS_DIR = AUTO_RESULTS_DIR / 'review_books'
-AUTO_SEGMENTED_DIR = AUTO_RESULTS_DIR / 'segmented'
+# Paddle 筛选路径
+PADDLE_REVIEW_BOOKS_DIR = PADDLE_RESULTS_DIR / 'review_books'
+PADDLE_SEGMENTED_DIR = PADDLE_RESULTS_DIR / 'segmented'
 
 # 创建必要的目录
 SEGMENTED_DIR.mkdir(parents=True, exist_ok=True)
@@ -589,24 +589,24 @@ def read_all_review_books() -> Dict:
     return out
 
 
-def _auto_book_path(book_name: str) -> Path:
+def _paddle_book_path(book_name: str) -> Path:
     safe_name = book_name.replace('/', '_')
-    return AUTO_REVIEW_BOOKS_DIR / f'{safe_name}.json'
+    return PADDLE_REVIEW_BOOKS_DIR / f'{safe_name}.json'
 
 
-def _auto_book_lock_path(book_name: str) -> Path:
+def _paddle_book_lock_path(book_name: str) -> Path:
     safe_name = book_name.replace('/', '_')
-    return AUTO_REVIEW_BOOKS_DIR / f'{safe_name}.json.lock'
+    return PADDLE_REVIEW_BOOKS_DIR / f'{safe_name}.json.lock'
 
 
-def list_auto_books() -> list:
-    if not AUTO_REVIEW_BOOKS_DIR.exists():
+def list_paddle_books() -> list:
+    if not PADDLE_REVIEW_BOOKS_DIR.exists():
         return []
-    return sorted([p.stem for p in AUTO_REVIEW_BOOKS_DIR.glob('*.json')])
+    return sorted([p.stem for p in PADDLE_REVIEW_BOOKS_DIR.glob('*.json')])
 
 
-def read_auto_book(book_name: str) -> Optional[Dict]:
-    path = _auto_book_path(book_name)
+def read_paddle_book(book_name: str) -> Optional[Dict]:
+    path = _paddle_book_path(book_name)
     if not path.exists():
         return None
     try:
@@ -616,10 +616,10 @@ def read_auto_book(book_name: str) -> Optional[Dict]:
         return None
 
 
-def write_auto_book(book_name: str, payload: Dict) -> bool:
-    AUTO_REVIEW_BOOKS_DIR.mkdir(parents=True, exist_ok=True)
-    book_path = _auto_book_path(book_name)
-    lock_path = _auto_book_lock_path(book_name)
+def write_paddle_book(book_name: str, payload: Dict) -> bool:
+    PADDLE_REVIEW_BOOKS_DIR.mkdir(parents=True, exist_ok=True)
+    book_path = _paddle_book_path(book_name)
+    lock_path = _paddle_book_lock_path(book_name)
     with open(lock_path, 'a+', encoding='utf-8') as lock_fp:
         if not _acquire_book_lock(lock_fp, timeout_sec=2.0):
             return False
@@ -971,6 +971,39 @@ def get_instances():
             enumerated.sort(key=lambda pair: pair[1].get('bbox', {}).get('width', 0), reverse=True)
         except Exception:
             pass
+    elif sort_mode == 'paddle':
+        paddle_book = read_paddle_book(book_name) or {}
+        paddle_chars = paddle_book.get('chars') if isinstance(paddle_book, dict) else None
+        paddle_entry = paddle_chars.get(char) if isinstance(paddle_chars, dict) else None
+        paddle_list = []
+        if isinstance(paddle_entry, dict):
+            paddle_list = paddle_entry.get('order') or paddle_entry.get('top5') or paddle_entry.get('items') or []
+        if isinstance(paddle_list, dict):
+            paddle_list = list(paddle_list.keys())
+        order_map = {}
+        if isinstance(paddle_list, list):
+            for idx, inst_id in enumerate(paddle_list):
+                if isinstance(inst_id, str) and inst_id not in order_map:
+                    order_map[inst_id] = idx
+        if order_map:
+            def _instance_id(inst: dict) -> Optional[str]:
+                try:
+                    volume = int(inst.get('volume'))
+                    page = inst.get('page', '')
+                    char_index = inst.get('char_index')
+                    if char_index is None:
+                        return None
+                    page_suffix = page.split('_')[-1] if page else ''
+                    return f"册{volume:02d}_page{page_suffix}_idx{char_index}"
+                except Exception:
+                    return None
+            def _auto_key(pair):
+                orig_idx, inst = pair
+                inst_id = _instance_id(inst)
+                if inst_id in order_map:
+                    return (0, order_map[inst_id])
+                return (1, orig_idx)
+            enumerated.sort(key=_auto_key)
     total = len(enumerated)
 
     # 分页
@@ -2349,6 +2382,26 @@ def api_fixing_items():
         review_all = read_review_data()
         review_book = (review_all.get('books') or {}).get(book_name, {})
         Lb = _compute_book_fixed_box_Lb(book_name, review_all)
+        ensure_standard_chars_data()
+        all_chars = standard_chars_data.get('all_chars') if isinstance(standard_chars_data, dict) else None
+        if not isinstance(all_chars, list):
+            order_map = get_standard_char_order_map()
+            all_chars = [ch for ch, _ in sorted(order_map.items(), key=lambda kv: kv[1])]
+        present_chars = {ch for ch, inst_map in lookup_book.items() if inst_map}
+        missing_chars = [ch for ch in all_chars if ch not in present_chars]
+        paddle_counts = {}
+        paddle_book = read_paddle_book(book_name)
+        paddle_chars = paddle_book.get('chars') if isinstance(paddle_book, dict) else None
+        if isinstance(paddle_chars, dict):
+            for ch, ch_obj in paddle_chars.items():
+                if not isinstance(ch_obj, dict):
+                    continue
+                items = ch_obj.get('top5')
+                if not isinstance(items, list):
+                    items = ch_obj.get('items')
+                count = len(items) if isinstance(items, list) else 0
+                if count:
+                    paddle_counts[ch] = count
 
         all_instances = []
         for ch, inst_map in lookup_book.items():
@@ -2428,7 +2481,10 @@ def api_fixing_items():
             'page': page,
             'page_size': page_size,
             'total': total,
-            'items': items
+            'items': items,
+            'missing_chars': missing_chars,
+            'missing_total': len(missing_chars),
+            'paddle_counts': paddle_counts
         })
     except Exception as e:
         print(f'❌ /api/fixing_items 失败: {e}')
@@ -2514,12 +2570,12 @@ def api_fixing_montage():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-@app.route('/api/auto/books', methods=['GET'])
-def api_auto_books():
+@app.route('/api/paddle/books', methods=['GET'])
+def api_paddle_books():
     try:
         books = []
-        for name in list_auto_books():
-            data = read_auto_book(name) or {}
+        for name in list_paddle_books():
+            data = read_paddle_book(name) or {}
             chars = data.get('chars') or {}
             books.append({
                 'name': name,
@@ -2527,18 +2583,18 @@ def api_auto_books():
             })
         return jsonify({'success': True, 'books': books})
     except Exception as e:
-        print(f'❌ /api/auto/books 失败: {e}')
+        print(f'❌ /api/paddle/books 失败: {e}')
         print(traceback.format_exc())
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-@app.route('/api/auto/char_list', methods=['GET'])
-def api_auto_char_list():
+@app.route('/api/paddle/char_list', methods=['GET'])
+def api_paddle_char_list():
     try:
         book_name = request.args.get('book')
         if not book_name:
             return jsonify({'success': False, 'error': '缺少参数 book'}), 400
-        data = read_auto_book(book_name) or {}
+        data = read_paddle_book(book_name) or {}
         chars = data.get('chars') or {}
         order_map = get_standard_char_order_map()
         items = []
@@ -2555,20 +2611,20 @@ def api_auto_char_list():
         items.sort(key=lambda x: (order_map.get(x['char'], 10**9), x['char']))
         return jsonify({'success': True, 'book': book_name, 'chars': items})
     except Exception as e:
-        print(f'❌ /api/auto/char_list 失败: {e}')
+        print(f'❌ /api/paddle/char_list 失败: {e}')
         print(traceback.format_exc())
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-@app.route('/api/auto/items', methods=['GET'])
-def api_auto_items():
+@app.route('/api/paddle/items', methods=['GET'])
+def api_paddle_items():
     try:
         book_name = request.args.get('book')
         char = request.args.get('char')
         include_image = (request.args.get('image', '1') or '1').lower() in ('1', 'true', 'yes')
         if not book_name or not char:
             return jsonify({'success': False, 'error': '缺少参数 book/char'}), 400
-        data = read_auto_book(book_name) or {}
+        data = read_paddle_book(book_name) or {}
         chars = data.get('chars') or {}
         ch_data = chars.get(char) or {}
         items = ch_data.get('items') or {}
@@ -2597,13 +2653,13 @@ def api_auto_items():
             'items': out
         })
     except Exception as e:
-        print(f'❌ /api/auto/items 失败: {e}')
+        print(f'❌ /api/paddle/items 失败: {e}')
         print(traceback.format_exc())
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-@app.route('/api/auto/decision', methods=['POST'])
-def api_auto_decision():
+@app.route('/api/paddle/decision', methods=['POST'])
+def api_paddle_decision():
     try:
         data = request.get_json() or {}
         book = data.get('book')
@@ -2614,7 +2670,7 @@ def api_auto_decision():
             return jsonify({'success': False, 'error': '缺少参数'}), 400
         if decision not in ('need', 'drop', 'pending', None, ''):
             return jsonify({'success': False, 'error': 'decision 非法'}), 400
-        payload = read_auto_book(book) or {}
+        payload = read_paddle_book(book) or {}
         chars = payload.get('chars') or {}
         ch_data = chars.get(char)
         if not isinstance(ch_data, dict):
@@ -2628,22 +2684,22 @@ def api_auto_decision():
         ch_data['items'] = items
         chars[char] = ch_data
         payload['chars'] = chars
-        ok = write_auto_book(book, payload)
+        ok = write_paddle_book(book, payload)
         if not ok:
             return jsonify({'success': False, 'error': '写入失败，请稍后重试'}), 500
         return jsonify({'success': True})
     except Exception as e:
-        print(f'❌ /api/auto/decision 失败: {e}')
+        print(f'❌ /api/paddle/decision 失败: {e}')
         print(traceback.format_exc())
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-@app.route('/auto_review')
-def auto_review_page():
+@app.route('/paddle_review')
+def paddle_review_page():
     try:
-        return render_template('auto/auto_review.html')
+        return render_template('paddle/paddle_review.html')
     except Exception:
-        return 'Auto Review 页面未生成', 404
+        return 'Paddle Review 页面未生成', 404
 
 
 @app.route('/fixing')
@@ -2741,9 +2797,9 @@ def main():
     print("\n  【第二轮审查】字符切割")
     print(f"    本机访问：http://localhost:5001/segment_review")
     print(f"    局域网访问：http://{local_ip}:5001/segment_review")
-    print("\n  【自动筛选复核】Paddle 自动筛选后复核")
-    print(f"    本机访问：http://localhost:5001/auto_review")
-    print(f"    局域网访问：http://{local_ip}:5001/auto_review")
+    print("\n  【Paddle 复核】Paddle 自动筛选后复核")
+    print(f"    本机访问：http://localhost:5001/paddle_review")
+    print(f"    局域网访问：http://{local_ip}:5001/paddle_review")
     print("\n按 Ctrl+C 停止服务器")
     print("=" * 70 + "\n")
 
