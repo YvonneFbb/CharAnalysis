@@ -80,9 +80,9 @@ VOLUME_OVERRIDES = {
 PADDLE_CONFIG = {
     'url': 'http://172.16.1.154:8000',
     'timeout': 20,
-    'topk': 15,
+    'topk': 16,
     'min_conf': 0.8,
-    'batch_size': 16,
+    'batch_size': 32,
     'workers': 1,
     'require_match': True,
 }

@@ -61,6 +61,9 @@
   /* 移除右下角拼贴浮窗 */
   .stat { font-size: 12px; color: #444; margin-left: auto; }
   select, input[type="number"], input[type="text"] { padding: 4px; }
+  .montage-panel { margin: 12px 0 16px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fafafa; padding: 8px; }
+  .montage-panel img { width: 100%; height: auto; display: block; border-radius: 6px; cursor: zoom-in; }
+  .montage-modal img { max-width: 95vw; max-height: 95vh; border-radius: 8px; background: #fff; }
 
   .ocr-segment-buttons { display: flex; gap: 12px; margin-top: 12px; }
   .btn { padding: 6px 12px; border: 1px solid #d7dee4; background: #fff; border-radius: 20px; cursor: pointer; font-size: 13px; color: #2f3542; transition: background 0.15s ease, color 0.15s ease; }
@@ -86,6 +89,8 @@
   .missing-item { display: inline-flex; align-items: center; gap: 4px; }
   .missing-chip { border: 1px solid #dfe6ec; background: #fff; color: #2f3542; border-radius: 14px; padding: 4px 8px; font-size: 12px; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease; }
   .missing-chip:hover { background: #f3f6f8; }
+  .missing-chip.has-paddle { background: #ffe6c7; border-color: #f2a24e; color: #6d3a00; }
+  .missing-chip.has-paddle:hover { background: #ffdbb0; }
 </style>
 
 <div class="container">
@@ -112,6 +117,13 @@
       <div class="ocr-segment-buttons">
         <button class="btn" onclick="openOcrModal()">打开 OCR 筛选（当前书）</button>
         <button class="btn btn-primary" onclick="openSegmentModalForBook()">打开切割审查列表</button>
+      </div>
+      <div class="montage-panel">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+          <span style="font-size: 12px; color: #4c5868;">Montage 预览</span>
+          <button class="btn" onclick="refreshMontage()">刷新</button>
+        </div>
+        <img id="montage-img" alt="montage" src="" />
       </div>
       <div id="grid" class="grid"></div>
       <div class="missing-section">
@@ -148,6 +160,19 @@
       </div>
       <div class="iframe-body">
         <iframe id="segment-frame" src=""></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="iframe-modal montage-modal" id="montage-modal">
+    <div class="iframe-container" style="width: auto; height: auto; background: transparent; box-shadow: none;">
+      <div class="iframe-header" style="background: #fff;">
+        <strong>Montage 放大</strong>
+        <div class="spacer"></div>
+        <button class="close-btn" onclick="closeMontageModal()">&times;</button>
+      </div>
+      <div class="iframe-body" style="display: flex; align-items: center; justify-content: center; background: #fff; padding: 12px;">
+        <img id="montage-modal-img" alt="montage large" src="" />
       </div>
     </div>
   </div>
@@ -198,6 +223,8 @@
     sumEl.textContent = `共 ${data.total} 项`;
     const Lb = (data.fixed_box && data.fixed_box.L_b) ? data.fixed_box.L_b : 0;
     document.getElementById('fixed-box-stat').textContent = Lb ? `固定框 L_b=${Lb}` : '';
+
+    refreshMontage();
 
     grid.innerHTML = '';
     for (const it of data.items) {
@@ -269,6 +296,7 @@
     const missingGrid = document.getElementById('missing-grid');
     const missingSummary = document.getElementById('missing-summary');
     const missingChars = Array.isArray(data.missing_chars) ? data.missing_chars : [];
+    const paddleCounts = (data.paddle_counts && typeof data.paddle_counts === 'object') ? data.paddle_counts : {};
     missingSummary.textContent = `共 ${missingChars.length} 个`;
     missingGrid.innerHTML = '';
     if (missingChars.length === 0) {
@@ -284,6 +312,11 @@
         const btn = document.createElement('button');
         btn.className = 'missing-chip';
         btn.textContent = ch;
+        const paddleCount = paddleCounts[ch] || 0;
+        if (paddleCount > 0) {
+          btn.classList.add('has-paddle');
+          btn.title = `Paddle 候选 ${paddleCount} 个`;
+        }
         btn.onclick = () => openOcrModalForChar(ch);
         wrap.appendChild(btn);
         missingGrid.appendChild(wrap);
@@ -363,11 +396,36 @@
     const frame = document.getElementById('segment-frame');
     frame.src = 'about:blank';
     modal.classList.remove('active');
+    // SEG 可能已更新状态，关闭后刷新 Fixing 列表
+    setTimeout(() => {
+      reloadFixing();
+    }, 500);
   }
 
   function refreshSegmentFrame(){
     const frame = document.getElementById('segment-frame');
     if (frame.src) frame.src = frame.src;
+  }
+
+  function refreshMontage(){
+    const montageImg = document.getElementById('montage-img');
+    const montageUrl = `${API_BASE}/api/fixing_montage?book=${encodeURIComponent(currentBook)}&use_fixed_box=1&tile=${TILE}&cols=50&ts=${Date.now()}`;
+    montageImg.src = montageUrl;
+    montageImg.onclick = () => openMontageModal(montageUrl);
+  }
+
+  function openMontageModal(src){
+    const modal = document.getElementById('montage-modal');
+    const img = document.getElementById('montage-modal-img');
+    img.src = src;
+    modal.classList.add('active');
+  }
+
+  function closeMontageModal(){
+    const modal = document.getElementById('montage-modal');
+    const img = document.getElementById('montage-modal-img');
+    img.src = '';
+    modal.classList.remove('active');
   }
 
   document.addEventListener('keydown', (event) => {
@@ -376,6 +434,11 @@
     const segModal = document.getElementById('segment-modal');
     if (segModal.classList.contains('active')) {
       closeSegmentModal();
+      return;
+    }
+    const montageModal = document.getElementById('montage-modal');
+    if (montageModal.classList.contains('active')) {
+      closeMontageModal();
       return;
     }
     if (ocrModal.classList.contains('active')) {

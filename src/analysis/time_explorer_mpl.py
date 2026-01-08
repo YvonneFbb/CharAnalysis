@@ -18,12 +18,12 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
-from matplotlib.widgets import RadioButtons, TextBox, Button, CheckButtons
+from matplotlib.widgets import RadioButtons, TextBox, Button, CheckButtons, Slider
 import numpy as np
 from PIL import Image
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 METRICS: Dict[str, str] = {
     "aspect_ratio_mean": "长宽比（高/宽，均值）",
@@ -369,6 +369,7 @@ def main() -> None:
         "metric": "aspect_ratio_mean",
         "color_by": "region",
         "search": "",
+        "q": 0.10,
     }
 
     plt.rcParams["font.sans-serif"] = [
@@ -382,6 +383,9 @@ def main() -> None:
     ]
     plt.rcParams["axes.unicode_minus"] = False
 
+    # 确保交互式窗口不被提前回收
+    plt.ioff()
+
     fig = plt.figure(figsize=(18.0, 9.2))
     ax = fig.add_axes([0.36, 0.12, 0.62, 0.82])
 
@@ -390,19 +394,21 @@ def main() -> None:
     ax_region = fig.add_axes([0.02, 0.32, 0.30, 0.18], facecolor="#f8fafc")
     ax_style = fig.add_axes([0.02, 0.16, 0.30, 0.14], facecolor="#f8fafc")
     ax_place_toggle = fig.add_axes([0.02, 0.10, 0.30, 0.06], facecolor="#f8fafc")
-    ax_search = fig.add_axes([0.36, 0.02, 0.26, 0.05])
-    ax_reset = fig.add_axes([0.65, 0.02, 0.08, 0.05])
+    ax_q = fig.add_axes([0.02, 0.04, 0.30, 0.04], facecolor="#f8fafc")
+    ax_search = None
+    ax_reset = None
 
     metric_radio = RadioButtons(ax_metric, list(METRICS.keys()), active=0)
     color_radio = RadioButtons(ax_color, list(COLOR_KEYS.keys()), active=0)
-    search_box = TextBox(ax_search, "书名/ID", initial="")
-    reset_btn = Button(ax_reset, "重置")
+    search_box = None
+    reset_btn = None
 
     regions = sorted({(r.get("region") or "（空）") for r in rows})
     styles = sorted({(r.get("style") or "（空）") for r in rows})
     region_check = CheckButtons(ax_region, regions, [True] * len(regions))
     style_check = CheckButtons(ax_style, styles, [True] * len(styles))
     place_toggle = CheckButtons(ax_place_toggle, ["区分书局"], [False])
+    q_slider = Slider(ax_q, "Q", 0.0, 0.25, valinit=state["q"], valstep=0.01)
 
     for cb in (region_check, style_check, place_toggle):
         for lbl in cb.labels:
@@ -455,14 +461,23 @@ def main() -> None:
         plot_rows: List[Dict] = []
         plot_samples: List[np.ndarray] = []
         plot_values: List[float] = []
+        q = state.get("q", 0.10)
+        q = max(0.0, min(0.25, float(q)))
         for r in current:
             book = r.get("book")
             if sample_key:
                 vals = samples_by_book.get(book, {}).get(sample_key, []) if book else []
                 if not vals:
                     continue
+                arr = np.asarray(vals, dtype=float)
+                if q > 0.0 and arr.size >= 4:
+                    lo = float(np.quantile(arr, q))
+                    hi = float(np.quantile(arr, 1.0 - q))
+                    arr = arr[(arr >= lo) & (arr <= hi)]
+                if arr.size == 0:
+                    continue
                 plot_rows.append(r)
-                plot_samples.append(np.asarray(vals, dtype=float))
+                plot_samples.append(arr)
             else:
                 y = r.get(metric)
                 if y is None or (isinstance(y, float) and math.isnan(y)):
@@ -489,6 +504,7 @@ def main() -> None:
         means: List[float] = []
         if sample_key:
             positions = list(range(len(plot_rows)))
+            whis = (100.0 * q, 100.0 * (1.0 - q))
             box = ax.boxplot(
                 plot_samples,
                 positions=positions,
@@ -496,7 +512,7 @@ def main() -> None:
                 patch_artist=True,
                 showmeans=True,
                 meanline=False,
-                whis=1.5,
+                whis=whis,
                 showfliers=True,
             )
             for i, patch in enumerate(box["boxes"]):
@@ -527,8 +543,25 @@ def main() -> None:
                 flier.set_markerfacecolor("#6b7280")
                 flier.set_markeredgecolor("none")
 
+            stds: List[float] = []
             for vals in plot_samples:
                 means.append(float(np.mean(vals)) if vals.size else float("nan"))
+                stds.append(float(np.std(vals)) if vals.size else float("nan"))
+            for i, (mu, sd) in enumerate(zip(means, stds)):
+                if not math.isfinite(mu) or not math.isfinite(sd):
+                    continue
+                ax.annotate(
+                    f"μ={mu:.2f}\nσ={sd:.2f}",
+                    xy=(positions[i], mu),
+                    xytext=(6, 8),
+                    textcoords="offset points",
+                    ha="left",
+                    va="bottom",
+                    fontsize=8,
+                    color="#111827",
+                    bbox=dict(facecolor="white", alpha=0.75, edgecolor="none", boxstyle="round,pad=0.2"),
+                    zorder=5,
+                )
         else:
             for idx, y in enumerate(plot_values):
                 ax.scatter([float(idx)], [y], c=[colors[idx]], s=36, alpha=0.85, edgecolors="none")
@@ -546,7 +579,7 @@ def main() -> None:
             rho_text = f"ρ={rho:.3f}"
         else:
             rho_text = "ρ=NA"
-        ax.set_title(f"{METRICS[state['metric']]}（n={len(plot_rows)}，{rho_text}）")
+        ax.set_title(f"{METRICS[state['metric']]}（n={len(plot_rows)}，Q={q:.2f}，{rho_text}）")
 
         labels = [r.get("book") or r.get("title") or "" for r in plot_rows]
         step = max(1, len(labels) // 16)
@@ -570,37 +603,27 @@ def main() -> None:
         state["color_by"] = label
         update_plot()
 
-    def on_search(text: str) -> None:
-        state["search"] = text.strip()
-        update_plot()
-
-    def on_reset(_event) -> None:
-        state["metric"] = "aspect_ratio_mean"
-        state["color_by"] = "region"
-        state["search"] = ""
-        metric_radio.set_active(0)
-        color_radio.set_active(0)
-        for i in range(len(regions)):
-            if not region_check.get_status()[i]:
-                region_check.set_active(i)
-        for i in range(len(styles)):
-            if not style_check.get_status()[i]:
-                style_check.set_active(i)
-        if place_toggle.get_status()[0]:
-            place_toggle.set_active(0)
-        search_box.set_val("")
-        update_plot()
-
     metric_radio.on_clicked(on_metric)
     color_radio.on_clicked(on_color)
-    search_box.on_submit(on_search)
-    reset_btn.on_clicked(on_reset)
+    # 搜索/重置控件已移除
     region_check.on_clicked(lambda _label: update_plot())
     style_check.on_clicked(lambda _label: update_plot())
     place_toggle.on_clicked(lambda _label: update_plot())
+    q_slider.on_changed(lambda val: (state.update({"q": float(val)}), update_plot()))
+
+    # 保持控件引用，避免被垃圾回收导致交互失效
+    _widgets = {
+        "metric": metric_radio,
+        "color": color_radio,
+        "region": region_check,
+        "style": style_check,
+        "place": place_toggle,
+        "q": q_slider,
+    }
+    globals()["_TIME_EXPLORER_WIDGETS"] = _widgets
 
     update_plot()
-    plt.show()
+    plt.show(block=True)
 
 
 if __name__ == "__main__":

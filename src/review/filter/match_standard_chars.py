@@ -227,6 +227,49 @@ def save_matched_chars(matched_data: Dict, output_path: str):
     print(f"  可使用以下命令裁切单本书:")
     print(f"  ./pipeline crop {output_path} --book <书名>")
 
+    # 同时拆分为每本书单独文件，便于后续按需加载
+    try:
+        save_matched_books(matched_data)
+    except Exception as e:
+        print(f"⚠️  拆分 matched_by_book 失败: {e}")
+
+
+def save_matched_books(matched_data: Dict):
+    """将 matched_by_book.json 拆分为每本书独立文件，并生成索引。"""
+    books = matched_data.get('books') if isinstance(matched_data, dict) else None
+    if not isinstance(books, dict) or not books:
+        return
+    output_dir = PROJECT_ROOT / 'data/results/matched_books'
+    output_dir.mkdir(parents=True, exist_ok=True)
+    index = {
+        'books': {},
+        'source_mtime': 0
+    }
+    for book_name, book_data in books.items():
+        try:
+            book_path = output_dir / f'{book_name}.json'
+            payload = {
+                'book': book_name,
+                'data': book_data
+            }
+            with open(book_path, 'w', encoding='utf-8') as f:
+                json.dump(payload, f, ensure_ascii=False, indent=2)
+            index['books'][book_name] = {
+                'total_standard_chars': book_data.get('total_standard_chars', 0),
+                'total_instances': book_data.get('total_instances', 0)
+            }
+        except Exception:
+            continue
+    try:
+        mtimes = [p.stat().st_mtime for p in output_dir.glob('*.json')]
+        index['source_mtime'] = max(mtimes) if mtimes else 0
+    except Exception:
+        index['source_mtime'] = 0
+    index_path = PROJECT_ROOT / 'data/results/_cache/matched_books_index.json'
+    index_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(index_path, 'w', encoding='utf-8') as f:
+        json.dump(index, f, ensure_ascii=False, indent=2)
+
 
 def main(ocr_dir: str, standard_chars_json: str, output_path: str):
     """

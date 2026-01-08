@@ -21,6 +21,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 RESULTS_DIR = PROJECT_ROOT / "data/results"
 PADDLE_RESULTS_DIR = RESULTS_DIR / "paddle"
 MATCHED_JSON = RESULTS_DIR / "matched_by_book.json"
+MATCHED_BOOKS_DIR = RESULTS_DIR / "matched_books"
 MATCHED_SHARDS = RESULTS_DIR / "_cache/matched_by_book_shards"
 PREPROCESSED_DIR = RESULTS_DIR / "preprocessed"
 SEGMENTED_DIR = PADDLE_RESULTS_DIR / "segmented"
@@ -40,6 +41,17 @@ def normalize_to_preprocessed_path(raw_or_mixed_path: str) -> str:
 
 
 def load_matched_book(book: str) -> Optional[Dict]:
+    book_path = MATCHED_BOOKS_DIR / f"{book}.json"
+    if book_path.exists():
+        try:
+            payload = json.loads(book_path.read_text(encoding="utf-8"))
+            data = payload.get("data") if isinstance(payload, dict) else None
+            if isinstance(data, dict):
+                return data
+            if isinstance(payload.get("chars"), dict):
+                return payload
+        except Exception:
+            pass
     shard_path = MATCHED_SHARDS / f"{book}.json"
     if shard_path.exists():
         try:
@@ -57,6 +69,8 @@ def load_matched_book(book: str) -> Optional[Dict]:
 
 
 def list_books() -> List[str]:
+    if MATCHED_BOOKS_DIR.exists() and list(MATCHED_BOOKS_DIR.glob("*.json")):
+        return sorted([p.stem for p in MATCHED_BOOKS_DIR.glob("*.json")])
     if MATCHED_SHARDS.exists():
         return sorted([p.stem for p in MATCHED_SHARDS.glob("*.json")])
     if MATCHED_JSON.exists():
@@ -215,9 +229,9 @@ def call_paddle_batch(images: List[bytes], paddle_url: str, timeout: int) -> Lis
 def rank_candidates(candidates: List[Dict], topk: int | None) -> List[Dict]:
     candidates.sort(
         key=lambda x: (
+            -int(x.get("width") or 0),
             -int(1 if x.get("match") else 0),
             -float(x.get("paddle_conf") or 0.0),
-            -int(x.get("width") or 0),
             x.get("instance_id") or ""
         )
     )
@@ -255,6 +269,50 @@ def _normalize_text(text: str) -> str:
 def _is_single_char(text: str) -> bool:
     cleaned = _normalize_text(text)
     return len(cleaned) == 1
+
+
+def _prepare_instance(ch: str, inst: Dict, stats: Dict[str, int], error_samples: Dict[str, List[str]], sample_fn):
+    bbox = inst.get("bbox") or {}
+    source_image = normalize_to_preprocessed_path(inst.get("source_image") or "")
+    instance_id = make_instance_id(inst)
+    if not source_image:
+        stats["skipped_source"] += 1
+        sample_fn(error_samples["missing_source"], f"{ch}:{instance_id} 缺少 source")
+        return None
+    preprocessed = PROJECT_ROOT / source_image
+    if not preprocessed.exists():
+        stats["skipped_source"] += 1
+        sample_fn(error_samples["missing_source"], f"{ch}:{instance_id} {source_image}")
+        return None
+    try:
+        seg_out = segment_character(str(preprocessed), bbox)
+        if isinstance(seg_out, tuple) and len(seg_out) >= 2:
+            segmented_img = seg_out[1]
+        else:
+            stats["seg_fail"] += 1
+            sample_fn(error_samples["seg_fail"], f"{ch}:{instance_id}")
+            return None
+    except Exception:
+        stats["seg_fail"] += 1
+        sample_fn(error_samples["seg_fail"], f"{ch}:{instance_id}")
+        return None
+    try:
+        img_bytes = encode_png_bytes(segmented_img)
+    except Exception:
+        stats["encode_fail"] += 1
+        sample_fn(error_samples["encode_fail"], f"{ch}:{instance_id}")
+        return None
+    h, w = segmented_img.shape[:2]
+    return {
+        "char": ch,
+        "inst": inst,
+        "instance_id": instance_id,
+        "bbox": bbox,
+        "source_image": source_image,
+        "img_bytes": img_bytes,
+        "width": int(w),
+        "height": int(h),
+    }
 
 
 def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_chars: Optional[int], limit_instances: Optional[int], min_conf: float, batch_size: int, require_match: bool) -> int:
@@ -295,104 +353,154 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
         if len(bucket) < sample_limit:
             bucket.append(msg)
     total_chars = len(char_keys)
-    progress = tqdm(char_keys, desc=f"Paddle {book}", unit="char")
-    for ch in progress:
+    batch_size = max(1, int(batch_size or 1))
+    states: Dict[str, Dict] = {}
+    for ch in char_keys:
         instances = chars.get(ch) or []
         if limit_instances is not None:
             instances = instances[:limit_instances]
         instances = sorted(instances, key=lambda inst: -int((inst.get("bbox") or {}).get("width") or 0))
         stats["instances"] += len(instances)
-        candidates: List[Dict] = []
+        states[ch] = {
+            "instances": instances,
+            "idx": 0,
+            "candidates": [],
+        }
 
-        idx = 0
-        batch_size = max(1, int(batch_size or 1))
-        while idx < len(instances):
-            if len(candidates) >= topk:
-                break
-            batch_items = []
-            while idx < len(instances) and len(batch_items) < batch_size:
-                inst = instances[idx]
-                idx += 1
-                bbox = inst.get("bbox") or {}
-                source_image = normalize_to_preprocessed_path(inst.get("source_image") or "")
-                if not source_image:
-                    stats["skipped_source"] += 1
-                    _maybe_sample(error_samples["missing_source"], f"{ch}:{make_instance_id(inst)} 缺少 source")
-                    continue
-                preprocessed = PROJECT_ROOT / source_image
-                if not preprocessed.exists():
-                    stats["skipped_source"] += 1
-                    _maybe_sample(error_samples["missing_source"], f"{ch}:{make_instance_id(inst)} {source_image}")
-                    continue
-                try:
-                    seg_out = segment_character(str(preprocessed), bbox)
-                    if isinstance(seg_out, tuple) and len(seg_out) >= 2:
-                        segmented_img = seg_out[1]
-                    else:
-                        stats["seg_fail"] += 1
-                        _maybe_sample(error_samples["seg_fail"], f"{ch}:{make_instance_id(inst)}")
-                        continue
-                except Exception:
-                    stats["seg_fail"] += 1
-                    _maybe_sample(error_samples["seg_fail"], f"{ch}:{make_instance_id(inst)}")
-                    continue
-                try:
-                    img_bytes = encode_png_bytes(segmented_img)
-                except Exception:
-                    stats["encode_fail"] += 1
-                    _maybe_sample(error_samples["encode_fail"], f"{ch}:{make_instance_id(inst)}")
-                    continue
-                h, w = segmented_img.shape[:2]
-                batch_items.append({
-                    "inst": inst,
-                    "bbox": bbox,
-                    "source_image": source_image,
-                    "img_bytes": img_bytes,
-                    "width": int(w),
-                    "height": int(h),
-                })
+    progress = tqdm(total=total_chars, desc=f"Paddle {book}", unit="char")
+    done_chars = set()
+    active_chars = [ch for ch in char_keys if states[ch]["instances"]]
+    for ch in char_keys:
+        if not states[ch]["instances"]:
+            done_chars.add(ch)
+            progress.update(1)
 
-            if not batch_items:
+    pending: List[Dict] = []
+    cursor = 0
+
+    def _mark_done(ch: str):
+        if ch not in done_chars:
+            done_chars.add(ch)
+            progress.update(1)
+
+    while active_chars:
+        if len(pending) < batch_size:
+            if cursor >= len(active_chars):
+                cursor = 0
+            ch = active_chars[cursor]
+            state = states[ch]
+            if topk > 0 and len(state["candidates"]) >= topk:
+                active_chars.pop(cursor)
+                _mark_done(ch)
                 continue
+            if state["idx"] >= len(state["instances"]):
+                active_chars.pop(cursor)
+                _mark_done(ch)
+                continue
+            inst = state["instances"][state["idx"]]
+            state["idx"] += 1
+            prepared = _prepare_instance(ch, inst, stats, error_samples, _maybe_sample)
+            if prepared:
+                pending.append(prepared)
+            cursor += 1
+            continue
 
-            try:
-                results = call_paddle_batch([b["img_bytes"] for b in batch_items], paddle_url, timeout=timeout)
-            except Exception as e:
-                stats["paddle_fail"] += len(batch_items)
-                msg = f"{type(e).__name__}: {e}"
-                _maybe_sample(error_samples["paddle_fail"], f"{ch}:{msg}")
-                results = [("", 0.0)] * len(batch_items)
+        try:
+            results = call_paddle_batch([b["img_bytes"] for b in pending], paddle_url, timeout=timeout)
+        except Exception as e:
+            stats["paddle_fail"] += len(pending)
+            msg = f"{type(e).__name__}: {e}"
+            _maybe_sample(error_samples["paddle_fail"], msg)
+            results = [("", 0.0)] * len(pending)
 
-            for item, (paddle_text, paddle_conf) in zip(batch_items, results):
-                if not _is_single_char(paddle_text):
-                    stats["filtered_non_single"] += 1
-                    continue
-                cleaned_text = _normalize_text(paddle_text)
-                if float(paddle_conf or 0.0) < min_conf:
-                    stats["filtered_low_conf"] += 1
-                    continue
-                inst = item["inst"]
-                instance_id = make_instance_id(inst)
-                match = cleaned_text == ch
-                if require_match and not match:
-                    stats["filtered_mismatch"] += 1
-                    continue
-                candidates.append({
-                    "instance_id": instance_id,
-                    "bbox": item["bbox"],
-                    "source_image": item["source_image"],
-                    "segmented_path": None,
-                    "paddle_text": cleaned_text,
-                    "paddle_conf": float(paddle_conf),
-                    "width": item["width"],
-                    "height": item["height"],
-                    "decision": "pending",
-                    "match": match,
-                    "png_bytes": item["img_bytes"],
-                })
-                if len(candidates) >= topk:
-                    break
+        for item, (paddle_text, paddle_conf) in zip(pending, results):
+            ch = item["char"]
+            state = states[ch]
+            if topk > 0 and len(state["candidates"]) >= topk:
+                continue
+            if not _is_single_char(paddle_text):
+                stats["filtered_non_single"] += 1
+                continue
+            cleaned_text = _normalize_text(paddle_text)
+            if float(paddle_conf or 0.0) < min_conf:
+                stats["filtered_low_conf"] += 1
+                continue
+            match = cleaned_text == ch
+            if require_match and not match:
+                stats["filtered_mismatch"] += 1
+                continue
+            state["candidates"].append({
+                "instance_id": item["instance_id"],
+                "bbox": item["bbox"],
+                "source_image": item["source_image"],
+                "segmented_path": None,
+                "paddle_text": cleaned_text,
+                "paddle_conf": float(paddle_conf),
+                "width": item["width"],
+                "height": item["height"],
+                "decision": "pending",
+                "match": match,
+                "png_bytes": item["img_bytes"],
+            })
+            stats["candidates"] += 1
+        pending = []
+        progress.set_postfix({
+            "saved": stats["saved"],
+            "cand": stats["candidates"],
+            "seg_fail": stats["seg_fail"],
+            "paddle_fail": stats["paddle_fail"],
+        })
 
+    if pending:
+        try:
+            results = call_paddle_batch([b["img_bytes"] for b in pending], paddle_url, timeout=timeout)
+        except Exception as e:
+            stats["paddle_fail"] += len(pending)
+            msg = f"{type(e).__name__}: {e}"
+            _maybe_sample(error_samples["paddle_fail"], msg)
+            results = [("", 0.0)] * len(pending)
+        for item, (paddle_text, paddle_conf) in zip(pending, results):
+            ch = item["char"]
+            state = states[ch]
+            if topk > 0 and len(state["candidates"]) >= topk:
+                continue
+            if not _is_single_char(paddle_text):
+                stats["filtered_non_single"] += 1
+                continue
+            cleaned_text = _normalize_text(paddle_text)
+            if float(paddle_conf or 0.0) < min_conf:
+                stats["filtered_low_conf"] += 1
+                continue
+            match = cleaned_text == ch
+            if require_match and not match:
+                stats["filtered_mismatch"] += 1
+                continue
+            state["candidates"].append({
+                "instance_id": item["instance_id"],
+                "bbox": item["bbox"],
+                "source_image": item["source_image"],
+                "segmented_path": None,
+                "paddle_text": cleaned_text,
+                "paddle_conf": float(paddle_conf),
+                "width": item["width"],
+                "height": item["height"],
+                "decision": "pending",
+                "match": match,
+                "png_bytes": item["img_bytes"],
+            })
+            stats["candidates"] += 1
+        pending = []
+        progress.set_postfix({
+            "saved": stats["saved"],
+            "cand": stats["candidates"],
+            "seg_fail": stats["seg_fail"],
+            "paddle_fail": stats["paddle_fail"],
+        })
+
+    progress.close()
+
+    for ch in char_keys:
+        candidates = states[ch]["candidates"]
         if not candidates:
             out_chars[ch] = {
                 "items": {},
@@ -402,9 +510,7 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
                 "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             }
             continue
-
         sorted_all = rank_candidates(candidates, topk=None)
-        stats["candidates"] += len(sorted_all)
         top_items = sorted_all[:topk] if topk and topk > 0 else []
         top_ids = {it.get("instance_id") for it in top_items if it.get("instance_id")}
         for item in sorted_all:
@@ -445,12 +551,6 @@ def process_book(book: str, paddle_url: str, topk: int, timeout: int, limit_char
             "scores": scores,
             "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         }
-        progress.set_postfix({
-            "saved": stats["saved"],
-            "cand": stats["candidates"],
-            "seg_fail": stats["seg_fail"],
-            "paddle_fail": stats["paddle_fail"],
-        })
 
     if not out_chars:
         return 0

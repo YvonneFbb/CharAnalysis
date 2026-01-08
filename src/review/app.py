@@ -57,6 +57,7 @@ MANUAL_RESULTS_DIR = RESULTS_DIR / 'manual'
 PADDLE_RESULTS_DIR = RESULTS_DIR / 'paddle'
 
 MATCHED_JSON_PATH = RESULTS_DIR / 'matched_by_book.json'
+MATCHED_BOOKS_DIR = RESULTS_DIR / 'matched_books'
 MATCHED_CACHE_DIR = RESULTS_DIR / '_cache'
 MATCHED_SHARDS_DIR = MATCHED_CACHE_DIR / 'matched_by_book_shards'
 MATCHED_INDEX_PATH = MATCHED_CACHE_DIR / 'matched_books_index.json'
@@ -96,13 +97,36 @@ _standard_char_order_map: Optional[Dict[str, int]] = None
 def _ensure_cache_dirs():
     MATCHED_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     MATCHED_SHARDS_DIR.mkdir(parents=True, exist_ok=True)
+    MATCHED_BOOKS_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def _extract_book_payload(payload: Optional[Dict], book_name: Optional[str] = None) -> Optional[Dict]:
+    if not isinstance(payload, dict):
+        return None
+    if isinstance(payload.get('data'), dict):
+        return payload.get('data')
+    if isinstance(payload.get('chars'), dict):
+        return payload
+    if isinstance(payload.get('books'), dict) and book_name:
+        return payload['books'].get(book_name)
+    return None
+
+
+def _matched_books_mtime() -> float:
+    if MATCHED_BOOKS_DIR.exists():
+        mtimes = [p.stat().st_mtime for p in MATCHED_BOOKS_DIR.glob('*.json')]
+        if mtimes:
+            return max(mtimes)
+    if MATCHED_JSON_PATH.exists():
+        return MATCHED_JSON_PATH.stat().st_mtime
+    return 0.0
 
 
 def ensure_matched_index() -> Dict:
     """获取书籍索引与统计信息（从缓存读取，过期则重建）。"""
     global matched_index_cache
     _ensure_cache_dirs()
-    src_mtime = MATCHED_JSON_PATH.stat().st_mtime if MATCHED_JSON_PATH.exists() else 0
+    src_mtime = _matched_books_mtime()
     if matched_index_cache is not None:
         return matched_index_cache
     # 尝试读缓存
@@ -115,28 +139,42 @@ def ensure_matched_index() -> Dict:
                 return matched_index_cache
         except Exception:
             pass
-    # 重建索引（首次会慢，但只做一次）
-    print(f"[索引] 构建 matched_by_book 索引（首次较慢）：{MATCHED_JSON_PATH}")
-    if MATCHED_JSON_PATH.exists():
+    # 重建索引（优先使用拆分后的 per-book 文件）
+    idx_books = {}
+    if MATCHED_BOOKS_DIR.exists() and list(MATCHED_BOOKS_DIR.glob('*.json')):
+        print(f"[索引] 构建 matched_books 索引：{MATCHED_BOOKS_DIR}")
+        for path in MATCHED_BOOKS_DIR.glob('*.json'):
+            try:
+                with open(path, 'r', encoding='utf-8') as f:
+                    payload = json.load(f)
+                book_name = payload.get('book') or path.stem
+                book_data = _extract_book_payload(payload, book_name)
+                if not isinstance(book_data, dict):
+                    continue
+                idx_books[book_name] = {
+                    'total_standard_chars': book_data.get('total_standard_chars', 0),
+                    'total_instances': book_data.get('total_instances', 0)
+                }
+            except Exception:
+                continue
+    elif MATCHED_JSON_PATH.exists():
+        print(f"[索引] 构建 matched_by_book 索引（首次较慢）：{MATCHED_JSON_PATH}")
         with open(MATCHED_JSON_PATH, 'r', encoding='utf-8') as f:
             data = json.load(f)
         books = data.get('books', {})
-        idx_books = {}
         for name, b in books.items():
             idx_books[name] = {
                 'total_standard_chars': b.get('total_standard_chars', 0),
                 'total_instances': b.get('total_instances', 0)
             }
-        matched_index_cache = {
-            'books': idx_books,
-            'source_mtime': src_mtime
-        }
-        with open(MATCHED_INDEX_PATH, 'w', encoding='utf-8') as f:
-            json.dump(matched_index_cache, f, ensure_ascii=False, indent=2)
-        return matched_index_cache
-    else:
-        matched_index_cache = { 'books': {}, 'source_mtime': src_mtime }
-        return matched_index_cache
+
+    matched_index_cache = {
+        'books': idx_books,
+        'source_mtime': src_mtime
+    }
+    with open(MATCHED_INDEX_PATH, 'w', encoding='utf-8') as f:
+        json.dump(matched_index_cache, f, ensure_ascii=False, indent=2)
+    return matched_index_cache
 
 
 def _build_shards_once(full_data: Optional[Dict] = None):
@@ -162,11 +200,22 @@ def ensure_matched_book_data(book_name: str) -> Optional[Dict]:
     if not book_name:
         return None
     _ensure_cache_dirs()
-    shard_path = MATCHED_SHARDS_DIR / f"{book_name}.json"
-    src_mtime = MATCHED_JSON_PATH.stat().st_mtime if MATCHED_JSON_PATH.exists() else 0
+    src_mtime = _matched_books_mtime()
     if src_mtime and src_mtime != matched_books_cache_mtime:
         matched_books_cache.clear()
         matched_books_cache_mtime = src_mtime
+    book_path = MATCHED_BOOKS_DIR / f"{book_name}.json"
+    if book_path.exists():
+        try:
+            with open(book_path, 'r', encoding='utf-8') as f:
+                payload = json.load(f)
+            data = _extract_book_payload(payload, book_name)
+            if data:
+                matched_books_cache[book_name] = data
+                return data
+        except Exception:
+            pass
+    shard_path = MATCHED_SHARDS_DIR / f"{book_name}.json"
     if book_name in matched_books_cache:
         return matched_books_cache[book_name]
     # 如果分片存在且不过期，直接加载
@@ -2559,14 +2608,35 @@ def main():
     # 使用懒加载机制，启动时不加载数据，只在访问相关页面时才加载
     import socket
 
-    # 获取本机局域网 IP
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        local_ip = s.getsockname()[0]
-        s.close()
-    except:
-        local_ip = "无法获取"
+    def _collect_lan_ips() -> list:
+        ips = set()
+        try:
+            for info in socket.getaddrinfo(socket.gethostname(), None):
+                ip = info[4][0]
+                if '.' in ip:
+                    ips.add(ip)
+        except Exception:
+            pass
+        try:
+            for ip in socket.gethostbyname_ex(socket.gethostname())[2]:
+                if '.' in ip:
+                    ips.add(ip)
+        except Exception:
+            pass
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect(("8.8.8.8", 80))
+            ips.add(s.getsockname()[0])
+            s.close()
+        except Exception:
+            pass
+        def _bad(ip: str) -> bool:
+            return ip.startswith("127.") or ip.startswith("169.254.") or ip.startswith("0.") or ip.startswith("255.") or ip.startswith("198.18.")
+        return sorted([ip for ip in ips if not _bad(ip)])
+
+    # 获取本机局域网 IP（兼容多网卡 / VPN）
+    local_ips = _collect_lan_ips()
+    local_ip = local_ips[0] if local_ips else "无法获取"
 
     print("\n" + "=" * 70)
     print("古籍字形审查系统 - 后端服务器")
@@ -2583,6 +2653,8 @@ def main():
     print("  【系统首页】选择审查模式")
     print(f"    本机访问：http://localhost:5001/")
     print(f"    局域网访问：http://{local_ip}:5001/")
+    if len(local_ips) > 1:
+        print(f"    其他可选地址：{', '.join(local_ips[1:])}")
     print("\n  【第一轮审查】文字筛选（OCR 审查）")
     print(f"    本机访问：http://localhost:5001/ocr_review")
     print(f"    局域网访问：http://{local_ip}:5001/ocr_review")
