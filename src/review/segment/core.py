@@ -1,24 +1,19 @@
 """
 字符切割核心模块 - 包装器
 
-直接使用 ref/charsis/src/segmentation 的完整实现
+参考 ref/charsis/src/segmentation 的实现进行整理
 """
 
 import cv2
 import numpy as np
 from typing import Dict, Tuple, Optional
 
-from .config import (
-    NOISE_REMOVAL_CONFIG,
-    CC_FILTER_CONFIG, 
-    PROJECTION_TRIM_CONFIG,
-    BORDER_REMOVAL_CONFIG
-)
+from .config import merge_params
 from .projection_trim import trim_projection_from_bin, binarize
 from .cc_filter import refine_binary_components
-from .border_removal import trim_border_from_bin
+from .border_removal import trim_border_from_bin, remove_border_frames
 from .noise_removal import remove_noise_patches
-from .vertical_hybrid import _render_combined_debug
+from .debug_viz import _render_combined_debug
 
 
 def segment_character(
@@ -26,9 +21,9 @@ def segment_character(
     bbox: Dict[str, int],
     custom_params: Optional[Dict] = None,
     padding: int = 10
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, Dict]:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, Dict, np.ndarray]:
     """
-    对单个字符进行精确切割（参考 ref/charsis/src/segmentation/vertical_hybrid.py）
+    对单个字符进行精确切割（参考 ref/charsis/src/segmentation）
 
     Args:
         preprocessed_image_path: 预处理图片路径
@@ -50,19 +45,13 @@ def segment_character(
 
     H, W = img.shape[:2]
 
-    # 使用 custom_params 或默认配置
-    if custom_params:
-        noise_cfg = custom_params.get('noise_removal', NOISE_REMOVAL_CONFIG)
-        cc_cfg = custom_params.get('cc_filter', CC_FILTER_CONFIG)
-        proj_cfg = custom_params.get('projection_trim', PROJECTION_TRIM_CONFIG)
-        border_cfg = custom_params.get('border_removal', BORDER_REMOVAL_CONFIG)
-        final_pad = custom_params.get('final_pad', 0)
-    else:
-        noise_cfg = NOISE_REMOVAL_CONFIG
-        cc_cfg = CC_FILTER_CONFIG
-        proj_cfg = PROJECTION_TRIM_CONFIG
-        border_cfg = BORDER_REMOVAL_CONFIG
-        final_pad = 0
+    # 合并自定义参数（保持默认配置不被修改）
+    merged = merge_params(custom_params or {})
+    noise_cfg = merged['noise_removal']
+    cc_cfg = merged['cc_filter']
+    proj_cfg = merged['projection_trim']
+    border_cfg = merged['border_removal']
+    final_pad = int(custom_params.get('final_pad', 0)) if custom_params else 0
 
     # 提取 ROI（带 padding）
     x0 = max(0, bbox['x'] - padding)
@@ -84,11 +73,10 @@ def segment_character(
 
     # 1. Noise patch removal (before binarization)
     gray_cleaned = gray.copy()
-    noise_debug_img = None
     if noise_cfg.get('enabled', True):
         result = remove_noise_patches(gray_cleaned, noise_cfg)
         if isinstance(result, tuple):
-            gray_cleaned, noise_debug_img = result
+            gray_cleaned = result[0]
         else:
             gray_cleaned = result
 
@@ -102,12 +90,15 @@ def segment_character(
 
     # 3. CC filtering
     bin_after = bin_before.copy()
-    cc_debug_img = None
     if cc_cfg.get('enabled', True):
-        bin_after, cc_debug_img = refine_binary_components(bin_after, cc_cfg, gray_cleaned)
+        bin_after, _ = refine_binary_components(bin_after, cc_cfg, gray_cleaned)
     else:
         # Skip CC filtering, use binarized image directly
         pass
+
+    # 3.5. Remove L-shaped border frames near edges (prevents projection from sticking to frames)
+    if border_cfg.get('frame_removal', {}).get('enabled', False):
+        bin_after = remove_border_frames(bin_after, border_cfg)
 
     # 4. Projection trimming
     if proj_cfg.get('enabled', True):

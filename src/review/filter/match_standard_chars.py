@@ -10,6 +10,7 @@ from typing import Dict, List, Set, Tuple
 from tqdm import tqdm
 
 from src.review.config import PROJECT_ROOT
+from src.review.utils.file_filter import extract_book_name, extract_volume_number
 
 
 def load_standard_chars(json_path: str) -> Tuple[Set[str], Dict[str, str]]:
@@ -36,40 +37,6 @@ def load_standard_chars(json_path: str) -> Tuple[Set[str], Dict[str, str]]:
 
     return standard_chars, char_to_method
 
-
-def extract_book_name(ocr_file_path: str, ocr_dir: str) -> str:
-    """
-    从 OCR 文件路径提取书名
-
-    Args:
-        ocr_file_path: OCR 文件完整路径
-        ocr_dir: OCR 根目录
-
-    Returns:
-        书名，如果是散乱文件则返回 None
-    """
-    rel_path = os.path.relpath(ocr_file_path, ocr_dir)
-    # 路径格式: 书名/册号_pages/page_xxxx_ocr.json
-    parts = rel_path.split(os.sep)
-
-    # 过滤掉直接在 ocr_dir 下的散乱文件（如 page_0001_preprocessed_ocr.json）
-    if len(parts) == 1:
-        # 只有文件名，没有子目录，说明是散乱文件
-        return None
-
-    if len(parts) >= 2:
-        return parts[0]
-
-    return None
-
-
-def extract_volume_number(volume_dir: str) -> int:
-    """从目录名提取册号"""
-    import re
-    match = re.search(r'册(\d+)', volume_dir)
-    if match:
-        return int(match.group(1))
-    return 0
 
 
 def match_ocr_results_by_book(ocr_dir: str, standard_chars: Set[str], char_to_method: Dict[str, str]) -> Dict:
@@ -111,7 +78,8 @@ def match_ocr_results_by_book(ocr_dir: str, standard_chars: Set[str], char_to_me
                 continue
 
             # 提取书籍信息
-            book_name = extract_book_name(ocr_file, ocr_dir)
+            rel_path = os.path.relpath(ocr_file, ocr_dir)
+            book_name = extract_book_name(rel_path, ocr_dir)
 
             # 跳过散乱文件（book_name 为 None）
             if book_name is None:
@@ -127,12 +95,11 @@ def match_ocr_results_by_book(ocr_dir: str, standard_chars: Set[str], char_to_me
                 }
 
             # 提取文件路径信息
-            rel_path = os.path.relpath(ocr_file, ocr_dir)
             path_parts = rel_path.split(os.sep)
 
             if len(path_parts) >= 3:
                 volume_dir = path_parts[1]  # 例如 "册01_pages"
-                volume_num = extract_volume_number(volume_dir)
+                volume_num = extract_volume_number(volume_dir) or 0
                 page_file = path_parts[2].replace('_preprocessed_ocr.json', '').replace('_ocr.json', '')
             else:
                 volume_num = 0

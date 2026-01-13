@@ -11,6 +11,118 @@ import numpy as np
 import cv2
 
 
+def remove_border_frames(binary_img: np.ndarray, params: Dict) -> np.ndarray:
+    """
+    Remove L-shaped border frames by detecting edge-near orthogonal line pairs.
+
+    Only removes lines that form a corner near the ROI edges, to avoid deleting
+    internal strokes.
+    """
+    if binary_img is None or binary_img.size == 0:
+        return binary_img
+    h, w = binary_img.shape[:2]
+    if h == 0 or w == 0:
+        return binary_img
+
+    frame_cfg = params.get('frame_removal', {}) if isinstance(params, dict) else {}
+    if not frame_cfg.get('enabled', False):
+        return binary_img
+
+    edge_ratio = float(frame_cfg.get('edge_margin_ratio', 0.08))
+    min_len_ratio = float(frame_cfg.get('min_length_ratio', 0.7))
+    min_len_px = int(frame_cfg.get('min_length_px', 12))
+    max_thickness = int(frame_cfg.get('max_thickness_px', 3))
+    min_corners = int(frame_cfg.get('min_corner_count', 1))
+    max_remove_ratio = float(frame_cfg.get('max_removal_ratio', 0.2))
+
+    margin_y = max(1, int(h * edge_ratio))
+    margin_x = max(1, int(w * edge_ratio))
+
+    k_len_h = max(min_len_px, int(w * min_len_ratio))
+    k_len_h = max(3, min(k_len_h, w))
+    kernel_h = cv2.getStructuringElement(cv2.MORPH_RECT, (k_len_h, 1))
+    h_mask = cv2.morphologyEx(binary_img, cv2.MORPH_OPEN, kernel_h)
+
+    k_len_v = max(min_len_px, int(h * min_len_ratio))
+    k_len_v = max(3, min(k_len_v, h))
+    kernel_v = cv2.getStructuringElement(cv2.MORPH_RECT, (1, k_len_v))
+    v_mask = cv2.morphologyEx(binary_img, cv2.MORPH_OPEN, kernel_v)
+
+    inter = cv2.bitwise_and(h_mask, v_mask)
+    if cv2.countNonZero(inter) == 0:
+        return binary_img
+
+    num_h, h_labels, h_stats, _ = cv2.connectedComponentsWithStats((h_mask > 0).astype(np.uint8), connectivity=8)
+    num_v, v_labels, v_stats, _ = cv2.connectedComponentsWithStats((v_mask > 0).astype(np.uint8), connectivity=8)
+    num_i, i_labels, i_stats, _ = cv2.connectedComponentsWithStats((inter > 0).astype(np.uint8), connectivity=8)
+
+    def _is_h_valid(stats) -> bool:
+        x, y, ww, hh, _ = stats
+        if hh > max_thickness:
+            return False
+        if ww < min_len_px and ww < int(w * min_len_ratio):
+            return False
+        return (y <= margin_y) or (y + hh >= h - margin_y)
+
+    def _is_v_valid(stats) -> bool:
+        x, y, ww, hh, _ = stats
+        if ww > max_thickness:
+            return False
+        if hh < min_len_px and hh < int(h * min_len_ratio):
+            return False
+        return (x <= margin_x) or (x + ww >= w - margin_x)
+
+    to_remove_h = set()
+    to_remove_v = set()
+    corner_hits = 0
+
+    for i in range(1, num_i):
+        x, y, ww, hh, _ = i_stats[i]
+        near_edge = (
+            x <= margin_x or y <= margin_y or
+            (x + ww) >= (w - margin_x) or
+            (y + hh) >= (h - margin_y)
+        )
+        if not near_edge:
+            continue
+        # take one pixel from this intersection component
+        ys, xs = np.where(i_labels == i)
+        if ys.size == 0:
+            continue
+        y0, x0 = int(ys[0]), int(xs[0])
+        hl = int(h_labels[y0, x0])
+        vl = int(v_labels[y0, x0])
+        if hl <= 0 or vl <= 0:
+            continue
+        if hl >= num_h or vl >= num_v:
+            continue
+        if not _is_h_valid(h_stats[hl]):
+            continue
+        if not _is_v_valid(v_stats[vl]):
+            continue
+        to_remove_h.add(hl)
+        to_remove_v.add(vl)
+        corner_hits += 1
+
+    if corner_hits < min_corners:
+        return binary_img
+
+    removal_mask = np.zeros_like(binary_img, dtype=np.uint8)
+    for hl in to_remove_h:
+        removal_mask[h_labels == hl] = 255
+    for vl in to_remove_v:
+        removal_mask[v_labels == vl] = 255
+
+    fg_total = int(np.count_nonzero(binary_img))
+    fg_removed = int(np.count_nonzero(removal_mask))
+    if fg_total > 0 and (fg_removed / float(fg_total)) > max_remove_ratio:
+        return binary_img
+
+    cleaned = binary_img.copy()
+    cleaned[removal_mask > 0] = 0
+    return cleaned
+
+
 def trim_border_from_bin(binary_img: np.ndarray, params: Dict) -> Tuple[int, int, int, int]:
     """
     Find border trim coordinates using horizontal and vertical projection analysis.
@@ -403,40 +515,3 @@ def _find_vertical_trim_bounds(binary_img: np.ndarray, params: Dict) -> Tuple[in
 
     return yt, yb
 
-
-def analyze_border_removal_effect(original: np.ndarray, cleaned: np.ndarray) -> Dict:
-    """
-    Analyze the effect of border removal for debugging.
-
-    Returns:
-        Dictionary with analysis results
-    """
-    if original is None or cleaned is None:
-        return {'error': 'Invalid input images'}
-
-    # Convert to binary for analysis
-    if len(original.shape) == 3:
-        orig_gray = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
-    else:
-        orig_gray = original.copy()
-
-    if len(cleaned.shape) == 3:
-        clean_gray = cv2.cvtColor(cleaned, cv2.COLOR_BGR2GRAY)
-    else:
-        clean_gray = cleaned.copy()
-
-    # Binarize
-    _, orig_bin = cv2.threshold(orig_gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-    _, clean_bin = cv2.threshold(clean_gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-
-    # Calculate differences
-    removed_pixels = cv2.bitwise_and(orig_bin, cv2.bitwise_not(clean_bin))
-    removed_area = np.sum(removed_pixels > 0)
-    total_area = np.sum(orig_bin > 0)
-
-    return {
-        'removed_area': int(removed_area),
-        'total_area': int(total_area),
-        'removal_ratio': float(removed_area / max(1, total_area)),
-        'has_effect': removed_area > 0
-    }

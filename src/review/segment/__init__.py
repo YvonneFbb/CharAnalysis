@@ -1,7 +1,7 @@
 """
 字符切割模块
 
-完全使用 ref/charsis/src/segmentation 的实现
+参考 ref/charsis/src/segmentation 的实现进行整理
 """
 
 from .core import segment_character, adjust_bbox

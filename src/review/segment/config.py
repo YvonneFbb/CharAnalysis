@@ -51,6 +51,17 @@ BORDER_REMOVAL_CONFIG = {
     'enabled': True,                    # 是否启用边框去除
     'max_iterations': 5,                # 最大迭代次数（多次执行以完全去除边框）
 
+    # 预清理：移除靠边的 L/回字框结构（更稳健）
+    'frame_removal': {
+        'enabled': True,
+        'edge_margin_ratio': 0.08,      # 只处理靠边区域（占比）
+        'min_length_ratio': 0.7,        # 线段最小长度占比
+        'min_length_px': 12,            # 线段最小像素长度
+        'max_thickness_px': 3,          # 最大线宽（像素）
+        'min_corner_count': 1,          # 至少命中几个角点才触发
+        'max_removal_ratio': 0.2,       # 最多允许移除的前景比例
+    },
+
     # 水平边框检测参数
     'border_max_width_ratio': 0.15,      # 最大边框宽度占比（左右两侧检测范围）
     'border_threshold_ratio': 0.35,      # 边框检测阈值（相对于最大投影值的比例）
