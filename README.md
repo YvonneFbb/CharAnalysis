@@ -44,6 +44,8 @@ CharAnalysis/
 
 - 审查结果真源：`data/results/manual/review_books/*.json`
 - Paddle 结果：`data/results/paddle/review_books/*.json`
+- 标准字匹配分片：`data/results/matched_books/*.json`（match 默认生成）
+- 标准字匹配聚合：`data/results/matched_by_book.json`（仅在 match -o 时生成）
 - 切割图片：`data/results/manual/segmented/`
 - Paddle 切割图片：`data/results/paddle/segmented/`
 - 分析包输入：`data/analysis/`（由 collect 生成）

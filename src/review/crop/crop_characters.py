@@ -5,7 +5,6 @@
 """
 import os
 import json
-from pathlib import Path
 from typing import Dict, List, Optional
 import cv2
 from tqdm import tqdm
@@ -156,19 +155,39 @@ def crop_all_books(matched_data: Dict, output_dir: str, padding: int = 5):
         crop_single_book(matched_data, book_name, output_dir, padding)
 
 
+def _normalize_matched_payload(payload: Dict, explicit_book: Optional[str] = None) -> Dict:
+    """
+    兼容聚合 matched_by_book.json 与单本书分片 matched_books/*.json。
+    """
+    if not isinstance(payload, dict):
+        raise ValueError("匹配结果不是有效的 JSON 对象")
+
+    if isinstance(payload.get('books'), dict):
+        return payload
+
+    if isinstance(payload.get('data'), dict):
+        book_data = payload['data']
+        book_key = explicit_book or payload.get('book') or book_data.get('book_name') or 'unknown'
+        return {'books': {book_key: book_data}}
+
+    book_key = explicit_book or payload.get('book_name') or 'unknown'
+    return {'books': {book_key: payload}}
+
+
 def main(matched_chars_json: str, output_dir: str, padding: int = 5, book_name: Optional[str] = None):
     """
     主函数
 
     Args:
-        matched_chars_json: 匹配结果 JSON 文件路径
+        matched_chars_json: 匹配结果 JSON 文件路径（支持聚合或单本书分片）
         output_dir: 输出目录
         padding: 边界填充像素数
         book_name: 指定书名（None 表示处理所有书籍）
     """
     # 加载匹配结果
     with open(matched_chars_json, 'r', encoding='utf-8') as f:
-        matched_data = json.load(f)
+        payload = json.load(f)
+    matched_data = _normalize_matched_payload(payload, explicit_book=book_name)
 
     if book_name:
         # 裁切单本书

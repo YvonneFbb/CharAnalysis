@@ -16,16 +16,16 @@ import cv2
 import numpy as np
 
 from src.review.segment import segment_character
+from src.review import config as review_config
 
-PROJECT_ROOT = Path(__file__).resolve().parents[3]
-RESULTS_DIR = PROJECT_ROOT / "data/results"
-PADDLE_RESULTS_DIR = RESULTS_DIR / "paddle"
-MATCHED_JSON = RESULTS_DIR / "matched_by_book.json"
-MATCHED_BOOKS_DIR = RESULTS_DIR / "matched_books"
-MATCHED_SHARDS = RESULTS_DIR / "_cache/matched_by_book_shards"
-PREPROCESSED_DIR = RESULTS_DIR / "preprocessed"
-SEGMENTED_DIR = PADDLE_RESULTS_DIR / "segmented"
-REVIEW_PADDLE_DIR = PADDLE_RESULTS_DIR / "review_books"
+PROJECT_ROOT = review_config.PROJECT_ROOT
+RESULTS_DIR = review_config.RESULTS_DIR
+PADDLE_RESULTS_DIR = review_config.PADDLE_RESULTS_DIR
+MATCHED_JSON = review_config.MATCHED_JSON_PATH
+MATCHED_BOOKS_DIR = review_config.MATCHED_BOOKS_DIR
+MATCHED_SHARDS = review_config.MATCHED_SHARDS_DIR
+SEGMENTED_DIR = review_config.PADDLE_SEGMENTED_DIR
+REVIEW_PADDLE_DIR = review_config.PADDLE_REVIEW_BOOKS_DIR
 
 
 def normalize_to_preprocessed_path(raw_or_mixed_path: str) -> str:

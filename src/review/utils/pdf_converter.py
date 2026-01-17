@@ -14,9 +14,6 @@ from src.review.utils.path import ensure_dir
 from src.review.utils.progress import ProgressTracker, get_default_progress_file, _get_relative_path
 from src.review.utils.file_filter import extract_volume_number, extract_book_name
 
-# 兼容旧调用：避免 volume_overrides 未定义时报错
-volume_overrides = None
-
 
 def pdf_to_images(
     pdf_path: str,
@@ -326,7 +323,7 @@ def convert_books_directory(
             # 按册号排序
             pdf_files.sort(key=lambda x: x[0])
 
-            overrides = (locals().get('volume_overrides') or {})
+            overrides = volume_overrides or {}
             override = overrides.get(book_name) if isinstance(overrides, dict) else None
             start_volume = None
             override_count = None

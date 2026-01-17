@@ -3,7 +3,6 @@
 
 包含路径配置、预处理参数、OCR 参数等
 """
-import os
 from pathlib import Path
 
 # ============================================================================
@@ -19,6 +18,27 @@ RAW_DIR = DATA_DIR / 'raw'
 RESULTS_DIR = DATA_DIR / 'results'
 PREPROCESSED_DIR = RESULTS_DIR / 'preprocessed'
 OCR_DIR = RESULTS_DIR / 'ocr'
+MANUAL_RESULTS_DIR = RESULTS_DIR / 'manual'
+PADDLE_RESULTS_DIR = RESULTS_DIR / 'paddle'
+
+# 匹配/索引相关路径
+MATCHED_JSON_PATH = RESULTS_DIR / 'matched_by_book.json'
+MATCHED_BOOKS_DIR = RESULTS_DIR / 'matched_books'
+MATCHED_CACHE_DIR = RESULTS_DIR / '_cache'
+MATCHED_SHARDS_DIR = MATCHED_CACHE_DIR / 'matched_by_book_shards'
+MATCHED_INDEX_PATH = MATCHED_CACHE_DIR / 'matched_books_index.json'
+
+# 审查相关路径
+REVIEW_RESULTS_PATH = MANUAL_RESULTS_DIR / 'review_results.json'
+REVIEW_BOOKS_DIR = MANUAL_RESULTS_DIR / 'review_books'
+SEGMENTATION_REVIEW_PATH = MANUAL_RESULTS_DIR / 'segmentation_review.json'
+SEGMENT_LOOKUP_PATH = MANUAL_RESULTS_DIR / 'segment_lookup.json'
+SEGMENTED_DIR = MANUAL_RESULTS_DIR / 'segmented'
+SEGMENT_MARKS_PATH = MANUAL_RESULTS_DIR / 'segment_marks.json'
+
+# Paddle 输出路径
+PADDLE_REVIEW_BOOKS_DIR = PADDLE_RESULTS_DIR / 'review_books'
+PADDLE_SEGMENTED_DIR = PADDLE_RESULTS_DIR / 'segmented'
 
 # 标准字集文件
 STANDARD_CHARS_JSON = DATA_DIR / 'metadata' / 'standard_chars.json'

@@ -287,7 +287,7 @@ def cmd_match(args):
     """匹配标准字命令"""
     ocr_dir = args.ocr_dir
     standard_chars_json = args.standard_chars if args.standard_chars else str(config.STANDARD_CHARS_JSON)
-    output = args.output if args.output else 'data/results/matched_chars.json'
+    output = args.output if args.output else None
 
     try:
         match_standard_chars.main(ocr_dir, standard_chars_json, output)
@@ -346,7 +346,7 @@ def cmd_config(args):
 
 
 def cmd_paddle(args):
-    """Paddle 自动筛选流程"""
+    """Paddle 评分/筛选流程"""
     paddle_url = args.paddle_url or config.PADDLE_CONFIG.get('url')
     if not paddle_url:
         print("错误：缺少 PaddleOCR 服务地址")
@@ -399,6 +399,12 @@ def main():
 
   # 查看配置
   ./pipeline config
+
+  # 标准字匹配（默认只生成分片 matched_books）
+  ./pipeline match data/results/ocr
+
+  # 如需生成聚合文件（供旧 crop 工具使用）
+  ./pipeline match data/results/ocr -o data/results/matched_by_book.json
         """
     )
 
@@ -444,12 +450,12 @@ def main():
     # match 命令
     parser_match = subparsers.add_parser('match', help='匹配标准字')
     parser_match.add_argument('ocr_dir', help='OCR 结果目录')
-    parser_match.add_argument('-o', '--output', help='输出 JSON 路径（默认 data/results/matched_chars.json）')
+    parser_match.add_argument('-o', '--output', help='输出聚合 JSON 路径（可选，不填则只生成分片）')
     parser_match.add_argument('--standard-chars', help='标准字 JSON 文件路径（可选）')
 
     # crop 命令
     parser_crop = subparsers.add_parser('crop', help='裁切字符图像')
-    parser_crop.add_argument('matched_chars_json', help='匹配结果 JSON 文件')
+    parser_crop.add_argument('matched_chars_json', help='匹配结果 JSON 文件（聚合或单本书分片）')
     parser_crop.add_argument('-o', '--output', help='输出目录（默认 data/results/chars）')
     parser_crop.add_argument('--padding', type=int, default=5, help='边界填充像素数（默认 5）')
     parser_crop.add_argument('--book', help='指定书名（不指定则处理所有书籍）')
@@ -458,7 +464,7 @@ def main():
     parser_config = subparsers.add_parser('config', help='显示配置信息')
 
     # paddle 命令
-    parser_paddle = subparsers.add_parser('paddle', help='Paddle 自动筛选流程')
+    parser_paddle = subparsers.add_parser('paddle', help='Paddle 评分/筛选流程')
     parser_paddle.add_argument('--paddle-url', default=None, help='PaddleOCR HTTP 服务地址（base 或 /ocr/predict_base64 完整地址）')
     parser_paddle.add_argument('--books', nargs='+', help='仅处理指定书籍')
     parser_paddle.add_argument('--topk', type=int, default=config.PADDLE_CONFIG.get('topk', 5), help='每字保留 TopK（默认 5）')

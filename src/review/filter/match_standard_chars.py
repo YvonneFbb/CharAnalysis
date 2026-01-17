@@ -5,10 +5,10 @@
 """
 import os
 import json
-from pathlib import Path
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Set, Tuple, Optional
 from tqdm import tqdm
 
+from src.review import config as review_config
 from src.review.config import PROJECT_ROOT
 from src.review.utils.file_filter import extract_book_name, extract_volume_number
 
@@ -175,7 +175,7 @@ def match_ocr_results_by_book(ocr_dir: str, standard_chars: Set[str], char_to_me
     }
 
 
-def save_matched_chars(matched_data: Dict, output_path: str):
+def save_matched_chars(matched_data: Dict, output_path: Optional[str]):
     """
     保存匹配结果到 JSON
 
@@ -183,16 +183,21 @@ def save_matched_chars(matched_data: Dict, output_path: str):
         matched_data: 匹配结果（按书籍分组）
         output_path: 输出文件路径
     """
-    # 确保输出目录存在
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    if output_path:
+        # 确保输出目录存在
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-    with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(matched_data, f, ensure_ascii=False, indent=2)
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(matched_data, f, ensure_ascii=False, indent=2)
 
-    print(f"\n✓ 匹配结果已保存至: {output_path}")
-    print(f"  格式: 按书籍分组")
-    print(f"  可使用以下命令裁切单本书:")
-    print(f"  ./pipeline crop {output_path} --book <书名>")
+        print(f"\n✓ 匹配结果已保存至: {output_path}")
+        print(f"  格式: 按书籍分组")
+        print(f"  可使用以下命令裁切单本书:")
+        print(f"  ./pipeline crop {output_path} --book <书名>")
+    else:
+        print("\n✓ 匹配结果已生成：仅输出分片文件（matched_books）")
+        print("  可直接使用分片裁切，例如：")
+        print("  ./pipeline crop data/results/matched_books/<书名>.json --book <书名>")
 
     # 同时拆分为每本书单独文件，便于后续按需加载
     try:
@@ -206,7 +211,7 @@ def save_matched_books(matched_data: Dict):
     books = matched_data.get('books') if isinstance(matched_data, dict) else None
     if not isinstance(books, dict) or not books:
         return
-    output_dir = PROJECT_ROOT / 'data/results/matched_books'
+    output_dir = review_config.MATCHED_BOOKS_DIR
     output_dir.mkdir(parents=True, exist_ok=True)
     index = {
         'books': {},
@@ -232,20 +237,20 @@ def save_matched_books(matched_data: Dict):
         index['source_mtime'] = max(mtimes) if mtimes else 0
     except Exception:
         index['source_mtime'] = 0
-    index_path = PROJECT_ROOT / 'data/results/_cache/matched_books_index.json'
+    index_path = review_config.MATCHED_INDEX_PATH
     index_path.parent.mkdir(parents=True, exist_ok=True)
     with open(index_path, 'w', encoding='utf-8') as f:
         json.dump(index, f, ensure_ascii=False, indent=2)
 
 
-def main(ocr_dir: str, standard_chars_json: str, output_path: str):
+def main(ocr_dir: str, standard_chars_json: str, output_path: Optional[str]):
     """
     主函数
 
     Args:
         ocr_dir: OCR 结果目录
         standard_chars_json: 标准字 JSON 文件路径
-        output_path: 输出文件路径
+        output_path: 输出文件路径（None 表示仅生成分片文件）
     """
     # 加载标准字
     standard_chars, char_to_method = load_standard_chars(standard_chars_json)

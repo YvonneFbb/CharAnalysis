@@ -30,6 +30,8 @@ from typing import List, Tuple, Optional, Dict
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.review import config as review_config
+
 # 导入切割模块
 from src.review.segment import segment_character, adjust_bbox, get_default_params
 
@@ -52,34 +54,33 @@ app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB
 app.config['JSON_AS_ASCII'] = False
 
 # 全局配置
-RESULTS_DIR = PROJECT_ROOT / 'data/results'
-MANUAL_RESULTS_DIR = RESULTS_DIR / 'manual'
-PADDLE_RESULTS_DIR = RESULTS_DIR / 'paddle'
+RESULTS_DIR = review_config.RESULTS_DIR
+MANUAL_RESULTS_DIR = review_config.MANUAL_RESULTS_DIR
+PADDLE_RESULTS_DIR = review_config.PADDLE_RESULTS_DIR
 
-MATCHED_JSON_PATH = RESULTS_DIR / 'matched_by_book.json'
-MATCHED_BOOKS_DIR = RESULTS_DIR / 'matched_books'
-MATCHED_CACHE_DIR = RESULTS_DIR / '_cache'
-MATCHED_SHARDS_DIR = MATCHED_CACHE_DIR / 'matched_by_book_shards'
-MATCHED_INDEX_PATH = MATCHED_CACHE_DIR / 'matched_books_index.json'
-STANDARD_CHARS_JSON_PATH = PROJECT_ROOT / 'data/metadata/standard_chars.json'
-STANDARD_CHARS_FALLBACK_PATH = PROJECT_ROOT / 'src/standard_chars.json'
-PREPROCESSED_DIR = RESULTS_DIR / 'preprocessed'
-REVIEW_RESULTS_PATH = MANUAL_RESULTS_DIR / 'review_results.json'
-REVIEW_BOOKS_DIR = MANUAL_RESULTS_DIR / 'review_books'
+MATCHED_JSON_PATH = review_config.MATCHED_JSON_PATH
+MATCHED_BOOKS_DIR = review_config.MATCHED_BOOKS_DIR
+MATCHED_CACHE_DIR = review_config.MATCHED_CACHE_DIR
+MATCHED_SHARDS_DIR = review_config.MATCHED_SHARDS_DIR
+MATCHED_INDEX_PATH = review_config.MATCHED_INDEX_PATH
+STANDARD_CHARS_JSON_PATH = review_config.STANDARD_CHARS_JSON
+PREPROCESSED_DIR = review_config.PREPROCESSED_DIR
+REVIEW_RESULTS_PATH = review_config.REVIEW_RESULTS_PATH
+REVIEW_BOOKS_DIR = review_config.REVIEW_BOOKS_DIR
 REVIEW_BOOK_BACKUP_KEEP = 5
 REVIEW_BOOK_BACKUP_COOLDOWN = 60  # 秒，避免高频写入产生大量备份
 
 # 切割相关路径
-SEGMENTATION_REVIEW_PATH = MANUAL_RESULTS_DIR / 'segmentation_review.json'
-SEGMENT_LOOKUP_PATH = MANUAL_RESULTS_DIR / 'segment_lookup.json'
-SEGMENTED_DIR = MANUAL_RESULTS_DIR / 'segmented'
+SEGMENTATION_REVIEW_PATH = review_config.SEGMENTATION_REVIEW_PATH
+SEGMENT_LOOKUP_PATH = review_config.SEGMENT_LOOKUP_PATH
+SEGMENTED_DIR = review_config.SEGMENTED_DIR
 
 # 标记功能路径
-SEGMENT_MARKS_PATH = MANUAL_RESULTS_DIR / 'segment_marks.json'
+SEGMENT_MARKS_PATH = review_config.SEGMENT_MARKS_PATH
 
 # Paddle 筛选路径
-PADDLE_REVIEW_BOOKS_DIR = PADDLE_RESULTS_DIR / 'review_books'
-PADDLE_SEGMENTED_DIR = PADDLE_RESULTS_DIR / 'segmented'
+PADDLE_REVIEW_BOOKS_DIR = review_config.PADDLE_REVIEW_BOOKS_DIR
+PADDLE_SEGMENTED_DIR = review_config.PADDLE_SEGMENTED_DIR
 
 # 创建必要的目录
 SEGMENTED_DIR.mkdir(parents=True, exist_ok=True)
@@ -248,10 +249,6 @@ def ensure_matched_book_data(book_name: str) -> Optional[Dict]:
 
 
 def _resolve_standard_chars_path() -> Path:
-    if STANDARD_CHARS_JSON_PATH.exists():
-        return STANDARD_CHARS_JSON_PATH
-    if STANDARD_CHARS_FALLBACK_PATH.exists():
-        return STANDARD_CHARS_FALLBACK_PATH
     return STANDARD_CHARS_JSON_PATH
 
 
