@@ -1,0 +1,276 @@
+{
+  "version": 1,
+  "generated_at": "2026-01-17T08:20:02.000707+00:00",
+  "source": {
+    "review_books_dir": "data/results/manual/review_books",
+    "segmented_dir": "data/results/manual/segmented"
+  },
+  "books": {
+    "01_1127_尚书正义": {
+      "count": 225,
+      "copied": 225,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 107
+    },
+    "02_1127_长短经": {
+      "count": 281,
+      "copied": 281,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 77
+    },
+    "03_1127_周易注疏": {
+      "count": 212,
+      "copied": 212,
+      "missing_images": 1,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 103
+    },
+    "04_1131_资治通鉴": {
+      "count": 258,
+      "copied": 258,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 68
+    },
+    "05_1139_汉官仪": {
+      "count": 148,
+      "copied": 148,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 86
+    },
+    "06_1139_文粹": {
+      "count": 318,
+      "copied": 318,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 54
+    },
+    "07_1139_文选": {
+      "count": 283,
+      "copied": 283,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 70
+    },
+    "08_1146_事类赋": {
+      "count": 255,
+      "copied": 255,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 98
+    },
+    "09_1147_古三坟书": {
+      "count": 181,
+      "copied": 181,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 81
+    },
+    "10_1148_花间集": {
+      "count": 219,
+      "copied": 219,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 83
+    },
+    "11_1152_抱朴子": {
+      "count": 289,
+      "copied": 289,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 56
+    },
+    "12_1165_陈书": {
+      "count": 307,
+      "copied": 307,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 108
+    },
+    "13_1165_诸史提要": {
+      "count": 292,
+      "copied": 292,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 99
+    },
+    "14_1167_论衡": {
+      "count": 285,
+      "copied": 285,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 81
+    },
+    "15_1169_钜宋广韵": {
+      "count": 211,
+      "copied": 211,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 73
+    },
+    "16_1170_洪氏集验方": {
+      "count": 219,
+      "copied": 219,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 92
+    },
+    "17_1171_史记": {
+      "count": 314,
+      "copied": 314,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 70
+    },
+    "18_1171_韦苏州集": {
+      "count": 291,
+      "copied": 291,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 82
+    },
+    "19_1175_新定三礼图": {
+      "count": 278,
+      "copied": 278,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 54
+    },
+    "20_1176_大易粹言": {
+      "count": 241,
+      "copied": 241,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 92
+    },
+    "21_1178_窦氏联珠集": {
+      "count": 224,
+      "copied": 224,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 76
+    },
+    "22_1191_春秋公羊经传解诂": {
+      "count": 227,
+      "copied": 227,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 78
+    },
+    "23_1191_鲍氏国策": {
+      "count": 272,
+      "copied": 272,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 83
+    },
+    "24_1192_礼记正义": {
+      "count": 282,
+      "copied": 282,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 70
+    },
+    "25_1193_春秋公羊经传解诂": {
+      "count": 233,
+      "copied": 233,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 84
+    },
+    "26_1195_中庸辑略": {
+      "count": 223,
+      "copied": 223,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 118
+    },
+    "27_1196_欧阳文忠公集": {
+      "count": 301,
+      "copied": 301,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 84
+    },
+    "28_1200_春秋左传正义": {
+      "count": 251,
+      "copied": 251,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 104
+    },
+    "29_1207_昆山杂咏": {
+      "count": 256,
+      "copied": 256,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 90
+    },
+    "30_1213_周髀算经": {
+      "count": 155,
+      "copied": 155,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 92
+    },
+    "31_1220_广韵": {
+      "count": 241,
+      "copied": 241,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 84
+    },
+    "32_1220_渭南文集": {
+      "count": 321,
+      "copied": 321,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 89
+    },
+    "33_1226_东汉会要": {
+      "count": 291,
+      "copied": 291,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 79
+    },
+    "34_1230_切韻指掌图": {
+      "count": 229,
+      "copied": 229,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 84
+    },
+    "35_1257_通鑑纪事本末": {
+      "count": 294,
+      "copied": 294,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 90
+    },
+    "36_1259_开庆四明续志": {
+      "count": 312,
+      "copied": 312,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 82
+    },
+    "37_1267_邵子观物篇渔樵问对": {
+      "count": 229,
+      "copied": 229,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 71
+    },
+    "38_1273_无文印": {
+      "count": 262,
+      "copied": 262,
+      "missing_images": 0,
+      "skipped_unmatched": 0,
+      "fixed_box_Lb": 49
+    }
+  }
+}
