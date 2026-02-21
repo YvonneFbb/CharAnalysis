@@ -2,6 +2,7 @@
 opencv-python-headless>=4.8.0
 numpy>=1.24.0
 Pillow>=10.0.0
+matplotlib>=3.8.0
 
 # OCR (macOS only) - 使用优化版本
 ocrmac @ git+https://github.com/Yinwhe/ocrmac.git ; platform_system == "Darwin"

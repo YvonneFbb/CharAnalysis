@@ -184,6 +184,95 @@ def parse_list_arg(value: str) -> List[str]:
     return [p for p in parts if p]
 
 
+def parse_styles_by_region(value: str) -> Dict[str, set[str]]:
+    """
+    Format:
+      "两浙地区:近欧型|扁方欧体;福建地区:近欧型"
+    Separators:
+      - region blocks: ';' or '；'
+      - region/styles: ':'
+      - styles inside region: '|' or ',' or '，'
+    """
+    out: Dict[str, set[str]] = {}
+    if not value:
+        return out
+    blocks = [b.strip() for b in value.replace("；", ";").split(";") if b.strip()]
+    for blk in blocks:
+        if ":" not in blk:
+            continue
+        reg, raw = blk.split(":", 1)
+        region = reg.strip()
+        if not region:
+            continue
+        styles = [
+            s.strip()
+            for s in raw.replace("，", ",").replace("|", ",").split(",")
+            if s.strip()
+        ]
+        out[region] = set(styles)
+    return out
+
+
+def _is_finite_number(value: object) -> bool:
+    try:
+        return math.isfinite(float(value))  # type: ignore[arg-type]
+    except Exception:
+        return False
+
+
+def _json_safe(value: object):
+    if isinstance(value, dict):
+        return {k: _json_safe(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_json_safe(v) for v in value]
+    if isinstance(value, tuple):
+        return [_json_safe(v) for v in value]
+    if isinstance(value, float):
+        return value if math.isfinite(value) else None
+    return value
+
+
+def _fmt_num(value: object, digits: int = 4, empty: str = "-") -> str:
+    if not _is_finite_number(value):
+        return empty
+    return f"{float(value):.{digits}f}"
+
+
+def _fmt_csv_num(value: object, digits: int = 6) -> str:
+    if not _is_finite_number(value):
+        return ""
+    return f"{float(value):.{digits}f}"
+
+
+def resolve_styles_by_region(
+    regions: List[str],
+    style_tags: List[str],
+    selected_styles_default: set[str],
+    styles_by_region_override: Dict[str, set[str]],
+) -> Dict[str, set[str]]:
+    base = set(selected_styles_default) if selected_styles_default else set(style_tags)
+    out = {r: set(base) for r in regions}
+    for region, styles in styles_by_region_override.items():
+        out[region] = set(styles)
+    return out
+
+
+def resolve_focus_period(periods: List["Period"], token: str) -> int:
+    if not periods:
+        return 0
+    raw = (token or "").strip()
+    if not raw:
+        return 0
+    if raw.isdigit():
+        idx = int(raw) - 1
+        if 0 <= idx < len(periods):
+            return idx
+    for i, p in enumerate(periods):
+        if raw == p.label:
+            return i
+    raise SystemExit(f"无效 focus-period: {token}，可用 1..{len(periods)} 或标签 {[p.label for p in periods]}")
+
+
 def parse_periods(value: str) -> List[Period]:
     """
     Format:
@@ -364,63 +453,6 @@ def _stable_seed(tag: str, values: List[float]) -> int:
     return int.from_bytes(h.digest(), "little", signed=False) & 0xFFFFFFFF
 
 
-def rankdata(values: np.ndarray) -> np.ndarray:
-    v = np.asarray(values)
-    order = np.argsort(v, kind="mergesort")
-    ranks = np.empty(v.size, dtype=float)
-    i = 0
-    while i < v.size:
-        j = i
-        while j + 1 < v.size and v[order[j + 1]] == v[order[i]]:
-            j += 1
-        r = (i + j) / 2.0 + 1.0
-        ranks[order[i : j + 1]] = r
-        i = j + 1
-    return ranks
-
-
-def spearman_rho(x: List[float], y: List[float]) -> float:
-    if len(x) != len(y) or len(x) < 2:
-        return float("nan")
-    xv = np.asarray(x, dtype=float)
-    yv = np.asarray(y, dtype=float)
-    rx = rankdata(xv)
-    ry = rankdata(yv)
-    if np.std(rx) == 0 or np.std(ry) == 0:
-        return float("nan")
-    return float(np.corrcoef(rx, ry)[0, 1])
-
-
-def compute_influence(records: List[Dict], value_key: str, limit: int = 12) -> List[Dict]:
-    valid = [
-        (i, float(r.get(value_key, float("nan"))))
-        for i, r in enumerate(records)
-        if math.isfinite(float(r.get(value_key, float("nan"))))
-        and r.get("year") is not None
-        and not bool(r.get("excluded"))
-    ]
-    if len(valid) < 3:
-        return []
-    years = np.asarray([float(records[i].get("year")) for i, _ in valid], dtype=float)
-    xs_full = rankdata(years).tolist()
-    ys_full = [v for _, v in valid]
-    rho_full = spearman_rho(xs_full, ys_full)
-    out: List[Dict] = []
-    for k, (i, _) in enumerate(valid):
-        xs = [xs_full[j] for j in range(len(xs_full)) if j != k]
-        ys = [ys_full[j] for j in range(len(ys_full)) if j != k]
-        rho_loo = spearman_rho(xs, ys)
-        out.append(
-            {
-                "book": records[i].get("book") or "",
-                "title": records[i].get("title") or "",
-                "delta": float(rho_loo - rho_full) if math.isfinite(rho_loo) and math.isfinite(rho_full) else float("nan"),
-            }
-        )
-    out = [r for r in out if math.isfinite(float(r.get("delta", float("nan"))))]
-    return sorted(out, key=lambda r: abs(float(r["delta"])), reverse=True)[:limit]
-
-
 def apply_q_trim(values: List[float], q: float) -> List[float]:
     vals = [float(v) for v in values if math.isfinite(float(v))]
     if q <= 0.0 or len(vals) < 4:
@@ -458,18 +490,351 @@ def compute_book_mu_a_from_chars(
     return (mu, a, used_chars)
 
 
+def filter_rows_by_region_styles(
+    rows: List[Dict],
+    selected_regions: set[str],
+    styles_by_region: Dict[str, set[str]],
+) -> List[Dict]:
+    out: List[Dict] = []
+    for r in rows:
+        year = r.get("year")
+        if year is None:
+            continue
+        region_value = (r.get("region") or "（空）")
+        if selected_regions and region_value not in selected_regions:
+            continue
+        tags = set(r.get("style_tags") or ["（空）"])
+        style_sel = set(styles_by_region.get(region_value, set()))
+        if (not style_sel) or tags.isdisjoint(style_sel):
+            continue
+        out.append(r)
+    return out
+
+
+def collect_books_for_period(
+    rows: List[Dict],
+    char_means_by_book: Dict[str, Dict[str, Dict[str, float]]],
+    period: "Period",
+    metric: str,
+    q: float,
+    common_chars_enabled: bool,
+) -> Tuple[List[Dict], Optional[int]]:
+    sample_key = METRIC_SAMPLES.get(metric)
+    period_rows = [r for r in rows if period.contains(int(r.get("year") or 0))]
+    if not period_rows:
+        return [], None
+
+    common_chars_set: Optional[set[str]] = None
+    if sample_key and common_chars_enabled:
+        for r in period_rows:
+            book = r.get("book") or ""
+            char_map = char_means_by_book.get(book, {})
+            keys = {
+                c for c, v in char_map.items()
+                if math.isfinite(float(v.get(sample_key, float("nan"))))
+            }
+            if common_chars_set is None:
+                common_chars_set = keys
+            else:
+                common_chars_set &= keys
+        common_chars_set = common_chars_set or set()
+
+    out: List[Dict] = []
+    scalar_metric = sample_key is None
+    for r in period_rows:
+        book = r.get("book") or ""
+        region_val = (r.get("region") or "（空）")
+        vals: List[float] = []
+        if sample_key:
+            char_map = char_means_by_book.get(book, {})
+            tmp = [
+                (c, float(v.get(sample_key, float("nan"))))
+                for c, v in char_map.items()
+                if math.isfinite(float(v.get(sample_key, float("nan"))))
+            ]
+            if common_chars_set is not None:
+                tmp = [(c, v) for c, v in tmp if c in common_chars_set]
+            vv = [v for _, v in tmp]
+            vals = apply_q_trim(vv, q)
+        else:
+            scalar = r.get(metric)
+            if scalar is not None and math.isfinite(float(scalar)):
+                vals = [float(scalar)]
+        if not vals:
+            continue
+        arr = np.asarray(vals, dtype=float)
+        a_val: Optional[float]
+        if scalar_metric:
+            a_val = None
+        else:
+            a_val = float(np.std(arr))
+        out.append(
+            {
+                "book": book,
+                "title": r.get("title") or "",
+                "year": r.get("year"),
+                "order": r.get("order"),
+                "region": region_val,
+                "style_tags": r.get("style_tags") or [],
+                "values": vals,
+                "mu": float(np.mean(arr)),
+                "a": a_val,
+                "n_values": len(vals),
+            }
+        )
+    common_count = len(common_chars_set) if (sample_key and common_chars_enabled and common_chars_set is not None) else None
+    return out, common_count
+
+
+def cluster_books_by_region(
+    books_data: List[Dict],
+    region_order: List[str],
+) -> Tuple[List[Dict], List[float], Dict[str, List[float]]]:
+    region_rank = {r: i for i, r in enumerate(region_order)}
+    ordered = sorted(
+        books_data,
+        key=lambda b: (
+            region_rank.get(b.get("region", "（空）"), 999),
+            b.get("year") if b.get("year") is not None else 9999,
+            b.get("order") if b.get("order") is not None else 9999,
+            b.get("book") or "",
+        ),
+    )
+    positions: List[float] = []
+    spans: Dict[str, List[float]] = {}
+    pos = 1.0
+    prev_region: Optional[str] = None
+    for b in ordered:
+        region_val = b.get("region") or "（空）"
+        if prev_region is not None and region_val != prev_region:
+            pos += 1.0
+        positions.append(pos)
+        spans.setdefault(region_val, []).append(pos)
+        prev_region = region_val
+        pos += 1.0
+    return ordered, positions, spans
+
+
+def draw_clustered_books_plot(
+    ax,
+    books_data: List[Dict],
+    region_order: List[str],
+    metric_label: str,
+    title: str,
+    q: float = 0.05,
+    common_count: Optional[int] = None,
+    annotate_mu_sigma: bool = False,
+    region_color_map: Optional[Dict[str, object]] = None,
+    show_xlabels: bool = True,
+) -> Tuple[List[Dict], List[float], Dict[str, List[float]]]:
+    if not books_data:
+        ax.text(0.5, 0.5, "无可用数据", transform=ax.transAxes, ha="center", va="center", color="#111827")
+        ax.set_title(title)
+        ax.set_ylabel(metric_label)
+        return [], [], {}
+    # Remove previous right-side a-axis if this panel is re-rendered.
+    prev_a_axis = getattr(ax, "_a_axis", None)
+    if prev_a_axis is not None:
+        try:
+            prev_a_axis.remove()
+        except Exception:
+            pass
+    ax._a_axis = None
+    ax.clear()
+
+    ordered, positions, region_spans = cluster_books_by_region(books_data, region_order)
+    labels = [b["book"] for b in ordered]
+    data = [list(b["values"]) for b in ordered]
+    book_regions = [b["region"] for b in ordered]
+    mus = [float(b["mu"]) for b in ordered]
+    sigmas = [float(b["a"]) if _is_finite_number(b.get("a")) else float("nan") for b in ordered]
+
+    uniq_regions = [r for r in region_order if r in region_spans] + [r for r in sorted(region_spans.keys()) if r not in region_order]
+    if region_color_map is None:
+        cmap = plt.get_cmap("tab10")
+        color_map = {reg: cmap(i % 10) for i, reg in enumerate(region_order)}
+    else:
+        color_map = dict(region_color_map)
+
+    whis = (100.0 * q, 100.0 * (1.0 - q))
+    bp = ax.boxplot(
+        data,
+        positions=positions,
+        widths=0.46,
+        tick_labels=labels,
+        showfliers=True,
+        patch_artist=True,
+        showmeans=True,
+        meanline=False,
+        whis=whis,
+    )
+    for patch, reg in zip(bp["boxes"], book_regions):
+        color = color_map.get(reg, "#cbd5e1")
+        patch.set_facecolor(color)
+        patch.set_alpha(0.25)
+        patch.set_edgecolor(color)
+        patch.set_linewidth(1.2)
+    for med, reg in zip(bp["medians"], book_regions):
+        med.set_color(color_map.get(reg, "#334155"))
+        med.set_linewidth(1.6)
+    for mean, reg in zip(bp["means"], book_regions):
+        mean.set_marker("D")
+        mean.set_markerfacecolor(color_map.get(reg, "#334155"))
+        mean.set_markeredgecolor("white")
+        mean.set_markersize(5.5)
+        mean.set_alpha(0.95)
+    for line in bp["whiskers"]:
+        line.set_linewidth(1.0)
+        line.set_color("#111827")
+        line.set_alpha(0.45)
+    for line in bp["caps"]:
+        line.set_linewidth(1.0)
+        line.set_color("#111827")
+        line.set_alpha(0.45)
+    for flier in bp["fliers"]:
+        flier.set_marker("o")
+        flier.set_markersize(2.6)
+        flier.set_alpha(0.25)
+        flier.set_markerfacecolor("#111827")
+        flier.set_markeredgecolor("none")
+
+    for idx, vals in enumerate(data):
+        rng = np.random.default_rng(_stable_seed(f"space-book-{labels[idx]}", vals))
+        jitter = rng.normal(0.0, 0.04, len(vals))
+        xs = np.full(len(vals), float(positions[idx])) + jitter
+        reg = book_regions[idx]
+        ax.scatter(
+            xs,
+            vals,
+            s=6,
+            alpha=0.20,
+            color=color_map.get(reg, "#64748b"),
+            edgecolors="none",
+        )
+
+    if annotate_mu_sigma:
+        for idx, mu in enumerate(mus):
+            ax.annotate(
+                f"μ={mu:.2f}",
+                xy=(positions[idx], mu),
+                xytext=(5, 7),
+                textcoords="offset points",
+                ha="left",
+                va="bottom",
+                fontsize=7,
+                color="#334155",
+                bbox=dict(facecolor="white", alpha=0.70, edgecolor="none", boxstyle="round,pad=0.15"),
+                zorder=5,
+            )
+
+        std_values = [sd for sd in sigmas if math.isfinite(sd)]
+        if std_values:
+            u_values = [v for vals in data for v in vals if math.isfinite(v)]
+            u_min = min(u_values) if u_values else 0.0
+            u_max = max(u_values) if u_values else 1.0
+            u_span = max(0.2, u_max - u_min)
+            a_min = min(std_values)
+            a_max = max(std_values)
+            a_span = max(0.02, a_max - a_min)
+            a_low = max(0.0, a_min - a_span * 0.30)
+            a_high = a_max + a_span * 0.35
+
+            # Map a-values into a compact band just below u-values (same axis, separated heights).
+            band_height = max(0.08, u_span * 0.16)
+            band_gap = max(0.02, u_span * 0.04)
+            band_top = u_min - band_gap
+            band_bottom = band_top - band_height
+            y_high = u_max + u_span * 0.10
+            ax.set_ylim(band_bottom - max(0.01, u_span * 0.02), y_high)
+
+            def _map_a_to_band(v: float) -> float:
+                if not math.isfinite(v):
+                    return float("nan")
+                if a_high <= a_low:
+                    return (band_bottom + band_top) * 0.5
+                ratio = (v - a_low) / (a_high - a_low)
+                ratio = max(0.0, min(1.0, ratio))
+                return band_bottom + ratio * (band_top - band_bottom)
+
+            for idx, sd in enumerate(sigmas):
+                if not math.isfinite(sd):
+                    continue
+                reg = book_regions[idx]
+                c = color_map.get(reg, "#64748b")
+                y_a = _map_a_to_band(sd)
+                ax.scatter(
+                    [positions[idx]],
+                    [y_a],
+                    marker="^",
+                    s=28,
+                    color=c,
+                    edgecolors="white",
+                    linewidths=0.5,
+                    alpha=0.90,
+                    zorder=4,
+                )
+                ax.annotate(
+                    f"a={sd:.2f}",
+                    xy=(positions[idx], y_a),
+                    xytext=(4, 4),
+                    textcoords="offset points",
+                    ha="left",
+                    va="bottom",
+                    fontsize=6.5,
+                    color="#475569",
+                    clip_on=False,
+                    zorder=5,
+                )
+
+            # Right-side a axis (same y space, but ticks only for a band).
+            ax_a = ax.twinx()
+            ax_a.set_ylim(ax.get_ylim())
+            ax_a.spines["left"].set_visible(False)
+            ax_a.spines["top"].set_visible(False)
+            ax_a.spines["bottom"].set_visible(False)
+            ax_a.spines["right"].set_color("#111827")
+            ax_a.tick_params(axis="y", labelsize=8, colors="#111827")
+            ax_a.yaxis.set_label_position("right")
+            ax_a.set_ylabel("a（字间差异）", fontsize=9, color="#111827")
+            a_ticks = np.linspace(a_low, a_high, num=4)
+            ax_a.set_yticks([_map_a_to_band(float(t)) for t in a_ticks])
+            ax_a.set_yticklabels([f"{t:.2f}" for t in a_ticks])
+            ax._a_axis = ax_a
+
+    for reg, span in region_spans.items():
+        x0, x1 = min(span), max(span)
+        ax.text((x0 + x1) / 2.0, 0.99, reg, transform=ax.get_xaxis_transform(), ha="center", va="top", fontsize=9, color="#1f2937")
+        ax.axvline(x=x1 + 0.5, color="#e5e7eb", linewidth=1.0, zorder=0)
+
+    handles = [
+        plt.Line2D([0], [0], marker="s", color="w", markerfacecolor=color_map[r], markersize=8, alpha=0.6)
+        for r in uniq_regions
+    ]
+    ax.legend(handles, uniq_regions, loc="upper left", frameon=False, title="区域", fontsize=9, title_fontsize=10)
+    cc_text = f" | common={common_count}" if common_count is not None else ""
+    ax.set_title(f"{title}{cc_text}")
+    ax.set_ylabel(metric_label)
+    ax.set_xticks(positions)
+    if show_xlabels:
+        ax.set_xticklabels(labels, rotation=90)
+        ax.set_xlabel("书籍（按地区分组）")
+    else:
+        ax.set_xticklabels([])
+        ax.tick_params(axis="x", which="both", length=0)
+    ax.grid(True, axis="y", alpha=0.20)
+    ax.set_xlim(min(positions) - 0.5, max(positions) + 0.5)
+    return ordered, positions, region_spans
+
+
 def compute_period_payloads(
     candidate_rows: List[Dict],
     char_means_by_book: Dict[str, Dict[str, Dict[str, float]]],
     periods: List[Period],
     metric: str,
-    group_by: str,
     q: float,
     common_chars_enabled: bool,
-    exclude_books: Optional[set[str]] = None,
 ) -> List[Dict]:
     sample_key = METRIC_SAMPLES.get(metric)
-    exclude_books = exclude_books or set()
     out_payloads: List[Dict] = []
 
     for p in periods:
@@ -495,8 +860,7 @@ def compute_period_payloads(
         records: List[Dict] = []
         for r in books_in_period:
             book = r.get("book") or ""
-            group_val = (r.get(group_by) or "（空）") if group_by != "style" else (r.get("style") or "（空）")
-            excluded = book in exclude_books
+            group_val = (r.get("region") or "（空）")
 
             if sample_key:
                 mu, a, used_chars = compute_book_mu_a_from_chars(
@@ -509,9 +873,11 @@ def compute_period_payloads(
                 used = len(used_chars)
             else:
                 mu = float(r.get(metric, float("nan")))
-                a = float("nan")
+                a = None
                 common_used = None
                 used = None
+            if not _is_finite_number(mu):
+                continue
 
             records.append(
                 {
@@ -526,7 +892,6 @@ def compute_period_payloads(
                     "group": group_val,
                     "mu": mu,
                     "a": a,
-                    "excluded": excluded,
                     "common_chars_count": common_used,
                     "used_chars_count": used,
                 }
@@ -535,19 +900,19 @@ def compute_period_payloads(
         groups = sorted({rec["group"] for rec in records})
         group_summaries: List[Dict] = []
         for g in groups:
-            subset = [rec for rec in records if rec["group"] == g and not bool(rec.get("excluded"))]
+            subset = [rec for rec in records if rec["group"] == g]
             mus = [float(rec["mu"]) for rec in subset if math.isfinite(float(rec["mu"]))]
-            aas = [float(rec["a"]) for rec in subset if math.isfinite(float(rec["a"]))]
+            aas = [float(rec["a"]) for rec in subset if _is_finite_number(rec.get("a"))]
             group_summaries.append(
                 {
                     "group": g,
                     "n_books": len(subset),
-                    "mu_mean": float(np.mean(mus)) if mus else float("nan"),
-                    "mu_median": float(np.median(mus)) if mus else float("nan"),
-                    "mu_std": float(np.std(mus)) if mus else float("nan"),
-                    "a_mean": float(np.mean(aas)) if aas else float("nan"),
-                    "a_median": float(np.median(aas)) if aas else float("nan"),
-                    "a_std": float(np.std(aas)) if aas else float("nan"),
+                    "mu_mean": float(np.mean(mus)) if mus else None,
+                    "mu_median": float(np.median(mus)) if mus else None,
+                    "mu_std": float(np.std(mus)) if mus else None,
+                    "a_mean": float(np.mean(aas)) if aas else None,
+                    "a_median": float(np.median(aas)) if aas else None,
+                    "a_std": float(np.std(aas)) if aas else None,
                 }
             )
 
@@ -558,13 +923,8 @@ def compute_period_payloads(
                 "end": p.end,
                 "end_inclusive": p.end_inclusive,
                 "n_books": len(records),
-                "n_books_used": len([r for r in records if not bool(r.get("excluded"))]),
                 "common_chars_count": len(common_chars_set) if (common_chars_enabled and sample_key) else None,
                 "groups": group_summaries,
-                "influence": {
-                    "u": compute_influence(records, "mu", limit=12),
-                    "a": compute_influence(records, "a", limit=12) if sample_key else [],
-                },
                 "books": sorted(records, key=lambda r: (r.get("year") or 0, r.get("book") or "")),
             }
         )
@@ -577,12 +937,11 @@ def launch_gui(
     char_means_by_book: Dict[str, Dict[str, Dict[str, float]]],
     periods: List[Period],
     metric_default: str,
-    group_by_default: str,
     q_default: float,
     common_chars_default: bool,
     selected_regions_default: set[str],
     selected_styles_default: set[str],
-    exclude_books_default: set[str],
+    styles_by_region_default: Dict[str, set[str]],
 ) -> None:
     plt.rcParams["font.family"] = "sans-serif"
     plt.rcParams["font.sans-serif"] = [
@@ -602,191 +961,161 @@ def launch_gui(
     plt.rcParams["axes.titlecolor"] = "#111827"
 
     state = {
-        "metric": metric_default if metric_default in METRICS else "face_ratio",
-        "group_by": group_by_default if group_by_default in {"region", "province", "place", "style"} else "region",
+        "metric": metric_default if metric_default in METRICS else "aspect_ratio",
         "q": max(0.0, min(0.25, float(q_default))),
         "common_chars": bool(common_chars_default),
-        "exclude_books": set(exclude_books_default),
-        "focus_period_idx": 0,
+        "bulk_update": False,
     }
 
-    regions = sorted({(r.get("region") or "（空）") for r in rows})
-    style_tags = sorted({tag for r in rows for tag in (r.get("style_tags") or ["（空）"])})
-    if not regions:
-        regions = ["（空）"]
-    if not style_tags:
-        style_tags = ["（空）"]
+    regions = sorted({(r.get("region") or "（空）") for r in rows}) or ["（空）"]
+    style_tags = sorted({tag for r in rows for tag in (r.get("style_tags") or ["（空）"])}) or ["（空）"]
+    state["style_by_region"] = resolve_styles_by_region(
+        regions=regions,
+        style_tags=style_tags,
+        selected_styles_default=set(selected_styles_default),
+        styles_by_region_override=styles_by_region_default,
+    )
+    state["style_target_region"] = regions[0]
 
-    fig = plt.figure(figsize=(17.5, 10.0))
+    fig = plt.figure(figsize=(16.8, 10.0))
     control_x, control_w = 0.02, 0.14
-    panel_x = control_x + control_w + 0.01
-    panel_w = 0.13
-    plot_x = panel_x + panel_w + 0.01
-    plot_w = 0.98 - plot_x
+    # Keep a clearer gap from controls and slightly narrow the plot area.
+    plot_x = control_x + control_w + 0.04
+    plot_w = 0.96 - plot_x
 
     ax_metric = fig.add_axes([control_x, 0.73, control_w, 0.23], facecolor="#f8fafc")
-    ax_group = fig.add_axes([control_x, 0.66, control_w, 0.06], facecolor="#f8fafc")
-    ax_toggles = fig.add_axes([control_x, 0.60, control_w, 0.05], facecolor="#f8fafc")
+    ax_toggles = fig.add_axes([control_x, 0.64, control_w, 0.07], facecolor="#f8fafc")
     ax_region = fig.add_axes([control_x, 0.42, control_w, 0.16], facecolor="#f8fafc")
-    ax_style = fig.add_axes([control_x, 0.18, control_w, 0.22], facecolor="#f8fafc")
+    ax_style_scope = fig.add_axes([control_x, 0.35, control_w, 0.06], facecolor="#f8fafc")
+    ax_style = fig.add_axes([control_x, 0.15, control_w, 0.19], facecolor="#f8fafc")
     ax_q = fig.add_axes([control_x, 0.11, control_w, 0.03], facecolor="#f8fafc")
 
-    ax_period = fig.add_axes([panel_x, 0.78, panel_w, 0.18], facecolor="#f8fafc")
-    ax_influence = fig.add_axes([panel_x, 0.44, panel_w, 0.32], facecolor="#f8fafc")
-    ax_exclude = fig.add_axes([panel_x, 0.10, panel_w, 0.30], facecolor="#f8fafc")
-
-    n_p = max(1, len(periods))
-    sub_h = 0.23
-    sub_gap = 0.03
-    top = 0.94
-    plot_axes: List = []
-    for i in range(n_p):
-        y = top - (i + 1) * sub_h - i * sub_gap
-        plot_axes.append(fig.add_axes([plot_x, y, plot_w, sub_h], facecolor="#ffffff"))
+    n_periods = max(1, len(periods))
+    # Slightly compress each period panel so 3-row layout fits smaller screens.
+    top, bottom, v_gap = 0.93, 0.17, 0.03
+    plot_h = (top - bottom - v_gap * (n_periods - 1)) / n_periods
+    plot_axes = []
+    for i in range(n_periods):
+        y = top - (i + 1) * plot_h - i * v_gap
+        plot_axes.append(fig.add_axes([plot_x, y, plot_w, plot_h], facecolor="#ffffff"))
 
     metric_labels = list(METRICS.keys())
     metric_active = metric_labels.index(state["metric"]) if state["metric"] in metric_labels else 0
     metric_radio = RadioButtons(ax_metric, metric_labels, active=metric_active)
-    group_labels = ["region", "province", "place", "style"]
-    group_active = group_labels.index(state["group_by"])
-    group_radio = RadioButtons(ax_group, group_labels, active=group_active)
     toggle_check = CheckButtons(ax_toggles, ["仅共同字"], [state["common_chars"]])
     region_check = CheckButtons(ax_region, regions, [(r in selected_regions_default) if selected_regions_default else True for r in regions])
-    style_check = CheckButtons(ax_style, style_tags, [(s in selected_styles_default) if selected_styles_default else True for s in style_tags])
+    style_scope_radio = RadioButtons(ax_style_scope, regions, active=0)
+    style_check = CheckButtons(ax_style, style_tags, [True] * len(style_tags))
     q_slider = Slider(ax_q, "Q", 0.0, 0.25, valinit=state["q"], valstep=0.01)
-    period_radio = RadioButtons(ax_period, [p.label for p in periods], active=0 if periods else None)
 
-    exclude_cb = None
-    exclude_keys: List[str] = []
+    ax_style_scope.set_title("样式编辑地区", fontsize=9, color="#111827")
 
     def selected_labels(labels: List[str], status: List[bool]) -> set[str]:
         return {l for l, on in zip(labels, status) if on}
 
+    def style_set_for_row(region_value: str) -> set[str]:
+        return set(state["style_by_region"].get(region_value, set()))
+
+    def sync_style_check_from_state() -> None:
+        target = set(state["style_by_region"].get(state["style_target_region"], set()))
+        current_status = list(style_check.get_status())
+        state["bulk_update"] = True
+        for idx, tag in enumerate(style_tags):
+            want = tag in target
+            if current_status[idx] != want:
+                style_check.set_active(idx)
+                current_status[idx] = want
+        state["bulk_update"] = False
+
     def current_filtered_rows() -> List[Dict]:
         region_sel = selected_labels(regions, list(region_check.get_status()))
-        style_sel = selected_labels(style_tags, list(style_check.get_status()))
         out: List[Dict] = []
         for r in rows:
             if r.get("year") is None:
                 continue
-            if region_sel and (r.get("region") or "（空）") not in region_sel:
+            region_value = (r.get("region") or "（空）")
+            if region_sel and region_value not in region_sel:
                 continue
             tags = set(r.get("style_tags") or ["（空）"])
-            if style_sel and tags.isdisjoint(style_sel):
+            style_sel_local = style_set_for_row(region_value)
+            if (not style_sel_local) or tags.isdisjoint(style_sel_local):
                 continue
             out.append(r)
         return out
 
-    def on_toggle_exclude(book_id: str) -> None:
-        if book_id in state["exclude_books"]:
-            state["exclude_books"].remove(book_id)
-        else:
-            state["exclude_books"].add(book_id)
+    def on_style_changed(_label: str) -> None:
+        if state.get("bulk_update"):
+            return
+        selected = selected_labels(style_tags, list(style_check.get_status()))
+        state["style_by_region"][state["style_target_region"]] = set(selected)
         update()
 
+    def on_style_scope_change(label: str) -> None:
+        state["style_target_region"] = label
+        sync_style_check_from_state()
+        fig.canvas.draw_idle()
+
     def update() -> None:
-        nonlocal exclude_cb, exclude_keys
-        state["metric"] = metric_labels[metric_radio.value_selected]
-        state["group_by"] = group_radio.value_selected
+        state["metric"] = metric_radio.value_selected
         st = toggle_check.get_status()
         state["common_chars"] = bool(st[0])
         state["q"] = float(q_slider.val)
-        if periods:
-            state["focus_period_idx"] = [p.label for p in periods].index(period_radio.value_selected)
-
-        filt = current_filtered_rows()
-        payloads = compute_period_payloads(
-            candidate_rows=filt,
-            char_means_by_book=char_means_by_book,
-            periods=periods,
-            metric=state["metric"],
-            group_by=state["group_by"],
-            q=float(state["q"]),
-            common_chars_enabled=bool(state["common_chars"]),
-            exclude_books=state["exclude_books"],
-        )
+        q = max(0.0, min(0.25, float(state["q"])))
 
         for ax in plot_axes:
             ax.clear()
-        for i, pres in enumerate(payloads):
-            ax = plot_axes[i]
-            groups = [g["group"] for g in pres["groups"] if int(g.get("n_books", 0)) > 0]
-            group_data = []
-            for g in groups:
-                vals = [
-                    float(b["mu"])
-                    for b in pres["books"]
-                    if b.get("group") == g and not bool(b.get("excluded")) and math.isfinite(float(b.get("mu", float("nan"))))
-                ]
-                group_data.append(vals)
-            if groups and any(len(v) > 0 for v in group_data):
-                ax.boxplot(group_data, labels=groups, showfliers=True)
+        filt = current_filtered_rows()
+        if not periods:
+            plot_axes[0].text(0.5, 0.5, "无可用数据", transform=plot_axes[0].transAxes, ha="center", va="center", color="#111827")
+            fig.canvas.draw_idle()
+            return
+
+        active_region_order = [region for region, on in zip(regions, region_check.get_status()) if on]
+        cmap = plt.get_cmap("tab10")
+        region_color_map = {reg: cmap(i % 10) for i, reg in enumerate(active_region_order)}
+        for idx, (ax, period) in enumerate(zip(plot_axes, periods)):
+            books_data, common_count = collect_books_for_period(
+                rows=filt,
+                char_means_by_book=char_means_by_book,
+                period=period,
+                metric=state["metric"],
+                q=q,
+                common_chars_enabled=bool(state.get("common_chars")),
+            )
+            if not books_data:
+                ax.text(0.5, 0.5, f"{period.label}: 无可用数据", transform=ax.transAxes, ha="center", va="center", color="#111827")
+                ax.set_ylabel(METRICS.get(state["metric"], state["metric"]))
             else:
-                ax.text(0.5, 0.5, "无可用数据", transform=ax.transAxes, ha="center", va="center", color="#111827")
-            cc = pres.get("common_chars_count")
-            cc_text = f" | common={cc}" if cc is not None else ""
-            ax.set_title(f"{pres['label']} {pres['start']}-{pres['end']}{'含' if pres['end_inclusive'] else ''} | n={pres['n_books_used']}/{pres['n_books']}{cc_text}")
-            ax.set_ylabel(METRICS.get(state["metric"], state["metric"]))
-            ax.tick_params(axis="x", labelrotation=45)
-            ax.grid(True, alpha=0.20)
-
-        ax_influence.clear()
-        ax_influence.axis("off")
-        ax_influence.set_title("影响书籍（焦点时期）", fontsize=9)
-        ax_exclude.clear()
-        ax_exclude.axis("off")
-        ax_exclude.set_title("剔除书籍（统计排除）", fontsize=9)
-        if payloads:
-            focus = payloads[int(state["focus_period_idx"])]
-            lines: List[str] = []
-            inf_u = focus.get("influence", {}).get("u", [])
-            inf_a = focus.get("influence", {}).get("a", [])
-            lines.append("u:")
-            for r in inf_u[:8]:
-                lines.append(f"{r.get('book')} {float(r.get('delta', float('nan'))):+.3f}")
-            if inf_a:
-                lines.append("")
-                lines.append("a:")
-                for r in inf_a[:8]:
-                    lines.append(f"{r.get('book')} {float(r.get('delta', float('nan'))):+.3f}")
-            ax_influence.text(0.0, 1.0, "\n".join(lines) if lines else "NA", ha="left", va="top", fontsize=8, color="#111827")
-
-            keys = []
-            for r in inf_u[:8]:
-                b = r.get("book") or ""
-                if b:
-                    keys.append(b)
-            for r in inf_a[:8]:
-                b = r.get("book") or ""
-                if b and b not in keys:
-                    keys.append(b)
-            exclude_keys = keys
-            if exclude_keys:
-                status = [k in state["exclude_books"] for k in exclude_keys]
-                exclude_cb = CheckButtons(ax_exclude, exclude_keys, status)
-                for lbl in exclude_cb.labels:
-                    lbl.set_fontsize(8)
-                    lbl.set_color("#111827")
-                exclude_cb.on_clicked(on_toggle_exclude)
-            else:
-                ax_exclude.text(0.0, 1.0, "无可剔除候选", ha="left", va="top", fontsize=8, color="#111827")
-
+                draw_clustered_books_plot(
+                    ax=ax,
+                    books_data=books_data,
+                    region_order=active_region_order,
+                    metric_label=METRICS.get(state["metric"], state["metric"]),
+                    title=f"{period.label} {period.start}-{period.end}{'含' if period.end_inclusive else ''} | n={len(books_data)}",
+                    q=q,
+                    common_count=common_count,
+                    annotate_mu_sigma=True,
+                    region_color_map=region_color_map,
+                    show_xlabels=(idx == len(periods) - 1),
+                )
         fig.canvas.draw_idle()
 
     metric_radio.on_clicked(lambda _label: update())
-    group_radio.on_clicked(lambda _label: update())
     toggle_check.on_clicked(lambda _label: update())
     region_check.on_clicked(lambda _label: update())
-    style_check.on_clicked(lambda _label: update())
+    style_scope_radio.on_clicked(on_style_scope_change)
+    style_check.on_clicked(on_style_changed)
     q_slider.on_changed(lambda _val: update())
-    period_radio.on_clicked(lambda _label: update())
 
+    sync_style_check_from_state()
     update()
     plt.show()
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Space explorer (periods + group comparisons).")
+    ap = argparse.ArgumentParser(
+        description="Space explorer（当前固定按 region 分组；无图环境请使用 --no-gui）."
+    )
     ap.add_argument("--bundle", type=str, default="data/analysis", help="Bundle root folder (default: data/analysis)")
     ap.add_argument("--metadata", type=str, default="data/metadata/books_metadata.csv", help="Books metadata CSV")
     ap.add_argument("--threshold", type=int, default=160, help="Black threshold (default: 160)")
@@ -795,16 +1124,18 @@ def main() -> None:
     ap.add_argument("--periods", type=str, default="1127-1162,1162-1208,1208-1273", help="Year periods")
     ap.add_argument("--regions", type=str, default="", help="Filter regions (comma-separated)")
     ap.add_argument("--styles", type=str, default="", help="Filter style tags (comma-separated)")
+    ap.add_argument("--styles-by-region", type=str, default="", help="Per-region styles, e.g. 两浙地区:近欧型|扁方欧体;福建地区:近欧型")
     ap.add_argument("--search", type=str, default="", help="Filter by book id/title substring")
-    ap.add_argument("--group-by", type=str, default="region", choices=["region", "province", "place", "style"], help="Group key")
+    ap.add_argument("--exclude-books", type=str, default="", help="Exclude books (comma-separated)")
+    ap.add_argument("--focus-period", type=str, default="", help="Focus period for CLI/plot, e.g. 1 or 早期")
+    ap.add_argument("--all-periods", action="store_true", help="CLI: output all periods (not only focus period)")
     ap.add_argument("--common-chars", action="store_true", help="Use common chars intersection within each period")
     ap.add_argument("--format", type=str, default="json", choices=["json", "csv", "text"], help="Output format")
     ap.add_argument("--out", type=str, default="", help="Write output to file (default: stdout)")
-    ap.add_argument("--plot", action="store_true", help="Show matplotlib plot (boxplot by group in each period)")
+    ap.add_argument("--plot", action="store_true", help="Show matplotlib plot (single focused period, clustered by region)")
     ap.add_argument("--save-fig", type=str, default="", help="Save figure to file (PNG)")
-    ap.add_argument("--gui", action="store_true", help="Interactive GUI mode (MVP, compatibility alias)")
-    ap.add_argument("--no-gui", action="store_true", help="Run CLI mode only (default is GUI)")
-    ap.add_argument("--exclude-books", type=str, default="", help="Exclude books from stats (comma-separated)")
+    ap.add_argument("--gui", action="store_true", help="Interactive GUI mode (compatibility alias; default behavior)")
+    ap.add_argument("--no-gui", action="store_true", help="Run CLI mode only (recommended for headless/CI)")
     args = ap.parse_args()
 
     bundle_root = PROJECT_ROOT / args.bundle
@@ -816,6 +1147,7 @@ def main() -> None:
     selected_regions = set(parse_list_arg(args.regions))
     selected_styles = set(parse_list_arg(args.styles))
     exclude_books = set(parse_list_arg(args.exclude_books))
+    styles_by_region_override = parse_styles_by_region(args.styles_by_region)
 
     # Candidate books (by meta filters only; period filter happens later)
     candidate: List[Dict] = []
@@ -825,15 +1157,27 @@ def main() -> None:
             continue
         if selected_regions and (r.get("region") or "（空）") not in selected_regions:
             continue
-        if selected_styles:
-            tags = set(r.get("style_tags") or ["（空）"])
-            if tags.isdisjoint(selected_styles):
-                continue
         if args.search:
             s = (r.get("book", "") + " " + r.get("title", "")).lower()
             if args.search.lower() not in s:
                 continue
+        if (r.get("book") or "") in exclude_books:
+            continue
         candidate.append(r)
+
+    all_regions = sorted({(r.get("region") or "（空）") for r in candidate}) or ["（空）"]
+    all_style_tags = sorted({tag for r in candidate for tag in (r.get("style_tags") or ["（空）"])}) or ["（空）"]
+    styles_by_region = resolve_styles_by_region(
+        regions=all_regions,
+        style_tags=all_style_tags,
+        selected_styles_default=selected_styles,
+        styles_by_region_override=styles_by_region_override,
+    )
+    filtered_rows = filter_rows_by_region_styles(
+        rows=candidate,
+        selected_regions=selected_regions,
+        styles_by_region=styles_by_region,
+    )
 
     if (not args.no_gui) or args.gui:
         launch_gui(
@@ -841,70 +1185,193 @@ def main() -> None:
             char_means_by_book=char_means_by_book,
             periods=periods,
             metric_default=args.metric,
-            group_by_default=args.group_by,
             q_default=q,
             common_chars_default=bool(args.common_chars),
             selected_regions_default=selected_regions,
             selected_styles_default=selected_styles,
-            exclude_books_default=exclude_books,
+            styles_by_region_default=styles_by_region_override,
         )
         return
 
-    period_payloads = compute_period_payloads(
-        candidate_rows=candidate,
+    if args.all_periods:
+        results = compute_period_payloads(
+            candidate_rows=filtered_rows,
+            char_means_by_book=char_means_by_book,
+            periods=periods,
+            metric=args.metric,
+            q=q,
+            common_chars_enabled=bool(args.common_chars),
+        )
+        payload = {
+            "metric": args.metric,
+            "metric_label": METRICS.get(args.metric, args.metric),
+            "q": q,
+            "group_by": "region",
+            "filters": {
+                "regions": sorted(selected_regions),
+                "styles": sorted(selected_styles),
+                "styles_by_region": {k: sorted(v) for k, v in styles_by_region.items()},
+                "exclude_books": sorted(exclude_books),
+                "search": args.search,
+                "common_chars": bool(args.common_chars),
+                "common_order": "common-first" if args.common_chars else None,
+            },
+            "periods": [
+                {"label": p.label, "start": p.start, "end": p.end, "end_inclusive": p.end_inclusive}
+                for p in periods
+            ],
+            "results": results,
+        }
+        if args.plot or args.save_fig:
+            fig, axes = plt.subplots(len(periods), 1, figsize=(14.5, 3.6 * max(1, len(periods))))
+            if not isinstance(axes, np.ndarray):
+                axes = np.asarray([axes])
+            region_order = [r for r in all_regions if (not selected_regions or r in selected_regions)]
+            cmap = plt.get_cmap("tab10")
+            region_color_map = {reg: cmap(i % 10) for i, reg in enumerate(region_order)}
+            for i, (ax, p) in enumerate(zip(axes, periods)):
+                books_data, common_count = collect_books_for_period(
+                    rows=filtered_rows,
+                    char_means_by_book=char_means_by_book,
+                    period=p,
+                    metric=args.metric,
+                    q=q,
+                    common_chars_enabled=bool(args.common_chars),
+                )
+                draw_clustered_books_plot(
+                    ax=ax,
+                    books_data=books_data,
+                    region_order=region_order,
+                    metric_label=METRICS.get(args.metric, args.metric),
+                    title=f"{p.label} {p.start}-{p.end}{'含' if p.end_inclusive else ''} | n={len(books_data)}",
+                    q=q,
+                    common_count=common_count,
+                    annotate_mu_sigma=False,
+                    region_color_map=region_color_map,
+                    show_xlabels=(i == len(periods) - 1),
+                )
+            fig.tight_layout()
+            if args.save_fig:
+                Path(args.save_fig).parent.mkdir(parents=True, exist_ok=True)
+                fig.savefig(args.save_fig, dpi=160)
+            if args.plot:
+                plt.show()
+
+        if args.format == "json":
+            output = json.dumps(_json_safe(payload), ensure_ascii=False, indent=2, allow_nan=False)
+        elif args.format == "csv":
+            lines = ["period,group,n_books,mu_mean,mu_median,mu_std,a_mean,a_median,a_std"]
+            for pres in results:
+                for g in pres["groups"]:
+                    lines.append(
+                        "{period},{group},{n},{mu_mean},{mu_median},{mu_std},{a_mean},{a_median},{a_std}".format(
+                            period=pres["label"],
+                            group=g["group"],
+                            n=g["n_books"],
+                            mu_mean=_fmt_csv_num(g["mu_mean"]),
+                            mu_median=_fmt_csv_num(g["mu_median"]),
+                            mu_std=_fmt_csv_num(g["mu_std"]),
+                            a_mean=_fmt_csv_num(g["a_mean"]),
+                            a_median=_fmt_csv_num(g["a_median"]),
+                            a_std=_fmt_csv_num(g["a_std"]),
+                        )
+                    )
+            output = "\n".join(lines)
+        else:
+            lines = [
+                f"metric={args.metric} q={q:.2f} group_by=region common_chars={bool(args.common_chars)} order=common-first",
+                f"periods={args.periods}",
+                "",
+            ]
+            for pres in results:
+                cc = pres.get("common_chars_count")
+                cc_hint = f" common_chars={cc}" if cc is not None else ""
+                lines.append(f"[{pres['label']}] {pres['start']}~{pres['end']}{' (inclusive)' if pres['end_inclusive'] else ''} n_books={pres['n_books']}{cc_hint}")
+                for g in pres["groups"]:
+                    lines.append(
+                        "  {group}: n={n} mu_med={mu_m} mu_mean={mu_mean}".format(
+                            group=g["group"],
+                            n=g["n_books"],
+                            mu_m=_fmt_num(g["mu_median"], digits=4, empty="-"),
+                            mu_mean=_fmt_num(g["mu_mean"], digits=4, empty="-"),
+                        )
+                    )
+                lines.append("")
+            output = "\n".join(lines)
+        if args.out:
+            Path(args.out).write_text(output, encoding="utf-8")
+        else:
+            print(output)
+        return
+
+    focus_idx = resolve_focus_period(periods, args.focus_period)
+    focus_period = periods[focus_idx]
+    books_data, common_count = collect_books_for_period(
+        rows=filtered_rows,
         char_means_by_book=char_means_by_book,
-        periods=periods,
+        period=focus_period,
         metric=args.metric,
-        group_by=args.group_by,
         q=q,
         common_chars_enabled=bool(args.common_chars),
-        exclude_books=exclude_books,
     )
+    region_order = [r for r in all_regions if (not selected_regions or r in selected_regions)]
+    books_data, positions, region_spans = cluster_books_by_region(books_data, region_order)
+    books_out: List[Dict] = []
+    for b, x in zip(books_data, positions):
+        row = dict(b)
+        row["plot_x"] = float(x)
+        books_out.append(row)
 
     payload = {
         "metric": args.metric,
         "metric_label": METRICS.get(args.metric, args.metric),
         "q": q,
-        "group_by": args.group_by,
+        "focus_period": {
+            "index": focus_idx + 1,
+            "label": focus_period.label,
+            "start": focus_period.start,
+            "end": focus_period.end,
+            "end_inclusive": focus_period.end_inclusive,
+        },
+        "group_by": "region",
         "filters": {
             "regions": sorted(selected_regions),
             "styles": sorted(selected_styles),
-            "search": args.search,
+            "styles_by_region": {k: sorted(v) for k, v in styles_by_region.items()},
             "exclude_books": sorted(exclude_books),
+            "search": args.search,
             "common_chars": bool(args.common_chars),
             "common_order": "common-first" if args.common_chars else None,
         },
-        "periods": [
-            {"label": p.label, "start": p.start, "end": p.end, "end_inclusive": p.end_inclusive}
-            for p in periods
-        ],
-        "results": period_payloads,
+        "summary": {
+            "n_books": len(books_data),
+            "common_chars_count": common_count,
+            "regions": sorted(region_spans.keys()),
+            "region_spans": {k: [float(vv) for vv in vals] for k, vals in region_spans.items()},
+        },
+        "books": books_out,
     }
 
     # Plot (optional)
     if args.plot or args.save_fig:
-        fig, axes = plt.subplots(len(period_payloads), 1, figsize=(12.5, 3.2 * max(1, len(period_payloads))))
-        if not isinstance(axes, np.ndarray):
-            axes = np.asarray([axes])
-        for ax, pres in zip(axes, period_payloads):
-            groups = [g["group"] for g in pres["groups"]]
-            data = []
-            for g in groups:
-                mus = [
-                    float(b["mu"])
-                    for b in pres["books"]
-                    if b["group"] == g and not bool(b.get("excluded")) and math.isfinite(float(b["mu"]))
-                ]
-                data.append(mus)
-            if groups and any(len(v) > 0 for v in data):
-                ax.boxplot(data, labels=groups, showfliers=True)
-            else:
-                ax.text(0.5, 0.5, "无可用数据", transform=ax.transAxes, ha="center", va="center", color="#111827")
-            ax.set_title(
-                f"{pres['label']} {pres['start']}~{pres['end']}{'（含）' if pres['end_inclusive'] else ''} | n={pres['n_books_used']}/{pres['n_books']}"
+        fig, ax = plt.subplots(1, 1, figsize=(14.0, 7.8))
+        if books_data:
+            cmap = plt.get_cmap("tab10")
+            region_color_map = {reg: cmap(i % 10) for i, reg in enumerate(region_order)}
+            draw_clustered_books_plot(
+                ax=ax,
+                books_data=books_data,
+                region_order=region_order,
+                metric_label=METRICS.get(args.metric, args.metric),
+                title=f"{focus_period.label} {focus_period.start}-{focus_period.end}{'含' if focus_period.end_inclusive else ''} | n={len(books_data)}",
+                q=q,
+                common_count=common_count,
+                annotate_mu_sigma=False,
+                region_color_map=region_color_map,
             )
-            ax.set_ylabel(METRICS.get(args.metric, args.metric))
-            ax.tick_params(axis="x", labelrotation=45)
+        else:
+            ax.text(0.5, 0.5, "无可用数据", transform=ax.transAxes, ha="center", va="center", color="#111827")
+            ax.set_title(f"{focus_period.label} {focus_period.start}-{focus_period.end}{'含' if focus_period.end_inclusive else ''}")
         fig.tight_layout()
         if args.save_fig:
             Path(args.save_fig).parent.mkdir(parents=True, exist_ok=True)
@@ -914,46 +1381,45 @@ def main() -> None:
 
     output = ""
     if args.format == "json":
-        output = json.dumps(payload, ensure_ascii=False, indent=2)
+        output = json.dumps(_json_safe(payload), ensure_ascii=False, indent=2, allow_nan=False)
     elif args.format == "csv":
-        # period/group summaries only
-        lines = ["period,group,n_books,mu_mean,mu_median,mu_std,a_mean,a_median,a_std"]
-        for pres in period_payloads:
-            for g in pres["groups"]:
-                lines.append(
-                    "{period},{group},{n},{mu_mean},{mu_median},{mu_std},{a_mean},{a_median},{a_std}".format(
-                        period=pres["label"],
-                        group=g["group"],
-                        n=g["n_books"],
-                        mu_mean=g["mu_mean"],
-                        mu_median=g["mu_median"],
-                        mu_std=g["mu_std"],
-                        a_mean=g["a_mean"],
-                        a_median=g["a_median"],
-                        a_std=g["a_std"],
-                    )
+        lines = ["book,title,year,order,region,plot_x,mu,a,n_values"]
+        for b in books_out:
+            lines.append(
+                "{book},{title},{year},{order},{region},{plot_x},{mu},{a},{n_values}".format(
+                    book=b.get("book", ""),
+                    title=b.get("title", ""),
+                    year=b.get("year", ""),
+                    order=b.get("order", ""),
+                    region=b.get("region", ""),
+                    plot_x=_fmt_csv_num(b.get("plot_x")),
+                    mu=_fmt_csv_num(b.get("mu")),
+                    a=_fmt_csv_num(b.get("a")),
+                    n_values=b.get("n_values", ""),
                 )
+            )
         output = "\n".join(lines)
     else:
         lines = [
-            f"metric={args.metric} q={q:.2f} group_by={args.group_by} common_chars={bool(args.common_chars)} order=common-first",
+            f"metric={args.metric} q={q:.2f} group_by=region common_chars={bool(args.common_chars)} order=common-first",
             f"periods={args.periods}",
+            f"focus={focus_period.label}({focus_idx+1})",
             "",
         ]
-        for pres in period_payloads:
-            cc = pres.get("common_chars_count")
-            cc_hint = f" common_chars={cc}" if cc is not None else ""
-            lines.append(f"[{pres['label']}] {pres['start']}~{pres['end']}{' (inclusive)' if pres['end_inclusive'] else ''} n_books={pres['n_books']}{cc_hint}")
-            for g in pres["groups"]:
-                lines.append(
-                    "  {group}: n={n} mu_med={mu_m:.4f} mu_mean={mu_mean:.4f}".format(
-                        group=g["group"],
-                        n=g["n_books"],
-                        mu_m=g["mu_median"] if math.isfinite(float(g["mu_median"])) else float("nan"),
-                        mu_mean=g["mu_mean"] if math.isfinite(float(g["mu_mean"])) else float("nan"),
-                    )
+        cc_hint = f" common_chars={common_count}" if common_count is not None else ""
+        lines.append(f"[{focus_period.label}] {focus_period.start}~{focus_period.end}{' (inclusive)' if focus_period.end_inclusive else ''} n_books={len(books_data)}{cc_hint}")
+        for b in books_data:
+            a_text = _fmt_num(b.get("a"), digits=4, empty="-")
+            lines.append(
+                "  {book} ({region}) mu={mu} a={a} n={n}".format(
+                    book=b.get("book", ""),
+                    region=b.get("region", ""),
+                    mu=_fmt_num(b.get("mu"), digits=4, empty="-"),
+                    a=a_text,
+                    n=int(b.get("n_values", 0)),
                 )
-            lines.append("")
+            )
+        lines.append("")
         output = "\n".join(lines)
 
     if args.out:
