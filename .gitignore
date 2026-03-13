@@ -32,5 +32,6 @@ data/*
 # 临时文件
 *.log
 *.tmp
-# 测试脚本可保留，仅忽略测试输出
-test/ocrmac_chain/
+
+
+src/paper/figures
