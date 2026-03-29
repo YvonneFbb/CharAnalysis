@@ -1,4 +1,4 @@
-# CharAnalysis（结构与功能备忘）
+# CharAnalysis
 
 本 README 仅记录当前代码结构与功能分布，便于维护时快速定位。
 
