@@ -14,10 +14,10 @@ This is intentionally simpler than time_explorer_mpl.py:
 from __future__ import annotations
 
 import argparse
-import csv
 import json
 import hashlib
 import math
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -25,10 +25,24 @@ from typing import Dict, List, Optional, Tuple
 import matplotlib.pyplot as plt
 from matplotlib.widgets import RadioButtons, CheckButtons, Slider
 import numpy as np
-from PIL import Image
-
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.analysis.dataset import (
+    BookMeta,
+    load_manifest_books,
+    make_book_row,
+    read_books_metadata,
+    split_style_tags,
+)
+from src.analysis.image_metrics import (
+    center_crop_fixed_box,
+    compute_book_metrics,
+    percentile,
+)
+
 
 METRICS: Dict[str, str] = {
     "aspect_ratio": "长宽比（高/宽）",
@@ -58,123 +72,6 @@ class Period:
         if self.end_inclusive:
             return year <= self.end
         return year < self.end
-
-
-@dataclass(frozen=True)
-class BookMeta:
-    book_id: str
-    title: str
-    year: Optional[int]
-    number: Optional[int]
-    region: str
-    province: str
-    place: str
-    style: str
-    style_tags: List[str]
-
-
-def split_style_tags(style_raw: str) -> List[str]:
-    if not style_raw:
-        return ["（空）"]
-    cleaned = (
-        style_raw.replace("，", ",")
-        .replace("、", ",")
-        .replace("/", ",")
-        .replace(";", ",")
-        .replace("；", ",")
-    )
-    parts = [p.strip() for p in cleaned.split(",") if p.strip()]
-    return parts or ["（空）"]
-
-
-def read_books_metadata(path: Path) -> Dict[str, BookMeta]:
-    out: Dict[str, BookMeta] = {}
-    if not path.exists():
-        return out
-    with open(path, "r", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            book_id = (row.get("BookID") or "").strip()
-            if not book_id:
-                continue
-            title = (row.get("宋刻本") or "").strip()
-            year_raw = (row.get("年份") or "").strip()
-            num_raw = (row.get("Number") or "").strip()
-            year: Optional[int]
-            try:
-                year = int(year_raw) if year_raw else None
-            except Exception:
-                year = None
-            number: Optional[int]
-            try:
-                number = int(num_raw) if num_raw else None
-            except Exception:
-                number = None
-            style_raw = (row.get("刻体倾向") or "").strip()
-            out[book_id] = BookMeta(
-                book_id=book_id,
-                title=title,
-                year=year,
-                number=number,
-                region=(row.get("区域划分") or "").strip(),
-                province=(row.get("省份") or "").strip(),
-                place=(row.get("地点") or "").strip(),
-                style=style_raw,
-                style_tags=split_style_tags(style_raw),
-            )
-    return out
-
-
-def load_manifest_books(bundle_root: Path) -> List[str]:
-    manifest_path = bundle_root / "manifest.json"
-    if not manifest_path.exists():
-        raise SystemExit(f"找不到 bundle：{manifest_path}")
-    with open(manifest_path, "r", encoding="utf-8") as f:
-        manifest = json.load(f)
-    books = sorted((manifest.get("books") or {}).keys())
-    if not books:
-        raise SystemExit("bundle 中没有任何 books。")
-    return books
-
-
-def iter_book_entries(bundle_root: Path, book: str) -> List[Dict]:
-    entries_path = bundle_root / "books" / book / "entries.json"
-    with open(entries_path, "r", encoding="utf-8") as f:
-        payload = json.load(f)
-    return payload.get("entries") or []
-
-
-def percentile(values: List[int], p: float) -> int:
-    if not values:
-        return 0
-    values_sorted = sorted(values)
-    k = max(0, math.ceil((p / 100.0) * len(values_sorted)) - 1)
-    return int(values_sorted[k])
-
-
-def center_crop_fixed_box(gray: Image.Image, Lb: int) -> Image.Image:
-    if Lb <= 0:
-        return gray.convert("L")
-    img = gray.convert("L")
-    w, h = img.size
-    cx, cy = w // 2, h // 2
-    half = Lb // 2
-    x0 = cx - half
-    y0 = cy - half
-    x1 = x0 + Lb
-    y1 = y0 + Lb
-
-    out = Image.new("L", (Lb, Lb), 255)
-    sx0 = max(0, x0)
-    sy0 = max(0, y0)
-    sx1 = min(w, x1)
-    sy1 = min(h, y1)
-    if sx0 < sx1 and sy0 < sy1:
-        sub = img.crop((sx0, sy0, sx1, sy1))
-        dx = sx0 - x0
-        dy = sy0 - y0
-        out.paste(sub, (dx, dy))
-    return out
 
 
 def parse_list_arg(value: str) -> List[str]:
@@ -326,121 +223,10 @@ def build_dataset(
     Lb_by_book: Dict[str, int] = {}
 
     for book in books:
-        entries = iter_book_entries(bundle_root, book)
-
-        instance_sizes: List[Tuple[str, int, int, Path]] = []
-        long_sides: List[int] = []
-        for e in entries:
-            rel = e.get("image")
-            if not rel:
-                continue
-            img_path = bundle_root / rel
-            if not img_path.exists():
-                continue
-            try:
-                with Image.open(img_path) as im:
-                    w, h = im.size
-            except Exception:
-                continue
-            char = e.get("char") or ""
-            instance_sizes.append((char, int(w), int(h), img_path))
-            long_sides.append(max(int(w), int(h)))
-
-        if not instance_sizes or not long_sides:
-            metrics = {
-                "instances": 0,
-                "chars": 0,
-                "Lb": 0,
-                "clipping_rate": float("nan"),
-                "aspect_ratio": float("nan"),
-                "face_ratio": float("nan"),
-                "ink_coverage": float("nan"),
-            }
-            char_means_by_book[book] = {}
-            Lb_by_book[book] = 0
-        else:
-            Lb = int(math.ceil(percentile(long_sides, 90) * 1.05))
-            Lb_by_book[book] = Lb
-            per_char: Dict[str, List[Tuple[float, float, float]]] = {}
-            clipped = 0
-            for char, w, h, img_path in instance_sizes:
-                if not char:
-                    continue
-                ar = float(h) / float(max(1, w))
-                face_ratio = float((w + h) / 2.0) / float(max(1, Lb))
-                if w > Lb or h > Lb:
-                    clipped += 1
-
-                ink = float("nan")
-                try:
-                    with Image.open(img_path) as im:
-                        gray = im.convert("L")
-                        fixed = center_crop_fixed_box(gray, Lb)
-                        arr = np.asarray(fixed, dtype=np.uint8)
-                        black = int(np.sum(arr < np.uint8(threshold)))
-                        white = int(Lb * Lb - black)
-                        if white > 0:
-                            ink = float(black) / float(white)
-                except Exception:
-                    pass
-
-                per_char.setdefault(char, []).append((ar, face_ratio, ink))
-
-            char_means_map: Dict[str, Dict[str, float]] = {}
-            char_means: List[Tuple[float, float, float]] = []
-            for char, items in per_char.items():
-                ars = [v[0] for v in items if math.isfinite(v[0])]
-                frs = [v[1] for v in items if math.isfinite(v[1])]
-                inks = [v[2] for v in items if math.isfinite(v[2])]
-                if not ars or not frs:
-                    continue
-                ar_mean = float(np.mean(np.asarray(ars, dtype=float)))
-                fr_mean = float(np.mean(np.asarray(frs, dtype=float)))
-                ic_mean = float(np.mean(np.asarray(inks, dtype=float))) if inks else float("nan")
-                char_means.append((ar_mean, fr_mean, ic_mean))
-                char_means_map[char] = {
-                    "aspect_ratio": ar_mean,
-                    "face_ratio": fr_mean,
-                    "ink_coverage": ic_mean,
-                }
-            char_means_by_book[book] = char_means_map
-
-            def mean_or_nan(values: List[float]) -> float:
-                if not values:
-                    return float("nan")
-                return float(np.mean(np.asarray(values, dtype=float)))
-
-            aspect_vals = [x[0] for x in char_means if math.isfinite(x[0])]
-            face_vals = [x[1] for x in char_means if math.isfinite(x[1])]
-            ink_vals = [x[2] for x in char_means if math.isfinite(x[2])]
-
-            metrics = {
-                "instances": len(instance_sizes),
-                "chars": len(char_means),
-                "Lb": Lb,
-                "clipping_rate": float(clipped) / float(max(1, len(instance_sizes))),
-                "aspect_ratio": mean_or_nan(aspect_vals),
-                "face_ratio": mean_or_nan(face_vals),
-                "ink_coverage": mean_or_nan([v for v in ink_vals if math.isfinite(v)]),
-            }
-
-        meta = meta_map.get(book)
-        year = meta.year if meta else None
-        number = meta.number if meta else None
-        rows.append(
-            {
-                "book": book,
-                "title": meta.title if meta else "",
-                "year": year,
-                "order": number,
-                "region": meta.region if meta else "",
-                "province": meta.province if meta else "",
-                "place": meta.place if meta else "",
-                "style": meta.style if meta else "",
-                "style_tags": meta.style_tags if meta else ["（空）"],
-                **metrics,
-            }
-        )
+        metrics, _, char_means = compute_book_metrics(bundle_root, book, threshold=threshold)
+        char_means_by_book[book] = char_means
+        Lb_by_book[book] = int(metrics.get("Lb") or 0)
+        rows.append(make_book_row(book, meta_map, metrics))
 
     return rows, char_means_by_book, Lb_by_book
 

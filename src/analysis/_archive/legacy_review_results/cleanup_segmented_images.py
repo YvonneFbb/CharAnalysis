@@ -2,7 +2,13 @@
 # -*- coding: utf-8 -*-
 
 """
-清理 data/results/manual/segmented 下不再需要的切割图片。
+Legacy script for cleaning segmented images under the old review_results.json
+layout.
+
+当前项目真源已改为 data/results/manual/review_books/*.json。本脚本仅作历史归档，
+不要直接用于当前数据。
+
+原用途：清理 data/results/manual/segmented 下不再需要的切割图片。
 
 规则（默认）：
   - 仅保留 review_results.json 中 segments 里 status == "confirmed" 且有 segmented_path 的图片

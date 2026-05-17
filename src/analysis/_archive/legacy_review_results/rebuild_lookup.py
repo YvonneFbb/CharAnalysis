@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""同步 review_results.json 中的 lookup 字段，并清理二轮残留记录。
+"""Legacy script for syncing lookup fields in the old review_results.json layout.
+
+当前项目真源已改为 data/results/manual/review_books/*.json。本脚本仅作历史归档，
+不要直接用于当前数据。
+
+原用途：同步 review_results.json 中的 lookup 字段，并清理二轮残留记录。
 
 运行后会：
 1. 重新根据 matched_by_book.json 里实例索引构建 lookup；

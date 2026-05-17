@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-将 review_results.json 拆分为按书籍存储的分片文件。
+"""Legacy script for splitting old review_results.json into book shards.
+
+当前项目真源已改为 data/results/manual/review_books/*.json。本脚本仅作历史归档，
+不要直接用于当前数据。
+
+原用途：将 review_results.json 拆分为按书籍存储的分片文件。
 
 输出目录：data/results/review_books/{book}.json
 """

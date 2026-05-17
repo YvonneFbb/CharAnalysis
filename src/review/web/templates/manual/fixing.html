@@ -1,98 +1,9 @@
 {% extends "layout.html" %}
 {% block title %}问题集中处理（Fixing）{% endblock %}
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/fixing.css') }}">
+{% endblock %}
 {% block content %}
-<style>
-  .fixing-wrap { display: flex; gap: 16px; }
-  .fixing-sidebar { width: 280px; flex: 0 0 auto; }
-  .fixing-main { flex: 1 1 auto; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
-  .card { border: 1px solid #dfe6ec; border-radius: 6px; padding: 0; background: #fff; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 2px 4px rgba(15,35,67,0.08); transition: box-shadow 0.15s ease; }
-  .card:hover { box-shadow: 0 4px 12px rgba(15,35,67,0.16); }
-  .thumb { width: 100%; display: block; background: #fff; border-radius: 4px; }
-  .card.dropped {
-    background: #f4f6f8;
-    border-color: #d8dfe5;
-  }
-  .card.dropped .thumb {
-    opacity: 0.35;
-    filter: grayscale(0.95);
-  }
-  .card.dropped .thumb-label { background: rgba(255,255,255,0.92); color: #6b737c; }
-  .card.pending {
-    background: #fff0d7;
-    border-color: #ebb05c;
-  }
-  .card.pending .thumb {
-    mix-blend-mode: multiply;
-  }
-  .card.pending .thumb-label { background: rgba(255, 240, 205, 0.95); color: #7a5200; }
-  .card.confirmed {
-    background: #f3fbf6;
-    border-color: #9ed3ac;
-  }
-  .card.confirmed .thumb-label { background: rgba(236, 250, 241, 0.95); color: #1f6a32; }
-  .card.unreviewed {
-    background: #ffffff;
-    border-color: #dfe6ec;
-  }
-  .card.unreviewed .thumb-label { background: rgba(248,249,250,0.92); color: #4c5868; }
-  .status-badge {
-    position: absolute;
-    top: 6px;
-    left: 6px;
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-weight: 600;
-    box-shadow: 0 2px 4px rgba(15,35,67,0.12);
-  }
-  .status-unreviewed { background: rgba(226, 240, 255, 0.95); color: #0f4c81; }
-  .status-confirmed { background: rgba(220, 245, 230, 0.95); color: #1f6a32; }
-  .status-pending { background: rgba(255, 233, 194, 0.95); color: #7a5200; }
-  .status-drop { background: rgba(230, 233, 236, 0.95); color: #5b6470; }
-  .thumb-label { position: absolute; left: 6px; right: 6px; bottom: 6px; background: rgba(255,255,255,0.95); color: #2f3542; font-size: 12px; padding: 3px 6px; border-radius: 4px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 4px rgba(15,35,67,0.18); opacity: 0; transform: translateY(6px); transition: opacity 0.15s ease, transform 0.15s ease; pointer-events: none; }
-  .card:hover .thumb-label { opacity: 1; transform: translateY(0); pointer-events: auto; }
-  .thumb-label .char-name { font-weight: 600; cursor: pointer; }
-  .thumb-actions { display: flex; gap: 4px; }
-  .thumb-actions button { border: 1px solid #cfd8dc; background: #fff; color: #2f3542; padding: 1px 6px; border-radius: 3px; font-size: 11px; cursor: pointer; transition: all 0.15s ease; }
-  .thumb-actions button:hover, .thumb-label .char-name:hover { background: #f1f5f8; }
-  .meta { display:none; }
-  .toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-  /* 移除右下角拼贴浮窗 */
-  .stat { font-size: 12px; color: #444; margin-left: auto; }
-  select, input[type="number"], input[type="text"] { padding: 4px; }
-  .montage-panel { margin: 12px 0 16px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fafafa; padding: 8px; }
-  .montage-panel img { width: 100%; height: auto; display: block; border-radius: 6px; cursor: zoom-in; }
-  .montage-modal img { max-width: 95vw; max-height: 95vh; border-radius: 8px; background: #fff; }
-
-  .ocr-segment-buttons { display: flex; gap: 12px; margin-top: 12px; }
-  .btn { padding: 6px 12px; border: 1px solid #d7dee4; background: #fff; border-radius: 20px; cursor: pointer; font-size: 13px; color: #2f3542; transition: background 0.15s ease, color 0.15s ease; }
-  .btn:hover { background: #f3f6f8; }
-  .btn-primary { border-color: #4f86c6; color: #4f86c6; background: #fff; }
-  .btn-primary:hover { background: #edf3fb; }
-  .btn-warning { border-color: #c9883a; color: #c9883a; background: #fff; }
-  .btn-link { background: none; border: none; color: #1769aa; cursor: pointer; text-decoration: underline; padding: 0; }
-  .modal-frame { width: 92vw; height: 92vh; border: none; background: #fff; }
-  .iframe-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 9999; }
-  .iframe-modal.active { display: flex; }
-  .iframe-container { width: 95vw; height: 95vh; background: #fff; border-radius: 8px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
-  .iframe-header { padding: 8px 12px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 12px; }
-  .iframe-header .spacer { flex: 1 1 auto; }
-  .iframe-header .close-btn { font-size: 20px; border: none; background: none; cursor: pointer; }
-  .iframe-body { flex: 1 1 auto; }
-  .iframe-body iframe { width: 100%; height: 100%; border: none; }
-
-  .missing-section { margin-top: 18px; padding-top: 12px; border-top: 1px dashed #e0e6ec; }
-  .missing-header { display: flex; align-items: center; gap: 12px; }
-  .missing-summary { font-size: 12px; color: #6b737c; }
-  .missing-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-  .missing-item { display: inline-flex; align-items: center; gap: 4px; }
-  .missing-chip { border: 1px solid #dfe6ec; background: #fff; color: #2f3542; border-radius: 14px; padding: 4px 8px; font-size: 12px; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease; }
-  .missing-chip:hover { background: #f3f6f8; }
-  .missing-chip.has-paddle { background: #ffe6c7; border-color: #f2a24e; color: #6d3a00; }
-  .missing-chip.has-paddle:hover { background: #ffdbb0; }
-</style>
-
 <div class="container">
   <h1>问题集中处理（Fixing）</h1>
   <div class="fixing-wrap">
@@ -101,27 +12,28 @@
         <label>选择书籍：</label>
         <select id="book-select"></select>
       </div>
-      <div style="margin-top: 8px;">
+      <div class="stack-top-sm">
         <label>灰度阈值：</label>
         <input id="bw-threshold" type="number" value="128" min="0" max="255"/>
       </div>
-      <div style="margin-top: 8px;">
-        <button onclick="reloadFixing()">刷新</button>
+      <div class="stack-top-sm">
+        <button id="reload-fixing-btn">刷新</button>
       </div>
     </aside>
+
     <main class="fixing-main">
       <div class="toolbar">
         <div id="summary">共 0 项</div>
         <div class="stat" id="fixed-box-stat"></div>
       </div>
       <div class="ocr-segment-buttons">
-        <button class="btn" onclick="openOcrModal()">打开 OCR 筛选（当前书）</button>
-        <button class="btn btn-primary" onclick="openSegmentModalForBook()">打开切割审查列表</button>
+        <button class="btn" id="open-ocr-modal-btn">打开 OCR 筛选（当前书）</button>
+        <button class="btn btn-primary" id="open-segment-modal-btn">打开切割审查列表</button>
       </div>
       <div class="montage-panel">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-          <span style="font-size: 12px; color: #4c5868;">Montage 预览</span>
-          <button class="btn" onclick="refreshMontage()">刷新</button>
+        <div class="toolbar montage-toolbar">
+          <span class="stat">Montage 预览</span>
+          <button class="btn" id="refresh-montage-btn">刷新</button>
         </div>
         <img id="montage-img" alt="montage" src="" />
       </div>
@@ -135,14 +47,14 @@
       </div>
     </main>
   </div>
-  <!-- OCR / Segment 处理模态（嵌入原页面，功能完全一致） -->
+
   <div class="iframe-modal" id="ocr-modal">
     <div class="iframe-container">
       <div class="iframe-header">
         <strong>第一轮 OCR 筛选</strong>
         <div class="spacer"></div>
-        <button class="btn" onclick="refreshOcrFrame()">刷新</button>
-        <button class="close-btn" onclick="closeOcrModal()">&times;</button>
+        <button class="btn" id="refresh-ocr-frame-btn">刷新</button>
+        <button class="close-btn" id="close-ocr-modal-btn">&times;</button>
       </div>
       <div class="iframe-body">
         <iframe id="ocr-frame" src=""></iframe>
@@ -155,8 +67,8 @@
       <div class="iframe-header">
         <strong>第二轮切割审查</strong>
         <div class="spacer"></div>
-        <button class="btn" onclick="refreshSegmentFrame()">刷新</button>
-        <button class="close-btn" onclick="closeSegmentModal()">&times;</button>
+        <button class="btn" id="refresh-segment-frame-btn">刷新</button>
+        <button class="close-btn" id="close-segment-modal-btn">&times;</button>
       </div>
       <div class="iframe-body">
         <iframe id="segment-frame" src=""></iframe>
@@ -165,297 +77,21 @@
   </div>
 
   <div class="iframe-modal montage-modal" id="montage-modal">
-    <div class="iframe-container" style="width: auto; height: auto; background: transparent; box-shadow: none;">
-      <div class="iframe-header" style="background: #fff;">
+    <div class="iframe-container montage-container">
+      <div class="iframe-header montage-header">
         <strong>Montage 放大</strong>
         <div class="spacer"></div>
-        <button class="close-btn" onclick="closeMontageModal()">&times;</button>
+        <button class="close-btn" id="close-montage-modal-btn">&times;</button>
       </div>
-      <div class="iframe-body" style="display: flex; align-items: center; justify-content: center; background: #fff; padding: 12px;">
+      <div class="iframe-body montage-body">
         <img id="montage-modal-img" alt="montage large" src="" />
       </div>
     </div>
   </div>
-
 </div>
-
-<script>
-  const API_BASE = '';
-  let currentBook = null;
-  let lastClickedChar = null;
-  let lastClickedInstance = null;
-  const TILE = 96;
-
-  async function loadBooks() {
-    const sel = document.getElementById('book-select');
-    sel.innerHTML = '';
-    // 直接使用 /api/books_simple（来自切割页，读取 lookup 列表）。
-    const resp = await fetch(`${API_BASE}/api/books_simple`);
-    const data = await resp.json();
-    if (!data.success) return;
-    for (const b of data.books) {
-      const opt = document.createElement('option');
-      opt.value = b.name; opt.textContent = b.name;
-      sel.appendChild(opt);
-    }
-    if (data.books.length > 0) {
-      currentBook = data.books[0].name;
-      sel.value = currentBook;
-    }
-    sel.addEventListener('change', () => {
-      currentBook = sel.value;
-      reloadFixing();
-    });
-  }
-
-  async function reloadFixing() {
-    const grid = document.getElementById('grid');
-    const sumEl = document.getElementById('summary');
-    const thrEl = document.getElementById('bw-threshold');
-    const threshold = Math.max(0, Math.min(255, parseInt(thrEl.value||'128', 10)));
-
-    if (!currentBook) return;
-    const url = `${API_BASE}/api/fixing_items?book=${encodeURIComponent(currentBook)}&all=1&image=thumb&threshold=${threshold}&use_fixed_box=1&tile=${TILE}`;
-    const resp = await fetch(url);
-    const data = await resp.json();
-    if (!data.success) { grid.innerHTML = '<div>加载失败</div>'; return; }
-
-    sumEl.textContent = `共 ${data.total} 项`;
-    const Lb = (data.fixed_box && data.fixed_box.L_b) ? data.fixed_box.L_b : 0;
-    document.getElementById('fixed-box-stat').textContent = Lb ? `固定框 L_b=${Lb}` : '';
-
-    refreshMontage();
-
-    grid.innerHTML = '';
-    for (const it of data.items) {
-      const card = document.createElement('div'); card.className = 'card';
-      const decision = (it.decision || 'unknown');
-      const status = (it.status || 'unreviewed');
-      if (decision === 'drop') {
-        card.classList.add('dropped');
-      } else if (status === 'pending_manual') {
-        card.classList.add('pending');
-      } else if (status === 'confirmed') {
-        card.classList.add('confirmed');
-      } else {
-        card.classList.add('unreviewed');
-      }
-      if (it.decision === 'drop') {
-        card.classList.add('dropped');
-      }
-
-      // 状态角标（始终显示）
-      let statusText = '未处理';
-      let statusClass = 'status-unreviewed';
-      if (decision === 'drop') {
-        statusText = '不需要';
-        statusClass = 'status-drop';
-      } else if (status === 'confirmed') {
-        statusText = '已确认';
-        statusClass = 'status-confirmed';
-      } else if (status === 'pending_manual') {
-        statusText = '待手动';
-        statusClass = 'status-pending';
-      }
-      const badge = document.createElement('div');
-      badge.className = `status-badge ${statusClass}`;
-      badge.textContent = statusText;
-      card.appendChild(badge);
-      if (it.thumb) {
-        const img = document.createElement('img'); img.className = 'thumb'; img.src = it.thumb; img.alt = `${it.char}-${it.instance_id}`; card.appendChild(img);
-      }
-
-      const label = document.createElement('div');
-      label.className = 'thumb-label';
-      label.innerHTML = `
-        <span class="char-name" title="打开 OCR">${it.char}</span>
-        <div class="thumb-actions">
-          <button type="button" data-action="segment">切割</button>
-          <button type="button" data-action="ocr">OCR</button>
-        </div>
-      `;
-      const charNameEl = label.querySelector('.char-name');
-      charNameEl.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openOcrModalForChar(it.char);
-      });
-      label.querySelector('[data-action="segment"]').addEventListener('click', (e) => {
-        e.stopPropagation();
-        openSegmentModal(it.char, it.instance_id);
-      });
-      label.querySelector('[data-action="ocr"]').addEventListener('click', (e) => {
-        e.stopPropagation();
-        openOcrModalForChar(it.char);
-      });
-      card.appendChild(label);
-
-      card.onclick = () => openSegmentModal(it.char, it.instance_id);
-      grid.appendChild(card);
-    }
-
-    const missingGrid = document.getElementById('missing-grid');
-    const missingSummary = document.getElementById('missing-summary');
-    const missingChars = Array.isArray(data.missing_chars) ? data.missing_chars : [];
-    const paddleCounts = (data.paddle_counts && typeof data.paddle_counts === 'object') ? data.paddle_counts : {};
-    missingSummary.textContent = `共 ${missingChars.length} 个`;
-    missingGrid.innerHTML = '';
-    if (missingChars.length === 0) {
-      const empty = document.createElement('div');
-      empty.textContent = '当前书籍没有缺失字';
-      empty.style.fontSize = '12px';
-      empty.style.color = '#6b737c';
-      missingGrid.appendChild(empty);
-    } else {
-      for (const ch of missingChars) {
-        const wrap = document.createElement('div');
-        wrap.className = 'missing-item';
-        const btn = document.createElement('button');
-        btn.className = 'missing-chip';
-        btn.textContent = ch;
-        const paddleCount = paddleCounts[ch] || 0;
-        if (paddleCount > 0) {
-          btn.classList.add('has-paddle');
-          btn.title = `Paddle 候选 ${paddleCount} 个`;
-        }
-        btn.onclick = () => openOcrModalForChar(ch);
-        wrap.appendChild(btn);
-        missingGrid.appendChild(wrap);
-      }
-    }
-  }
-
-  (async function init(){
-    await loadBooks();
-    await reloadFixing();
-  })();
-
-  function openOcrModal(targetChar){
-    if (!currentBook) {
-      alert('请先选择书籍');
-      return;
-    }
-    const frame = document.getElementById('ocr-frame');
-    const params = new URLSearchParams({ book: currentBook });
-    if (targetChar) params.set('char', targetChar);
-    if (new URLSearchParams(window.location.search).has('debug')) {
-      params.set('debug', '1');
-    }
-    frame.src = `/ocr_review?${params.toString()}`;
-    document.getElementById('ocr-modal').classList.add('active');
-  }
-
-  function openOcrModalForChar(char){
-    openOcrModal(char);
-  }
-
-  function closeOcrModal(){
-    const modal = document.getElementById('ocr-modal');
-    const frame = document.getElementById('ocr-frame');
-    frame.src = 'about:blank';
-    modal.classList.remove('active');
-    // OCR 可能已更新选择，关闭后刷新 Fixing 列表
-    setTimeout(() => {
-      reloadFixing();
-    }, 500);
-  }
-
-  function refreshOcrFrame(){
-    const frame = document.getElementById('ocr-frame');
-    if (frame.src) frame.src = frame.src;
-  }
-
-  function openSegmentModalForBook() {
-    if (!currentBook) {
-      alert('请先选择书籍');
-      return;
-    }
-    const frame = document.getElementById('segment-frame');
-    frame.src = `/segment_review?book=${encodeURIComponent(currentBook)}`;
-    document.getElementById('segment-modal').classList.add('active');
-  }
-
-  function openSegmentModal(char, inst){
-    if (!currentBook) {
-      alert('请先选择书籍');
-      return;
-    }
-    lastClickedChar = char;
-    lastClickedInstance = inst;
-    const params = new URLSearchParams({
-      book: currentBook,
-      char,
-      instance_id: inst
-    });
-    const frame = document.getElementById('segment-frame');
-    frame.src = `/segment_review?${params.toString()}`;
-    document.getElementById('segment-modal').classList.add('active');
-  }
-
-  function closeSegmentModal(){
-    const modal = document.getElementById('segment-modal');
-    const frame = document.getElementById('segment-frame');
-    frame.src = 'about:blank';
-    modal.classList.remove('active');
-    // SEG 可能已更新状态，关闭后刷新 Fixing 列表
-    setTimeout(() => {
-      reloadFixing();
-    }, 500);
-  }
-
-  function refreshSegmentFrame(){
-    const frame = document.getElementById('segment-frame');
-    if (frame.src) frame.src = frame.src;
-  }
-
-  function refreshMontage(){
-    const montageImg = document.getElementById('montage-img');
-    const montageUrl = `${API_BASE}/api/fixing_montage?book=${encodeURIComponent(currentBook)}&use_fixed_box=1&tile=${TILE}&cols=50&ts=${Date.now()}`;
-    montageImg.src = montageUrl;
-    montageImg.onclick = () => openMontageModal(montageUrl);
-  }
-
-  function openMontageModal(src){
-    const modal = document.getElementById('montage-modal');
-    const img = document.getElementById('montage-modal-img');
-    img.src = src;
-    modal.classList.add('active');
-  }
-
-  function closeMontageModal(){
-    const modal = document.getElementById('montage-modal');
-    const img = document.getElementById('montage-modal-img');
-    img.src = '';
-    modal.classList.remove('active');
-  }
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key !== 'Escape') return;
-    const ocrModal = document.getElementById('ocr-modal');
-    const segModal = document.getElementById('segment-modal');
-    if (segModal.classList.contains('active')) {
-      closeSegmentModal();
-      return;
-    }
-    const montageModal = document.getElementById('montage-modal');
-    if (montageModal.classList.contains('active')) {
-      closeMontageModal();
-      return;
-    }
-    if (ocrModal.classList.contains('active')) {
-      closeOcrModal();
-    }
-  });
-
-  window.addEventListener('message', (event) => {
-    if (event.origin !== window.location.origin) return;
-    const data = event.data || {};
-    if (data.type === 'close-ocr-modal') {
-      closeOcrModal();
-    } else if (data.type === 'close-segment-modal') {
-      closeSegmentModal();
-    }
-  });
-
-  // 旧的内联面板逻辑已移除，全部功能通过原生页面完成
-</script>
+{% endblock %}
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/dom.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/fixing.js') }}"></script>
 {% endblock %}

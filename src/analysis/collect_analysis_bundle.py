@@ -18,125 +18,23 @@ import argparse
 import json
 import math
 import shutil
+import sys
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple
 
-from PIL import Image, ImageDraw
+from PIL import Image
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-REVIEW_BOOKS_DIR = PROJECT_ROOT / 'data/results/manual/review_books'
-SEGMENTED_DIR = PROJECT_ROOT / 'data/results/manual/segmented'
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.analysis.image_metrics import center_crop_fixed_box, percentile
+from src.analysis.montage import build_montage, make_tile
+from src.review import config as review_config
+from src.review.storage.review_books import REVIEW_BOOKS_DIR, list_review_books, read_review_book
 
-def list_review_books() -> List[str]:
-    if not REVIEW_BOOKS_DIR.exists():
-        return []
-    return sorted([p.stem for p in REVIEW_BOOKS_DIR.glob('*.json')])
-
-
-def read_review_book(book_name: str) -> Optional[Dict]:
-    path = REVIEW_BOOKS_DIR / f'{book_name}.json'
-    if not path.exists():
-        return None
-    try:
-        with open(path, 'r', encoding='utf-8') as f:
-            payload = json.load(f)
-    except Exception:
-        return None
-    if isinstance(payload, dict):
-        if 'chars' in payload and isinstance(payload['chars'], dict):
-            return payload['chars']
-        if 'books' in payload and isinstance(payload['books'], dict):
-            return payload['books'].get(book_name)
-    return None
-
-
-def percentile(values: List[int], p: float) -> int:
-    if not values:
-        return 0
-    values_sorted = sorted(values)
-    k = max(0, math.ceil((p / 100.0) * len(values_sorted)) - 1)
-    return int(values_sorted[k])
-
-
-def center_crop_fixed_box(img: Image.Image, Lb: int) -> Image.Image:
-    if Lb <= 0:
-        return img
-    gray = img.convert('L')
-    w, h = gray.size
-    cx, cy = w // 2, h // 2
-    half = Lb // 2
-    x0 = cx - half
-    y0 = cy - half
-    x1 = x0 + Lb
-    y1 = y0 + Lb
-    out = Image.new('L', (Lb, Lb), 255)
-    sx0 = max(0, x0)
-    sy0 = max(0, y0)
-    sx1 = min(w, x1)
-    sy1 = min(h, y1)
-    if sx0 < sx1 and sy0 < sy1:
-        sub = gray.crop((sx0, sy0, sx1, sy1))
-        dx = sx0 - x0
-        dy = sy0 - y0
-        out.paste(sub, (dx, dy))
-    return out
-
-
-def make_tile(
-    img: Image.Image,
-    tile_size: int,
-    border: int,
-    bg_color: Tuple[int, int, int],
-    scale: bool = True
-) -> Image.Image:
-    canvas = Image.new('RGB', (tile_size, tile_size), bg_color)
-    if img is None:
-        draw = ImageDraw.Draw(canvas)
-        border_color = (210, 210, 210)
-        for b in range(border):
-            draw.rectangle([b, b, tile_size - 1 - b, tile_size - 1 - b], outline=border_color)
-        return canvas
-
-    w, h = img.size
-    if scale:
-        max_w = tile_size - 2 * border - 2
-        max_h = tile_size - 2 * border - 2
-        if max_w <= 0 or max_h <= 0:
-            max_w = max_h = max(1, tile_size - 2)
-        ratio = min(max_w / max(1, w), max_h / max(1, h))
-        new_w = max(1, int(round(w * ratio)))
-        new_h = max(1, int(round(h * ratio)))
-        img_resized = img.resize((new_w, new_h), Image.BICUBIC)
-    else:
-        img_resized = img
-        new_w, new_h = img.size
-
-    ox = (tile_size - new_w) // 2
-    oy = (tile_size - new_h) // 2
-    canvas.paste(img_resized.convert('RGB'), (ox, oy))
-
-    draw = ImageDraw.Draw(canvas)
-    border_color = (210, 210, 210)
-    for b in range(border):
-        draw.rectangle([b, b, tile_size - 1 - b, tile_size - 1 - b], outline=border_color)
-    return canvas
-
-
-def build_montage(tiles: List[Image.Image], cols: int, tile_size: int, bg_color: Tuple[int, int, int]) -> Image.Image:
-    if not tiles:
-        return Image.new('RGB', (tile_size, tile_size), bg_color)
-    cols = max(1, cols)
-    rows = math.ceil(len(tiles) / cols)
-    W = cols * tile_size
-    H = rows * tile_size
-    out = Image.new('RGB', (W, H), bg_color)
-    for idx, tile in enumerate(tiles):
-        r = idx // cols
-        c = idx % cols
-        out.paste(tile, (c * tile_size, r * tile_size))
-    return out
+SEGMENTED_DIR = review_config.SEGMENTED_DIR
 
 
 def collect_book_entries(book_name: str, use_fixed_box: bool) -> Tuple[List[Dict], Dict]:
@@ -227,9 +125,20 @@ def main():
     manifest = {
         'version': 1,
         'generated_at': datetime.now(timezone.utc).isoformat(),
+        'parameters': {
+            'use_fixed_box': bool(args.use_fixed_box),
+            'tile_size': int(args.tile_size),
+            'cols': int(args.cols),
+            'border': int(args.border),
+            'books': list(books),
+        },
         'source': {
             'review_books_dir': str(REVIEW_BOOKS_DIR.relative_to(PROJECT_ROOT)),
-            'segmented_dir': str(SEGMENTED_DIR.relative_to(PROJECT_ROOT))
+            'segmented_dir': str(SEGMENTED_DIR.relative_to(PROJECT_ROOT)),
+            'review_books_mtime': max(
+                (p.stat().st_mtime for p in REVIEW_BOOKS_DIR.glob('*.json')),
+                default=0,
+            ),
         },
         'books': {}
     }

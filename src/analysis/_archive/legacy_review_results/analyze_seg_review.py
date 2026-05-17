@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""
-从第二轮审查结果（data/results/segmentation_review.json）读取已确认的实例，
+"""Legacy analysis script for the old segmentation_review.json layout.
+
+当前项目分析入口已改为 data/analysis bundle。本脚本仅作历史归档，
+不要直接用于当前数据。
+
+原用途：从第二轮审查结果（data/results/segmentation_review.json）读取已确认的实例，
 为每本书计算基础特征并输出：
 
 - JSON：data/analysis/features/{book}.json

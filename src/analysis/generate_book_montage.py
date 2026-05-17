@@ -26,33 +26,30 @@
 from __future__ import annotations
 
 import argparse
-import json
 import math
-import os
+import sys
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Optional, Tuple
 
-from PIL import Image, ImageDraw
-import numpy as np
+from PIL import Image
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-REVIEW_BOOKS_DIR = PROJECT_ROOT / 'data/results/manual/review_books'
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 EXPORT_DIR = PROJECT_ROOT / 'data/exports/montage'
+
+from src.analysis.image_metrics import center_crop_fixed_box, percentile
+from src.analysis.montage import build_montage, hex_to_rgb, make_tile
+from src.review.storage.review_books import list_review_books, read_all_review_books
 
 
 def load_review_segments() -> Dict:
     """返回切割状态视图（books->char->instance_id->entry），来自分片文件。"""
-    out = { 'version': 2, 'books': {} }
-    if not REVIEW_BOOKS_DIR.exists():
-        return out
-    for path in REVIEW_BOOKS_DIR.glob('*.json'):
-        try:
-            payload = json.load(open(path, 'r', encoding='utf-8'))
-        except Exception:
-            continue
-        book = payload.get('book') or path.stem
-        chars = payload.get('chars') or {}
+    data = read_all_review_books()
+    out = {'version': 2, 'books': {}}
+    for book, chars in (data.get('books') or {}).items():
         book_out = {}
         for char, char_obj in chars.items():
             if not isinstance(char_obj, dict):
@@ -105,99 +102,11 @@ def open_confirmed_image(abs_path: Path) -> Optional[Image.Image]:
         return None
 
 
-def make_tile(img: Image.Image, tile_size: int, border: int, bg_color: Tuple[int, int, int]=(255, 255, 255)) -> Image.Image:
-    """将任意尺寸的 img 等比缩放放入 tile_size 方块，四周留白并绘制淡色边框。"""
-    canvas = Image.new('RGB', (tile_size, tile_size), bg_color)
-    if img is None:
-        # 空图：直接画边框
-        draw = ImageDraw.Draw(canvas)
-        border_color = (210, 210, 210)  # 淡灰
-        for b in range(border):
-            draw.rectangle([b, b, tile_size - 1 - b, tile_size - 1 - b], outline=border_color)
-        return canvas
-
-    # 等比缩放，留2*border的安全边
-    max_w = tile_size - 2*border - 2
-    max_h = tile_size - 2*border - 2
-    if max_w <= 0 or max_h <= 0:
-        max_w = max_h = max(1, tile_size - 2)
-
-    w, h = img.size
-    scale = min(max_w / max(1, w), max_h / max(1, h))
-    new_w = max(1, int(round(w * scale)))
-    new_h = max(1, int(round(h * scale)))
-    img_resized = img.resize((new_w, new_h), Image.BICUBIC)
-
-    # 居中粘贴
-    ox = (tile_size - new_w) // 2
-    oy = (tile_size - new_h) // 2
-    canvas.paste(img_resized, (ox, oy))
-
-    # 画淡色边框
-    draw = ImageDraw.Draw(canvas)
-    border_color = (210, 210, 210)
-    for b in range(border):
-        draw.rectangle([b, b, tile_size - 1 - b, tile_size - 1 - b], outline=border_color)
-
-    return canvas
-
-
-def center_crop_fixed_box(img: Image.Image, Lb: int) -> Image.Image:
-    """以图像中心为锚点，截取 Lb×Lb 的固定框，越界用白色填充。"""
-    if Lb <= 0:
-        return img
-    gray = img.convert('L')
-    w, h = gray.size
-    cx, cy = w // 2, h // 2
-    half = Lb // 2
-    x0 = cx - half
-    y0 = cy - half
-    x1 = x0 + Lb
-    y1 = y0 + Lb
-    # 目标画布（白底）
-    out = Image.new('L', (Lb, Lb), 255)
-    # 源与目标重叠区域
-    sx0 = max(0, x0)
-    sy0 = max(0, y0)
-    sx1 = min(w, x1)
-    sy1 = min(h, y1)
-    if sx0 < sx1 and sy0 < sy1:
-        sub = gray.crop((sx0, sy0, sx1, sy1))
-        dx = sx0 - x0
-        dy = sy0 - y0
-        out.paste(sub, (dx, dy))
-    return out
-
-
-def build_montage(tiles: List[Image.Image], cols: int, tile_size: int, bg_color: Tuple[int, int, int]=(255, 255, 255)) -> Image.Image:
-    if not tiles:
-        return Image.new('RGB', (tile_size, tile_size), bg_color)
-    cols = max(1, cols)
-    rows = math.ceil(len(tiles) / cols)
-    W = cols * tile_size
-    H = rows * tile_size
-    out = Image.new('RGB', (W, H), bg_color)
-    for idx, tile in enumerate(tiles):
-        r = idx // cols
-        c = idx % cols
-        out.paste(tile, (c * tile_size, r * tile_size))
-    return out
-
-
 def list_books(review_data: Dict) -> List[str]:
-    books = list((review_data.get('books') or {}).keys())
-    books.sort()
-    return books
-
-
-def hex_to_rgb(hex_str: str) -> Tuple[int, int, int]:
-    s = hex_str.strip().lstrip('#')
-    if len(s) == 6:
-        r = int(s[0:2], 16)
-        g = int(s[2:4], 16)
-        b = int(s[4:6], 16)
-        return (r, g, b)
-    raise ValueError('Invalid hex color, expect #RRGGBB')
+    books = list_review_books()
+    if books:
+        return books
+    return sorted((review_data.get('books') or {}).keys())
 
 
 def main():
@@ -244,8 +153,7 @@ def main():
                 except Exception:
                     continue
             if long_sides:
-                p90 = float(np.percentile(np.array(long_sides, dtype=float), 90))
-                L_b = int(np.ceil(p90 * 1.05))
+                L_b = int(math.ceil(percentile(long_sides, 90) * 1.05))
                 print(f'  • Fixed box L_b={L_b} (P90 * 1.05)')
             else:
                 L_b = 0

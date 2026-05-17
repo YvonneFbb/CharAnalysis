@@ -13,7 +13,6 @@ import logging
 from flask_cors import CORS
 import json
 import os
-import shutil
 from pathlib import Path
 import cv2
 import numpy as np
@@ -31,6 +30,23 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.review import config as review_config
+from src.review.identity import (
+    make_instance_id as _make_instance_id,
+    normalize_to_preprocessed_path,
+)
+from src.review.storage.common import acquire_file_lock as _acquire_book_lock
+from src.review.storage.paddle_books import (
+    list_paddle_books,
+    read_paddle_book,
+    write_paddle_book,
+)
+from src.review.storage.review_books import (
+    list_review_books,
+    read_all_review_books,
+    read_review_book,
+    review_book_lock_path,
+    write_review_book,
+)
 
 # 导入切割模块
 from src.review.segment import segment_character, adjust_bbox, get_default_params
@@ -54,10 +70,6 @@ app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50MB
 app.config['JSON_AS_ASCII'] = False
 
 # 全局配置
-RESULTS_DIR = review_config.RESULTS_DIR
-MANUAL_RESULTS_DIR = review_config.MANUAL_RESULTS_DIR
-PADDLE_RESULTS_DIR = review_config.PADDLE_RESULTS_DIR
-
 MATCHED_JSON_PATH = review_config.MATCHED_JSON_PATH
 MATCHED_BOOKS_DIR = review_config.MATCHED_BOOKS_DIR
 MATCHED_CACHE_DIR = review_config.MATCHED_CACHE_DIR
@@ -65,22 +77,14 @@ MATCHED_SHARDS_DIR = review_config.MATCHED_SHARDS_DIR
 MATCHED_INDEX_PATH = review_config.MATCHED_INDEX_PATH
 STANDARD_CHARS_JSON_PATH = review_config.STANDARD_CHARS_JSON
 PREPROCESSED_DIR = review_config.PREPROCESSED_DIR
-REVIEW_RESULTS_PATH = review_config.REVIEW_RESULTS_PATH
 REVIEW_BOOKS_DIR = review_config.REVIEW_BOOKS_DIR
-REVIEW_BOOK_BACKUP_KEEP = 5
-REVIEW_BOOK_BACKUP_COOLDOWN = 60  # 秒，避免高频写入产生大量备份
 
 # 切割相关路径
 SEGMENTATION_REVIEW_PATH = review_config.SEGMENTATION_REVIEW_PATH
-SEGMENT_LOOKUP_PATH = review_config.SEGMENT_LOOKUP_PATH
 SEGMENTED_DIR = review_config.SEGMENTED_DIR
 
 # 标记功能路径
 SEGMENT_MARKS_PATH = review_config.SEGMENT_MARKS_PATH
-
-# Paddle 筛选路径
-PADDLE_REVIEW_BOOKS_DIR = review_config.PADDLE_REVIEW_BOOKS_DIR
-PADDLE_SEGMENTED_DIR = review_config.PADDLE_SEGMENTED_DIR
 
 # 创建必要的目录
 SEGMENTED_DIR.mkdir(parents=True, exist_ok=True)
@@ -91,7 +95,7 @@ matched_books_cache: Dict[str, dict] = {}
 matched_books_cache_mtime = 0.0
 matched_index_cache: Optional[Dict] = None
 standard_chars_data = None
-segment_lookup_data = None  # 内存中的查找索引（随 review_results.json 保存同步写入）
+segment_lookup_data = None  # 内存中的查找索引（随 review_books 分片保存同步写入）
 _standard_char_order_map: Optional[Dict[str, int]] = None
 
 
@@ -265,7 +269,7 @@ def ensure_standard_chars_data():
 
 def _derive_lookup_from_review(review: Dict) -> Dict:
     """
-    从 review_results.json 的 instances 与 matched_by_book.json 推导 lookup 结构：
+    从 review_books 的 instances 与 matched_by_book.json 推导 lookup 结构：
     { 'books': { book: { char: { instance_id: {bbox, source_image, ...} } } } }
     - 如果 review 内部已有 'lookup' 字段，则优先直接拷贝
     - 否则按 instances + matched_by_book 补齐
@@ -314,29 +318,6 @@ def _derive_lookup_from_review(review: Dict) -> Dict:
         if out_book:
             out['books'][book_name] = out_book
     return out
-
-
-def _make_instance_id(inst: Dict) -> str:
-    try:
-        vol = int(inst.get('volume', 0))
-    except Exception:
-        vol = 0
-    page = inst.get('page', '')
-    page_suffix = page.split('_')[-1] if page else ''
-    char_index = inst.get('char_index', 0)
-    return f"册{vol:02d}_page{page_suffix}_idx{char_index}"
-
-
-def _parse_instance_id(instance_id: str):
-    """从 instance_id 中解析 volume, page_suffix, char_index。匹配失败返回 None。"""
-    import re
-    m = re.match(r'^册(\d+)_page(\d+)_idx(\d+)$', instance_id)
-    if not m:
-        return None
-    vol = int(m.group(1))
-    page = m.group(2)
-    idx = int(m.group(3))
-    return vol, page, idx
 
 
 def _sync_lookup_for_char(book_name: str, char: str, char_obj: Dict) -> set:
@@ -515,179 +496,6 @@ def ensure_segment_lookup_data():
         segment_lookup_data = { 'version': 1, 'books': {} }
 
 
-def _review_book_path(book_name: str) -> Path:
-    safe_name = book_name.replace('/', '_')
-    return REVIEW_BOOKS_DIR / f'{safe_name}.json'
-
-
-def _review_book_backup_dir(book_name: str) -> Path:
-    safe_name = book_name.replace('/', '_')
-    return REVIEW_BOOKS_DIR / '_backups' / safe_name
-
-
-def _read_review_payload(path: Path) -> Optional[Dict]:
-    try:
-        with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except Exception:
-        return None
-
-
-def _extract_review_book_chars(payload: Dict, book_name: str) -> Optional[Dict]:
-    if not isinstance(payload, dict):
-        return None
-    if 'chars' in payload and isinstance(payload['chars'], dict):
-        return payload['chars']
-    if 'books' in payload and isinstance(payload['books'], dict):
-        return payload['books'].get(book_name)
-    return None
-
-
-def _read_latest_review_backup(book_name: str) -> Optional[Dict]:
-    backup_dir = _review_book_backup_dir(book_name)
-    if not backup_dir.exists():
-        return None
-    candidates = sorted(backup_dir.glob('*.json'), key=lambda p: p.stat().st_mtime, reverse=True)
-    for path in candidates:
-        payload = _read_review_payload(path)
-        if payload is not None:
-            print(f'⚠️  {book_name}: 主文件损坏，回退到备份 {path.name}')
-            return payload
-    return None
-
-
-def _rotate_review_backups(backup_dir: Path, keep: int):
-    try:
-        backups = sorted(backup_dir.glob('*.json'), key=lambda p: p.stat().st_mtime, reverse=True)
-        for old in backups[keep:]:
-            old.unlink(missing_ok=True)
-    except Exception:
-        pass
-
-
-def _maybe_backup_review_book(book_name: str, book_path: Path):
-    if not book_path.exists():
-        return
-    backup_dir = _review_book_backup_dir(book_name)
-    backup_dir.mkdir(parents=True, exist_ok=True)
-    backups = sorted(backup_dir.glob('*.json'), key=lambda p: p.stat().st_mtime)
-    if backups:
-        latest_mtime = backups[-1].stat().st_mtime
-        if time.time() - latest_mtime < REVIEW_BOOK_BACKUP_COOLDOWN:
-            return
-    ts = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
-    backup_path = backup_dir / f'{ts}.json'
-    try:
-        shutil.copy2(book_path, backup_path)
-    except Exception:
-        return
-    _rotate_review_backups(backup_dir, REVIEW_BOOK_BACKUP_KEEP)
-
-
-def _fsync_dir(path: Path):
-    try:
-        dir_fd = os.open(str(path), os.O_RDONLY)
-        try:
-            os.fsync(dir_fd)
-        finally:
-            os.close(dir_fd)
-    except Exception:
-        pass
-
-
-def read_review_book(book_name: str) -> Optional[Dict]:
-    """读取单本书的 OCR 数据（字符级），返回 {char: data}。"""
-    path = _review_book_path(book_name)
-    if not path.exists():
-        return None
-    payload = _read_review_payload(path)
-    if payload is None:
-        payload = _read_latest_review_backup(book_name)
-    if payload is None:
-        return None
-    return _extract_review_book_chars(payload, book_name)
-
-
-def write_review_book(book_name: str, book_data: Dict, skip_backup: bool = False):
-    """写入单本书的 OCR 数据（字符级）。"""
-    REVIEW_BOOKS_DIR.mkdir(parents=True, exist_ok=True)
-    book_path = _review_book_path(book_name)
-    if not skip_backup:
-        _maybe_backup_review_book(book_name, book_path)
-    payload = {
-        'version': 2,
-        'book': book_name,
-        'chars': book_data
-    }
-    tmp = book_path.with_suffix(f'.json.tmp.{os.getpid()}-{int(time.time()*1000)}')
-    with open(tmp, 'w', encoding='utf-8') as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
-        f.flush()
-        os.fsync(f.fileno())
-    os.replace(tmp, book_path)
-    _fsync_dir(book_path.parent)
-
-
-def list_review_books() -> list:
-    if not REVIEW_BOOKS_DIR.exists():
-        return []
-    return sorted([p.stem for p in REVIEW_BOOKS_DIR.glob('*.json')])
-
-
-def read_all_review_books() -> Dict:
-    """聚合所有分片为 {version:2, books:{book: chars}} 的内存视图。"""
-    out = {'version': 2, 'books': {}}
-    for book_name in list_review_books():
-        chars = read_review_book(book_name)
-        if isinstance(chars, dict):
-            out['books'][book_name] = chars
-    return out
-
-
-def _paddle_book_path(book_name: str) -> Path:
-    safe_name = book_name.replace('/', '_')
-    return PADDLE_REVIEW_BOOKS_DIR / f'{safe_name}.json'
-
-
-def _paddle_book_lock_path(book_name: str) -> Path:
-    safe_name = book_name.replace('/', '_')
-    return PADDLE_REVIEW_BOOKS_DIR / f'{safe_name}.json.lock'
-
-
-def list_paddle_books() -> list:
-    if not PADDLE_REVIEW_BOOKS_DIR.exists():
-        return []
-    return sorted([p.stem for p in PADDLE_REVIEW_BOOKS_DIR.glob('*.json')])
-
-
-def read_paddle_book(book_name: str) -> Optional[Dict]:
-    path = _paddle_book_path(book_name)
-    if not path.exists():
-        return None
-    try:
-        with open(path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except Exception:
-        return None
-
-
-def write_paddle_book(book_name: str, payload: Dict) -> bool:
-    PADDLE_REVIEW_BOOKS_DIR.mkdir(parents=True, exist_ok=True)
-    book_path = _paddle_book_path(book_name)
-    lock_path = _paddle_book_lock_path(book_name)
-    with open(lock_path, 'a+', encoding='utf-8') as lock_fp:
-        if not _acquire_book_lock(lock_fp, timeout_sec=2.0):
-            return False
-        tmp = book_path.with_suffix(book_path.suffix + f'.tmp.{os.getpid()}-{int(time.time()*1000)}')
-        with open(tmp, 'w', encoding='utf-8') as f:
-            json.dump(payload, f, ensure_ascii=False, indent=2)
-            f.flush()
-            os.fsync(f.fileno())
-        os.replace(tmp, book_path)
-        _fsync_dir(book_path.parent)
-    return True
-
-
 def get_standard_char_order_map() -> Dict[str, int]:
     global _standard_char_order_map
     if _standard_char_order_map is not None:
@@ -733,40 +541,18 @@ def get_lookup_book(book_name: str) -> Optional[Dict]:
     return _ensure_lookup_for_book(book_name)
 
 
-# ==================== 切割审查状态：单文件加锁工具（统一存于 review_results.json） ====================
-def _review_lock_path() -> Path:
-    # 兼容旧逻辑的全局锁（尽量避免使用）
-    return REVIEW_RESULTS_PATH.with_suffix(REVIEW_RESULTS_PATH.suffix + '.lock')
-
-
+# ==================== 切割审查状态：单书分片加锁工具（统一存于 review_books/*.json） ====================
 def _review_book_lock_path(book_name: str) -> Path:
-    safe_name = book_name.replace('/', '_')
-    return REVIEW_BOOKS_DIR / f'{safe_name}.json.lock'
+    return review_book_lock_path(book_name)
 
 
-def _acquire_book_lock(lock_fp, timeout_sec: float = 2.0) -> bool:
-    try:
-        import fcntl
-    except Exception:
-        return True
-    start = time.time()
-    while True:
-        try:
-            fcntl.flock(lock_fp.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-            return True
-        except BlockingIOError:
-            if time.time() - start >= timeout_sec:
-                return False
-            time.sleep(0.05)
-        except Exception:
-            return True
 def _read_review_results() -> Dict:
     # 兼容旧逻辑：现在统一从分片读取
     return read_all_review_books()
 
 def read_review_data() -> dict:
     """
-    兼容接口：返回切割状态视图（源自 review_results.json 的 segments 字段）。
+    兼容接口：返回切割状态视图（源自 review_books/*.json 的 segments 字段）。
     结构与旧 segmentation_review.json 保持一致：{version, books{book{char{inst_id: entry}}}}
     """
     rr = read_all_review_books()
@@ -824,7 +610,7 @@ def build_combined_book(book_name: str) -> dict:
 
 def write_review_data(seg_view: dict):
     """
-    将切割状态写回 review_results.json 的 segments 字段。
+    将切割状态写回 review_books/*.json 的 segments 字段。
     仅更新 segments，不改动 instances/lookup/timestamp。
     同时写出兼容文件 segmentation_review.json（派生视图），便于旧脚本使用。
     """
@@ -854,7 +640,7 @@ def write_review_data(seg_view: dict):
         pass
 
 def update_review_entry(book_name: str, char: str, instance_id: str, entry: dict):
-    """对切割状态进行加锁的读-改-写更新（存于 review_results.json 的 segments）。"""
+    """对切割状态进行加锁的读-改-写更新（存于 review_books/*.json 的 segments）。"""
     try:
         import fcntl  # POSIX
     except Exception:
@@ -882,34 +668,6 @@ def update_review_entry(book_name: str, char: str, instance_id: str, entry: dict
                 fcntl.flock(lock_fp.fileno(), fcntl.LOCK_UN)
             except Exception:
                 pass
-
-def normalize_to_preprocessed_path(raw_or_mixed_path: str) -> str:
-    """
-    将路径统一转换为 preprocessed 格式
-
-    data/raw/{book}/册XX_pages/page_XXXX.png
-    → data/results/preprocessed/{book}/册XX_pages/page_XXXX_preprocessed.png
-    """
-    import re
-    from pathlib import Path
-
-    # 如果已经是 preprocessed 路径，直接返回
-    if '/preprocessed/' in raw_or_mixed_path and '_preprocessed.png' in raw_or_mixed_path:
-        return raw_or_mixed_path
-
-    # 解析路径
-    # 模式：data/raw/{book}/册XX_pages/page_XXXX.png
-    match = re.search(r'data/raw/([^/]+)/(册\d+_pages)/(page_\d+)\.png', raw_or_mixed_path)
-
-    if match:
-        book, volume_dir, page_name = match.groups()
-        preprocessed_path = f'data/results/preprocessed/{book}/{volume_dir}/{page_name}_preprocessed.png'
-        return preprocessed_path
-
-    # 如果无法匹配，返回原路径并警告
-    print(f"⚠️  无法标准化路径: {raw_or_mixed_path}")
-    return raw_or_mixed_path
-
 
 @app.route('/api/books', methods=['GET'])
 def get_books():
@@ -2542,7 +2300,7 @@ def paddle_review_page():
 
 @app.route('/fixing')
 def fixing_page():
-    """Fixing 页面（问题集中处理，读取 segmentation_review.json）"""
+    """Fixing 页面（问题集中处理，读取 review_books 派生视图）"""
     try:
         return render_template('manual/fixing.html')
     except Exception:
@@ -2642,7 +2400,7 @@ def main():
     print(f"标准字文件：{_resolve_standard_chars_path()}")
     print(f"图片目录：{PREPROCESSED_DIR}")
     print(f"切割结果目录：{SEGMENTED_DIR}")
-    print("查找索引：内存派生自 review_results.json（不再依赖独立文件）")
+    print("查找索引：内存派生自 review_books 分片（不再依赖独立文件）")
 
     print("\n服务器启动中...")
     print("=" * 70)

@@ -13,31 +13,35 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import os
-import re
 import shutil
+import sys
 from pathlib import Path
 from typing import Dict, Tuple, Optional
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-REVIEW_BOOKS_DIR = PROJECT_ROOT / 'data/results/manual/review_books'
-MATCHED_JSON_PATH = PROJECT_ROOT / 'data/results/matched_by_book.json'
-MATCHED_CACHE_DIR = PROJECT_ROOT / 'data/results/_cache'
-MATCHED_SHARDS_DIR = MATCHED_CACHE_DIR / 'matched_by_book_shards'
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
+from src.review import config as review_config
+from src.review.identity import make_instance_id, normalize_to_preprocessed_path
+from src.review.storage.review_books import (
+    list_review_books,
+    read_review_book,
+    review_book_backup_dir,
+    review_book_path,
+    write_review_book,
+)
 
-def _review_book_path(book_name: str) -> Path:
-    safe_name = book_name.replace('/', '_')
-    return REVIEW_BOOKS_DIR / f'{safe_name}.json'
+MATCHED_JSON_PATH = review_config.MATCHED_JSON_PATH
+MATCHED_SHARDS_DIR = review_config.MATCHED_SHARDS_DIR
 
 
 def _backup_book(book_name: str):
-    src = _review_book_path(book_name)
+    src = review_book_path(book_name)
     if not src.exists():
         return
-    backup_dir = REVIEW_BOOKS_DIR / '_backups' / book_name.replace('/', '_')
+    backup_dir = review_book_backup_dir(book_name)
     backup_dir.mkdir(parents=True, exist_ok=True)
     ts = f'{int(os.path.getmtime(src)*1000)}'
     dst = backup_dir / f'pre_repair_{ts}.json'
@@ -45,36 +49,6 @@ def _backup_book(book_name: str):
         shutil.copy2(src, dst)
     except Exception:
         pass
-
-
-def read_review_book(book_name: str) -> Optional[Dict]:
-    path = _review_book_path(book_name)
-    if not path.exists():
-        return None
-    try:
-        with open(path, 'r', encoding='utf-8') as f:
-            payload = json.load(f)
-    except Exception:
-        return None
-    if isinstance(payload, dict):
-        if 'chars' in payload and isinstance(payload['chars'], dict):
-            return payload['chars']
-        if 'books' in payload and isinstance(payload['books'], dict):
-            return payload['books'].get(book_name)
-    return None
-
-
-def write_review_book(book_name: str, book_data: Dict):
-    REVIEW_BOOKS_DIR.mkdir(parents=True, exist_ok=True)
-    payload = {
-        'version': 2,
-        'book': book_name,
-        'chars': book_data
-    }
-    tmp = _review_book_path(book_name).with_suffix(f'.json.tmp.{os.getpid()}')
-    with open(tmp, 'w', encoding='utf-8') as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
-    os.replace(tmp, _review_book_path(book_name))
 
 
 def _load_matched_book(book_name: str) -> Optional[Dict]:
@@ -99,27 +73,6 @@ def _load_matched_book(book_name: str) -> Optional[Dict]:
         return None
 
 
-def normalize_to_preprocessed_path(raw_or_mixed_path: str) -> str:
-    if '/preprocessed/' in raw_or_mixed_path and '_preprocessed.png' in raw_or_mixed_path:
-        return raw_or_mixed_path
-    match = re.search(r'data/raw/([^/]+)/(册\\d+_pages)/(page_\\d+)\\.png', raw_or_mixed_path)
-    if match:
-        book, volume_dir, page_name = match.groups()
-        return f'data/results/preprocessed/{book}/{volume_dir}/{page_name}_preprocessed.png'
-    return raw_or_mixed_path
-
-
-def _make_instance_id(inst: Dict) -> str:
-    try:
-        vol = int(inst.get('volume', 0))
-    except Exception:
-        vol = 0
-    page = inst.get('page', '')
-    page_suffix = page.split('_')[-1] if page else ''
-    char_index = inst.get('char_index', 0)
-    return f"册{vol:02d}_page{page_suffix}_idx{char_index}"
-
-
 def _sync_lookup_for_char(book_name: str, char: str, char_obj: Dict, matched_book: Dict) -> set:
     matched_list = (matched_book.get('chars') or {}).get(char)
     old_lookup = char_obj.get('lookup') or {}
@@ -141,7 +94,7 @@ def _sync_lookup_for_char(book_name: str, char: str, char_obj: Dict, matched_boo
         if idx < 0 or idx >= len(matched_list):
             continue
         inst = matched_list[idx]
-        inst_id = _make_instance_id(inst)
+        inst_id = make_instance_id(inst)
         selected_ids.add(inst_id)
         src = normalize_to_preprocessed_path(inst.get('source_image', ''))
         new_lookup[inst_id] = {
@@ -205,15 +158,9 @@ def repair_book(book_name: str, dry_run: bool = False) -> Tuple[int, int, int]:
 
     if changed and not dry_run:
         _backup_book(book_name)
-        write_review_book(book_name, book_obj)
+        write_review_book(book_name, book_obj, skip_backup=True)
 
     return (chars_fixed, removed_segments, 1 if changed else 0)
-
-
-def list_books() -> list:
-    if not REVIEW_BOOKS_DIR.exists():
-        return []
-    return sorted([p.stem for p in REVIEW_BOOKS_DIR.glob('*.json')])
 
 
 def main():
@@ -222,7 +169,7 @@ def main():
     ap.add_argument('--dry-run', action='store_true', help='只扫描不写入')
     args = ap.parse_args()
 
-    books = args.books if args.books else list_books()
+    books = args.books if args.books else list_review_books()
     if not books:
         print('未找到任何分书文件。')
         return

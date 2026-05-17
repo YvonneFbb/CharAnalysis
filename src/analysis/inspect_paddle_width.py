@@ -9,11 +9,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Dict, List, Optional
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.review.identity import make_instance_id
+
 MATCHED_BOOKS_DIR = PROJECT_ROOT / "data/results/matched_books"
 MATCHED_JSON = PROJECT_ROOT / "data/results/matched_by_book.json"
 PADDLE_BOOKS_DIR = PROJECT_ROOT / "data/results/paddle/review_books"
@@ -45,17 +50,6 @@ def load_paddle_book(book: str) -> Optional[Dict]:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return None
-
-
-def make_instance_id(inst: Dict) -> str:
-    try:
-        vol = int(inst.get("volume", 0))
-    except Exception:
-        vol = 0
-    page = inst.get("page", "")
-    page_suffix = page.split("_")[-1] if page else ""
-    char_index = inst.get("char_index", 0)
-    return f"册{vol:02d}_page{page_suffix}_idx{char_index}"
 
 
 def main():

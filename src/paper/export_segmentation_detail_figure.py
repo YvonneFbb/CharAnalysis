@@ -16,7 +16,9 @@ from pathlib import Path
 
 import cv2
 import numpy as np
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
+
+from src.paper.figure_export import default_dpi, parse_formats
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -29,6 +31,31 @@ from src.review.segment.cc_filter import refine_binary_components
 from src.review.segment.border_removal import trim_border_from_bin, remove_border_frames
 
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "src/paper/figures/segmentation"
+FONT_DIR = Path.home() / "Library/Fonts"
+FONT_REGULAR_PATH = FONT_DIR / "PingFangSC-Regular.ttf"
+
+LABELS = {
+    "zh": [
+        "(a) OCR bbox",
+        "(b) ROI",
+        "(c) Noise removal",
+        "(d) Binarization",
+        "(e) CC filter",
+        "(f) Projection trim",
+        "(g) Final trim",
+        "(h) Final glyph",
+    ],
+    "en": [
+        "(a) OCR bbox",
+        "(b) ROI",
+        "(c) Noise removal",
+        "(d) Binarization",
+        "(e) Connected-component filtering",
+        "(f) Projection trim",
+        "(g) Final trim",
+        "(h) Final glyph",
+    ],
+}
 
 
 def _resolve_path(path_str: str) -> Path:
@@ -36,6 +63,30 @@ def _resolve_path(path_str: str) -> Path:
     if not path.is_absolute():
         path = PROJECT_ROOT / path
     return path.resolve()
+
+
+def _font(size: int):
+    if FONT_REGULAR_PATH.exists():
+        return ImageFont.truetype(str(FONT_REGULAR_PATH), size=size)
+    return ImageFont.load_default()
+
+
+def _wrap_title(draw: ImageDraw.ImageDraw, text: str, font, max_width: int) -> list[str]:
+    words = text.split(" ")
+    if not words:
+        return [text]
+    lines: list[str] = []
+    current = words[0]
+    for word in words[1:]:
+        trial = f"{current} {word}"
+        bbox = draw.textbbox((0, 0), trial, font=font)
+        if (bbox[2] - bbox[0]) <= max_width:
+            current = trial
+        else:
+            lines.append(current)
+            current = word
+    lines.append(current)
+    return lines
 
 
 def load_ocr_characters(path: Path, target_text: str) -> list[dict]:
@@ -187,19 +238,20 @@ def _resize_to_box(img: np.ndarray, box_w: int, box_h: int) -> np.ndarray:
     return cv2.resize(img, (new_w, new_h), interpolation=interp)
 
 
-def make_composite(output_path: Path, panels: list[tuple[str, np.ndarray]], cols: int = 4) -> None:
+def make_composite(output_path: Path, panels: list[tuple[str, np.ndarray]], cols: int = 4, dpi: int = 300) -> None:
     if not panels:
         raise ValueError("No panels for composite.")
 
     tile_w = 300
     tile_h = 220
-    title_h = 34
+    title_h = 52
     pad = 16
     rows = (len(panels) + cols - 1) // cols
     canvas_w = cols * tile_w + (cols + 1) * pad
     canvas_h = rows * (tile_h + title_h) + (rows + 1) * pad
     canvas = Image.new("RGB", (canvas_w, canvas_h), (255, 255, 255))
     draw = ImageDraw.Draw(canvas)
+    title_font = _font(18)
 
     for idx, (title, panel) in enumerate(panels):
         r = idx // cols
@@ -208,7 +260,12 @@ def make_composite(output_path: Path, panels: list[tuple[str, np.ndarray]], cols
         y = pad + r * (tile_h + title_h + pad)
 
         draw.rectangle([x, y, x + tile_w, y + title_h + tile_h], outline=(190, 190, 190), width=1)
-        draw.text((x + 8, y + 8), title, fill=(20, 20, 20))
+        title_lines = _wrap_title(draw, title, title_font, tile_w - 20)
+        ty = y + 6
+        for line in title_lines:
+            draw.text((x + 10, ty), line, fill=(20, 20, 20), font=title_font)
+            bbox = draw.textbbox((x + 10, ty), line, font=title_font)
+            ty += (bbox[3] - bbox[1]) + 2
 
         resized = _resize_to_box(panel, tile_w - 12, tile_h - 12)
         panel_img = Image.fromarray(cv2.cvtColor(resized, cv2.COLOR_BGR2RGB))
@@ -217,7 +274,15 @@ def make_composite(output_path: Path, panels: list[tuple[str, np.ndarray]], cols
         canvas.paste(panel_img, (px, py))
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    canvas.save(output_path)
+    ext = output_path.suffix.lower()
+    if ext == ".pdf":
+        canvas.save(output_path, resolution=float(dpi))
+    elif ext in {".jpg", ".jpeg"}:
+        canvas.save(output_path, quality=95, subsampling=0, dpi=(dpi, dpi))
+    elif ext == ".tiff":
+        canvas.save(output_path, compression="tiff_lzw", dpi=(dpi, dpi))
+    else:
+        canvas.save(output_path, dpi=(dpi, dpi))
 
 
 def choose_candidate(preprocessed_image: Path, candidates: list[dict], padding: int) -> tuple[dict, dict]:
@@ -263,6 +328,9 @@ def main() -> int:
     parser.add_argument("--padding", type=int, default=10, help="Padding around OCR bbox")
     parser.add_argument("--name", default="orig_crop_wu", help="Output folder name")
     parser.add_argument("--out-dir", default=str(DEFAULT_OUTPUT_DIR), help="Output root directory")
+    parser.add_argument("--lang", choices=("zh", "en"), default="en")
+    parser.add_argument("--formats", default="jpeg,pdf")
+    parser.add_argument("--dpi-kind", choices=("lineart", "grayscale", "colour", "color"), default="colour")
     args = parser.parse_args()
 
     base_image = _resolve_path(args.base_image)
@@ -339,17 +407,21 @@ def main() -> int:
     save_image(out_root / "07_final_trim.png", final_overlay)
     save_image(out_root / "08_final_segmented.png", to_rgb(final_segmented))
 
+    labs = LABELS["en" if args.lang == "en" else "zh"]
     panels = [
-        ("(a) OCR bbox", context_img),
-        ("(b) ROI", to_rgb(gray)),
-        ("(c) Noise removal", noise_overlay),
-        ("(d) Binarization", to_white_bg_binary(bin_before)),
-        ("(e) CC filter", cc_overlay),
-        ("(f) Projection trim", proj_overlay),
-        ("(g) Final trim", final_overlay),
-        ("(h) Final glyph", to_rgb(final_segmented)),
+        (labs[0], context_img),
+        (labs[1], to_rgb(gray)),
+        (labs[2], noise_overlay),
+        (labs[3], to_white_bg_binary(bin_before)),
+        (labs[4], cc_overlay),
+        (labs[5], proj_overlay),
+        (labs[6], final_overlay),
+        (labs[7], to_rgb(final_segmented)),
     ]
-    make_composite(out_root / "00_segmentation_composite.png", panels)
+    dpi = default_dpi(args.dpi_kind)
+    for fmt in parse_formats(args.formats):
+        ext = "jpeg" if fmt.lower() == "jpg" else fmt.lower()
+        make_composite(out_root / f"00_segmentation_composite.{ext}", panels, dpi=dpi)
 
     manifest = {
         "base_image": str(base_image),

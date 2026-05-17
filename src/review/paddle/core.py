@@ -3,7 +3,6 @@ from __future__ import annotations
 import base64
 import json
 import os
-import re
 import time
 import urllib.parse
 import urllib.request
@@ -17,6 +16,7 @@ import numpy as np
 
 from src.review.segment import segment_character
 from src.review import config as review_config
+from src.review.identity import make_instance_id, normalize_to_preprocessed_path
 
 PROJECT_ROOT = review_config.PROJECT_ROOT
 RESULTS_DIR = review_config.RESULTS_DIR
@@ -26,18 +26,6 @@ MATCHED_BOOKS_DIR = review_config.MATCHED_BOOKS_DIR
 MATCHED_SHARDS = review_config.MATCHED_SHARDS_DIR
 SEGMENTED_DIR = review_config.PADDLE_SEGMENTED_DIR
 REVIEW_PADDLE_DIR = review_config.PADDLE_REVIEW_BOOKS_DIR
-
-
-def normalize_to_preprocessed_path(raw_or_mixed_path: str) -> str:
-    if not raw_or_mixed_path:
-        return raw_or_mixed_path
-    if "/preprocessed/" in raw_or_mixed_path and "_preprocessed.png" in raw_or_mixed_path:
-        return raw_or_mixed_path
-    match = re.search(r"data/raw/([^/]+)/(册\\d+_pages)/(page_\\d+)\\.png", raw_or_mixed_path)
-    if match:
-        book, volume_dir, page_name = match.groups()
-        return f"data/results/preprocessed/{book}/{volume_dir}/{page_name}_preprocessed.png"
-    return raw_or_mixed_path
 
 
 def load_matched_book(book: str) -> Optional[Dict]:
@@ -77,17 +65,6 @@ def list_books() -> List[str]:
         data = json.loads(MATCHED_JSON.read_text(encoding="utf-8"))
         return sorted((data.get("books") or {}).keys())
     return []
-
-
-def make_instance_id(inst: Dict) -> str:
-    try:
-        vol = int(inst.get("volume", 0))
-    except Exception:
-        vol = 0
-    page = inst.get("page", "")
-    page_suffix = page.split("_")[-1] if page else ""
-    char_index = inst.get("char_index", 0)
-    return f"册{vol:02d}_page{page_suffix}_idx{char_index}"
 
 
 def encode_png_b64(img_bgr) -> str:
