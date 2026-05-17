@@ -31,8 +31,10 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.review import config as review_config
 from src.review.identity import (
+    get_confirmed_path as _get_confirmed_path,
     make_instance_id as _make_instance_id,
     normalize_to_preprocessed_path,
+    set_confirmed_path as _set_confirmed_path,
 )
 from src.review.storage.common import acquire_file_lock as _acquire_book_lock
 from src.review.storage.paddle_books import (
@@ -81,13 +83,13 @@ REVIEW_BOOKS_DIR = review_config.REVIEW_BOOKS_DIR
 
 # 切割相关路径
 SEGMENTATION_REVIEW_PATH = review_config.SEGMENTATION_REVIEW_PATH
-SEGMENTED_DIR = review_config.SEGMENTED_DIR
+CONFIRMED_DIR = review_config.CONFIRMED_DIR
 
 # 标记功能路径
 SEGMENT_MARKS_PATH = review_config.SEGMENT_MARKS_PATH
 
 # 创建必要的目录
-SEGMENTED_DIR.mkdir(parents=True, exist_ok=True)
+CONFIRMED_DIR.mkdir(parents=True, exist_ok=True)
 
 # 加载数据（懒加载 / 分片缓存）
 matched_data = None  # 旧的整库加载（尽量避免使用）
@@ -459,7 +461,7 @@ def _remove_segmentation_entries(book_name: str, char: str, instance_ids: set):
             for inst_id in instance_ids:
                 entry = seg_map.pop(inst_id, None)
                 if entry:
-                    seg_rel = entry.get('segmented_path')
+                    seg_rel = _get_confirmed_path(entry)
                     if seg_rel:
                         seg_abs = PROJECT_ROOT / seg_rel
                         try:
@@ -577,7 +579,7 @@ def build_combined_book(book_name: str) -> dict:
     """
     构建统一视图：以 OCR 选中的 lookup 为主，叠加切割状态。
     返回结构：{ char: { inst_id: {selected, bbox, source_image, ...,
-                                 status, decision, segmented_path, method, timestamp} } }
+                                 status, decision, confirmed_path, method, timestamp} } }
     """
     lookup_book = get_lookup_book(book_name) or {}
     seg_data = read_review_data()
@@ -600,7 +602,8 @@ def build_combined_book(book_name: str) -> dict:
                 'index': info.get('index'),
                 'status': seg_entry.get('status', 'unreviewed'),
                 'decision': seg_entry.get('decision'),
-                'segmented_path': seg_entry.get('segmented_path'),
+                'confirmed_path': _get_confirmed_path(seg_entry),
+                'segmented_path': _get_confirmed_path(seg_entry),
                 'method': seg_entry.get('method'),
                 'timestamp': seg_entry.get('timestamp')
             }
@@ -641,6 +644,7 @@ def write_review_data(seg_view: dict):
 
 def update_review_entry(book_name: str, char: str, instance_id: str, entry: dict):
     """对切割状态进行加锁的读-改-写更新（存于 review_books/*.json 的 segments）。"""
+    entry = _set_confirmed_path(dict(entry), _get_confirmed_path(entry))
     try:
         import fcntl  # POSIX
     except Exception:
@@ -1206,7 +1210,7 @@ def api_segment_instances():
                 )
                 if isinstance(saved, dict):
                     entry_state = saved
-                segmented_rel = saved.get('segmented_path') if isinstance(saved, dict) else None
+                segmented_rel = _get_confirmed_path(saved) if isinstance(saved, dict) else None
                 saved_status = saved.get('status') if isinstance(saved, dict) else None
                 if segmented_rel:
                     # 转换为绝对路径
@@ -1275,7 +1279,7 @@ def api_save_segmentation():
         # 只保存切割后的图片（扁平结构：不使用字符子文件夹）
         segmented_path = None
         if segmented_b64:
-            book_dir = SEGMENTED_DIR / book_name
+            book_dir = CONFIRMED_DIR / book_name
             book_dir.mkdir(parents=True, exist_ok=True)
 
             # 解码 base64
@@ -1287,14 +1291,13 @@ def api_save_segmentation():
 
         # 更新审查状态（单文件加锁写入）
         from datetime import datetime, timezone
-        rel_path = f"data/results/manual/segmented/{book_name}/{char}_{instance_id}.png" if segmented_path else None
-        update_review_entry(book_name, char, instance_id, {
+        rel_path = f"data/results/manual/confirmed/{book_name}/{char}_{instance_id}.png" if segmented_path else None
+        update_review_entry(book_name, char, instance_id, _set_confirmed_path({
             'status': status,
             'method': method,
             'timestamp': datetime.now(timezone.utc).isoformat(),
-            'segmented_path': rel_path,
             'decision': decision
-        })
+        }, rel_path))
 
         app.logger.info('[API] /save_segmentation saved: %s', rel_path)
         return jsonify({'success': True})
@@ -1328,13 +1331,12 @@ def api_unconfirm_segmentation():
 
         # 恢复为未审查（单文件加锁写入）
         from datetime import datetime, timezone
-        update_review_entry(book_name, char, instance_id, {
+        update_review_entry(book_name, char, instance_id, _set_confirmed_path({
             'status': 'unreviewed',
             'method': None,
             'timestamp': datetime.now(timezone.utc).isoformat(),
-            'segmented_path': None,
             'decision': 'unknown'
-        })
+        }, None))
 
         app.logger.info('[API] /unconfirm_segmentation done: %s/%s/%s', book_name, char, instance_id)
         return jsonify({'success': True})
@@ -1372,7 +1374,7 @@ def api_mark_segmentation_decision():
 
         status = entry.get('status', 'unreviewed')
         method = entry.get('method')
-        segmented_path = entry.get('segmented_path')
+        segmented_path = _get_confirmed_path(entry)
 
         if decision == 'drop':
             status = 'dropped'
@@ -1391,13 +1393,12 @@ def api_mark_segmentation_decision():
         else:  # unknown
             status = 'unreviewed'
 
-        update_review_entry(book_name, char, instance_id, {
+        update_review_entry(book_name, char, instance_id, _set_confirmed_path({
             'status': status,
             'method': method,
             'timestamp': datetime.now(timezone.utc).isoformat(),
-            'segmented_path': segmented_path,
             'decision': decision
-        })
+        }, segmented_path))
 
         return jsonify({'success': True})
 
@@ -1787,7 +1788,7 @@ def api_export_marked():
 # ==================== Fixing（问题集中处理）只读 API ====================
 
 def _iter_confirmed_entries(review: Dict, book_name: str) -> List[Tuple[str, str, str]]:
-    """返回该书所有已确认的 (char, instance_id, segmented_rel_path)。"""
+    """返回该书所有已确认的 (char, instance_id, confirmed_rel_path)。"""
     out: List[Tuple[str, str, str]] = []
     books = (review or {}).get('books', {})
     book_obj = books.get(book_name, {}) if isinstance(books, dict) else {}
@@ -1799,7 +1800,7 @@ def _iter_confirmed_entries(review: Dict, book_name: str) -> List[Tuple[str, str
                 continue
             if entry.get('status') != 'confirmed':
                 continue
-            seg_rel = entry.get('segmented_path')
+            seg_rel = _get_confirmed_path(entry)
             if not seg_rel:
                 continue
             out.append((ch, inst_id, seg_rel))
@@ -2003,7 +2004,7 @@ def api_fixing_items():
         for ch, inst_map in lookup_book.items():
             for inst_id, info in inst_map.items():
                 entry = (review_book.get(ch) or {}).get(inst_id, {})
-                seg_rel = entry.get('segmented_path')
+                seg_rel = _get_confirmed_path(entry)
                 status = entry.get('status', 'unreviewed')
                 method = entry.get('method')
                 metrics = {}
@@ -2017,6 +2018,7 @@ def api_fixing_items():
                     'book': book_name,
                     'char': ch,
                     'instance_id': inst_id,
+                    'confirmed_path': seg_rel,
                     'segmented_path': seg_rel,
                     'status': status,
                     'method': method,
@@ -2044,6 +2046,7 @@ def api_fixing_items():
                 'book': item_data['book'],
                 'char': item_data['char'],
                 'instance_id': item_data['instance_id'],
+                'confirmed_path': seg_rel,
                 'segmented_path': seg_rel,
                 'status': item_data['status'],
                 'method': item_data['method'],
@@ -2232,7 +2235,7 @@ def api_paddle_items():
                 continue
             row = dict(item)
             if include_image:
-                seg_rel = row.get('segmented_path')
+                seg_rel = row.get('confirmed_path') or row.get('segmented_path')
                 if seg_rel:
                     seg_abs = PROJECT_ROOT / seg_rel
                     if seg_abs.exists():
@@ -2399,7 +2402,7 @@ def main():
     print(f"数据文件：{MATCHED_JSON_PATH}")
     print(f"标准字文件：{_resolve_standard_chars_path()}")
     print(f"图片目录：{PREPROCESSED_DIR}")
-    print(f"切割结果目录：{SEGMENTED_DIR}")
+    print(f"确认结果目录：{CONFIRMED_DIR}")
     print("查找索引：内存派生自 review_books 分片（不再依赖独立文件）")
 
     print("\n服务器启动中...")

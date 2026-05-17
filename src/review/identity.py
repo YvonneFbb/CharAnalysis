@@ -5,6 +5,9 @@ from __future__ import annotations
 import re
 from typing import Dict, Optional, Tuple
 
+MANUAL_SEGMENTED_PREFIX = "data/results/manual/segmented/"
+MANUAL_CONFIRMED_PREFIX = "data/results/manual/confirmed/"
+
 
 def normalize_to_preprocessed_path(raw_or_mixed_path: str) -> str:
     """
@@ -44,3 +47,27 @@ def parse_instance_id(instance_id: str) -> Optional[Tuple[int, str, int]]:
     page = match.group(2)
     idx = int(match.group(3))
     return vol, page, idx
+
+
+def normalize_to_confirmed_path(path: Optional[str]) -> Optional[str]:
+    if not path:
+        return path
+    if path.startswith(MANUAL_SEGMENTED_PREFIX):
+        return MANUAL_CONFIRMED_PREFIX + path[len(MANUAL_SEGMENTED_PREFIX):]
+    return path
+
+
+def get_confirmed_path(payload: Optional[Dict]) -> Optional[str]:
+    if not isinstance(payload, dict):
+        return None
+    path = payload.get("confirmed_path") or payload.get("segmented_path")
+    if not isinstance(path, str) or not path:
+        return None
+    return normalize_to_confirmed_path(path)
+
+
+def set_confirmed_path(payload: Dict, path: Optional[str]) -> Dict:
+    normalized = normalize_to_confirmed_path(path)
+    payload["confirmed_path"] = normalized
+    payload["segmented_path"] = normalized
+    return payload

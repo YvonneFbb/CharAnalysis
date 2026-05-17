@@ -32,9 +32,10 @@ if str(PROJECT_ROOT) not in sys.path:
 from src.analysis.image_metrics import center_crop_fixed_box, percentile
 from src.analysis.montage import build_montage, make_tile
 from src.review import config as review_config
+from src.review.identity import get_confirmed_path
 from src.review.storage.review_books import REVIEW_BOOKS_DIR, list_review_books, read_review_book
 
-SEGMENTED_DIR = review_config.SEGMENTED_DIR
+CONFIRMED_DIR = review_config.CONFIRMED_DIR
 
 
 def collect_book_entries(book_name: str, use_fixed_box: bool) -> Tuple[List[Dict], Dict]:
@@ -56,7 +57,7 @@ def collect_book_entries(book_name: str, use_fixed_box: bool) -> Tuple[List[Dict
                 continue
             if seg.get('decision') == 'drop':
                 continue
-            seg_rel = seg.get('segmented_path')
+            seg_rel = get_confirmed_path(seg)
             if not seg_rel:
                 missing_images += 1
                 continue
@@ -70,6 +71,7 @@ def collect_book_entries(book_name: str, use_fixed_box: bool) -> Tuple[List[Dict
             entries.append({
                 'char': char,
                 'instance_id': inst_id,
+                'confirmed_path': seg_rel,
                 'segmented_path': seg_rel,
                 'image_name': abs_path.name,
                 'status': seg.get('status'),
@@ -123,7 +125,7 @@ def main():
 
     from datetime import datetime, timezone
     manifest = {
-        'version': 1,
+        'version': 2,
         'generated_at': datetime.now(timezone.utc).isoformat(),
         'parameters': {
             'use_fixed_box': bool(args.use_fixed_box),
@@ -134,11 +136,19 @@ def main():
         },
         'source': {
             'review_books_dir': str(REVIEW_BOOKS_DIR.relative_to(PROJECT_ROOT)),
-            'segmented_dir': str(SEGMENTED_DIR.relative_to(PROJECT_ROOT)),
+            'confirmed_dir': str(CONFIRMED_DIR.relative_to(PROJECT_ROOT)),
             'review_books_mtime': max(
                 (p.stat().st_mtime for p in REVIEW_BOOKS_DIR.glob('*.json')),
                 default=0,
             ),
+        },
+        'summary': {
+            'total_books': 0,
+            'total_entries': 0,
+            'total_copied': 0,
+            'total_missing_images': 0,
+            'total_missing_lookup': 0,
+            'total_skipped_unmatched': 0,
         },
         'books': {}
     }
@@ -173,7 +183,7 @@ def main():
         # Build montage
         tiles: List[Image.Image] = []
         Lb = 0
-        if args.use_fixed_box and long_sides:
+        if long_sides:
             Lb = int(math.ceil(percentile(long_sides, 90) * 1.05))
         content_size = Lb if (args.use_fixed_box and Lb > 0) else (max(long_sides) if long_sides else 0)
         tile_size = max(8, content_size + max(0, args.border) * 2 + 2) if content_size else max(8, args.tile_size)
@@ -203,9 +213,16 @@ def main():
             'count': len(entries),
             'copied': copied,
             'missing_images': meta['missing_images'],
+            'missing_lookup': meta['missing_lookup'],
             'skipped_unmatched': meta['skipped_unmatched'],
             'fixed_box_Lb': Lb
         }
+        manifest['summary']['total_books'] += 1
+        manifest['summary']['total_entries'] += len(entries)
+        manifest['summary']['total_copied'] += copied
+        manifest['summary']['total_missing_images'] += meta['missing_images']
+        manifest['summary']['total_missing_lookup'] += meta['missing_lookup']
+        manifest['summary']['total_skipped_unmatched'] += meta['skipped_unmatched']
 
         print(f'✓ {book}: {len(entries)} items, montage={montage_dir / f"{book}.png"}')
 

@@ -26,8 +26,43 @@ ENV/
 # 数据目录
 # 默认忽略 data 下所有内容（体量大）
 data/*
-# 仅保留一个分析备份包（其余 data 继续忽略）
-!data/analysis_backup.zip
+# 仅放行必要元数据和人工精选真源
+!data/metadata/
+data/metadata/*
+!data/metadata/books_metadata.csv
+
+!data/results/
+data/results/*
+
+!data/results/manual/
+data/results/manual/*
+
+!data/results/manual/review_books/
+data/results/manual/review_books/*
+!data/results/manual/review_books/*.json
+data/results/manual/review_books/*.lock
+data/results/manual/review_books/_backups/
+
+!data/results/manual/confirmed/
+!data/results/manual/confirmed/**
+
+# 其余结果层保持忽略：可重建、体量大或只是缓存
+data/results/_cache/
+data/results/matched_books/
+data/results/matched_by_book.json
+data/results/ocr/
+data/results/paddle/
+data/results/preprocessed/
+data/results/cropped_cache/
+data/results/index.html
+data/results/manual/review_results.json
+data/results/manual/segmentation_review.json
+data/results/manual/segment_lookup.json
+data/results/manual/segment_marks.json
+
+# analysis 是派生包，默认不进仓库；如需重建可本地生成
+data/analysis/
+data/analysis_backup.zip
 
 # 临时文件
 *.log

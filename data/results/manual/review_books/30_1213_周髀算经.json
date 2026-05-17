@@ -1,0 +1,5595 @@
+{
+  "version": 2,
+  "book": "30_1213_周髀算经",
+  "chars": {
+    "一": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T02:05:25.945Z",
+      "lookup": {
+        "册02_page0028_idx83": {
+          "bbox": {
+            "x": 1113,
+            "y": 342,
+            "width": 106,
+            "height": 40
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0028",
+          "char_index": 83,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0028_idx83": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:54:04.188857+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/一_册02_page0028_idx83.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/一_册02_page0028_idx83.png"
+        }
+      }
+    },
+    "丁": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T02:02:40.857Z",
+      "lookup": {
+        "册02_page0041_idx83": {
+          "bbox": {
+            "x": 1536,
+            "y": 1134,
+            "width": 127,
+            "height": 79
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0041",
+          "char_index": 83,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0041_idx83": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:02:32.785128+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/丁_册02_page0041_idx83.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/丁_册02_page0041_idx83.png"
+        }
+      }
+    },
+    "七": {
+      "instances": {
+        "47": true,
+        "58": true
+      },
+      "timestamp": "2025-10-29T01:55:51.017Z",
+      "lookup": {
+        "册02_page0022_idx2": {
+          "bbox": {
+            "x": 1771,
+            "y": 308,
+            "width": 106,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0022_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0022",
+          "char_index": 2,
+          "index": 47
+        },
+        "册02_page0022_idx98": {
+          "bbox": {
+            "x": 1315,
+            "y": 1250,
+            "width": 102,
+            "height": 52
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0022_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0022",
+          "char_index": 98,
+          "index": 58
+        }
+      },
+      "segments": {
+        "册02_page0022_idx2": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:57:52.560057+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/七_册02_page0022_idx2.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/七_册02_page0022_idx2.png"
+        },
+        "册02_page0022_idx98": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:57:53.245781+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/七_册02_page0022_idx98.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/七_册02_page0022_idx98.png"
+        }
+      }
+    },
+    "三": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T01:56:05.188Z",
+      "lookup": {
+        "册02_page0028_idx268": {
+          "bbox": {
+            "x": 364,
+            "y": 460,
+            "width": 109,
+            "height": 55
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0028",
+          "char_index": 268,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册02_page0028_idx268": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:53:39.958192+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/三_册02_page0028_idx268.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/三_册02_page0028_idx268.png"
+        }
+      }
+    },
+    "上": {
+      "instances": {
+        "40": true
+      },
+      "timestamp": "2025-10-29T02:03:10.560Z",
+      "lookup": {
+        "册02_page0004_idx40": {
+          "bbox": {
+            "x": 1616,
+            "y": 504,
+            "width": 82,
+            "height": 62
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0004_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0004",
+          "char_index": 40,
+          "index": 40
+        }
+      },
+      "segments": {
+        "册02_page0004_idx40": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:00:02.291146+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/上_册02_page0004_idx40.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/上_册02_page0004_idx40.png"
+        }
+      }
+    },
+    "下": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T02:03:12.893Z",
+      "lookup": {
+        "册02_page0041_idx55": {
+          "bbox": {
+            "x": 1655,
+            "y": 489,
+            "width": 95,
+            "height": 72
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0041",
+          "char_index": 55,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册02_page0041_idx55": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:00:08.908693+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/下_册02_page0041_idx55.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/下_册02_page0041_idx55.png"
+        }
+      }
+    },
+    "不": {
+      "instances": {
+        "4": true,
+        "15": true
+      },
+      "timestamp": "2025-10-29T01:53:58.748Z",
+      "lookup": {
+        "册02_page0017_idx450": {
+          "bbox": {
+            "x": 210,
+            "y": 397,
+            "width": 90,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0017_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0017",
+          "char_index": 450,
+          "index": 4
+        },
+        "册02_page0022_idx152": {
+          "bbox": {
+            "x": 1037,
+            "y": 1299,
+            "width": 95,
+            "height": 54
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0022_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0022",
+          "char_index": 152,
+          "index": 15
+        }
+      },
+      "segments": {
+        "册02_page0017_idx450": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:00:12.410919+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/不_册02_page0017_idx450.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/不_册02_page0017_idx450.png"
+        },
+        "册02_page0022_idx152": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:00:39.870137+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/不_册02_page0022_idx152.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/不_册02_page0022_idx152.png"
+        }
+      }
+    },
+    "丙": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T01:53:28.361Z",
+      "lookup": {
+        "册02_page0035_idx169": {
+          "bbox": {
+            "x": 1122,
+            "y": 727,
+            "width": 123,
+            "height": 77
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0035_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0035",
+          "char_index": 169,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0035_idx169": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:56:11.176149+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/丙_册02_page0035_idx169.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/丙_册02_page0035_idx169.png"
+        }
+      }
+    },
+    "中": {
+      "instances": {
+        "2": true,
+        "3": true
+      },
+      "timestamp": "2025-10-29T01:54:12.823Z",
+      "lookup": {
+        "册02_page0003_idx101": {
+          "bbox": {
+            "x": 1146,
+            "y": 511,
+            "width": 107,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0003_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0003",
+          "char_index": 101,
+          "index": 2
+        },
+        "册02_page0003_idx203": {
+          "bbox": {
+            "x": 606,
+            "y": 641,
+            "width": 88,
+            "height": 66
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0003_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0003",
+          "char_index": 203,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册02_page0003_idx101": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:56:34.562059+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/中_册02_page0003_idx101.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/中_册02_page0003_idx101.png"
+        },
+        "册02_page0003_idx203": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:56:35.552361+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/中_册02_page0003_idx203.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/中_册02_page0003_idx203.png"
+        }
+      }
+    },
+    "主": {
+      "instances": {
+        "11": true
+      },
+      "timestamp": "2025-10-29T02:03:47.063Z",
+      "lookup": {
+        "册02_page0029_idx65": {
+          "bbox": {
+            "x": 1611,
+            "y": 696,
+            "width": 115,
+            "height": 72
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0029_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0029",
+          "char_index": 65,
+          "index": 11
+        }
+      },
+      "segments": {
+        "册02_page0029_idx65": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:59:34.947468+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/主_册02_page0029_idx65.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/主_册02_page0029_idx65.png"
+        }
+      }
+    },
+    "乃": {
+      "instances": {
+        "17": true
+      },
+      "timestamp": "2025-10-29T02:03:37.863Z",
+      "lookup": {
+        "册02_page0004_idx126": {
+          "bbox": {
+            "x": 1233,
+            "y": 250,
+            "width": 99,
+            "height": 62
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0004_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0004",
+          "char_index": 126,
+          "index": 17
+        }
+      },
+      "segments": {
+        "册02_page0004_idx126": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:57:39.612411+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/乃_册02_page0004_idx126.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/乃_册02_page0004_idx126.png"
+        }
+      }
+    },
+    "之": {
+      "instances": {
+        "13": true,
+        "15": true
+      },
+      "timestamp": "2025-10-29T01:57:07.020Z",
+      "lookup": {
+        "册02_page0041_idx57": {
+          "bbox": {
+            "x": 1655,
+            "y": 643,
+            "width": 95,
+            "height": 48
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0041",
+          "char_index": 57,
+          "index": 13
+        },
+        "册02_page0041_idx30": {
+          "bbox": {
+            "x": 1862,
+            "y": 1000,
+            "width": 107,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0041",
+          "char_index": 30,
+          "index": 15
+        }
+      },
+      "segments": {
+        "册02_page0041_idx57": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:58:18.357082+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/之_册02_page0041_idx57.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/之_册02_page0041_idx57.png"
+        },
+        "册02_page0041_idx30": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:58:25.420200+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/之_册02_page0041_idx30.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/之_册02_page0041_idx30.png"
+        }
+      }
+    },
+    "乎": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-29T02:00:07.488Z",
+      "lookup": {
+        "册01_page0005_idx47": {
+          "bbox": {
+            "x": 1409,
+            "y": 895,
+            "width": 85,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0005_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0005",
+          "char_index": 47,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0005_idx47": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:01:08.031826+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/乎_册01_page0005_idx47.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/乎_册01_page0005_idx47.png"
+        }
+      }
+    },
+    "乖": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T01:55:40.368Z",
+      "lookup": {
+        "册01_page0022_idx1": {
+          "bbox": {
+            "x": 1384,
+            "y": 202,
+            "width": 52,
+            "height": 70
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0022_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0022",
+          "char_index": 1,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0022_idx1": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:14:51.788568+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "乙": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T02:05:33.945Z",
+      "lookup": {
+        "册02_page0035_idx144": {
+          "bbox": {
+            "x": 1128,
+            "y": 133,
+            "width": 123,
+            "height": 93
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0035_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0035",
+          "char_index": 144,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0035_idx144": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:54:52.830596+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/乙_册02_page0035_idx144.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/乙_册02_page0035_idx144.png"
+        }
+      }
+    },
+    "也": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-29T01:55:53.417Z",
+      "lookup": {
+        "册02_page0003_idx288": {
+          "bbox": {
+            "x": 214,
+            "y": 623,
+            "width": 116,
+            "height": 87
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0003_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0003",
+          "char_index": 288,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册02_page0003_idx288": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:57:58.982810+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/也_册02_page0003_idx288.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/也_册02_page0003_idx288.png"
+        }
+      }
+    },
+    "予": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T02:00:20.980Z",
+      "lookup": {
+        "册01_page0015_idx74": {
+          "bbox": {
+            "x": 1582,
+            "y": 916,
+            "width": 55,
+            "height": 61
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0015_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0015",
+          "char_index": 74,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0015_idx74": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:14:58.456712+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "二": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-10-29T02:05:28.861Z",
+      "lookup": {
+        "册02_page0029_idx85": {
+          "bbox": {
+            "x": 1318,
+            "y": 498,
+            "width": 105,
+            "height": 66
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0029_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0029",
+          "char_index": 85,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册02_page0029_idx85": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:54:09.646468+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/二_册02_page0029_idx85.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/二_册02_page0029_idx85.png"
+        }
+      }
+    },
+    "于": {
+      "instances": {
+        "6": true
+      },
+      "timestamp": "2025-10-29T02:00:17.380Z",
+      "lookup": {
+        "册02_page0036_idx172": {
+          "bbox": {
+            "x": 274,
+            "y": 471,
+            "width": 49,
+            "height": 97
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0036_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0036",
+          "char_index": 172,
+          "index": 6
+        }
+      },
+      "segments": {
+        "册02_page0036_idx172": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:15:09.776836+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "云": {
+      "instances": {
+        "4": true,
+        "19": true
+      },
+      "timestamp": "2025-11-11T15:15:25.346Z",
+      "lookup": {
+        "册02_page0040_idx159": {
+          "bbox": {
+            "x": 939,
+            "y": 925,
+            "width": 105,
+            "height": 66
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 159,
+          "index": 4
+        },
+        "册01_page0011_idx281": {
+          "bbox": {
+            "x": 302,
+            "y": 1054,
+            "width": 116,
+            "height": 58
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0011_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0011",
+          "char_index": 281,
+          "index": 19
+        }
+      },
+      "segments": {
+        "册02_page0040_idx159": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:15:51.378637+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/云_册02_page0040_idx159.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/云_册02_page0040_idx159.png"
+        },
+        "册01_page0011_idx281": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:15:55.745877+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/云_册01_page0011_idx281.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/云_册01_page0011_idx281.png"
+        }
+      }
+    },
+    "人": {
+      "instances": {
+        "0": true,
+        "6": true
+      },
+      "timestamp": "2025-10-29T02:03:29.488Z",
+      "lookup": {
+        "册02_page0003_idx71": {
+          "bbox": {
+            "x": 1339,
+            "y": 857,
+            "width": 95,
+            "height": 60
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0003_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0003",
+          "char_index": 71,
+          "index": 0
+        },
+        "册02_page0040_idx266": {
+          "bbox": {
+            "x": 316,
+            "y": 910,
+            "width": 106,
+            "height": 80
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 266,
+          "index": 6
+        }
+      },
+      "segments": {
+        "册02_page0003_idx71": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:52:14.455181+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/人_册02_page0003_idx71.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/人_册02_page0003_idx71.png"
+        },
+        "册02_page0040_idx266": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:52:16.034366+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/人_册02_page0040_idx266.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/人_册02_page0040_idx266.png"
+        }
+      }
+    },
+    "來": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T01:59:58.401Z",
+      "lookup": {
+        "册02_page0025_idx233": {
+          "bbox": {
+            "x": 764,
+            "y": 333,
+            "width": 100,
+            "height": 75
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0025_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0025",
+          "char_index": 233,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册02_page0025_idx233": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:50:43.675114+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/來_册02_page0025_idx233.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/來_册02_page0025_idx233.png"
+        }
+      }
+    },
+    "入": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T02:03:22.472Z",
+      "lookup": {
+        "册02_page0009_idx179": {
+          "bbox": {
+            "x": 767,
+            "y": 168,
+            "width": 101,
+            "height": 75
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0009_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0009",
+          "char_index": 179,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册02_page0009_idx179": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:52:12.255901+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/入_册02_page0009_idx179.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/入_册02_page0009_idx179.png"
+        }
+      }
+    },
+    "八": {
+      "instances": {
+        "13": true
+      },
+      "timestamp": "2025-10-29T02:03:24.430Z",
+      "lookup": {
+        "册02_page0022_idx93": {
+          "bbox": {
+            "x": 1310,
+            "y": 909,
+            "width": 102,
+            "height": 64
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0022_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0022",
+          "char_index": 93,
+          "index": 13
+        }
+      },
+      "segments": {
+        "册02_page0022_idx93": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:52:13.528785+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/八_册02_page0022_idx93.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/八_册02_page0022_idx93.png"
+        }
+      }
+    },
+    "公": {
+      "instances": {
+        "1": true,
+        "9": true
+      },
+      "timestamp": "2025-10-29T02:02:46.401Z",
+      "lookup": {
+        "册02_page0040_idx44": {
+          "bbox": {
+            "x": 1632,
+            "y": 711,
+            "width": 100,
+            "height": 63
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 44,
+          "index": 1
+        },
+        "册01_page0015_idx34": {
+          "bbox": {
+            "x": 1608,
+            "y": 182,
+            "width": 109,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0015_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0015",
+          "char_index": 34,
+          "index": 9
+        }
+      },
+      "segments": {
+        "册02_page0040_idx44": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:02:33.709182+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/公_册02_page0040_idx44.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/公_册02_page0040_idx44.png"
+        },
+        "册01_page0015_idx34": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:02:46.815832+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/公_册01_page0015_idx34.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/公_册01_page0015_idx34.png"
+        }
+      }
+    },
+    "其": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T01:58:31.686Z",
+      "lookup": {
+        "册02_page0041_idx26": {
+          "bbox": {
+            "x": 1860,
+            "y": 706,
+            "width": 108,
+            "height": 81
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0041",
+          "char_index": 26,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0041_idx26": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:52:16.903473+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/其_册02_page0041_idx26.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/其_册02_page0041_idx26.png"
+        }
+      }
+    },
+    "具": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T01:58:34.402Z",
+      "lookup": {
+        "册02_page0033_idx200": {
+          "bbox": {
+            "x": 813,
+            "y": 622,
+            "width": 59,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0033_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0033",
+          "char_index": 200,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册02_page0033_idx200": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:15:41.542523+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "典": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-10-29T01:58:36.960Z",
+      "lookup": {
+        "册01_page0014_idx224": {
+          "bbox": {
+            "x": 774,
+            "y": 921,
+            "width": 106,
+            "height": 80
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0014_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0014",
+          "char_index": 224,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册01_page0014_idx224": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:52:23.088151+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/典_册01_page0014_idx224.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/典_册01_page0014_idx224.png"
+        }
+      }
+    },
+    "劉": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-29T01:52:19.521Z",
+      "lookup": {
+        "册01_page0021_idx125": {
+          "bbox": {
+            "x": 1424,
+            "y": 771,
+            "width": 51,
+            "height": 77
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0021_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0021",
+          "char_index": 125,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0021_idx125": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:16:06.075780+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "十": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T02:05:30.712Z",
+      "lookup": {
+        "册02_page0028_idx304": {
+          "bbox": {
+            "x": 181,
+            "y": 450,
+            "width": 94,
+            "height": 82
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0028",
+          "char_index": 304,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0028_idx304": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:54:10.864692+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/十_册02_page0028_idx304.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/十_册02_page0028_idx304.png"
+        }
+      }
+    },
+    "千": {
+      "instances": {
+        "590": true
+      },
+      "timestamp": "2025-11-11T15:20:12.917Z",
+      "lookup": {
+        "册01_page0036_idx183": {
+          "bbox": {
+            "x": 1045,
+            "y": 810,
+            "width": 128,
+            "height": 64
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0036_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0036",
+          "char_index": 183,
+          "index": 590
+        }
+      },
+      "segments": {
+        "册01_page0036_idx183": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:17:02.042418+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/千_册01_page0036_idx183.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/千_册01_page0036_idx183.png"
+        }
+      }
+    },
+    "升": {
+      "instances": {
+        "13": true
+      },
+      "timestamp": "2025-10-29T02:00:41.721Z",
+      "lookup": {
+        "册01_page0005_idx186": {
+          "bbox": {
+            "x": 875,
+            "y": 437,
+            "width": 100,
+            "height": 63
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0005_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0005",
+          "char_index": 186,
+          "index": 13
+        }
+      },
+      "segments": {
+        "册01_page0005_idx186": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:52:59.736121+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/升_册01_page0005_idx186.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/升_册01_page0005_idx186.png"
+        }
+      }
+    },
+    "南": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T01:53:25.870Z",
+      "lookup": {
+        "册02_page0039_idx75": {
+          "bbox": {
+            "x": 1527,
+            "y": 349,
+            "width": 114,
+            "height": 86
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0039_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0039",
+          "char_index": 75,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0039_idx75": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:56:10.327909+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/南_册02_page0039_idx75.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/南_册02_page0039_idx75.png"
+        }
+      }
+    },
+    "卯": {
+      "instances": {
+        "4": true
+      },
+      "timestamp": "2025-10-29T02:00:45.421Z",
+      "lookup": {
+        "册02_page0036_idx107": {
+          "bbox": {
+            "x": 1219,
+            "y": 1337,
+            "width": 121,
+            "height": 72
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0036_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0036",
+          "char_index": 107,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册02_page0036_idx107": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:53:10.922055+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/卯_册02_page0036_idx107.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/卯_册02_page0036_idx107.png"
+        }
+      }
+    },
+    "即": {
+      "instances": {
+        "13": true,
+        "14": true
+      },
+      "timestamp": "2025-10-29T01:50:42.401Z",
+      "lookup": {
+        "册02_page0009_idx2": {
+          "bbox": {
+            "x": 1804,
+            "y": 310,
+            "width": 122,
+            "height": 76
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0009_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0009",
+          "char_index": 2,
+          "index": 13
+        },
+        "册02_page0009_idx210": {
+          "bbox": {
+            "x": 673,
+            "y": 1175,
+            "width": 113,
+            "height": 71
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0009_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0009",
+          "char_index": 210,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册02_page0009_idx2": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:02:50.915197+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/即_册02_page0009_idx2.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/即_册02_page0009_idx2.png"
+        },
+        "册02_page0009_idx210": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:02:52.451081+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/即_册02_page0009_idx210.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/即_册02_page0009_idx210.png"
+        }
+      }
+    },
+    "卷": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T01:55:09.368Z",
+      "lookup": {
+        "册02_page0031_idx38": {
+          "bbox": {
+            "x": 1659,
+            "y": 455,
+            "width": 101,
+            "height": 88
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0031_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0031",
+          "char_index": 38,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0031_idx38": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:49:00.623461+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/卷_册02_page0031_idx38.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/卷_册02_page0031_idx38.png"
+        }
+      }
+    },
+    "去": {
+      "instances": {
+        "29": true
+      },
+      "timestamp": "2025-10-29T01:56:33.146Z",
+      "lookup": {
+        "册02_page0005_idx67": {
+          "bbox": {
+            "x": 1545,
+            "y": 978,
+            "width": 91,
+            "height": 58
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0005_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0005",
+          "char_index": 67,
+          "index": 29
+        }
+      },
+      "segments": {
+        "册02_page0005_idx67": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:53:46.432826+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/去_册02_page0005_idx67.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/去_册02_page0005_idx67.png"
+        }
+      }
+    },
+    "參": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-29T02:02:11.740Z",
+      "lookup": {
+        "册02_page0038_idx176": {
+          "bbox": {
+            "x": 1231,
+            "y": 1202,
+            "width": 111,
+            "height": 84
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0038_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0038",
+          "char_index": 176,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册02_page0038_idx176": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:02:17.069382+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/參_册02_page0038_idx176.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/參_册02_page0038_idx176.png"
+        }
+      }
+    },
+    "及": {
+      "instances": {
+        "13": true
+      },
+      "timestamp": "2025-10-29T01:59:20.447Z",
+      "lookup": {
+        "册02_page0023_idx101": {
+          "bbox": {
+            "x": 1344,
+            "y": 1003,
+            "width": 81,
+            "height": 71
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0023_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0023",
+          "char_index": 101,
+          "index": 13
+        }
+      },
+      "segments": {
+        "册02_page0023_idx101": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:03:53.353728+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/及_册02_page0023_idx101.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/及_册02_page0023_idx101.png"
+        }
+      }
+    },
+    "反": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-29T01:59:22.531Z",
+      "lookup": {
+        "册02_page0029_idx176": {
+          "bbox": {
+            "x": 925,
+            "y": 1002,
+            "width": 100,
+            "height": 75
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0029_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0029",
+          "char_index": 176,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册02_page0029_idx176": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:03:54.595099+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/反_册02_page0029_idx176.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/反_册02_page0029_idx176.png"
+        }
+      }
+    },
+    "受": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-29T01:59:27.127Z",
+      "lookup": {
+        "册02_page0040_idx45": {
+          "bbox": {
+            "x": 1633,
+            "y": 773,
+            "width": 100,
+            "height": 76
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 45,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册02_page0040_idx45": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:57:24.183306+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/受_册02_page0040_idx45.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/受_册02_page0040_idx45.png"
+        }
+      }
+    },
+    "句": {
+      "instances": {
+        "9": true
+      },
+      "timestamp": "2025-10-29T01:59:47.989Z",
+      "lookup": {
+        "册02_page0037_idx334": {
+          "bbox": {
+            "x": 236,
+            "y": 986,
+            "width": 116,
+            "height": 88
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0037_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0037",
+          "char_index": 334,
+          "index": 9
+        }
+      },
+      "segments": {
+        "册02_page0037_idx334": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:52:50.889194+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/句_册02_page0037_idx334.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/句_册02_page0037_idx334.png"
+        }
+      }
+    },
+    "可": {
+      "instances": {
+        "18": true
+      },
+      "timestamp": "2025-10-29T01:55:03.360Z",
+      "lookup": {
+        "册01_page0040_idx220": {
+          "bbox": {
+            "x": 788,
+            "y": 611,
+            "width": 85,
+            "height": 64
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0040",
+          "char_index": 220,
+          "index": 18
+        }
+      },
+      "segments": {
+        "册01_page0040_idx220": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:47:50.093825+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/可_册01_page0040_idx220.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/可_册01_page0040_idx220.png"
+        }
+      }
+    },
+    "合": {
+      "instances": {
+        "51": true
+      },
+      "timestamp": "2025-10-29T02:00:56.570Z",
+      "lookup": {
+        "册01_page0014_idx95": {
+          "bbox": {
+            "x": 1331,
+            "y": 1252,
+            "width": 96,
+            "height": 60
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0014_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0014",
+          "char_index": 95,
+          "index": 51
+        }
+      },
+      "segments": {
+        "册01_page0014_idx95": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:00:58.538090+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/合_册01_page0014_idx95.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/合_册01_page0014_idx95.png"
+        }
+      }
+    },
+    "同": {
+      "instances": {
+        "14": true
+      },
+      "timestamp": "2025-10-29T01:58:43.931Z",
+      "lookup": {
+        "册02_page0040_idx211": {
+          "bbox": {
+            "x": 633,
+            "y": 835,
+            "width": 106,
+            "height": 66
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 211,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册02_page0040_idx211": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:04:03.670344+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/同_册02_page0040_idx211.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/同_册02_page0040_idx211.png"
+        }
+      }
+    },
+    "吕": {
+      "instances": {
+        "8": true
+      },
+      "timestamp": "2025-10-29T02:04:09.406Z",
+      "lookup": {
+        "册01_page0034_idx281": {
+          "bbox": {
+            "x": 496,
+            "y": 168,
+            "width": 95,
+            "height": 83
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0034_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0034",
+          "char_index": 281,
+          "index": 8
+        }
+      },
+      "segments": {
+        "册01_page0034_idx281": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:03:47.013539+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/吕_册01_page0034_idx281.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/吕_册01_page0034_idx281.png"
+        }
+      }
+    },
+    "吾": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T01:55:28.968Z",
+      "lookup": {
+        "册01_page0017_idx28": {
+          "bbox": {
+            "x": 1492,
+            "y": 840,
+            "width": 104,
+            "height": 78
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0017_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0017",
+          "char_index": 28,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0017_idx28": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:02:55.134336+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/吾_册01_page0017_idx28.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/吾_册01_page0017_idx28.png"
+        }
+      }
+    },
+    "周": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T01:58:48.865Z",
+      "lookup": {
+        "册02_page0039_idx241": {
+          "bbox": {
+            "x": 317,
+            "y": 114,
+            "width": 102,
+            "height": 89
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0039_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0039",
+          "char_index": 241,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册02_page0039_idx241": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:04:16.316841+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/周_册02_page0039_idx241.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/周_册02_page0039_idx241.png"
+        }
+      }
+    },
+    "和": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T02:00:39.113Z",
+      "lookup": {
+        "册02_page0003_idx218": {
+          "bbox": {
+            "x": 509,
+            "y": 444,
+            "width": 105,
+            "height": 66
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0003_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0003",
+          "char_index": 218,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0003_idx218": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:55:53.956857+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/和_册02_page0003_idx218.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/和_册02_page0003_idx218.png"
+        }
+      }
+    },
+    "善": {
+      "instances": {
+        "11": true
+      },
+      "timestamp": "2025-10-29T01:58:28.102Z",
+      "lookup": {
+        "册01_page0005_idx49": {
+          "bbox": {
+            "x": 1413,
+            "y": 1082,
+            "width": 83,
+            "height": 72
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0005_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0005",
+          "char_index": 49,
+          "index": 11
+        }
+      },
+      "segments": {
+        "册01_page0005_idx49": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:57:43.641989+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/善_册01_page0005_idx49.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/善_册01_page0005_idx49.png"
+        }
+      }
+    },
+    "單": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T01:54:19.677Z",
+      "lookup": {
+        "册02_page0034_idx319": {
+          "bbox": {
+            "x": 122,
+            "y": 1271,
+            "width": 108,
+            "height": 81
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0034_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0034",
+          "char_index": 319,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册02_page0034_idx319": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:51:51.519345+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/單_册02_page0034_idx319.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/單_册02_page0034_idx319.png"
+        }
+      }
+    },
+    "四": {
+      "instances": {
+        "6": true
+      },
+      "timestamp": "2025-10-29T02:04:46.732Z",
+      "lookup": {
+        "册02_page0028_idx308": {
+          "bbox": {
+            "x": 181,
+            "y": 732,
+            "width": 94,
+            "height": 59
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0028",
+          "char_index": 308,
+          "index": 6
+        }
+      },
+      "segments": {
+        "册02_page0028_idx308": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:01:00.535840+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/四_册02_page0028_idx308.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/四_册02_page0028_idx308.png"
+        }
+      }
+    },
+    "固": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-29T01:53:22.586Z",
+      "lookup": {
+        "册01_page0016_idx314": {
+          "bbox": {
+            "x": 104,
+            "y": 174,
+            "width": 108,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0016_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0016",
+          "char_index": 314,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0016_idx314": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:56:08.794457+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/固_册01_page0016_idx314.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/固_册01_page0016_idx314.png"
+        }
+      }
+    },
+    "國": {
+      "instances": {
+        "20": true
+      },
+      "timestamp": "2025-10-29T01:53:20.055Z",
+      "lookup": {
+        "册01_page0034_idx127": {
+          "bbox": {
+            "x": 244,
+            "y": 848,
+            "width": 55,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0034_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0034",
+          "char_index": 127,
+          "index": 20
+        }
+      },
+      "segments": {
+        "册01_page0034_idx127": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:16:38.360809+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "土": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-11-11T15:17:13.417Z",
+      "lookup": {
+        "册02_page0035_idx401": {
+          "bbox": {
+            "x": 155,
+            "y": 1353,
+            "width": 56,
+            "height": 52
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0035_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0035",
+          "char_index": 401,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册02_page0035_idx401": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-12-02T12:27:11.690198+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "圭": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T02:04:11.244Z",
+      "lookup": {
+        "册01_page0021_idx451": {
+          "bbox": {
+            "x": 1723,
+            "y": 890,
+            "width": 49,
+            "height": 79
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0021_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0021",
+          "char_index": 451,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0021_idx451": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:16:54.077115+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "地": {
+      "instances": {
+        "2": true,
+        "4": true
+      },
+      "timestamp": "2025-10-29T01:54:43.422Z",
+      "lookup": {
+        "册02_page0003_idx214": {
+          "bbox": {
+            "x": 512,
+            "y": 158,
+            "width": 105,
+            "height": 79
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0003_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0003",
+          "char_index": 214,
+          "index": 2
+        },
+        "册02_page0003_idx69": {
+          "bbox": {
+            "x": 1339,
+            "y": 726,
+            "width": 95,
+            "height": 48
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0003_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0003",
+          "char_index": 69,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册02_page0003_idx214": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:49:54.519203+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/地_册02_page0003_idx214.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/地_册02_page0003_idx214.png"
+        },
+        "册02_page0003_idx69": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:49:55.623416+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/地_册02_page0003_idx69.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/地_册02_page0003_idx69.png"
+        }
+      }
+    },
+    "增": {
+      "instances": {
+        "13": true
+      },
+      "timestamp": "2025-11-11T15:17:36.248Z",
+      "lookup": {
+        "册01_page0036_idx137": {
+          "bbox": {
+            "x": 1347,
+            "y": 678,
+            "width": 115,
+            "height": 73
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0036_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0036",
+          "char_index": 137,
+          "index": 13
+        }
+      },
+      "segments": {
+        "册01_page0036_idx137": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:18:19.129729+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/增_册01_page0036_idx137.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/增_册01_page0036_idx137.png"
+        }
+      }
+    },
+    "士": {
+      "instances": {
+        "34": true
+      },
+      "timestamp": "2025-10-29T02:04:41.649Z",
+      "lookup": {
+        "册01_page0016_idx199": {
+          "bbox": {
+            "x": 684,
+            "y": 183,
+            "width": 100,
+            "height": 63
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0016_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0016",
+          "char_index": 199,
+          "index": 34
+        }
+      },
+      "segments": {
+        "册01_page0016_idx199": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:00:59.725660+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/士_册01_page0016_idx199.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/士_册01_page0016_idx199.png"
+        }
+      }
+    },
+    "外": {
+      "instances": {
+        "57": true
+      },
+      "timestamp": "2025-11-11T15:20:24.510Z",
+      "lookup": {
+        "册01_page0035_idx148": {
+          "bbox": {
+            "x": 1038,
+            "y": 254,
+            "width": 116,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0035_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0035",
+          "char_index": 148,
+          "index": 57
+        }
+      },
+      "segments": {
+        "册01_page0035_idx148": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:18:26.078911+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/外_册01_page0035_idx148.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/外_册01_page0035_idx148.png"
+        }
+      }
+    },
+    "大": {
+      "instances": {
+        "14": true
+      },
+      "timestamp": "2025-10-29T01:56:35.937Z",
+      "lookup": {
+        "册02_page0022_idx299": {
+          "bbox": {
+            "x": 286,
+            "y": 168,
+            "width": 92,
+            "height": 80
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0022_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0022",
+          "char_index": 299,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册02_page0022_idx299": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:02:13.145884+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/大_册02_page0022_idx299.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/大_册02_page0022_idx299.png"
+        }
+      }
+    },
+    "天": {
+      "instances": {
+        "32": true
+      },
+      "timestamp": "2025-10-29T01:56:49.954Z",
+      "lookup": {
+        "册02_page0023_idx283": {
+          "bbox": {
+            "x": 322,
+            "y": 814,
+            "width": 95,
+            "height": 71
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0023_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0023",
+          "char_index": 283,
+          "index": 32
+        }
+      },
+      "segments": {
+        "册02_page0023_idx283": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:02:15.792873+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/天_册02_page0023_idx283.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/天_册02_page0023_idx283.png"
+        }
+      }
+    },
+    "太": {
+      "instances": {
+        "4": true
+      },
+      "timestamp": "2025-10-29T01:55:14.197Z",
+      "lookup": {
+        "册02_page0036_idx137": {
+          "bbox": {
+            "x": 1995,
+            "y": 346,
+            "width": 54,
+            "height": 89
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0036_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0036",
+          "char_index": 137,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册02_page0036_idx137": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:18:36.102526+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "夫": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T01:55:11.518Z",
+      "lookup": {
+        "册01_page0016_idx259": {
+          "bbox": {
+            "x": 409,
+            "y": 511,
+            "width": 91,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0016_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0016",
+          "char_index": 259,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0016_idx259": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:49:18.754672+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/夫_册01_page0016_idx259.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/夫_册01_page0016_idx259.png"
+        }
+      }
+    },
+    "妙": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T02:05:05.899Z",
+      "lookup": {
+        "册02_page0041_idx51": {
+          "bbox": {
+            "x": 1654,
+            "y": 204,
+            "width": 95,
+            "height": 72
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0041",
+          "char_index": 51,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0041_idx51": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:53:11.874525+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/妙_册02_page0041_idx51.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/妙_册02_page0041_idx51.png"
+        }
+      }
+    },
+    "婁": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T01:55:26.459Z",
+      "lookup": {
+        "册02_page0036_idx137": {
+          "bbox": {
+            "x": 925,
+            "y": 495,
+            "width": 115,
+            "height": 87
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0036_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0036",
+          "char_index": 137,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0036_idx137": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:02:53.785710+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/婁_册02_page0036_idx137.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/婁_册02_page0036_idx137.png"
+        }
+      }
+    },
+    "室": {
+      "instances": {
+        "4": true
+      },
+      "timestamp": "2025-10-28T19:30:34.386Z",
+      "lookup": {
+        "册01_page0004_idx246": {
+          "bbox": {
+            "x": 432,
+            "y": 783,
+            "width": 83,
+            "height": 62
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0004_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0004",
+          "char_index": 246,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册01_page0004_idx246": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:54:03.157646+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/室_册01_page0004_idx246.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/室_册01_page0004_idx246.png"
+        }
+      }
+    },
+    "寸": {
+      "instances": {
+        "43": true,
+        "123": true
+      },
+      "timestamp": "2025-10-29T02:03:00.475Z",
+      "lookup": {
+        "册02_page0015_idx24": {
+          "bbox": {
+            "x": 1625,
+            "y": 533,
+            "width": 93,
+            "height": 70
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0015_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0015",
+          "char_index": 24,
+          "index": 43
+        },
+        "册02_page0014_idx25": {
+          "bbox": {
+            "x": 1234,
+            "y": 517,
+            "width": 98,
+            "height": 75
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0014_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0014",
+          "char_index": 25,
+          "index": 123
+        }
+      },
+      "segments": {
+        "册02_page0015_idx24": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:00:50.380271+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/寸_册02_page0015_idx24.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/寸_册02_page0015_idx24.png"
+        },
+        "册02_page0014_idx25": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:00:51.125863+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/寸_册02_page0014_idx25.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/寸_册02_page0014_idx25.png"
+        }
+      }
+    },
+    "小": {
+      "instances": {
+        "15": true
+      },
+      "timestamp": "2025-10-29T02:04:56.649Z",
+      "lookup": {
+        "册02_page0015_idx57": {
+          "bbox": {
+            "x": 1243,
+            "y": 192,
+            "width": 105,
+            "height": 79
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0015_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0015",
+          "char_index": 57,
+          "index": 15
+        }
+      },
+      "segments": {
+        "册02_page0015_idx57": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:55:08.549190+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/小_册02_page0015_idx57.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/小_册02_page0015_idx57.png"
+        }
+      }
+    },
+    "少": {
+      "instances": {
+        "7": true,
+        "10": true
+      },
+      "timestamp": "2025-10-29T02:02:07.146Z",
+      "lookup": {
+        "册02_page0025_idx50": {
+          "bbox": {
+            "x": 1610,
+            "y": 1137,
+            "width": 91,
+            "height": 46
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0025_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0025",
+          "char_index": 50,
+          "index": 7
+        },
+        "册02_page0032_idx95": {
+          "bbox": {
+            "x": 836,
+            "y": 955,
+            "width": 79,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0032_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0032",
+          "char_index": 95,
+          "index": 10
+        }
+      },
+      "segments": {
+        "册02_page0025_idx50": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:59:26.247124+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/少_册02_page0025_idx50.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/少_册02_page0025_idx50.png"
+        },
+        "册02_page0032_idx95": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:59:27.076912+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/少_册02_page0032_idx95.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/少_册02_page0032_idx95.png"
+        }
+      }
+    },
+    "尤": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T02:01:37.215Z",
+      "lookup": {
+        "册02_page0016_idx534": {
+          "bbox": {
+            "x": 1538,
+            "y": 1178,
+            "width": 53,
+            "height": 61
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0016_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0016",
+          "char_index": 534,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0016_idx534": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:18:43.500552+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "尺": {
+      "instances": {
+        "29": true,
+        "30": true
+      },
+      "timestamp": "2025-10-29T01:56:43.879Z",
+      "lookup": {
+        "册02_page0015_idx12": {
+          "bbox": {
+            "x": 1716,
+            "y": 402,
+            "width": 105,
+            "height": 66
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0015_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0015",
+          "char_index": 12,
+          "index": 29
+        },
+        "册02_page0015_idx22": {
+          "bbox": {
+            "x": 1624,
+            "y": 407,
+            "width": 93,
+            "height": 70
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0015_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0015",
+          "char_index": 22,
+          "index": 30
+        }
+      },
+      "segments": {
+        "册02_page0015_idx12": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:02:14.061532+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/尺_册02_page0015_idx12.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/尺_册02_page0015_idx12.png"
+        },
+        "册02_page0015_idx22": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:02:14.849699+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/尺_册02_page0015_idx22.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/尺_册02_page0015_idx22.png"
+        }
+      }
+    },
+    "居": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T02:01:50.436Z",
+      "lookup": {
+        "册02_page0003_idx73": {
+          "bbox": {
+            "x": 1340,
+            "y": 988,
+            "width": 95,
+            "height": 72
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0003_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0003",
+          "char_index": 73,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0003_idx73": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:01:18.867761+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/居_册02_page0003_idx73.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/居_册02_page0003_idx73.png"
+        }
+      }
+    },
+    "山": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-10-29T02:03:14.885Z",
+      "lookup": {
+        "册01_page0004_idx185": {
+          "bbox": {
+            "x": 703,
+            "y": 272,
+            "width": 92,
+            "height": 58
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0004_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0004",
+          "char_index": 185,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册01_page0004_idx185": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:00:10.623314+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/山_册01_page0004_idx185.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/山_册01_page0004_idx185.png"
+        }
+      }
+    },
+    "川": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T01:53:54.598Z",
+      "lookup": {
+        "册02_page0035_idx50": {
+          "bbox": {
+            "x": 1744,
+            "y": 1147,
+            "width": 121,
+            "height": 61
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0035_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0035",
+          "char_index": 50,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0035_idx50": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:00:11.414566+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/川_册02_page0035_idx50.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/川_册02_page0035_idx50.png"
+        }
+      }
+    },
+    "師": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T01:54:26.369Z",
+      "lookup": {
+        "册02_page0041_idx70": {
+          "bbox": {
+            "x": 1536,
+            "y": 213,
+            "width": 127,
+            "height": 64
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0041",
+          "char_index": 70,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0041_idx70": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:47:51.749701+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/師_册02_page0041_idx70.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/師_册02_page0041_idx70.png"
+        }
+      }
+    },
+    "平": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-11-11T15:20:32.966Z",
+      "lookup": {
+        "册02_page0007_idx325": {
+          "bbox": {
+            "x": 108,
+            "y": 1227,
+            "width": 106,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0007_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0007",
+          "char_index": 325,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册02_page0007_idx325": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:20:49.143916+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/平_册02_page0007_idx325.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/平_册02_page0007_idx325.png"
+        }
+      }
+    },
+    "年": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T01:54:17.827Z",
+      "lookup": {
+        "册02_page0041_idx75": {
+          "bbox": {
+            "x": 1536,
+            "y": 562,
+            "width": 127,
+            "height": 79
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0041",
+          "char_index": 75,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0041_idx75": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:51:50.683357+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/年_册02_page0041_idx75.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/年_册02_page0041_idx75.png"
+        }
+      }
+    },
+    "庶": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T02:01:51.961Z",
+      "lookup": {
+        "册01_page0004_idx249": {
+          "bbox": {
+            "x": 432,
+            "y": 980,
+            "width": 83,
+            "height": 62
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0004_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0004",
+          "char_index": 249,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0004_idx249": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:01:19.609931+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/庶_册01_page0004_idx249.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/庶_册01_page0004_idx249.png"
+        }
+      }
+    },
+    "建": {
+      "instances": {
+        "7": true
+      },
+      "timestamp": "2025-10-29T01:57:15.933Z",
+      "lookup": {
+        "册02_page0029_idx303": {
+          "bbox": {
+            "x": 215,
+            "y": 988,
+            "width": 118,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0029_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0029",
+          "char_index": 303,
+          "index": 7
+        }
+      },
+      "segments": {
+        "册02_page0029_idx303": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:58:26.680361+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/建_册02_page0029_idx303.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/建_册02_page0029_idx303.png"
+        }
+      }
+    },
+    "張": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-11-11T15:19:00.860Z",
+      "lookup": {
+        "册02_page0040_idx291": {
+          "bbox": {
+            "x": 115,
+            "y": 199,
+            "width": 96,
+            "height": 72
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 291,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0040_idx291": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:03:08.965105+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/張_册02_page0040_idx291.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/張_册02_page0040_idx291.png"
+        }
+      }
+    },
+    "心": {
+      "instances": {
+        "4": true
+      },
+      "timestamp": "2025-11-11T15:19:07.315Z",
+      "lookup": {
+        "册02_page0011_idx252": {
+          "bbox": {
+            "x": 592,
+            "y": 379,
+            "width": 42,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0011_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0011",
+          "char_index": 252,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册02_page0011_idx252": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:20:54.607424+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "志": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-10-29T01:57:38.845Z",
+      "lookup": {
+        "册02_page0040_idx89": {
+          "bbox": {
+            "x": 1330,
+            "y": 127,
+            "width": 99,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 89,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册02_page0040_idx89": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:58:55.006407+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/志_册02_page0040_idx89.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/志_册02_page0040_idx89.png"
+        }
+      }
+    },
+    "意": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T01:51:36.351Z",
+      "lookup": {
+        "册02_page0040_idx212": {
+          "bbox": {
+            "x": 633,
+            "y": 902,
+            "width": 106,
+            "height": 93
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 212,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0040_idx212": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:46:28.195556+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/意_册02_page0040_idx212.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/意_册02_page0040_idx212.png"
+        }
+      }
+    },
+    "成": {
+      "instances": {
+        "11": true,
+        "14": true
+      },
+      "timestamp": "2025-10-29T01:57:22.082Z",
+      "lookup": {
+        "册02_page0004_idx181": {
+          "bbox": {
+            "x": 1064,
+            "y": 631,
+            "width": 71,
+            "height": 71
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0004_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0004",
+          "char_index": 181,
+          "index": 11
+        },
+        "册02_page0004_idx168": {
+          "bbox": {
+            "x": 1048,
+            "y": 631,
+            "width": 107,
+            "height": 81
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0004_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0004",
+          "char_index": 168,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册02_page0004_idx181": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:01:36.615411+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/成_册02_page0004_idx181.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/成_册02_page0004_idx181.png"
+        },
+        "册02_page0004_idx168": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:01:37.872298+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/成_册02_page0004_idx168.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/成_册02_page0004_idx168.png"
+        }
+      }
+    },
+    "才": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T02:02:50.435Z",
+      "lookup": {
+        "册02_page0034_idx319": {
+          "bbox": {
+            "x": 122,
+            "y": 1203,
+            "width": 108,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0034_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0034",
+          "char_index": 319,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0034_idx319": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:00:49.128392+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/才_册02_page0034_idx319.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/才_册02_page0034_idx319.png"
+        }
+      }
+    },
+    "數": {
+      "instances": {
+        "0": true,
+        "14": true
+      },
+      "timestamp": "2025-10-29T01:52:16.754Z",
+      "lookup": {
+        "册02_page0028_idx207": {
+          "bbox": {
+            "x": 647,
+            "y": 386,
+            "width": 113,
+            "height": 85
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0028",
+          "char_index": 207,
+          "index": 0
+        },
+        "册02_page0035_idx266": {
+          "bbox": {
+            "x": 520,
+            "y": 1063,
+            "width": 107,
+            "height": 81
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0035_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0035",
+          "char_index": 266,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册02_page0028_idx207": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:55:48.506837+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/數_册02_page0028_idx207.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/數_册02_page0028_idx207.png"
+        },
+        "册02_page0035_idx266": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:55:49.465637+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/數_册02_page0035_idx266.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/數_册02_page0035_idx266.png"
+        }
+      }
+    },
+    "文": {
+      "instances": {
+        "30": true
+      },
+      "timestamp": "2025-10-29T01:58:11.044Z",
+      "lookup": {
+        "册02_page0040_idx91": {
+          "bbox": {
+            "x": 1330,
+            "y": 288,
+            "width": 99,
+            "height": 62
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 91,
+          "index": 30
+        }
+      },
+      "segments": {
+        "册02_page0040_idx91": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:56:36.675558+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/文_册02_page0040_idx91.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/文_册02_page0040_idx91.png"
+        }
+      }
+    },
+    "施": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T01:52:28.170Z",
+      "lookup": {
+        "册01_page0019_idx604": {
+          "bbox": {
+            "x": 1076,
+            "y": 1239,
+            "width": 39,
+            "height": 79
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0019_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0019",
+          "char_index": 604,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0019_idx604": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:19:20.096042+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "日": {
+      "instances": {
+        "13": true
+      },
+      "timestamp": "2025-10-29T02:04:54.265Z",
+      "lookup": {
+        "册02_page0029_idx67": {
+          "bbox": {
+            "x": 1423,
+            "y": 927,
+            "width": 93,
+            "height": 58
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0029_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0029",
+          "char_index": 67,
+          "index": 13
+        }
+      },
+      "segments": {
+        "册02_page0029_idx67": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:54:55.068711+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/日_册02_page0029_idx67.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/日_册02_page0029_idx67.png"
+        }
+      }
+    },
+    "昌": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T02:04:06.325Z",
+      "lookup": {
+        "册02_page0036_idx354": {
+          "bbox": {
+            "x": 1279,
+            "y": 835,
+            "width": 55,
+            "height": 88
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0036_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0036",
+          "char_index": 354,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册02_page0036_idx354": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:19:35.900069+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/昌_册02_page0036_idx354.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/昌_册02_page0036_idx354.png"
+        }
+      }
+    },
+    "明": {
+      "instances": {
+        "35": true
+      },
+      "timestamp": "2025-11-11T15:21:09.326Z",
+      "lookup": {
+        "册02_page0014_idx100": {
+          "bbox": {
+            "x": 854,
+            "y": 269,
+            "width": 110,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0014_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0014",
+          "char_index": 100,
+          "index": 35
+        }
+      },
+      "segments": {
+        "册02_page0014_idx100": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:21:12.348563+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/明_册02_page0014_idx100.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/明_册02_page0014_idx100.png"
+        }
+      }
+    },
+    "昔": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-29T01:51:55.108Z",
+      "lookup": {
+        "册01_page0005_idx36": {
+          "bbox": {
+            "x": 1403,
+            "y": 149,
+            "width": 85,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0005_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0005",
+          "char_index": 36,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0005_idx36": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:47:49.065031+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/昔_册01_page0005_idx36.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/昔_册01_page0005_idx36.png"
+        }
+      }
+    },
+    "春": {
+      "instances": {
+        "14": true
+      },
+      "timestamp": "2025-10-29T01:55:07.418Z",
+      "lookup": {
+        "册02_page0014_idx61": {
+          "bbox": {
+            "x": 1331,
+            "y": 240,
+            "width": 105,
+            "height": 92
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0014_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0014",
+          "char_index": 61,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册02_page0014_idx61": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:48:59.635941+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/春_册02_page0014_idx61.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/春_册02_page0014_idx61.png"
+        }
+      }
+    },
+    "曲": {
+      "instances": {
+        "4": true
+      },
+      "timestamp": "2025-10-29T01:58:55.465Z",
+      "lookup": {
+        "册01_page0004_idx210": {
+          "bbox": {
+            "x": 613,
+            "y": 722,
+            "width": 98,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0004_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0004",
+          "char_index": 210,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册01_page0004_idx210": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:01:06.921019+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/曲_册01_page0004_idx210.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/曲_册01_page0004_idx210.png"
+        }
+      }
+    },
+    "月": {
+      "instances": {
+        "7": true
+      },
+      "timestamp": "2025-10-29T02:04:36.065Z",
+      "lookup": {
+        "册02_page0028_idx315": {
+          "bbox": {
+            "x": 181,
+            "y": 1179,
+            "width": 94,
+            "height": 71
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0028",
+          "char_index": 315,
+          "index": 7
+        }
+      },
+      "segments": {
+        "册02_page0028_idx315": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:04:02.922570+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/月_册02_page0028_idx315.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/月_册02_page0028_idx315.png"
+        }
+      }
+    },
+    "朝": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-11-11T15:21:22.967Z",
+      "lookup": {
+        "册02_page0007_idx207": {
+          "bbox": {
+            "x": 673,
+            "y": 447,
+            "width": 113,
+            "height": 71
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0007_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0007",
+          "char_index": 207,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册02_page0007_idx207": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:49:40.282502+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/朝_册02_page0007_idx207.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/朝_册02_page0007_idx207.png"
+        }
+      }
+    },
+    "未": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-29T02:00:03.597Z",
+      "lookup": {
+        "册02_page0009_idx283": {
+          "bbox": {
+            "x": 302,
+            "y": 1242,
+            "width": 95,
+            "height": 72
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0009_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0009",
+          "char_index": 283,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册02_page0009_idx283": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:51:28.005182+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/未_册02_page0009_idx283.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/未_册02_page0009_idx283.png"
+        }
+      }
+    },
+    "本": {
+      "instances": {
+        "25": true
+      },
+      "timestamp": "2025-10-29T02:04:02.823Z",
+      "lookup": {
+        "册02_page0040_idx198": {
+          "bbox": {
+            "x": 731,
+            "y": 1189,
+            "width": 106,
+            "height": 80
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 198,
+          "index": 25
+        }
+      },
+      "segments": {
+        "册02_page0040_idx198": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:00:01.206546+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/本_册02_page0040_idx198.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/本_册02_page0040_idx198.png"
+        }
+      }
+    },
+    "東": {
+      "instances": {
+        "6": true
+      },
+      "timestamp": "2025-10-29T01:59:53.588Z",
+      "lookup": {
+        "册02_page0009_idx242": {
+          "bbox": {
+            "x": 484,
+            "y": 898,
+            "width": 105,
+            "height": 92
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0009_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0009",
+          "char_index": 242,
+          "index": 6
+        }
+      },
+      "segments": {
+        "册02_page0009_idx242": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:50:23.717494+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/東_册02_page0009_idx242.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/東_册02_page0009_idx242.png"
+        }
+      }
+    },
+    "業": {
+      "instances": {
+        "15": true
+      },
+      "timestamp": "2025-10-29T01:52:51.653Z",
+      "lookup": {
+        "册01_page0016_idx273": {
+          "bbox": {
+            "x": 297,
+            "y": 385,
+            "width": 107,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0016_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0016",
+          "char_index": 273,
+          "index": 15
+        }
+      },
+      "segments": {
+        "册01_page0016_idx273": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:21:49.850991+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/業_册01_page0016_idx273.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/業_册01_page0016_idx273.png"
+        }
+      }
+    },
+    "止": {
+      "instances": {},
+      "timestamp": "2025-10-29T02:02:37.910Z",
+      "lookup": {}
+    },
+    "正": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T02:03:57.677Z",
+      "lookup": {
+        "册02_page0039_idx74": {
+          "bbox": {
+            "x": 1527,
+            "y": 278,
+            "width": 114,
+            "height": 71
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0039_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0039",
+          "char_index": 74,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0039_idx74": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:59:40.777197+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/正_册02_page0039_idx74.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/正_册02_page0039_idx74.png"
+        }
+      }
+    },
+    "此": {
+      "instances": {
+        "14": true
+      },
+      "timestamp": "2025-10-29T01:55:44.259Z",
+      "lookup": {
+        "册02_page0023_idx98": {
+          "bbox": {
+            "x": 1348,
+            "y": 803,
+            "width": 81,
+            "height": 61
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0023_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0023",
+          "char_index": 98,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册02_page0023_idx98": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:57:44.354783+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/此_册02_page0023_idx98.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/此_册02_page0023_idx98.png"
+        }
+      }
+    },
+    "武": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T01:56:54.170Z",
+      "lookup": {
+        "册01_page0021_idx403": {
+          "bbox": {
+            "x": 579,
+            "y": 1040,
+            "width": 42,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0021_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0021",
+          "char_index": 403,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0021_idx403": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:20:01.564545+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "母": {
+      "instances": {
+        "14": true
+      },
+      "timestamp": "2025-10-29T02:03:33.555Z",
+      "lookup": {
+        "册02_page0023_idx27": {
+          "bbox": {
+            "x": 1714,
+            "y": 873,
+            "width": 88,
+            "height": 66
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0023_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0023",
+          "char_index": 27,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册02_page0023_idx27": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:57:38.672912+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/母_册02_page0023_idx27.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/母_册02_page0023_idx27.png"
+        }
+      }
+    },
+    "氏": {
+      "instances": {
+        "10": true
+      },
+      "timestamp": "2025-10-29T01:59:06.731Z",
+      "lookup": {
+        "册01_page0034_idx48": {
+          "bbox": {
+            "x": 492,
+            "y": 250,
+            "width": 94,
+            "height": 71
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0034_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0034",
+          "char_index": 48,
+          "index": 10
+        }
+      },
+      "segments": {
+        "册01_page0034_idx48": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:56:38.363630+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/氏_册01_page0034_idx48.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/氏_册01_page0034_idx48.png"
+        }
+      }
+    },
+    "民": {
+      "instances": {
+        "4": true
+      },
+      "timestamp": "2025-10-29T01:59:02.556Z",
+      "lookup": {
+        "册01_page0004_idx173": {
+          "bbox": {
+            "x": 807,
+            "y": 650,
+            "width": 86,
+            "height": 64
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0004_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0004",
+          "char_index": 173,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册01_page0004_idx173": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:56:37.568160+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/民_册01_page0004_idx173.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/民_册01_page0004_idx173.png"
+        }
+      }
+    },
+    "氣": {
+      "instances": {
+        "17": true
+      },
+      "timestamp": "2025-11-11T15:22:06.364Z",
+      "lookup": {
+        "册02_page0038_idx195": {
+          "bbox": {
+            "x": 937,
+            "y": 482,
+            "width": 127,
+            "height": 96
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0038_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0038",
+          "char_index": 195,
+          "index": 17
+        }
+      },
+      "segments": {
+        "册02_page0038_idx195": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:24:04.048733+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/氣_册02_page0038_idx195.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/氣_册02_page0038_idx195.png"
+        }
+      }
+    },
+    "海": {
+      "instances": {
+        "6": true,
+        "8": true
+      },
+      "timestamp": "2025-10-29T02:02:23.998Z",
+      "lookup": {
+        "册02_page0036_idx313": {
+          "bbox": {
+            "x": 644,
+            "y": 753,
+            "width": 87,
+            "height": 100
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0036_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0036",
+          "char_index": 313,
+          "index": 6
+        },
+        "册01_page0034_idx286": {
+          "bbox": {
+            "x": 494,
+            "y": 508,
+            "width": 94,
+            "height": 83
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0034_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0034",
+          "char_index": 286,
+          "index": 8
+        }
+      },
+      "segments": {
+        "册02_page0036_idx313": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:57:25.585229+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/海_册02_page0036_idx313.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/海_册02_page0036_idx313.png"
+        },
+        "册01_page0034_idx286": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:57:37.448121+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/海_册01_page0034_idx286.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/海_册01_page0034_idx286.png"
+        }
+      }
+    },
+    "為": {
+      "instances": {
+        "13": true
+      },
+      "timestamp": "2025-10-29T01:58:00.132Z",
+      "lookup": {
+        "册02_page0023_idx312": {
+          "bbox": {
+            "x": 235,
+            "y": 1135,
+            "width": 93,
+            "height": 81
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0023_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0023",
+          "char_index": 312,
+          "index": 13
+        }
+      },
+      "segments": {
+        "册02_page0023_idx312": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:55:28.060717+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/為_册02_page0023_idx312.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/為_册02_page0023_idx312.png"
+        }
+      }
+    },
+    "焉": {
+      "instances": {
+        "14": true
+      },
+      "timestamp": "2025-10-29T01:57:57.724Z",
+      "lookup": {
+        "册01_page0032_idx234": {
+          "bbox": {
+            "x": 298,
+            "y": 1302,
+            "width": 87,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0032_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0032",
+          "char_index": 234,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册01_page0032_idx234": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:55:27.174158+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/焉_册01_page0032_idx234.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/焉_册01_page0032_idx234.png"
+        }
+      }
+    },
+    "無": {
+      "instances": {
+        "16": true
+      },
+      "timestamp": "2025-10-29T01:59:30.926Z",
+      "lookup": {
+        "册01_page0016_idx275": {
+          "bbox": {
+            "x": 298,
+            "y": 168,
+            "width": 105,
+            "height": 79
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0016_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0016",
+          "char_index": 275,
+          "index": 16
+        }
+      },
+      "segments": {
+        "册01_page0016_idx275": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:57:05.616503+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/無_册01_page0016_idx275.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/無_册01_page0016_idx275.png"
+        }
+      }
+    },
+    "然": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T01:59:40.176Z",
+      "lookup": {
+        "册02_page0003_idx275": {
+          "bbox": {
+            "x": 315,
+            "y": 963,
+            "width": 103,
+            "height": 77
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0003_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0003",
+          "char_index": 275,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0003_idx275": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:57:23.050396+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/然_册02_page0003_idx275.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/然_册02_page0003_idx275.png"
+        }
+      }
+    },
+    "照": {
+      "instances": {
+        "12": true
+      },
+      "timestamp": "2025-10-29T01:59:32.843Z",
+      "lookup": {
+        "册01_page0027_idx80": {
+          "bbox": {
+            "x": 1437,
+            "y": 837,
+            "width": 87,
+            "height": 76
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0027_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0027",
+          "char_index": 80,
+          "index": 12
+        }
+      },
+      "segments": {
+        "册01_page0027_idx80": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:57:07.446682+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/照_册01_page0027_idx80.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/照_册01_page0027_idx80.png"
+        }
+      }
+    },
+    "牧": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T01:54:32.043Z",
+      "lookup": {
+        "册01_page0005_idx85": {
+          "bbox": {
+            "x": 1316,
+            "y": 1215,
+            "width": 50,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0005_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0005",
+          "char_index": 85,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0005_idx85": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:22:16.898630+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "王": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-11-11T15:22:31.013Z",
+      "lookup": {
+        "册02_page0032_idx53": {
+          "bbox": {
+            "x": 1677,
+            "y": 1148,
+            "width": 63,
+            "height": 63
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0032_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0032",
+          "char_index": 53,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册02_page0032_idx53": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:24:08.046458+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/王_册02_page0032_idx53.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/王_册02_page0032_idx53.png"
+        }
+      }
+    },
+    "甲": {
+      "instances": {
+        "8": true
+      },
+      "timestamp": "2025-11-11T15:24:31.699Z",
+      "lookup": {
+        "册02_page0035_idx154": {
+          "bbox": {
+            "x": 1229,
+            "y": 926,
+            "width": 117,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0035_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0035",
+          "char_index": 154,
+          "index": 8
+        }
+      },
+      "segments": {
+        "册02_page0035_idx154": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:27:00.314680+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/甲_册02_page0035_idx154.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/甲_册02_page0035_idx154.png"
+        }
+      }
+    },
+    "申": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T01:54:09.215Z",
+      "lookup": {
+        "册02_page0024_idx238": {
+          "bbox": {
+            "x": 783,
+            "y": 874,
+            "width": 103,
+            "height": 77
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0024_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0024",
+          "char_index": 238,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册02_page0024_idx238": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:56:25.833987+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/申_册02_page0024_idx238.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/申_册02_page0024_idx238.png"
+        }
+      }
+    },
+    "界": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T01:52:00.937Z",
+      "lookup": {
+        "册02_page0036_idx530": {
+          "bbox": {
+            "x": 1330,
+            "y": 1334,
+            "width": 53,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0036_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0036",
+          "char_index": 530,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册02_page0036_idx530": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:22:49.738673+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "畢": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-29T01:54:22.852Z",
+      "lookup": {
+        "册02_page0017_idx97": {
+          "bbox": {
+            "x": 1388,
+            "y": 528,
+            "width": 50,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0017_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0017",
+          "char_index": 97,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册02_page0017_idx97": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:23:07.914012+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "畫": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-11-11T15:23:16.569Z",
+      "lookup": {
+        "册02_page0029_idx30": {
+          "bbox": {
+            "x": 1609,
+            "y": 769,
+            "width": 119,
+            "height": 89
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0029_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0029",
+          "char_index": 30,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0029_idx30": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:24:37.838278+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/畫_册02_page0029_idx30.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/畫_册02_page0029_idx30.png"
+        }
+      }
+    },
+    "癸": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T01:55:21.147Z",
+      "lookup": {
+        "册02_page0027_idx367": {
+          "bbox": {
+            "x": 759,
+            "y": 652,
+            "width": 56,
+            "height": 76
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0027_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0027",
+          "char_index": 367,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0027_idx367": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:23:24.210605+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "皆": {
+      "instances": {
+        "13": true
+      },
+      "timestamp": "2025-10-29T01:51:49.564Z",
+      "lookup": {
+        "册02_page0040_idx257": {
+          "bbox": {
+            "x": 315,
+            "y": 287,
+            "width": 106,
+            "height": 80
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 257,
+          "index": 13
+        }
+      },
+      "segments": {
+        "册02_page0040_idx257": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:47:32.998498+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/皆_册02_page0040_idx257.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/皆_册02_page0040_idx257.png"
+        }
+      }
+    },
+    "目": {
+      "instances": {
+        "17": true
+      },
+      "timestamp": "2025-10-29T02:04:29.614Z",
+      "lookup": {
+        "册02_page0040_idx150": {
+          "bbox": {
+            "x": 939,
+            "y": 295,
+            "width": 105,
+            "height": 66
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 150,
+          "index": 17
+        }
+      },
+      "segments": {
+        "册02_page0040_idx150": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:04:01.845768+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/目_册02_page0040_idx150.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/目_册02_page0040_idx150.png"
+        }
+      }
+    },
+    "直": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-28T19:30:39.870Z",
+      "lookup": {
+        "册02_page0006_idx303": {
+          "bbox": {
+            "x": 219,
+            "y": 1117,
+            "width": 94,
+            "height": 59
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0006_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0006",
+          "char_index": 303,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册02_page0006_idx303": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:53:12.504948+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/直_册02_page0006_idx303.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/直_册02_page0006_idx303.png"
+        }
+      }
+    },
+    "省": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T02:02:02.015Z",
+      "lookup": {
+        "册02_page0034_idx300": {
+          "bbox": {
+            "x": 219,
+            "y": 1131,
+            "width": 114,
+            "height": 86
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0034_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0034",
+          "char_index": 300,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0034_idx300": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:59:06.378528+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/省_册02_page0034_idx300.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/省_册02_page0034_idx300.png"
+        }
+      }
+    },
+    "眾": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T01:51:58.971Z",
+      "lookup": {
+        "册01_page0009_idx491": {
+          "bbox": {
+            "x": 241,
+            "y": 1246,
+            "width": 40,
+            "height": 43
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0009_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0009",
+          "char_index": 491,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0009_idx491": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:25:00.845155+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "禹": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-10-29T01:52:07.304Z",
+      "lookup": {
+        "册01_page0006_idx45": {
+          "bbox": {
+            "x": 1043,
+            "y": 242,
+            "width": 101,
+            "height": 76
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0006_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0006",
+          "char_index": 45,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册01_page0006_idx45": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:48:10.341313+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/禹_册01_page0006_idx45.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/禹_册01_page0006_idx45.png"
+        }
+      }
+    },
+    "章": {
+      "instances": {
+        "14": true
+      },
+      "timestamp": "2025-10-29T01:51:32.742Z",
+      "lookup": {
+        "册02_page0036_idx350": {
+          "bbox": {
+            "x": 102,
+            "y": 1186,
+            "width": 119,
+            "height": 90
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0036_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0036",
+          "char_index": 350,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册02_page0036_idx350": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:46:20.966423+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/章_册02_page0036_idx350.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/章_册02_page0036_idx350.png"
+        }
+      }
+    },
+    "竹": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T02:04:13.411Z",
+      "lookup": {
+        "册01_page0017_idx299": {
+          "bbox": {
+            "x": 336,
+            "y": 321,
+            "width": 90,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0017_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0017",
+          "char_index": 299,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0017_idx299": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:56:09.626737+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/竹_册01_page0017_idx299.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/竹_册01_page0017_idx299.png"
+        }
+      }
+    },
+    "累": {
+      "instances": {
+        "9": true
+      },
+      "timestamp": "2025-10-29T01:51:44.767Z",
+      "lookup": {
+        "册01_page0004_idx157": {
+          "bbox": {
+            "x": 904,
+            "y": 781,
+            "width": 84,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0004_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0004",
+          "char_index": 157,
+          "index": 9
+        }
+      },
+      "segments": {
+        "册01_page0004_idx157": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:46:43.919278+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/累_册01_page0004_idx157.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/累_册01_page0004_idx157.png"
+        }
+      }
+    },
+    "繁": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T01:53:50.582Z",
+      "lookup": {
+        "册02_page0005_idx267": {
+          "bbox": {
+            "x": 396,
+            "y": 691,
+            "width": 108,
+            "height": 95
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0005_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0005",
+          "char_index": 267,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0005_idx267": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:03:59.815830+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/繁_册02_page0005_idx267.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/繁_册02_page0005_idx267.png"
+        }
+      }
+    },
+    "羊": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T01:58:23.511Z",
+      "lookup": {
+        "册01_page0021_idx157": {
+          "bbox": {
+            "x": 1821,
+            "y": 360,
+            "width": 46,
+            "height": 72
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0021_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0021",
+          "char_index": 157,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0021_idx157": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:25:09.043463+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "考": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-10-29T02:01:55.223Z",
+      "lookup": {
+        "册02_page0040_idx271": {
+          "bbox": {
+            "x": 317,
+            "y": 1254,
+            "width": 106,
+            "height": 80
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 271,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册02_page0040_idx271": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:58:56.357859+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/考_册02_page0040_idx271.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/考_册02_page0040_idx271.png"
+        }
+      }
+    },
+    "而": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T01:53:34.203Z",
+      "lookup": {
+        "册02_page0028_idx279": {
+          "bbox": {
+            "x": 364,
+            "y": 1182,
+            "width": 109,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0028",
+          "char_index": 279,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册02_page0028_idx279": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:56:14.956602+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/而_册02_page0028_idx279.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/而_册02_page0028_idx279.png"
+        }
+      }
+    },
+    "耳": {
+      "instances": {},
+      "timestamp": "2025-10-29T02:04:33.515Z",
+      "lookup": {}
+    },
+    "自": {
+      "instances": {
+        "13": true
+      },
+      "timestamp": "2025-10-29T02:04:23.134Z",
+      "lookup": {
+        "册02_page0040_idx42": {
+          "bbox": {
+            "x": 1630,
+            "y": 562,
+            "width": 100,
+            "height": 63
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 42,
+          "index": 13
+        }
+      },
+      "segments": {
+        "册02_page0040_idx42": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:04:00.781688+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/自_册02_page0040_idx42.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/自_册02_page0040_idx42.png"
+        }
+      }
+    },
+    "至": {
+      "instances": {
+        "17": true
+      },
+      "timestamp": "2025-10-28T19:30:46.352Z",
+      "lookup": {
+        "册02_page0015_idx174": {
+          "bbox": {
+            "x": 495,
+            "y": 475,
+            "width": 85,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0015_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0015",
+          "char_index": 174,
+          "index": 17
+        }
+      },
+      "segments": {
+        "册02_page0015_idx174": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:53:13.567535+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/至_册02_page0015_idx174.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/至_册02_page0015_idx174.png"
+        }
+      }
+    },
+    "與": {
+      "instances": {
+        "13": true
+      },
+      "timestamp": "2025-10-29T01:58:38.894Z",
+      "lookup": {
+        "册02_page0029_idx235": {
+          "bbox": {
+            "x": 618,
+            "y": 1335,
+            "width": 115,
+            "height": 70
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0029_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0029",
+          "char_index": 235,
+          "index": 13
+        }
+      },
+      "segments": {
+        "册02_page0029_idx235": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:52:41.088862+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/與_册02_page0029_idx235.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/與_册02_page0029_idx235.png"
+        }
+      }
+    },
+    "良": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T01:59:11.064Z",
+      "lookup": {
+        "册02_page0039_idx138": {
+          "bbox": {
+            "x": 1216,
+            "y": 987,
+            "width": 117,
+            "height": 88
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0039_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0039",
+          "char_index": 138,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0039_idx138": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:56:49.713031+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/良_册02_page0039_idx138.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/良_册02_page0039_idx138.png"
+        }
+      }
+    },
+    "華": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T01:53:09.811Z",
+      "lookup": {
+        "册02_page0033_idx307": {
+          "bbox": {
+            "x": 1283,
+            "y": 817,
+            "width": 56,
+            "height": 89
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0033_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0033",
+          "char_index": 307,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0033_idx307": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:25:20.706299+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "蕃": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T01:53:07.236Z",
+      "lookup": {
+        "册02_page0037_idx57": {
+          "bbox": {
+            "x": 1612,
+            "y": 1329,
+            "width": 123,
+            "height": 86
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0037_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0037",
+          "char_index": 57,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0037_idx57": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:51:41.959402+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/蕃_册02_page0037_idx57.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/蕃_册02_page0037_idx57.png"
+        }
+      }
+    },
+    "術": {
+      "instances": {
+        "0": true,
+        "11": true
+      },
+      "timestamp": "2025-10-29T01:51:21.042Z",
+      "lookup": {
+        "册02_page0041_idx46": {
+          "bbox": {
+            "x": 1750,
+            "y": 1063,
+            "width": 113,
+            "height": 85
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0041",
+          "char_index": 46,
+          "index": 0
+        },
+        "册02_page0010_idx258": {
+          "bbox": {
+            "x": 375,
+            "y": 164,
+            "width": 103,
+            "height": 90
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0010_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0010",
+          "char_index": 258,
+          "index": 11
+        }
+      },
+      "segments": {
+        "册02_page0041_idx46": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:46:57.485066+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/術_册02_page0041_idx46.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/術_册02_page0041_idx46.png"
+        },
+        "册02_page0010_idx258": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:47:11.676029+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/術_册02_page0010_idx258.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/術_册02_page0010_idx258.png"
+        }
+      }
+    },
+    "衛": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T01:51:16.659Z",
+      "lookup": {
+        "册02_page0025_idx392": {
+          "bbox": {
+            "x": 102,
+            "y": 512,
+            "width": 103,
+            "height": 77
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0025_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0025",
+          "char_index": 392,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册02_page0025_idx392": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:51:43.628060+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/衛_册02_page0025_idx392.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/衛_册02_page0025_idx392.png"
+        }
+      }
+    },
+    "西": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-29T01:58:52.115Z",
+      "lookup": {
+        "册02_page0003_idx199": {
+          "bbox": {
+            "x": 607,
+            "y": 377,
+            "width": 88,
+            "height": 66
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0003_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0003",
+          "char_index": 199,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册02_page0003_idx199": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:01:01.413658+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/西_册02_page0003_idx199.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/西_册02_page0003_idx199.png"
+        }
+      }
+    },
+    "要": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T01:52:03.237Z",
+      "lookup": {
+        "册01_page0020_idx417": {
+          "bbox": {
+            "x": 644,
+            "y": 736,
+            "width": 56,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0020_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0020",
+          "char_index": 417,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0020_idx417": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:25:30.956430+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "見": {
+      "instances": {
+        "19": true
+      },
+      "timestamp": "2025-11-11T15:25:42.450Z",
+      "lookup": {
+        "册01_page0029_idx462": {
+          "bbox": {
+            "x": 80,
+            "y": 1094,
+            "width": 103,
+            "height": 77
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0029_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0029",
+          "char_index": 462,
+          "index": 19
+        }
+      },
+      "segments": {
+        "册01_page0029_idx462": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:27:03.143512+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/見_册01_page0029_idx462.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/見_册01_page0029_idx462.png"
+        }
+      }
+    },
+    "識": {
+      "instances": {
+        "13": true,
+        "15": true
+      },
+      "timestamp": "2025-10-29T01:57:29.199Z",
+      "lookup": {
+        "册02_page0005_idx279": {
+          "bbox": {
+            "x": 287,
+            "y": 296,
+            "width": 122,
+            "height": 92
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0005_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0005",
+          "char_index": 279,
+          "index": 13
+        },
+        "册02_page0005_idx62": {
+          "bbox": {
+            "x": 1547,
+            "y": 637,
+            "width": 91,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0005_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0005",
+          "char_index": 62,
+          "index": 15
+        }
+      },
+      "segments": {
+        "册02_page0005_idx279": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:01:38.655847+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/識_册02_page0005_idx279.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/識_册02_page0005_idx279.png"
+        },
+        "册02_page0005_idx62": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:01:46.563493+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/識_册02_page0005_idx62.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/識_册02_page0005_idx62.png"
+        }
+      }
+    },
+    "變": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-29T01:55:19.097Z",
+      "lookup": {
+        "册01_page0024_idx28": {
+          "bbox": {
+            "x": 1724,
+            "y": 1314,
+            "width": 52,
+            "height": 58
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0024_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0024",
+          "char_index": 28,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0024_idx28": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:25:52.922379+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "車": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T01:54:07.306Z",
+      "lookup": {
+        "册02_page0038_idx116": {
+          "bbox": {
+            "x": 1432,
+            "y": 624,
+            "width": 97,
+            "height": 85
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0038_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0038",
+          "char_index": 116,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0038_idx116": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:56:23.726279+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/車_册02_page0038_idx116.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/車_册02_page0038_idx116.png"
+        }
+      }
+    },
+    "軍": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T01:54:15.185Z",
+      "lookup": {
+        "册02_page0041_idx94": {
+          "bbox": {
+            "x": 1442,
+            "y": 631,
+            "width": 102,
+            "height": 77
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0041",
+          "char_index": 94,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0041_idx94": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:51:44.692988+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/軍_册02_page0041_idx94.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/軍_册02_page0041_idx94.png"
+        }
+      }
+    },
+    "辰": {
+      "instances": {
+        "14": true
+      },
+      "timestamp": "2025-10-29T02:01:47.236Z",
+      "lookup": {
+        "册01_page0034_idx318": {
+          "bbox": {
+            "x": 1383,
+            "y": 707,
+            "width": 49,
+            "height": 78
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0034_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0034",
+          "char_index": 318,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册01_page0034_idx318": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:26:07.748401+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "道": {
+      "instances": {
+        "19": true
+      },
+      "timestamp": "2025-10-29T01:57:00.670Z",
+      "lookup": {
+        "册02_page0004_idx170": {
+          "bbox": {
+            "x": 1050,
+            "y": 777,
+            "width": 107,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0004_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0004",
+          "char_index": 170,
+          "index": 19
+        }
+      },
+      "segments": {
+        "册02_page0004_idx170": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:58:10.045222+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/道_册02_page0004_idx170.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/道_册02_page0004_idx170.png"
+        }
+      }
+    },
+    "鄉": {
+      "instances": {},
+      "timestamp": "2025-10-29T01:53:01.653Z",
+      "lookup": {}
+    },
+    "里": {
+      "instances": {
+        "6": true
+      },
+      "timestamp": "2025-10-28T19:30:43.619Z",
+      "lookup": {
+        "册02_page0003_idx76": {
+          "bbox": {
+            "x": 1340,
+            "y": 1189,
+            "width": 95,
+            "height": 60
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0003_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0003",
+          "char_index": 76,
+          "index": 6
+        }
+      },
+      "segments": {
+        "册02_page0003_idx76": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:53:33.820840+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/里_册02_page0003_idx76.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/里_册02_page0003_idx76.png"
+        }
+      }
+    },
+    "量": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-29T01:53:45.803Z",
+      "lookup": {
+        "册02_page0033_idx473": {
+          "bbox": {
+            "x": 1348,
+            "y": 1172,
+            "width": 91,
+            "height": 89
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0033_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0033",
+          "char_index": 473,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0033_idx473": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:53:50.537005+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/量_册02_page0033_idx473.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/量_册02_page0033_idx473.png"
+        }
+      }
+    },
+    "長": {
+      "instances": {
+        "43": true
+      },
+      "timestamp": "2025-10-29T01:59:17.481Z",
+      "lookup": {
+        "册01_page0017_idx304": {
+          "bbox": {
+            "x": 339,
+            "y": 644,
+            "width": 90,
+            "height": 90
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0017_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0017",
+          "char_index": 304,
+          "index": 43
+        }
+      },
+      "segments": {
+        "册01_page0017_idx304": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:56:50.734137+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/長_册01_page0017_idx304.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/長_册01_page0017_idx304.png"
+        }
+      }
+    },
+    "雨": {
+      "instances": {
+        "7": true,
+        "8": true
+      },
+      "timestamp": "2025-11-11T15:26:16.646Z",
+      "lookup": {
+        "册02_page0014_idx68": {
+          "bbox": {
+            "x": 1203,
+            "y": 180,
+            "width": 116,
+            "height": 89
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0014_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0014",
+          "char_index": 68,
+          "index": 7
+        },
+        "册02_page0014_idx110": {
+          "bbox": {
+            "x": 757,
+            "y": 260,
+            "width": 102,
+            "height": 78
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0014_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0014",
+          "char_index": 110,
+          "index": 8
+        }
+      },
+      "segments": {
+        "册02_page0014_idx68": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:27:12.147628+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/雨_册02_page0014_idx68.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/雨_册02_page0014_idx68.png"
+        },
+        "册02_page0014_idx110": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:27:12.991172+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/雨_册02_page0014_idx110.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/雨_册02_page0014_idx110.png"
+        }
+      }
+    },
+    "須": {
+      "instances": {
+        "0": true,
+        "2": true
+      },
+      "timestamp": "2025-10-29T02:02:15.515Z",
+      "lookup": {
+        "册02_page0038_idx17": {
+          "bbox": {
+            "x": 1932,
+            "y": 1326,
+            "width": 118,
+            "height": 90
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0038_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0038",
+          "char_index": 17,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册02_page0038_idx17": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:02:28.932844+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/須_册02_page0038_idx17.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/須_册02_page0038_idx17.png"
+        }
+      }
+    },
+    "風": {
+      "instances": {
+        "8": true
+      },
+      "timestamp": "2025-10-29T02:01:25.128Z",
+      "lookup": {
+        "册02_page0040_idx170": {
+          "bbox": {
+            "x": 833,
+            "y": 427,
+            "width": 99,
+            "height": 62
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0040_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0040",
+          "char_index": 170,
+          "index": 8
+        }
+      },
+      "segments": {
+        "册02_page0040_idx170": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T06:01:29.971366+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/風_册02_page0040_idx170.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/風_册02_page0040_idx170.png"
+        }
+      }
+    },
+    "馬": {
+      "instances": {
+        "11": true
+      },
+      "timestamp": "2025-10-29T01:57:55.140Z",
+      "lookup": {
+        "册02_page0036_idx76": {
+          "bbox": {
+            "x": 476,
+            "y": 263,
+            "width": 57,
+            "height": 89
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0036_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0036",
+          "char_index": 76,
+          "index": 11
+        }
+      },
+      "segments": {
+        "册02_page0036_idx76": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:26:36.071598+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "體": {
+      "instances": {
+        "59": true
+      },
+      "timestamp": "2025-11-11T15:26:45.014Z",
+      "lookup": {
+        "册01_page0004_idx34": {
+          "bbox": {
+            "x": 1637,
+            "y": 1285,
+            "width": 104,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0004_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0004",
+          "char_index": 34,
+          "index": 59
+        }
+      },
+      "segments": {
+        "册01_page0004_idx34": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T15:27:17.029824+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/體_册01_page0004_idx34.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/體_册01_page0004_idx34.png"
+        }
+      }
+    },
+    "鷹": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-29T01:53:04.434Z",
+      "lookup": {
+        "册02_page0010_idx6": {
+          "bbox": {
+            "x": 1864,
+            "y": 561,
+            "width": 53,
+            "height": 78
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册02_pages/page_0010_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 2,
+          "page": "page_0010",
+          "char_index": 6,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册02_page0010_idx6": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T15:26:54.222267+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "齊": {
+      "instances": {
+        "11": true
+      },
+      "timestamp": "2025-10-29T02:03:20.152Z",
+      "lookup": {
+        "册01_page0010_idx359": {
+          "bbox": {
+            "x": 194,
+            "y": 513,
+            "width": 89,
+            "height": 78
+          },
+          "source_image": "data/results/preprocessed/30_1213_周髀算经/册01_pages/page_0010_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0010",
+          "char_index": 359,
+          "index": 11
+        }
+      },
+      "segments": {
+        "册01_page0010_idx359": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-02T05:54:54.115348+00:00",
+          "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/齊_册01_page0010_idx359.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/齊_册01_page0010_idx359.png"
+        }
+      }
+    }
+  }
+}

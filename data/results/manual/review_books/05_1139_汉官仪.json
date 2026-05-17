@@ -1,0 +1,5821 @@
+{
+  "version": 2,
+  "book": "05_1139_汉官仪",
+  "chars": {
+    "一": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:42:55.342Z",
+      "lookup": {
+        "册01_page0028_idx302": {
+          "bbox": {
+            "x": 569,
+            "y": 1040,
+            "width": 99,
+            "height": 38
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0028",
+          "char_index": 302,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0028_idx302": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:42.574761+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/一_册01_page0028_idx302.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/一_册01_page0028_idx302.png"
+        }
+      }
+    },
+    "七": {
+      "instances": {
+        "15": true
+      },
+      "timestamp": "2025-10-27T17:36:22.453Z",
+      "lookup": {
+        "册01_page0016_idx230": {
+          "bbox": {
+            "x": 746,
+            "y": 452,
+            "width": 84,
+            "height": 56
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0016_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0016",
+          "char_index": 230,
+          "index": 15
+        }
+      },
+      "segments": {
+        "册01_page0016_idx230": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:15:07.867832+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/七_册01_page0016_idx230.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/七_册01_page0016_idx230.png"
+        }
+      }
+    },
+    "三": {
+      "instances": {
+        "13": true
+      },
+      "timestamp": "2025-10-27T17:36:26.424Z",
+      "lookup": {
+        "册01_page0041_idx233": {
+          "bbox": {
+            "x": 132,
+            "y": 738,
+            "width": 85,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0041",
+          "char_index": 233,
+          "index": 13
+        }
+      },
+      "segments": {
+        "册01_page0041_idx233": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:06.289562+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/三_册01_page0041_idx233.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/三_册01_page0041_idx233.png"
+        }
+      }
+    },
+    "上": {
+      "instances": {
+        "15": true
+      },
+      "timestamp": "2025-10-27T17:40:59.533Z",
+      "lookup": {
+        "册01_page0049_idx239": {
+          "bbox": {
+            "x": 474,
+            "y": 849,
+            "width": 90,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0049_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0049",
+          "char_index": 239,
+          "index": 15
+        }
+      },
+      "segments": {
+        "册01_page0049_idx239": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:33.859967+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/上_册01_page0049_idx239.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/上_册01_page0049_idx239.png"
+        }
+      }
+    },
+    "下": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:41:01.191Z",
+      "lookup": {
+        "册01_page0057_idx336": {
+          "bbox": {
+            "x": 49,
+            "y": 511,
+            "width": 98,
+            "height": 73
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 336,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0057_idx336": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:35.760942+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/下_册01_page0057_idx336.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/下_册01_page0057_idx336.png"
+        }
+      }
+    },
+    "不": {
+      "instances": {
+        "12": true
+      },
+      "timestamp": "2025-10-27T17:34:42.642Z",
+      "lookup": {
+        "册01_page0057_idx185": {
+          "bbox": {
+            "x": 828,
+            "y": 1035,
+            "width": 87,
+            "height": 76
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 185,
+          "index": 12
+        }
+      },
+      "segments": {
+        "册01_page0057_idx185": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:45.792307+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/不_册01_page0057_idx185.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/不_册01_page0057_idx185.png"
+        }
+      }
+    },
+    "中": {
+      "instances": {
+        "57": true,
+        "58": true
+      },
+      "timestamp": "2025-10-27T17:34:57.666Z",
+      "lookup": {
+        "册01_page0048_idx274": {
+          "bbox": {
+            "x": 141,
+            "y": 354,
+            "width": 78,
+            "height": 59
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0048_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0048",
+          "char_index": 274,
+          "index": 57
+        },
+        "册01_page0048_idx280": {
+          "bbox": {
+            "x": 141,
+            "y": 774,
+            "width": 78,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0048_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0048",
+          "char_index": 280,
+          "index": 58
+        }
+      },
+      "segments": {
+        "册01_page0048_idx274": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:12:40.859863+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/中_册01_page0048_idx274.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/中_册01_page0048_idx274.png"
+        },
+        "册01_page0048_idx280": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:12:41.974998+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/中_册01_page0048_idx280.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/中_册01_page0048_idx280.png"
+        }
+      }
+    },
+    "主": {
+      "instances": {
+        "0": true,
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:41:48.906Z",
+      "lookup": {
+        "册01_page0060_idx44": {
+          "bbox": {
+            "x": 1383,
+            "y": 404,
+            "width": 71,
+            "height": 70
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0060_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0060",
+          "char_index": 44,
+          "index": 0
+        },
+        "册01_page0006_idx42": {
+          "bbox": {
+            "x": 1559,
+            "y": 1382,
+            "width": 83,
+            "height": 61
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0006_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0006",
+          "char_index": 42,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0060_idx44": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:28.462845+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/主_册01_page0060_idx44.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/主_册01_page0060_idx44.png"
+        },
+        "册01_page0006_idx42": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:29.647384+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/主_册01_page0006_idx42.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/主_册01_page0006_idx42.png"
+        }
+      }
+    },
+    "乃": {
+      "instances": {
+        "7": true
+      },
+      "timestamp": "2025-11-11T07:38:05.533Z",
+      "lookup": {
+        "册01_page0060_idx134": {
+          "bbox": {
+            "x": 814,
+            "y": 1225,
+            "width": 100,
+            "height": 75
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0060_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0060",
+          "char_index": 134,
+          "index": 7
+        }
+      },
+      "segments": {
+        "册01_page0060_idx134": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T07:38:42.658616+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/乃_册01_page0060_idx134.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/乃_册01_page0060_idx134.png"
+        }
+      }
+    },
+    "之": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:36:42.228Z",
+      "lookup": {
+        "册01_page0057_idx67": {
+          "bbox": {
+            "x": 1456,
+            "y": 1370,
+            "width": 90,
+            "height": 65
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 67,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0057_idx67": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:15:11.782316+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/之_册01_page0057_idx67.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/之_册01_page0057_idx67.png"
+        }
+      }
+    },
+    "乎": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-11-11T07:38:14.799Z",
+      "lookup": {
+        "册01_page0033_idx239": {
+          "bbox": {
+            "x": 224,
+            "y": 408,
+            "width": 50,
+            "height": 50
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0033_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0033",
+          "char_index": 239,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0033_idx239": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:39:02.492384+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "也": {
+      "instances": {
+        "14": true
+      },
+      "timestamp": "2025-10-27T17:36:24.299Z",
+      "lookup": {
+        "册01_page0006_idx16": {
+          "bbox": {
+            "x": 1642,
+            "y": 620,
+            "width": 87,
+            "height": 66
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0006_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0006",
+          "char_index": 16,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册01_page0006_idx16": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:15:08.634128+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/也_册01_page0006_idx16.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/也_册01_page0006_idx16.png"
+        }
+      }
+    },
+    "予": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:38:54.185Z",
+      "lookup": {
+        "册01_page0042_idx138": {
+          "bbox": {
+            "x": 1118,
+            "y": 632,
+            "width": 84,
+            "height": 84
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0042_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0042",
+          "char_index": 138,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0042_idx138": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:17:15.349880+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/予_册01_page0042_idx138.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/予_册01_page0042_idx138.png"
+        }
+      }
+    },
+    "二": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:42:57.476Z",
+      "lookup": {
+        "册01_page0028_idx121": {
+          "bbox": {
+            "x": 1363,
+            "y": 926,
+            "width": 92,
+            "height": 58
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0028",
+          "char_index": 121,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0028_idx121": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:43.470694+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/二_册01_page0028_idx121.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/二_册01_page0028_idx121.png"
+        }
+      }
+    },
+    "于": {
+      "instances": {
+        "12": true
+      },
+      "timestamp": "2025-10-27T17:38:56.626Z",
+      "lookup": {
+        "册01_page0056_idx185": {
+          "bbox": {
+            "x": 734,
+            "y": 256,
+            "width": 86,
+            "height": 65
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0056_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0056",
+          "char_index": 185,
+          "index": 12
+        }
+      },
+      "segments": {
+        "册01_page0056_idx185": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:17:16.609698+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/于_册01_page0056_idx185.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/于_册01_page0056_idx185.png"
+        }
+      }
+    },
+    "云": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:36:28.965Z",
+      "lookup": {
+        "册01_page0028_idx55": {
+          "bbox": {
+            "x": 1614,
+            "y": 851,
+            "width": 45,
+            "height": 51
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0028",
+          "char_index": 55,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0028_idx55": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:39:08.326478+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "人": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-10-27T17:41:25.052Z",
+      "lookup": {
+        "册01_page0057_idx216": {
+          "bbox": {
+            "x": 657,
+            "y": 761,
+            "width": 92,
+            "height": 81
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 216,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册01_page0057_idx216": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:20.002022+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/人_册01_page0057_idx216.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/人_册01_page0057_idx216.png"
+        }
+      }
+    },
+    "仁": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:39:16.051Z",
+      "lookup": {
+        "册01_page0056_idx177": {
+          "bbox": {
+            "x": 824,
+            "y": 625,
+            "width": 88,
+            "height": 66
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0056_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0056",
+          "char_index": 177,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0056_idx177": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:12:21.223060+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/仁_册01_page0056_idx177.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/仁_册01_page0056_idx177.png"
+        }
+      }
+    },
+    "來": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:38:45.093Z",
+      "lookup": {
+        "册01_page0032_idx206": {
+          "bbox": {
+            "x": 658,
+            "y": 958,
+            "width": 37,
+            "height": 60
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0032_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0032",
+          "char_index": 206,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0032_idx206": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:39:15.571406+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "免": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:40:02.292Z",
+      "lookup": {
+        "册01_page0057_idx213": {
+          "bbox": {
+            "x": 657,
+            "y": 520,
+            "width": 92,
+            "height": 81
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 213,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0057_idx213": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:27.480950+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/免_册01_page0057_idx213.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/免_册01_page0057_idx213.png"
+        }
+      }
+    },
+    "入": {
+      "instances": {
+        "32": true
+      },
+      "timestamp": "2025-10-27T17:41:19.894Z",
+      "lookup": {
+        "册01_page0006_idx24": {
+          "bbox": {
+            "x": 1648,
+            "y": 1306,
+            "width": 89,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0006_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0006",
+          "char_index": 24,
+          "index": 32
+        }
+      },
+      "segments": {
+        "册01_page0006_idx24": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:17.642375+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/入_册01_page0006_idx24.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/入_册01_page0006_idx24.png"
+        }
+      }
+    },
+    "八": {
+      "instances": {
+        "11": true
+      },
+      "timestamp": "2025-10-27T17:41:22.510Z",
+      "lookup": {
+        "册01_page0016_idx339": {
+          "bbox": {
+            "x": 141,
+            "y": 216,
+            "width": 98,
+            "height": 50
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0016_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0016",
+          "char_index": 339,
+          "index": 11
+        }
+      },
+      "segments": {
+        "册01_page0016_idx339": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:18.798746+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/八_册01_page0016_idx339.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/八_册01_page0016_idx339.png"
+        }
+      }
+    },
+    "公": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:40:47.371Z",
+      "lookup": {
+        "册01_page0017_idx193": {
+          "bbox": {
+            "x": 829,
+            "y": 463,
+            "width": 84,
+            "height": 73
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0017_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0017",
+          "char_index": 193,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0017_idx193": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:20.711744+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/公_册01_page0017_idx193.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/公_册01_page0017_idx193.png"
+        }
+      }
+    },
+    "其": {
+      "instances": {
+        "12": true
+      },
+      "timestamp": "2025-10-27T17:37:28.086Z",
+      "lookup": {
+        "册01_page0055_idx213": {
+          "bbox": {
+            "x": 646,
+            "y": 781,
+            "width": 86,
+            "height": 75
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 213,
+          "index": 12
+        }
+      },
+      "segments": {
+        "册01_page0055_idx213": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:22.284635+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/其_册01_page0055_idx213.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/其_册01_page0055_idx213.png"
+        }
+      }
+    },
+    "典": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:37:31.194Z",
+      "lookup": {
+        "册01_page0048_idx100": {
+          "bbox": {
+            "x": 1022,
+            "y": 1124,
+            "width": 76,
+            "height": 94
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0048_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0048",
+          "char_index": 100,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0048_idx100": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:29.801511+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/典_册01_page0048_idx100.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/典_册01_page0048_idx100.png"
+        }
+      }
+    },
+    "冠": {
+      "instances": {
+        "1": true,
+        "3": true
+      },
+      "timestamp": "2025-11-11T07:39:27.300Z",
+      "lookup": {
+        "册01_page0010_idx277": {
+          "bbox": {
+            "x": 725,
+            "y": 1032,
+            "width": 46,
+            "height": 52
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0010_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0010",
+          "char_index": 277,
+          "index": 1
+        },
+        "册01_page0010_idx273": {
+          "bbox": {
+            "x": 722,
+            "y": 930,
+            "width": 49,
+            "height": 56
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0010_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0010",
+          "char_index": 273,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0010_idx273": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:40:18.413758+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        },
+        "册01_page0010_idx277": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:40:14.943558+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "劉": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-10-27T17:33:21.743Z",
+      "lookup": {
+        "册01_page0006_idx31": {
+          "bbox": {
+            "x": 1557,
+            "y": 521,
+            "width": 83,
+            "height": 83
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0006_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0006",
+          "char_index": 31,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册01_page0006_idx31": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:12:06.930266+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/劉_册01_page0006_idx31.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/劉_册01_page0006_idx31.png"
+        }
+      }
+    },
+    "力": {
+      "instances": {
+        "0": true,
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:41:44.922Z",
+      "lookup": {
+        "册01_page0057_idx57": {
+          "bbox": {
+            "x": 1460,
+            "y": 564,
+            "width": 88,
+            "height": 66
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 57,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0057_idx57": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:15:00.091003+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/力_册01_page0057_idx57.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/力_册01_page0057_idx57.png"
+        }
+      }
+    },
+    "十": {
+      "instances": {
+        "22": true
+      },
+      "timestamp": "2025-10-27T17:43:02.209Z",
+      "lookup": {
+        "册01_page0057_idx134": {
+          "bbox": {
+            "x": 1115,
+            "y": 1278,
+            "width": 89,
+            "height": 89
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 134,
+          "index": 22
+        }
+      },
+      "segments": {
+        "册01_page0057_idx134": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:44.534903+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/十_册01_page0057_idx134.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/十_册01_page0057_idx134.png"
+        }
+      }
+    },
+    "千": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:36:14.741Z",
+      "lookup": {
+        "册01_page0057_idx7": {
+          "bbox": {
+            "x": 1718,
+            "y": 659,
+            "width": 82,
+            "height": 72
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 7,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0057_idx7": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:59.567767+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/千_册01_page0057_idx7.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/千_册01_page0057_idx7.png"
+        }
+      }
+    },
+    "升": {
+      "instances": {
+        "4": true,
+        "7": true
+      },
+      "timestamp": "2025-10-27T17:39:29.605Z",
+      "lookup": {
+        "册01_page0049_idx311": {
+          "bbox": {
+            "x": 58,
+            "y": 810,
+            "width": 84,
+            "height": 63
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0049_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0049",
+          "char_index": 311,
+          "index": 4
+        },
+        "册01_page0051_idx3": {
+          "bbox": {
+            "x": 1707,
+            "y": 387,
+            "width": 75,
+            "height": 94
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0051_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0051",
+          "char_index": 3,
+          "index": 7
+        }
+      },
+      "segments": {
+        "册01_page0049_idx311": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:47.301508+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/升_册01_page0049_idx311.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/升_册01_page0049_idx311.png"
+        },
+        "册01_page0051_idx3": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:48.618195+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/升_册01_page0051_idx3.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/升_册01_page0051_idx3.png"
+        }
+      }
+    },
+    "南": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:34:12.788Z",
+      "lookup": {
+        "册01_page0057_idx120": {
+          "bbox": {
+            "x": 1115,
+            "y": 244,
+            "width": 89,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 120,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0057_idx120": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:12:29.361225+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/南_册01_page0057_idx120.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/南_册01_page0057_idx120.png"
+        }
+      }
+    },
+    "即": {
+      "instances": {
+        "1": true,
+        "5": true
+      },
+      "timestamp": "2025-10-27T16:56:31.993Z",
+      "lookup": {
+        "册01_page0041_idx162": {
+          "bbox": {
+            "x": 645,
+            "y": 775,
+            "width": 79,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0041",
+          "char_index": 162,
+          "index": 1
+        },
+        "册01_page0049_idx258": {
+          "bbox": {
+            "x": 383,
+            "y": 998,
+            "width": 97,
+            "height": 85
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0049_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0049",
+          "char_index": 258,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册01_page0041_idx162": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:40.561454+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/即_册01_page0041_idx162.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/即_册01_page0041_idx162.png"
+        },
+        "册01_page0049_idx258": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:50.510130+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/即_册01_page0049_idx258.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/即_册01_page0049_idx258.png"
+        }
+      }
+    },
+    "却": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T16:56:34.610Z",
+      "lookup": {
+        "册01_page0045_idx306": {
+          "bbox": {
+            "x": 171,
+            "y": 1249,
+            "width": 48,
+            "height": 60
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0045_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0045",
+          "char_index": 306,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0045_idx306": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:39:36.313760+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "卷": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:35:52.674Z",
+      "lookup": {
+        "册01_page0048_idx3": {
+          "bbox": {
+            "x": 1709,
+            "y": 390,
+            "width": 81,
+            "height": 81
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0048_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0048",
+          "char_index": 3,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0048_idx3": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:08:44.138590+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/卷_册01_page0048_idx3.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/卷_册01_page0048_idx3.png"
+        }
+      }
+    },
+    "去": {
+      "instances": {
+        "0": true,
+        "7": true
+      },
+      "timestamp": "2025-10-27T17:36:33.436Z",
+      "lookup": {
+        "册01_page0057_idx77": {
+          "bbox": {
+            "x": 1369,
+            "y": 812,
+            "width": 106,
+            "height": 81
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 77,
+          "index": 0
+        },
+        "册01_page0060_idx132": {
+          "bbox": {
+            "x": 814,
+            "y": 1088,
+            "width": 100,
+            "height": 63
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0060_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0060",
+          "char_index": 132,
+          "index": 7
+        }
+      },
+      "segments": {
+        "册01_page0057_idx77": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:13.864194+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/去_册01_page0057_idx77.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/去_册01_page0057_idx77.png"
+        },
+        "册01_page0060_idx132": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:14.800273+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/去_册01_page0060_idx132.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/去_册01_page0060_idx132.png"
+        }
+      }
+    },
+    "參": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:40:26.109Z",
+      "lookup": {
+        "册01_page0059_idx217": {
+          "bbox": {
+            "x": 316,
+            "y": 374,
+            "width": 89,
+            "height": 98
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0059_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0059",
+          "char_index": 217,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0059_idx217": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:18.734521+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/參_册01_page0059_idx217.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/參_册01_page0059_idx217.png"
+        }
+      }
+    },
+    "及": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:38:01.027Z",
+      "lookup": {
+        "册01_page0060_idx113": {
+          "bbox": {
+            "x": 941,
+            "y": 170,
+            "width": 78,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0060_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0060",
+          "char_index": 113,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0060_idx113": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:19:39.499061+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/及_册01_page0060_idx113.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/及_册01_page0060_idx113.png"
+        }
+      }
+    },
+    "反": {
+      "instances": {
+        "0": true,
+        "1": true
+      },
+      "timestamp": "2025-11-11T07:40:26.148Z",
+      "lookup": {
+        "册01_page0017_idx124": {
+          "bbox": {
+            "x": 1158,
+            "y": 823,
+            "width": 49,
+            "height": 43
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0017_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0017",
+          "char_index": 124,
+          "index": 0
+        },
+        "册01_page0020_idx145": {
+          "bbox": {
+            "x": 1244,
+            "y": 944,
+            "width": 51,
+            "height": 45
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0020_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0020",
+          "char_index": 145,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0020_idx145": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:42:57.638290+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        },
+        "册01_page0017_idx124": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:40:37.686343+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "受": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-11-11T07:39:56.326Z",
+      "lookup": {
+        "册01_page0010_idx307": {
+          "bbox": {
+            "x": 687,
+            "y": 1247,
+            "width": 47,
+            "height": 58
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0010_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0010",
+          "char_index": 307,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0010_idx307": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:39:59.763209+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "口": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-11-11T07:40:48.110Z",
+      "lookup": {
+        "册01_page0006_idx28": {
+          "bbox": {
+            "x": 1556,
+            "y": 313,
+            "width": 83,
+            "height": 52
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0006_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0006",
+          "char_index": 28,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0006_idx28": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T07:42:44.549937+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/口_册01_page0006_idx28.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/口_册01_page0006_idx28.png"
+        }
+      }
+    },
+    "可": {
+      "instances": {
+        "3": true,
+        "13": true
+      },
+      "timestamp": "2025-10-27T17:35:41.924Z",
+      "lookup": {
+        "册01_page0057_idx253": {
+          "bbox": {
+            "x": 489,
+            "y": 869,
+            "width": 86,
+            "height": 65
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 253,
+          "index": 3
+        },
+        "册01_page0059_idx161": {
+          "bbox": {
+            "x": 834,
+            "y": 365,
+            "width": 86,
+            "height": 65
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0059_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0059",
+          "char_index": 161,
+          "index": 13
+        }
+      },
+      "segments": {
+        "册01_page0057_idx253": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:08:24.536178+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/可_册01_page0057_idx253.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/可_册01_page0057_idx253.png"
+        },
+        "册01_page0059_idx161": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:08:33.710467+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/可_册01_page0059_idx161.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/可_册01_page0059_idx161.png"
+        }
+      }
+    },
+    "合": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-10-27T17:39:36.676Z",
+      "lookup": {
+        "册01_page0054_idx189": {
+          "bbox": {
+            "x": 465,
+            "y": 608,
+            "width": 89,
+            "height": 78
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0054_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0054",
+          "char_index": 189,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册01_page0054_idx189": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:46.817222+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/合_册01_page0054_idx189.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/合_册01_page0054_idx189.png"
+        }
+      }
+    },
+    "同": {
+      "instances": {
+        "16": true
+      },
+      "timestamp": "2025-10-27T17:37:38.498Z",
+      "lookup": {
+        "册01_page0045_idx75": {
+          "bbox": {
+            "x": 1279,
+            "y": 988,
+            "width": 89,
+            "height": 71
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0045_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0045",
+          "char_index": 75,
+          "index": 16
+        }
+      },
+      "segments": {
+        "册01_page0045_idx75": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:20:11.363197+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/同_册01_page0045_idx75.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/同_册01_page0045_idx75.png"
+        }
+      }
+    },
+    "吾": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:36:09.524Z",
+      "lookup": {
+        "册01_page0048_idx85": {
+          "bbox": {
+            "x": 1111,
+            "y": 976,
+            "width": 78,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0048_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0048",
+          "char_index": 85,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0048_idx85": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:56.692083+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/吾_册01_page0048_idx85.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/吾_册01_page0048_idx85.png"
+        }
+      }
+    },
+    "周": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:37:40.265Z",
+      "lookup": {
+        "册01_page0019_idx302": {
+          "bbox": {
+            "x": 574,
+            "y": 542,
+            "width": 38,
+            "height": 43
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0019_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0019",
+          "char_index": 302,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0019_idx302": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:41:00.051181+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "善": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:37:26.377Z",
+      "lookup": {
+        "册01_page0059_idx64": {
+          "bbox": {
+            "x": 1382,
+            "y": 794,
+            "width": 88,
+            "height": 88
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0059_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0059",
+          "char_index": 64,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0059_idx64": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:15:05.597614+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/善_册01_page0059_idx64.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/善_册01_page0059_idx64.png"
+        }
+      }
+    },
+    "喜": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:36:07.391Z",
+      "lookup": {
+        "册01_page0059_idx161": {
+          "bbox": {
+            "x": 834,
+            "y": 421,
+            "width": 88,
+            "height": 98
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0059_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0059",
+          "char_index": 161,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0059_idx161": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:53.855117+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/喜_册01_page0059_idx161.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/喜_册01_page0059_idx161.png"
+        }
+      }
+    },
+    "單": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:35:09.408Z",
+      "lookup": {
+        "册01_page0017_idx29": {
+          "bbox": {
+            "x": 1578,
+            "y": 206,
+            "width": 54,
+            "height": 66
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0017_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0017",
+          "char_index": 29,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0017_idx29": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:41:09.174176+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "四": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:42:25.538Z",
+      "lookup": {
+        "册01_page0028_idx81": {
+          "bbox": {
+            "x": 1523,
+            "y": 1110,
+            "width": 99,
+            "height": 50
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0028",
+          "char_index": 81,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0028_idx81": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:17:02.267326+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/四_册01_page0028_idx81.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/四_册01_page0028_idx81.png"
+        }
+      }
+    },
+    "國": {
+      "instances": {
+        "15": true
+      },
+      "timestamp": "2025-10-27T17:34:08.625Z",
+      "lookup": {
+        "册01_page0048_idx9": {
+          "bbox": {
+            "x": 1625,
+            "y": 560,
+            "width": 73,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0048_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0048",
+          "char_index": 9,
+          "index": 15
+        }
+      },
+      "segments": {
+        "册01_page0048_idx9": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:12:22.343314+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/國_册01_page0048_idx9.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/國_册01_page0048_idx9.png"
+        }
+      }
+    },
+    "地": {
+      "instances": {
+        "4": true
+      },
+      "timestamp": "2025-10-27T17:35:33.220Z",
+      "lookup": {
+        "册01_page0055_idx239": {
+          "bbox": {
+            "x": 472,
+            "y": 219,
+            "width": 89,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 239,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册01_page0055_idx239": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:09:14.387083+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/地_册01_page0055_idx239.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/地_册01_page0055_idx239.png"
+        }
+      }
+    },
+    "增": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:33:33.947Z",
+      "lookup": {
+        "册01_page0055_idx74": {
+          "bbox": {
+            "x": 1362,
+            "y": 790,
+            "width": 92,
+            "height": 81
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 74,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0055_idx74": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:45.776819+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/增_册01_page0055_idx74.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/增_册01_page0055_idx74.png"
+        }
+      }
+    },
+    "士": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:42:22.105Z",
+      "lookup": {
+        "册01_page0057_idx47": {
+          "bbox": {
+            "x": 1542,
+            "y": 1114,
+            "width": 89,
+            "height": 78
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 47,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0057_idx47": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:56.518905+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/士_册01_page0057_idx47.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/士_册01_page0057_idx47.png"
+        }
+      }
+    },
+    "外": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:39:48.159Z",
+      "lookup": {
+        "册01_page0021_idx147": {
+          "bbox": {
+            "x": 807,
+            "y": 159,
+            "width": 58,
+            "height": 57
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0021_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0021",
+          "char_index": 147,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0021_idx147": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:43:07.988666+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "大": {
+      "instances": {
+        "13": true
+      },
+      "timestamp": "2025-11-11T07:43:13.776Z",
+      "lookup": {
+        "册01_page0016_idx68": {
+          "bbox": {
+            "x": 1457,
+            "y": 556,
+            "width": 85,
+            "height": 64
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0016_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0016",
+          "char_index": 68,
+          "index": 13
+        }
+      },
+      "segments": {
+        "册01_page0016_idx68": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T07:44:44.662878+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/大_册01_page0016_idx68.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/大_册01_page0016_idx68.png"
+        }
+      }
+    },
+    "天": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:36:37.136Z",
+      "lookup": {
+        "册01_page0057_idx122": {
+          "bbox": {
+            "x": 1115,
+            "y": 388,
+            "width": 89,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 122,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0057_idx122": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:05.740470+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/天_册01_page0057_idx122.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/天_册01_page0057_idx122.png"
+        }
+      }
+    },
+    "太": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:35:58.978Z",
+      "lookup": {
+        "册01_page0028_idx155": {
+          "bbox": {
+            "x": 1196,
+            "y": 873,
+            "width": 91,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0028",
+          "char_index": 155,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0028_idx155": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:08:56.535481+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/太_册01_page0028_idx155.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/太_册01_page0028_idx155.png"
+        }
+      }
+    },
+    "夫": {
+      "instances": {
+        "6": true
+      },
+      "timestamp": "2025-10-27T17:35:56.959Z",
+      "lookup": {
+        "册01_page0016_idx69": {
+          "bbox": {
+            "x": 1457,
+            "y": 619,
+            "width": 85,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0016_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0016",
+          "char_index": 69,
+          "index": 6
+        }
+      },
+      "segments": {
+        "册01_page0016_idx69": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:08:53.656722+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/夫_册01_page0016_idx69.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/夫_册01_page0016_idx69.png"
+        }
+      }
+    },
+    "孔": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:42:49.313Z",
+      "lookup": {
+        "册01_page0057_idx53": {
+          "bbox": {
+            "x": 1461,
+            "y": 302,
+            "width": 89,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 53,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0057_idx53": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:23.035018+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/孔_册01_page0057_idx53.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/孔_册01_page0057_idx53.png"
+        }
+      }
+    },
+    "宣": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T16:56:08.965Z",
+      "lookup": {
+        "册01_page0057_idx179": {
+          "bbox": {
+            "x": 827,
+            "y": 578,
+            "width": 87,
+            "height": 76
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 179,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0057_idx179": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:37.920858+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/宣_册01_page0057_idx179.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/宣_册01_page0057_idx179.png"
+        }
+      }
+    },
+    "室": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T16:56:10.414Z",
+      "lookup": {
+        "册01_page0055_idx297": {
+          "bbox": {
+            "x": 218,
+            "y": 701,
+            "width": 87,
+            "height": 87
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 297,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0055_idx297": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:41.243347+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/室_册01_page0055_idx297.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/室_册01_page0055_idx297.png"
+        }
+      }
+    },
+    "寡": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:33:43.947Z",
+      "lookup": {
+        "册01_page0056_idx187": {
+          "bbox": {
+            "x": 735,
+            "y": 396,
+            "width": 87,
+            "height": 97
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0056_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0056",
+          "char_index": 187,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0056_idx187": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:08:22.281203+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/寡_册01_page0056_idx187.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/寡_册01_page0056_idx187.png"
+        }
+      }
+    },
+    "寬": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:33:58.609Z",
+      "lookup": {
+        "册01_page0003_idx32": {
+          "bbox": {
+            "x": 317,
+            "y": 904,
+            "width": 61,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0003_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0003",
+          "char_index": 32,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0003_idx32": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:41:16.833237+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "對": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-10-27T17:33:27.301Z",
+      "lookup": {
+        "册01_page0024_idx97": {
+          "bbox": {
+            "x": 1101,
+            "y": 1029,
+            "width": 94,
+            "height": 59
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0024_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0024",
+          "char_index": 97,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册01_page0024_idx97": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:43:27.393877+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "小": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:42:37.605Z",
+      "lookup": {
+        "册01_page0055_idx230": {
+          "bbox": {
+            "x": 555,
+            "y": 877,
+            "width": 94,
+            "height": 59
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 230,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0055_idx230": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:49.308197+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/小_册01_page0055_idx230.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/小_册01_page0055_idx230.png"
+        }
+      }
+    },
+    "少": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:40:23.942Z",
+      "lookup": {
+        "册01_page0023_idx133": {
+          "bbox": {
+            "x": 1041,
+            "y": 556,
+            "width": 84,
+            "height": 84
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0023_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0023",
+          "char_index": 133,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0023_idx133": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:24.814595+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/少_册01_page0023_idx133.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/少_册01_page0023_idx133.png"
+        }
+      }
+    },
+    "尹": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:40:12.692Z",
+      "lookup": {
+        "册01_page0048_idx88": {
+          "bbox": {
+            "x": 1028,
+            "y": 292,
+            "width": 72,
+            "height": 72
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0048_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0048",
+          "char_index": 88,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0048_idx88": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:17:32.896110+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/尹_册01_page0048_idx88.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/尹_册01_page0048_idx88.png"
+        }
+      }
+    },
+    "居": {
+      "instances": {
+        "9": true
+      },
+      "timestamp": "2025-11-11T07:41:40.398Z",
+      "lookup": {
+        "册01_page0057_idx281": {
+          "bbox": {
+            "x": 311,
+            "y": 363,
+            "width": 88,
+            "height": 77
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 281,
+          "index": 9
+        }
+      },
+      "segments": {
+        "册01_page0057_idx281": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:17:18.198569+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/居_册01_page0057_idx281.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/居_册01_page0057_idx281.png"
+        }
+      }
+    },
+    "山": {
+      "instances": {
+        "1": true,
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:41:07.108Z",
+      "lookup": {
+        "册01_page0028_idx280": {
+          "bbox": {
+            "x": 666,
+            "y": 1010,
+            "width": 78,
+            "height": 49
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0028",
+          "char_index": 280,
+          "index": 1
+        },
+        "册01_page0029_idx0": {
+          "bbox": {
+            "x": 1710,
+            "y": 439,
+            "width": 87,
+            "height": 86
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0029_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0029",
+          "char_index": 0,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0028_idx280": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:44:56.364974+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        },
+        "册01_page0029_idx0": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:37.676400+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/山_册01_page0029_idx0.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/山_册01_page0029_idx0.png"
+        }
+      }
+    },
+    "川": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:34:40.725Z",
+      "lookup": {
+        "册01_page0048_idx106": {
+          "bbox": {
+            "x": 938,
+            "y": 906,
+            "width": 85,
+            "height": 64
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0048_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0048",
+          "char_index": 106,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0048_idx106": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:44.598491+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/川_册01_page0048_idx106.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/川_册01_page0048_idx106.png"
+        }
+      }
+    },
+    "己": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:41:27.044Z",
+      "lookup": {
+        "册01_page0006_idx184": {
+          "bbox": {
+            "x": 670,
+            "y": 161,
+            "width": 49,
+            "height": 37
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0006_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0006",
+          "char_index": 184,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0006_idx184": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:43:37.674416+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "巴": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:38:59.226Z",
+      "lookup": {
+        "册01_page0029_idx120": {
+          "bbox": {
+            "x": 1114,
+            "y": 786,
+            "width": 89,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0029_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0029",
+          "char_index": 120,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0029_idx120": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:03.554284+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/巴_册01_page0029_idx120.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/巴_册01_page0029_idx120.png"
+        }
+      }
+    },
+    "市": {
+      "instances": {
+        "2": true,
+        "5": true
+      },
+      "timestamp": "2025-10-27T17:35:48.499Z",
+      "lookup": {
+        "册01_page0041_idx267": {
+          "bbox": {
+            "x": 57,
+            "y": 677,
+            "width": 78,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0041",
+          "char_index": 267,
+          "index": 2
+        },
+        "册01_page0042_idx88": {
+          "bbox": {
+            "x": 1465,
+            "y": 676,
+            "width": 40,
+            "height": 70
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0042_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0042",
+          "char_index": 88,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册01_page0041_idx267": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:08:35.116954+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/市_册01_page0041_idx267.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/市_册01_page0041_idx267.png"
+        },
+        "册01_page0042_idx88": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:43:42.550654+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "師": {
+      "instances": {
+        "4": true
+      },
+      "timestamp": "2025-10-27T17:35:17.566Z",
+      "lookup": {
+        "册01_page0060_idx110": {
+          "bbox": {
+            "x": 1015,
+            "y": 1255,
+            "width": 90,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0060_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0060",
+          "char_index": 110,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册01_page0060_idx110": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:08:37.396869+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/師_册01_page0060_idx110.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/師_册01_page0060_idx110.png"
+        }
+      }
+    },
+    "平": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:36:16.274Z",
+      "lookup": {
+        "册01_page0039_idx89": {
+          "bbox": {
+            "x": 1288,
+            "y": 478,
+            "width": 75,
+            "height": 84
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0039_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0039",
+          "char_index": 89,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0039_idx89": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:19:10.684091+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/平_册01_page0039_idx89.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/平_册01_page0039_idx89.png"
+        }
+      }
+    },
+    "年": {
+      "instances": {
+        "1": true,
+        "12": true
+      },
+      "timestamp": "2025-10-27T17:35:07.783Z",
+      "lookup": {
+        "册01_page0057_idx250": {
+          "bbox": {
+            "x": 489,
+            "y": 644,
+            "width": 86,
+            "height": 75
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 250,
+          "index": 1
+        },
+        "册01_page0055_idx224": {
+          "bbox": {
+            "x": 552,
+            "y": 372,
+            "width": 95,
+            "height": 95
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 224,
+          "index": 12
+        }
+      },
+      "segments": {
+        "册01_page0057_idx250": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:09:47.203453+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/年_册01_page0057_idx250.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/年_册01_page0057_idx250.png"
+        },
+        "册01_page0055_idx224": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:09:48.688792+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/年_册01_page0055_idx224.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/年_册01_page0055_idx224.png"
+        }
+      }
+    },
+    "庶": {
+      "instances": {
+        "18": true
+      },
+      "timestamp": "2025-10-27T17:40:10.809Z",
+      "lookup": {
+        "册01_page0052_idx88": {
+          "bbox": {
+            "x": 1016,
+            "y": 453,
+            "width": 86,
+            "height": 86
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0052_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0052",
+          "char_index": 88,
+          "index": 18
+        }
+      },
+      "segments": {
+        "册01_page0052_idx88": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:17:30.585872+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/庶_册01_page0052_idx88.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/庶_册01_page0052_idx88.png"
+        }
+      }
+    },
+    "廷": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-11-11T07:44:08.918Z",
+      "lookup": {
+        "册01_page0017_idx334": {
+          "bbox": {
+            "x": 139,
+            "y": 463,
+            "width": 86,
+            "height": 75
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0017_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0017",
+          "char_index": 334,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0017_idx334": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T07:45:22.768119+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/廷_册01_page0017_idx334.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/廷_册01_page0017_idx334.png"
+        }
+      }
+    },
+    "張": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:42:50.609Z",
+      "lookup": {
+        "册01_page0031_idx302": {
+          "bbox": {
+            "x": 95,
+            "y": 220,
+            "width": 45,
+            "height": 62
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0031_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0031",
+          "char_index": 302,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0031_idx302": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:44:18.530919+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "心": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:37:03.586Z",
+      "lookup": {
+        "册01_page0055_idx100": {
+          "bbox": {
+            "x": 1188,
+            "y": 155,
+            "width": 92,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 100,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0055_idx100": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:15:28.917336+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/心_册01_page0055_idx100.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/心_册01_page0055_idx100.png"
+        }
+      }
+    },
+    "恩": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:37:05.019Z",
+      "lookup": {
+        "册01_page0057_idx162": {
+          "bbox": {
+            "x": 945,
+            "y": 917,
+            "width": 87,
+            "height": 76
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 162,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0057_idx162": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:15:29.985471+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/恩_册01_page0057_idx162.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/恩_册01_page0057_idx162.png"
+        }
+      }
+    },
+    "意": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T16:58:11.742Z",
+      "lookup": {
+        "册01_page0049_idx272": {
+          "bbox": {
+            "x": 306,
+            "y": 155,
+            "width": 38,
+            "height": 60
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0049_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0049",
+          "char_index": 272,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0049_idx272": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:44:26.086070+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "拜": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:39:32.651Z",
+      "lookup": {
+        "册01_page0057_idx227": {
+          "bbox": {
+            "x": 569,
+            "y": 217,
+            "width": 89,
+            "height": 78
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 227,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0057_idx227": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:49.926201+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/拜_册01_page0057_idx227.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/拜_册01_page0057_idx227.png"
+        }
+      }
+    },
+    "擲": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:33:52.592Z",
+      "lookup": {
+        "册01_page0053_idx164": {
+          "bbox": {
+            "x": 732,
+            "y": 773,
+            "width": 96,
+            "height": 72
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0053_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0053",
+          "char_index": 164,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0053_idx164": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:09:36.675877+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/擲_册01_page0053_idx164.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/擲_册01_page0053_idx164.png"
+        }
+      }
+    },
+    "支": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:37:20.452Z",
+      "lookup": {
+        "册01_page0009_idx317": {
+          "bbox": {
+            "x": 549,
+            "y": 762,
+            "width": 43,
+            "height": 54
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0009_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0009",
+          "char_index": 317,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0009_idx317": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:44:34.857640+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "數": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:33:18.388Z",
+      "lookup": {
+        "册01_page0057_idx235": {
+          "bbox": {
+            "x": 574,
+            "y": 822,
+            "width": 89,
+            "height": 89
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 235,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0057_idx235": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:55.638958+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/數_册01_page0057_idx235.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/數_册01_page0057_idx235.png"
+        }
+      }
+    },
+    "文": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:37:18.686Z",
+      "lookup": {
+        "册01_page0015_idx80": {
+          "bbox": {
+            "x": 1388,
+            "y": 474,
+            "width": 65,
+            "height": 57
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0015_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0015",
+          "char_index": 80,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0015_idx80": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:12:43.006028+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/文_册01_page0015_idx80.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/文_册01_page0015_idx80.png"
+        }
+      }
+    },
+    "日": {
+      "instances": {
+        "8": true,
+        "23": true
+      },
+      "timestamp": "2025-11-11T07:45:37.435Z",
+      "lookup": {
+        "册01_page0055_idx267": {
+          "bbox": {
+            "x": 381,
+            "y": 1010,
+            "width": 97,
+            "height": 61
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 267,
+          "index": 8
+        },
+        "册01_page0007_idx179": {
+          "bbox": {
+            "x": 964,
+            "y": 298,
+            "width": 37,
+            "height": 37
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0007_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0007",
+          "char_index": 179,
+          "index": 23
+        }
+      },
+      "segments": {
+        "册01_page0007_idx179": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:47:20.005207+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        },
+        "册01_page0055_idx267": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T07:47:16.010346+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/日_册01_page0055_idx267.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/日_册01_page0055_idx267.png"
+        }
+      }
+    },
+    "昌": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:42:02.505Z",
+      "lookup": {
+        "册01_page0017_idx110": {
+          "bbox": {
+            "x": 1154,
+            "y": 168,
+            "width": 49,
+            "height": 43
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0017_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0017",
+          "char_index": 110,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0017_idx110": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:45:44.477807+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "明": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:35:24.208Z",
+      "lookup": {
+        "册01_page0057_idx33": {
+          "bbox": {
+            "x": 1627,
+            "y": 1362,
+            "width": 90,
+            "height": 70
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 33,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0057_idx33": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:08:38.529939+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/明_册01_page0057_idx33.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/明_册01_page0057_idx33.png"
+        }
+      }
+    },
+    "春": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:35:51.166Z",
+      "lookup": {
+        "册01_page0054_idx185": {
+          "bbox": {
+            "x": 551,
+            "y": 989,
+            "width": 105,
+            "height": 92
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0054_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0054",
+          "char_index": 185,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0054_idx185": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:08:43.079110+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/春_册01_page0054_idx185.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/春_册01_page0054_idx185.png"
+        }
+      }
+    },
+    "曾": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:37:25.286Z",
+      "lookup": {
+        "册01_page0043_idx116": {
+          "bbox": {
+            "x": 946,
+            "y": 1134,
+            "width": 102,
+            "height": 77
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0043_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0043",
+          "char_index": 116,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0043_idx116": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:15:02.196703+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/曾_册01_page0043_idx116.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/曾_册01_page0043_idx116.png"
+        }
+      }
+    },
+    "月": {
+      "instances": {
+        "0": true,
+        "4": true
+      },
+      "timestamp": "2025-11-11T07:45:55.044Z",
+      "lookup": {
+        "册01_page0060_idx237": {
+          "bbox": {
+            "x": 62,
+            "y": 986,
+            "width": 81,
+            "height": 52
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0060_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0060",
+          "char_index": 237,
+          "index": 0
+        },
+        "册01_page0059_idx185": {
+          "bbox": {
+            "x": 398,
+            "y": 322,
+            "width": 94,
+            "height": 128
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0059_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0059",
+          "char_index": 185,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册01_page0059_idx185": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T07:47:26.392856+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/月_册01_page0059_idx185.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/月_册01_page0059_idx185.png"
+        },
+        "册01_page0060_idx237": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T07:47:42.573143+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/月_册01_page0060_idx237.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/月_册01_page0060_idx237.png"
+        }
+      }
+    },
+    "朝": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:35:30.091Z",
+      "lookup": {
+        "册01_page0049_idx234": {
+          "bbox": {
+            "x": 473,
+            "y": 455,
+            "width": 90,
+            "height": 79
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0049_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0049",
+          "char_index": 234,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0049_idx234": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:09:12.983813+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/朝_册01_page0049_idx234.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/朝_册01_page0049_idx234.png"
+        }
+      }
+    },
+    "未": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:38:46.910Z",
+      "lookup": {
+        "册01_page0049_idx278": {
+          "bbox": {
+            "x": 218,
+            "y": 1019,
+            "width": 85,
+            "height": 64
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0049_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0049",
+          "char_index": 278,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0049_idx278": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:09:34.911198+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/未_册01_page0049_idx278.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/未_册01_page0049_idx278.png"
+        }
+      }
+    },
+    "本": {
+      "instances": {
+        "12": true
+      },
+      "timestamp": "2025-10-27T17:41:59.531Z",
+      "lookup": {
+        "册01_page0038_idx217": {
+          "bbox": {
+            "x": 397,
+            "y": 1374,
+            "width": 84,
+            "height": 75
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0038_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0038",
+          "char_index": 217,
+          "index": 12
+        }
+      },
+      "segments": {
+        "册01_page0038_idx217": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:33.063490+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/本_册01_page0038_idx217.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/本_册01_page0038_idx217.png"
+        }
+      }
+    },
+    "束": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:38:43.635Z",
+      "lookup": {
+        "册01_page0033_idx203": {
+          "bbox": {
+            "x": 814,
+            "y": 773,
+            "width": 48,
+            "height": 54
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0033_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0033",
+          "char_index": 203,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0033_idx203": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:46:04.134511+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "東": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-11-11T07:46:11.887Z",
+      "lookup": {
+        "册01_page0028_idx144": {
+          "bbox": {
+            "x": 1279,
+            "y": 1013,
+            "width": 87,
+            "height": 87
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0028",
+          "char_index": 144,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0028_idx144": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T07:47:48.445511+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/東_册01_page0028_idx144.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/東_册01_page0028_idx144.png"
+        }
+      }
+    },
+    "林": {
+      "instances": {
+        "11": true
+      },
+      "timestamp": "2025-10-27T17:42:04.256Z",
+      "lookup": {
+        "册01_page0049_idx227": {
+          "bbox": {
+            "x": 648,
+            "y": 1258,
+            "width": 97,
+            "height": 61
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0049_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0049",
+          "char_index": 227,
+          "index": 11
+        }
+      },
+      "segments": {
+        "册01_page0049_idx227": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:12:27.251665+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/林_册01_page0049_idx227.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/林_册01_page0049_idx227.png"
+        }
+      }
+    },
+    "止": {
+      "instances": {
+        "10": true
+      },
+      "timestamp": "2025-10-27T17:40:41.808Z",
+      "lookup": {
+        "册01_page0057_idx63": {
+          "bbox": {
+            "x": 1458,
+            "y": 1026,
+            "width": 88,
+            "height": 77
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 63,
+          "index": 10
+        }
+      },
+      "segments": {
+        "册01_page0057_idx63": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:20.029575+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/止_册01_page0057_idx63.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/止_册01_page0057_idx63.png"
+        }
+      }
+    },
+    "正": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-10-27T17:41:56.447Z",
+      "lookup": {
+        "册01_page0048_idx69": {
+          "bbox": {
+            "x": 1284,
+            "y": 1227,
+            "width": 73,
+            "height": 62
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0048_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0048",
+          "char_index": 69,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册01_page0048_idx69": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:31.603217+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/正_册01_page0048_idx69.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/正_册01_page0048_idx69.png"
+        }
+      }
+    },
+    "此": {
+      "instances": {
+        "15": true
+      },
+      "timestamp": "2025-10-27T17:36:19.290Z",
+      "lookup": {
+        "册01_page0053_idx195": {
+          "bbox": {
+            "x": 567,
+            "y": 531,
+            "width": 82,
+            "height": 72
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0053_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0053",
+          "char_index": 195,
+          "index": 15
+        }
+      },
+      "segments": {
+        "册01_page0053_idx195": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:15:06.822400+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/此_册01_page0053_idx195.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/此_册01_page0053_idx195.png"
+        }
+      }
+    },
+    "武": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:36:53.553Z",
+      "lookup": {
+        "册01_page0055_idx202": {
+          "bbox": {
+            "x": 730,
+            "y": 1328,
+            "width": 85,
+            "height": 64
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 202,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0055_idx202": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:02.120806+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/武_册01_page0055_idx202.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/武_册01_page0055_idx202.png"
+        }
+      }
+    },
+    "母": {
+      "instances": {
+        "0": true,
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:41:35.460Z",
+      "lookup": {
+        "册01_page0054_idx164": {
+          "bbox": {
+            "x": 813,
+            "y": 1234,
+            "width": 89,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0054_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0054",
+          "char_index": 164,
+          "index": 0
+        },
+        "册01_page0008_idx485": {
+          "bbox": {
+            "x": 286,
+            "y": 152,
+            "width": 49,
+            "height": 49
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0008_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0008",
+          "char_index": 485,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0054_idx164": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:14:54.032134+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/母_册01_page0054_idx164.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/母_册01_page0054_idx164.png"
+        },
+        "册01_page0008_idx485": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:46:19.639064+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "氏": {
+      "instances": {
+        "6": true
+      },
+      "timestamp": "2025-10-27T17:37:53.044Z",
+      "lookup": {
+        "册01_page0006_idx32": {
+          "bbox": {
+            "x": 1557,
+            "y": 604,
+            "width": 83,
+            "height": 73
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0006_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0006",
+          "char_index": 32,
+          "index": 6
+        }
+      },
+      "segments": {
+        "册01_page0006_idx32": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:13:43.157223+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/氏_册01_page0006_idx32.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/氏_册01_page0006_idx32.png"
+        }
+      }
+    },
+    "民": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:37:50.385Z",
+      "lookup": {
+        "册01_page0056_idx301": {
+          "bbox": {
+            "x": 147,
+            "y": 157,
+            "width": 90,
+            "height": 78
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0056_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0056",
+          "char_index": 301,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0056_idx301": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:13:41.884310+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/民_册01_page0056_idx301.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/民_册01_page0056_idx301.png"
+        }
+      }
+    },
+    "海": {
+      "instances": {
+        "2": true,
+        "4": true
+      },
+      "timestamp": "2025-10-27T17:40:33.917Z",
+      "lookup": {
+        "册01_page0029_idx11": {
+          "bbox": {
+            "x": 1715,
+            "y": 1309,
+            "width": 86,
+            "height": 76
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0029_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0029",
+          "char_index": 11,
+          "index": 2
+        },
+        "册01_page0048_idx123": {
+          "bbox": {
+            "x": 815,
+            "y": 572,
+            "width": 91,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0048_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0048",
+          "char_index": 123,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册01_page0029_idx11": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:14:25.639596+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/海_册01_page0029_idx11.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/海_册01_page0029_idx11.png"
+        },
+        "册01_page0048_idx123": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:14:37.161548+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/海_册01_page0048_idx123.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/海_册01_page0048_idx123.png"
+        }
+      }
+    },
+    "為": {
+      "instances": {
+        "4": true
+      },
+      "timestamp": "2025-10-27T17:37:16.402Z",
+      "lookup": {
+        "册01_page0057_idx214": {
+          "bbox": {
+            "x": 657,
+            "y": 600,
+            "width": 92,
+            "height": 81
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 214,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册01_page0057_idx214": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:53.533371+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/為_册01_page0057_idx214.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/為_册01_page0057_idx214.png"
+        }
+      }
+    },
+    "烏": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:37:09.811Z",
+      "lookup": {
+        "册01_page0055_idx290": {
+          "bbox": {
+            "x": 219,
+            "y": 146,
+            "width": 88,
+            "height": 87
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 290,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0055_idx290": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:50.380874+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/烏_册01_page0055_idx290.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/烏_册01_page0055_idx290.png"
+        }
+      }
+    },
+    "焉": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:37:13.869Z",
+      "lookup": {
+        "册01_page0008_idx333": {
+          "bbox": {
+            "x": 464,
+            "y": 770,
+            "width": 34,
+            "height": 55
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0008_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0008",
+          "char_index": 333,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0008_idx333": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:46:30.384084+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "無": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:38:11.610Z",
+      "lookup": {
+        "册01_page0060_idx150": {
+          "bbox": {
+            "x": 663,
+            "y": 354,
+            "width": 75,
+            "height": 66
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0060_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0060",
+          "char_index": 150,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0060_idx150": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:13:57.371312+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/無_册01_page0060_idx150.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/無_册01_page0060_idx150.png"
+        }
+      }
+    },
+    "然": {
+      "instances": {
+        "25": true
+      },
+      "timestamp": "2025-10-27T17:38:40.026Z",
+      "lookup": {
+        "册01_page0059_idx72": {
+          "bbox": {
+            "x": 1379,
+            "y": 1303,
+            "width": 88,
+            "height": 77
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0059_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0059",
+          "char_index": 72,
+          "index": 25
+        }
+      },
+      "segments": {
+        "册01_page0059_idx72": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:13:58.594987+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/然_册01_page0059_idx72.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/然_册01_page0059_idx72.png"
+        }
+      }
+    },
+    "父": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:37:21.752Z",
+      "lookup": {
+        "册01_page0055_idx300": {
+          "bbox": {
+            "x": 218,
+            "y": 918,
+            "width": 87,
+            "height": 87
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 300,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0055_idx300": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:12:48.075805+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/父_册01_page0055_idx300.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/父_册01_page0055_idx300.png"
+        }
+      }
+    },
+    "牧": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:35:25.575Z",
+      "lookup": {
+        "册01_page0056_idx281": {
+          "bbox": {
+            "x": 321,
+            "y": 1219,
+            "width": 86,
+            "height": 65
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0056_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0056",
+          "char_index": 281,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0056_idx281": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:08:39.363612+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/牧_册01_page0056_idx281.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/牧_册01_page0056_idx281.png"
+        }
+      }
+    },
+    "犬": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:36:38.511Z",
+      "lookup": {
+        "册01_page0054_idx136": {
+          "bbox": {
+            "x": 926,
+            "y": 533,
+            "width": 85,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0054_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0054",
+          "char_index": 136,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0054_idx136": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:17.527550+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/犬_册01_page0054_idx136.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/犬_册01_page0054_idx136.png"
+        }
+      }
+    },
+    "王": {
+      "instances": {
+        "14": true
+      },
+      "timestamp": "2025-10-27T17:41:53.356Z",
+      "lookup": {
+        "册01_page0033_idx69": {
+          "bbox": {
+            "x": 1458,
+            "y": 622,
+            "width": 77,
+            "height": 58
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0033_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0033",
+          "char_index": 69,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册01_page0033_idx69": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:30.929072+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/王_册01_page0033_idx69.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/王_册01_page0033_idx69.png"
+        }
+      }
+    },
+    "田": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:37:47.560Z",
+      "lookup": {
+        "册01_page0057_idx136": {
+          "bbox": {
+            "x": 1032,
+            "y": 160,
+            "width": 90,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 136,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0057_idx136": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:17:09.520794+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/田_册01_page0057_idx136.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/田_册01_page0057_idx136.png"
+        }
+      }
+    },
+    "甲": {
+      "instances": {
+        "2": true,
+        "4": true
+      },
+      "timestamp": "2025-10-27T17:36:12.339Z",
+      "lookup": {
+        "册01_page0056_idx229": {
+          "bbox": {
+            "x": 568,
+            "y": 1165,
+            "width": 86,
+            "height": 65
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0056_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0056",
+          "char_index": 229,
+          "index": 2
+        },
+        "册01_page0056_idx233": {
+          "bbox": {
+            "x": 565,
+            "y": 1167,
+            "width": 89,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0056_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0056",
+          "char_index": 233,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册01_page0056_idx229": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:57.688464+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/甲_册01_page0056_idx229.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/甲_册01_page0056_idx229.png"
+        },
+        "册01_page0056_idx233": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:58.298122+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/甲_册01_page0056_idx233.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/甲_册01_page0056_idx233.png"
+        }
+      }
+    },
+    "界": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:33:13.168Z",
+      "lookup": {
+        "册01_page0042_idx192": {
+          "bbox": {
+            "x": 863,
+            "y": 281,
+            "width": 51,
+            "height": 57
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0042_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0042",
+          "char_index": 192,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0042_idx192": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:46:41.361453+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "留": {
+      "instances": {
+        "6": true,
+        "15": true
+      },
+      "timestamp": "2025-10-27T16:58:06.242Z",
+      "lookup": {
+        "册01_page0048_idx120": {
+          "bbox": {
+            "x": 815,
+            "y": 709,
+            "width": 91,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0048_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0048",
+          "char_index": 120,
+          "index": 6
+        },
+        "册01_page0028_idx241": {
+          "bbox": {
+            "x": 741,
+            "y": 853,
+            "width": 87,
+            "height": 76
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0028_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0028",
+          "char_index": 241,
+          "index": 15
+        }
+      },
+      "segments": {
+        "册01_page0048_idx120": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:09:59.640169+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/留_册01_page0048_idx120.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/留_册01_page0048_idx120.png"
+        },
+        "册01_page0028_idx241": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:46:46.224998+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "畫": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-11-11T07:46:51.489Z",
+      "lookup": {
+        "册01_page0006_idx12": {
+          "bbox": {
+            "x": 1639,
+            "y": 282,
+            "width": 88,
+            "height": 98
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0006_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0006",
+          "char_index": 12,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0006_idx12": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T07:48:33.175647+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/畫_册01_page0006_idx12.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/畫_册01_page0006_idx12.png"
+        }
+      }
+    },
+    "皆": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T16:58:18.225Z",
+      "lookup": {
+        "册01_page0041_idx173": {
+          "bbox": {
+            "x": 555,
+            "y": 1108,
+            "width": 92,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0041",
+          "char_index": 173,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0041_idx173": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:08:23.433373+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/皆_册01_page0041_idx173.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/皆_册01_page0041_idx173.png"
+        }
+      }
+    },
+    "直": {
+      "instances": {
+        "13": true,
+        "14": true
+      },
+      "timestamp": "2025-10-27T16:56:17.497Z",
+      "lookup": {
+        "册01_page0007_idx206": {
+          "bbox": {
+            "x": 849,
+            "y": 758,
+            "width": 88,
+            "height": 88
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0007_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0007",
+          "char_index": 206,
+          "index": 13
+        },
+        "册01_page0007_idx271": {
+          "bbox": {
+            "x": 679,
+            "y": 907,
+            "width": 35,
+            "height": 53
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0007_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0007",
+          "char_index": 271,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册01_page0007_idx206": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:53.940191+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/直_册01_page0007_idx206.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/直_册01_page0007_idx206.png"
+        },
+        "册01_page0007_idx271": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:46:59.428646+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "省": {
+      "instances": {
+        "0": true,
+        "4": true
+      },
+      "timestamp": "2025-10-27T17:40:22.375Z",
+      "lookup": {
+        "册01_page0055_idx31": {
+          "bbox": {
+            "x": 1616,
+            "y": 1315,
+            "width": 87,
+            "height": 76
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 31,
+          "index": 0
+        },
+        "册01_page0015_idx100": {
+          "bbox": {
+            "x": 1340,
+            "y": 1257,
+            "width": 38,
+            "height": 62
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0015_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0015",
+          "char_index": 100,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册01_page0055_idx31": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:22.119279+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/省_册01_page0055_idx31.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/省_册01_page0055_idx31.png"
+        },
+        "册01_page0015_idx100": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:47:04.870642+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "禁": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:36:04.678Z",
+      "lookup": {
+        "册01_page0056_idx38": {
+          "bbox": {
+            "x": 1534,
+            "y": 707,
+            "width": 90,
+            "height": 90
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0056_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0056",
+          "char_index": 38,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0056_idx38": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:37.628752+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/禁_册01_page0056_idx38.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/禁_册01_page0056_idx38.png"
+        }
+      }
+    },
+    "素": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T16:58:13.992Z",
+      "lookup": {
+        "册01_page0043_idx215": {
+          "bbox": {
+            "x": 475,
+            "y": 1281,
+            "width": 48,
+            "height": 72
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0043_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0043",
+          "char_index": 215,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0043_idx215": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:48:51.946265+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "累": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T16:58:15.759Z",
+      "lookup": {
+        "册01_page0051_idx53": {
+          "bbox": {
+            "x": 1436,
+            "y": 1099,
+            "width": 105,
+            "height": 92
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0051_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0051",
+          "char_index": 53,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0051_idx53": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:07:59.128749+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/累_册01_page0051_idx53.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/累_册01_page0051_idx53.png"
+        }
+      }
+    },
+    "罔": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:37:35.548Z",
+      "lookup": {
+        "册01_page0033_idx333": {
+          "bbox": {
+            "x": 269,
+            "y": 358,
+            "width": 45,
+            "height": 51
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0033_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0033",
+          "char_index": 333,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0033_idx333": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:48:58.158683+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "羊": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:37:23.686Z",
+      "lookup": {
+        "册01_page0056_idx294": {
+          "bbox": {
+            "x": 237,
+            "y": 888,
+            "width": 86,
+            "height": 86
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0056_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0056",
+          "char_index": 294,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0056_idx294": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:15:01.155481+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/羊_册01_page0056_idx294.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/羊_册01_page0056_idx294.png"
+        }
+      }
+    },
+    "羽": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:42:06.256Z",
+      "lookup": {
+        "册01_page0048_idx278": {
+          "bbox": {
+            "x": 141,
+            "y": 616,
+            "width": 78,
+            "height": 90
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0048_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0048",
+          "char_index": 278,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0048_idx278": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:12:28.142701+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/羽_册01_page0048_idx278.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/羽_册01_page0048_idx278.png"
+        }
+      }
+    },
+    "老": {
+      "instances": {
+        "4": true
+      },
+      "timestamp": "2025-10-27T17:40:17.100Z",
+      "lookup": {
+        "册01_page0055_idx225": {
+          "bbox": {
+            "x": 553,
+            "y": 466,
+            "width": 94,
+            "height": 71
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 225,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册01_page0055_idx225": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:15:41.134553+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/老_册01_page0055_idx225.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/老_册01_page0055_idx225.png"
+        }
+      }
+    },
+    "考": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:40:14.759Z",
+      "lookup": {
+        "册01_page0057_idx38": {
+          "bbox": {
+            "x": 1547,
+            "y": 432,
+            "width": 89,
+            "height": 89
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 38,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0057_idx38": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:15:39.815679+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/考_册01_page0057_idx38.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/考_册01_page0057_idx38.png"
+        }
+      }
+    },
+    "而": {
+      "instances": {
+        "9": true
+      },
+      "timestamp": "2025-10-27T17:34:24.021Z",
+      "lookup": {
+        "册01_page0054_idx154": {
+          "bbox": {
+            "x": 810,
+            "y": 455,
+            "width": 89,
+            "height": 67
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0054_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0054",
+          "char_index": 154,
+          "index": 9
+        }
+      },
+      "segments": {
+        "册01_page0054_idx154": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:12:30.405762+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/而_册01_page0054_idx154.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/而_册01_page0054_idx154.png"
+        }
+      }
+    },
+    "耳": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:42:15.772Z",
+      "lookup": {
+        "册01_page0049_idx275": {
+          "bbox": {
+            "x": 306,
+            "y": 307,
+            "width": 38,
+            "height": 48
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0049_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0049",
+          "char_index": 275,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0049_idx275": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:49:04.882372+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "聲": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:34:31.875Z",
+      "lookup": {
+        "册01_page0055_idx73": {
+          "bbox": {
+            "x": 1362,
+            "y": 698,
+            "width": 92,
+            "height": 92
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 73,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0055_idx73": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:19:51.959384+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/聲_册01_page0055_idx73.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/聲_册01_page0055_idx73.png"
+        }
+      }
+    },
+    "自": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:42:11.472Z",
+      "lookup": {
+        "册01_page0060_idx226": {
+          "bbox": {
+            "x": 226,
+            "y": 754,
+            "width": 94,
+            "height": 71
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0060_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0060",
+          "char_index": 226,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0060_idx226": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:19:52.968357+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/自_册01_page0060_idx226.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/自_册01_page0060_idx226.png"
+        }
+      }
+    },
+    "至": {
+      "instances": {
+        "5": true
+      },
+      "timestamp": "2025-10-27T16:56:21.247Z",
+      "lookup": {
+        "册01_page0051_idx89": {
+          "bbox": {
+            "x": 1190,
+            "y": 154,
+            "width": 87,
+            "height": 75
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0051_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0051",
+          "char_index": 89,
+          "index": 5
+        }
+      },
+      "segments": {
+        "册01_page0051_idx89": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:57.765097+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/至_册01_page0051_idx89.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/至_册01_page0051_idx89.png"
+        }
+      }
+    },
+    "與": {
+      "instances": {
+        "14": true
+      },
+      "timestamp": "2025-10-27T17:37:33.715Z",
+      "lookup": {
+        "册01_page0059_idx97": {
+          "bbox": {
+            "x": 1204,
+            "y": 598,
+            "width": 96,
+            "height": 84
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0059_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0059",
+          "char_index": 97,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册01_page0059_idx97": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:31.469794+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/與_册01_page0059_idx97.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/與_册01_page0059_idx97.png"
+        }
+      }
+    },
+    "舒": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:42:43.063Z",
+      "lookup": {
+        "册01_page0006_idx51": {
+          "bbox": {
+            "x": 1475,
+            "y": 769,
+            "width": 96,
+            "height": 85
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0006_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0006",
+          "char_index": 51,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0006_idx51": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:50.933806+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/舒_册01_page0006_idx51.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/舒_册01_page0006_idx51.png"
+        }
+      }
+    },
+    "良": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:37:55.094Z",
+      "lookup": {
+        "册01_page0027_idx162": {
+          "bbox": {
+            "x": 743,
+            "y": 1042,
+            "width": 46,
+            "height": 80
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0027_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0027",
+          "char_index": 162,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0027_idx162": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:49:16.556190+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "蜀": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:38:41.935Z",
+      "lookup": {
+        "册01_page0029_idx117": {
+          "bbox": {
+            "x": 1110,
+            "y": 461,
+            "width": 95,
+            "height": 94
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0029_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0029",
+          "char_index": 117,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0029_idx117": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:44.768617+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/蜀_册01_page0029_idx117.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/蜀_册01_page0029_idx117.png"
+        }
+      }
+    },
+    "術": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T16:57:41.876Z",
+      "lookup": {
+        "册01_page0055_idx36": {
+          "bbox": {
+            "x": 1532,
+            "y": 371,
+            "width": 90,
+            "height": 90
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 36,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0055_idx36": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:08:08.750406+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/術_册01_page0055_idx36.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/術_册01_page0055_idx36.png"
+        }
+      }
+    },
+    "衛": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-11-11T07:49:21.691Z",
+      "lookup": {
+        "册01_page0017_idx78": {
+          "bbox": {
+            "x": 1288,
+            "y": 475,
+            "width": 82,
+            "height": 81
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0017_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0017",
+          "char_index": 78,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0017_idx78": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T07:50:54.256453+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/衛_册01_page0017_idx78.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/衛_册01_page0017_idx78.png"
+        }
+      }
+    },
+    "西": {
+      "instances": {
+        "14": true
+      },
+      "timestamp": "2025-10-27T17:37:42.940Z",
+      "lookup": {
+        "册01_page0059_idx11": {
+          "bbox": {
+            "x": 1631,
+            "y": 543,
+            "width": 92,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0059_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0059",
+          "char_index": 11,
+          "index": 14
+        }
+      },
+      "segments": {
+        "册01_page0059_idx11": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:17:07.958795+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/西_册01_page0059_idx11.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/西_册01_page0059_idx11.png"
+        }
+      }
+    },
+    "要": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:33:15.880Z",
+      "lookup": {
+        "册01_page0009_idx315": {
+          "bbox": {
+            "x": 546,
+            "y": 605,
+            "width": 50,
+            "height": 56
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0009_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0009",
+          "char_index": 315,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0009_idx315": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:49:28.703132+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "見": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:39:57.875Z",
+      "lookup": {
+        "册01_page0055_idx227": {
+          "bbox": {
+            "x": 554,
+            "y": 619,
+            "width": 95,
+            "height": 83
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 227,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0055_idx227": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:26.123168+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/見_册01_page0055_idx227.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/見_册01_page0055_idx227.png"
+        }
+      }
+    },
+    "謝": {
+      "instances": {
+        "79": true
+      },
+      "timestamp": "2025-10-27T16:57:31.143Z",
+      "lookup": {
+        "册01_page0013_idx285": {
+          "bbox": {
+            "x": 326,
+            "y": 574,
+            "width": 48,
+            "height": 48
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0013_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0013",
+          "char_index": 285,
+          "index": 79
+        }
+      },
+      "segments": {
+        "册01_page0013_idx285": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:49:46.897621+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "識": {
+      "instances": {
+        "12": true
+      },
+      "timestamp": "2025-10-27T17:37:01.619Z",
+      "lookup": {
+        "册01_page0055_idx114": {
+          "bbox": {
+            "x": 1188,
+            "y": 1316,
+            "width": 92,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 114,
+          "index": 12
+        }
+      },
+      "segments": {
+        "册01_page0055_idx114": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:18:03.548787+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/識_册01_page0055_idx114.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/識_册01_page0055_idx114.png"
+        }
+      }
+    },
+    "谷": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:39:45.484Z",
+      "lookup": {
+        "册01_page0030_idx132": {
+          "bbox": {
+            "x": 861,
+            "y": 787,
+            "width": 48,
+            "height": 54
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0030_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0030",
+          "char_index": 132,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0030_idx132": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:50:41.857959+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "車": {
+      "instances": {
+        "15": true
+      },
+      "timestamp": "2025-10-27T17:35:00.383Z",
+      "lookup": {
+        "册01_page0035_idx206": {
+          "bbox": {
+            "x": 459,
+            "y": 555,
+            "width": 89,
+            "height": 100
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0035_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0035",
+          "char_index": 206,
+          "index": 15
+        }
+      },
+      "segments": {
+        "册01_page0035_idx206": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:12:34.911449+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/車_册01_page0035_idx206.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/車_册01_page0035_idx206.png"
+        }
+      }
+    },
+    "軍": {
+      "instances": {
+        "3": true,
+        "12": true
+      },
+      "timestamp": "2025-10-27T17:35:05.300Z",
+      "lookup": {
+        "册01_page0049_idx100": {
+          "bbox": {
+            "x": 1193,
+            "y": 225,
+            "width": 84,
+            "height": 74
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0049_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0049",
+          "char_index": 100,
+          "index": 3
+        },
+        "册01_page0043_idx293": {
+          "bbox": {
+            "x": 148,
+            "y": 584,
+            "width": 86,
+            "height": 100
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0043_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0043",
+          "char_index": 293,
+          "index": 12
+        }
+      },
+      "segments": {
+        "册01_page0049_idx100": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:09:42.218216+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/軍_册01_page0049_idx100.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/軍_册01_page0049_idx100.png"
+        },
+        "册01_page0043_idx293": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T07:42:26.526410+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/軍_册01_page0043_idx293.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/軍_册01_page0043_idx293.png"
+        }
+      }
+    },
+    "道": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-10-27T17:36:40.811Z",
+      "lookup": {
+        "册01_page0055_idx94": {
+          "bbox": {
+            "x": 1278,
+            "y": 791,
+            "width": 89,
+            "height": 89
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 94,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0055_idx94": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:15:10.056469+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/道_册01_page0055_idx94.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/道_册01_page0055_idx94.png"
+        }
+      }
+    },
+    "鄉": {
+      "instances": {
+        "19": true
+      },
+      "timestamp": "2025-10-27T16:57:58.342Z",
+      "lookup": {
+        "册01_page0010_idx430": {
+          "bbox": {
+            "x": 379,
+            "y": 1165,
+            "width": 50,
+            "height": 56
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0010_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0010",
+          "char_index": 430,
+          "index": 19
+        }
+      },
+      "segments": {
+        "册01_page0010_idx430": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:50:32.877648+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "醫": {
+      "instances": {
+        "4": true
+      },
+      "timestamp": "2025-10-27T16:57:52.142Z",
+      "lookup": {
+        "册01_page0009_idx392": {
+          "bbox": {
+            "x": 249,
+            "y": 614,
+            "width": 50,
+            "height": 56
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0009_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0009",
+          "char_index": 392,
+          "index": 4
+        }
+      },
+      "segments": {
+        "册01_page0009_idx392": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:50:18.730100+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "采": {
+      "instances": {
+        "1": true,
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:38:06.618Z",
+      "lookup": {
+        "册01_page0041_idx169": {
+          "bbox": {
+            "x": 555,
+            "y": 855,
+            "width": 92,
+            "height": 69
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0041_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0041",
+          "char_index": 169,
+          "index": 1
+        },
+        "册01_page0060_idx149": {
+          "bbox": {
+            "x": 663,
+            "y": 280,
+            "width": 75,
+            "height": 75
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0060_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0060",
+          "char_index": 149,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0041_idx169": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:14:04.141424+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/采_册01_page0041_idx169.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/采_册01_page0041_idx169.png"
+        },
+        "册01_page0060_idx149": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:14:05.375698+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/采_册01_page0060_idx149.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/采_册01_page0060_idx149.png"
+        }
+      }
+    },
+    "里": {
+      "instances": {
+        "3": true
+      },
+      "timestamp": "2025-11-11T07:42:01.132Z",
+      "lookup": {
+        "册01_page0010_idx431": {
+          "bbox": {
+            "x": 379,
+            "y": 1220,
+            "width": 50,
+            "height": 50
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0010_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0010",
+          "char_index": 431,
+          "index": 3
+        }
+      },
+      "segments": {
+        "册01_page0010_idx431": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:50:04.981281+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "量": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:34:30.179Z",
+      "lookup": {
+        "册01_page0055_idx184": {
+          "bbox": {
+            "x": 814,
+            "y": 1224,
+            "width": 86,
+            "height": 86
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 184,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0055_idx184": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:36.745381+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/量_册01_page0055_idx184.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/量_册01_page0055_idx184.png"
+        }
+      }
+    },
+    "金": {
+      "instances": {
+        "5": true,
+        "6": true
+      },
+      "timestamp": "2025-10-27T17:39:43.159Z",
+      "lookup": {
+        "册01_page0048_idx84": {
+          "bbox": {
+            "x": 1112,
+            "y": 908,
+            "width": 78,
+            "height": 68
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0048_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0048",
+          "char_index": 84,
+          "index": 5
+        },
+        "册01_page0043_idx249": {
+          "bbox": {
+            "x": 397,
+            "y": 768,
+            "width": 37,
+            "height": 65
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0043_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0043",
+          "char_index": 249,
+          "index": 6
+        }
+      },
+      "segments": {
+        "册01_page0048_idx84": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:16:47.507751+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/金_册01_page0048_idx84.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/金_册01_page0048_idx84.png"
+        },
+        "册01_page0043_idx249": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:41:55.872547+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "長": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T17:37:57.643Z",
+      "lookup": {
+        "册01_page0057_idx339": {
+          "bbox": {
+            "x": 51,
+            "y": 753,
+            "width": 98,
+            "height": 86
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0057_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0057",
+          "char_index": 339,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0057_idx339": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:13:56.369807+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/長_册01_page0057_idx339.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/長_册01_page0057_idx339.png"
+        }
+      }
+    },
+    "雕": {
+      "instances": {
+        "2": true
+      },
+      "timestamp": "2025-10-27T16:57:21.209Z",
+      "lookup": {
+        "册01_page0060_idx241": {
+          "bbox": {
+            "x": 68,
+            "y": 1226,
+            "width": 81,
+            "height": 62
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0060_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0060",
+          "char_index": 241,
+          "index": 2
+        }
+      },
+      "segments": {
+        "册01_page0060_idx241": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:43.401857+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/雕_册01_page0060_idx241.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/雕_册01_page0060_idx241.png"
+        }
+      }
+    },
+    "靡": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-11-11T07:49:54.229Z",
+      "lookup": {
+        "册01_page0055_idx128": {
+          "bbox": {
+            "x": 1103,
+            "y": 860,
+            "width": 91,
+            "height": 91
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0055_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0055",
+          "char_index": 128,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0055_idx128": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-11-11T07:50:49.307367+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/靡_册01_page0055_idx128.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/靡_册01_page0055_idx128.png"
+        }
+      }
+    },
+    "風": {
+      "instances": {
+        "17": true
+      },
+      "timestamp": "2025-10-27T17:39:52.067Z",
+      "lookup": {
+        "册01_page0026_idx123": {
+          "bbox": {
+            "x": 1211,
+            "y": 620,
+            "width": 88,
+            "height": 88
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0026_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0026",
+          "char_index": 123,
+          "index": 17
+        }
+      },
+      "segments": {
+        "册01_page0026_idx123": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:17:40.211931+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/風_册01_page0026_idx123.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/風_册01_page0026_idx123.png"
+        }
+      }
+    },
+    "食": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:36:01.195Z",
+      "lookup": {
+        "册01_page0054_idx256": {
+          "bbox": {
+            "x": 210,
+            "y": 1298,
+            "width": 85,
+            "height": 85
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0054_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0054",
+          "char_index": 256,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0054_idx256": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:10:39.285135+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/食_册01_page0054_idx256.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/食_册01_page0054_idx256.png"
+        }
+      }
+    },
+    "馬": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:37:12.244Z",
+      "lookup": {
+        "册01_page0029_idx278": {
+          "bbox": {
+            "x": 316,
+            "y": 620,
+            "width": 88,
+            "height": 142
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0029_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0029",
+          "char_index": 278,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0029_idx278": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:51.425526+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/馬_册01_page0029_idx278.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/馬_册01_page0029_idx278.png"
+        }
+      }
+    },
+    "鳳": {
+      "instances": {
+        "0": true
+      },
+      "timestamp": "2025-10-27T17:39:49.776Z",
+      "lookup": {
+        "册01_page0019_idx103": {
+          "bbox": {
+            "x": 1316,
+            "y": 316,
+            "width": 50,
+            "height": 55
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0019_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0019",
+          "char_index": 103,
+          "index": 0
+        }
+      },
+      "segments": {
+        "册01_page0019_idx103": {
+          "status": "dropped",
+          "method": null,
+          "timestamp": "2025-11-11T07:41:51.493908+00:00",
+          "segmented_path": null,
+          "decision": "drop"
+        }
+      }
+    },
+    "點": {
+      "instances": {},
+      "timestamp": "2025-10-27T17:38:20.443Z",
+      "lookup": {}
+    },
+    "齊": {
+      "instances": {
+        "1": true
+      },
+      "timestamp": "2025-10-27T17:41:11.183Z",
+      "lookup": {
+        "册01_page0048_idx117": {
+          "bbox": {
+            "x": 814,
+            "y": 151,
+            "width": 92,
+            "height": 91
+          },
+          "source_image": "data/results/preprocessed/05_1139_汉官仪/册01_pages/page_0048_preprocessed.png",
+          "confidence": 1.0,
+          "volume": 1,
+          "page": "page_0048",
+          "char_index": 117,
+          "index": 1
+        }
+      },
+      "segments": {
+        "册01_page0048_idx117": {
+          "status": "confirmed",
+          "method": "auto",
+          "timestamp": "2025-10-30T14:11:46.250920+00:00",
+          "segmented_path": "data/results/manual/confirmed/05_1139_汉官仪/齊_册01_page0048_idx117.png",
+          "decision": "need",
+          "confirmed_path": "data/results/manual/confirmed/05_1139_汉官仪/齊_册01_page0048_idx117.png"
+        }
+      }
+    }
+  }
+}

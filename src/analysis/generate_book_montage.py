@@ -7,7 +7,7 @@
 
 数据来源（唯一）：data/results/manual/review_books/*.json
   - 仅采集 segments 中 status == "confirmed" 且 decision != "drop" 的实例
-  - 使用其中的 segmented_path 加载图片（相对项目根目录）
+  - 使用其中的 confirmed_path 加载图片（相对项目根目录；兼容旧 segmented_path）
 
 输出：data/exports/montage/{book}.png
 
@@ -42,6 +42,7 @@ EXPORT_DIR = PROJECT_ROOT / 'data/exports/montage'
 
 from src.analysis.image_metrics import center_crop_fixed_box, percentile
 from src.analysis.montage import build_montage, hex_to_rgb, make_tile
+from src.review.identity import get_confirmed_path
 from src.review.storage.review_books import list_review_books, read_all_review_books
 
 
@@ -79,7 +80,7 @@ def iter_confirmed_instances(review_data: Dict, book: str) -> List[Tuple[str, st
                 continue
             if entry.get('decision') == 'drop':
                 continue
-            seg_rel = entry.get('segmented_path')
+            seg_rel = get_confirmed_path(entry)
             if not seg_rel:
                 continue
             abs_path = PROJECT_ROOT / seg_rel

@@ -33,7 +33,9 @@ REVIEW_RESULTS_PATH = MANUAL_RESULTS_DIR / 'review_results.json'
 REVIEW_BOOKS_DIR = MANUAL_RESULTS_DIR / 'review_books'
 SEGMENTATION_REVIEW_PATH = MANUAL_RESULTS_DIR / 'segmentation_review.json'
 SEGMENT_LOOKUP_PATH = MANUAL_RESULTS_DIR / 'segment_lookup.json'
-SEGMENTED_DIR = MANUAL_RESULTS_DIR / 'segmented'
+CONFIRMED_DIR = MANUAL_RESULTS_DIR / 'confirmed'
+# Backward alias. Manual final cuts are now treated as confirmed outputs.
+SEGMENTED_DIR = CONFIRMED_DIR
 SEGMENT_MARKS_PATH = MANUAL_RESULTS_DIR / 'segment_marks.json'
 
 # Paddle 输出路径
