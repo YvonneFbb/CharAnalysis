@@ -38,32 +38,6 @@
             color: #666;
         }
 
-        .header-actions {
-            margin-top: 20px;
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
-
-        .hidden-input {
-            display: none;
-        }
-
-        .btn-header {
-            padding: 8px 20px;
-            background: white;
-            color: #333;
-            border: 1px solid #ddd;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .btn-header:hover {
-            background: #f5f5f5;
-            border-color: #999;
-        }
-
         .content {
             padding: 30px;
         }
@@ -189,6 +163,11 @@
             border-color: #22c55e;
         }
 
+        .char-item.partially-reviewed {
+            background: #fffbea;
+            border-color: #d4a72c;
+        }
+
         .reviewed-badge {
             position: absolute;
             top: 4px;
@@ -274,9 +253,15 @@
             flex: 1;
         }
 
+        .modal-note {
+            margin-bottom: 16px;
+            color: #666;
+            font-size: 13px;
+        }
+
         .instances-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 16px;
         }
 
@@ -287,8 +272,7 @@
         .instance-item {
             border: 2px solid #ddd;
             padding: 10px;
-            text-align: center;
-            cursor: pointer;
+            text-align: left;
             transition: all 0.2s;
             background: white;
         }
@@ -297,43 +281,137 @@
             border-color: #333;
         }
 
-        .instance-item.selected {
+        .instance-item.status-accepted {
             border-color: #22c55e;
             background: #f0fdf4;
+        }
+
+        .instance-item.status-rejected {
+            border-color: #e57373;
+            background: #fff5f5;
+        }
+
+        .instance-item.status-pending {
+            border-color: #d4a72c;
+            background: #fffdf5;
+        }
+
+        .instance-preview {
+            width: 100%;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            background: #fafafa;
+            border: 1px solid #eee;
         }
 
         .instance-item img {
             max-width: 100%;
             height: auto;
-            margin-bottom: 8px;
         }
 
-        .instance-loading {
-            width: 80px;
-            height: 80px;
-            background: #fafafa;
+        .preview-missing,
+        .empty-card {
+            width: 100%;
+            min-height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 8px;
-            font-size: 11px;
+            padding: 12px;
+            text-align: center;
+            font-size: 12px;
             color: #999;
         }
 
         .instance-info {
-            font-size: 11px;
-            color: #999;
-            margin-bottom: 4px;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            line-height: 1.5;
         }
 
-        .instance-status {
+        .instance-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .instance-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 999px;
             font-size: 12px;
             font-weight: 500;
-            color: #999;
         }
 
-        .instance-item.selected .instance-status {
-            color: #22c55e;
+        .instance-tag-pending {
+            background: #fff0c2;
+            color: #8a6500;
+        }
+
+        .instance-tag-accepted {
+            background: #ddf7e7;
+            color: #167f39;
+        }
+
+        .instance-tag-rejected {
+            background: #ffe0e0;
+            color: #a62d2d;
+        }
+
+        .instance-tag-match {
+            background: #edf6ff;
+            color: #195fa8;
+        }
+
+        .instance-tag-mismatch {
+            background: #f4e7ff;
+            color: #6b3fb3;
+        }
+
+        .instance-tag-unknown {
+            background: #f1f1f1;
+            color: #666;
+        }
+
+        .instance-tag-error {
+            background: #ffe7e7;
+            color: #ad2626;
+        }
+
+        .instance-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .instance-action-btn {
+            border: 1px solid #ddd;
+            background: white;
+            padding: 6px 10px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .instance-action-btn.active {
+            border-color: #111;
+            background: #111;
+            color: white;
+        }
+
+        .instance-action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .instance-error {
+            margin-bottom: 8px;
+            color: #b42318;
+            font-size: 11px;
         }
 
         .modal-footer {
@@ -392,33 +470,9 @@
             text-align: center;
         }
 
-        .actions button {
-            padding: 10px 24px;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
-            margin-left: 10px;
-            transition: all 0.2s;
-        }
-
-        .btn-clear-all {
-            background: #f5f5f5;
-            color: #333;
-            border: 1px solid #ddd;
-        }
-
-        .btn-clear-all:hover {
-            background: #e5e5e5;
-        }
-
-        .btn-save {
-            background: #111;
-            color: white;
-            border: 1px solid #111;
-        }
-
-        .btn-save:hover {
-            background: #333;
+        .actions {
+            font-size: 12px;
+            color: #666;
         }
 
         .modal-loading {

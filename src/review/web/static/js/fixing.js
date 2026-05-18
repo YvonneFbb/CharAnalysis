@@ -5,8 +5,7 @@
 
   const state = {
     currentBook: null,
-    lastClickedChar: null,
-    lastClickedInstance: null,
+    ocrModalDirty: false,
   };
 
   async function loadBooks() {
@@ -56,7 +55,7 @@
       text(qs('#fixed-box-stat'), Lb ? `固定框 L_b=${Lb}` : '');
       refreshMontage();
       renderItems(data.items || []);
-      renderMissing(data.missing_chars || [], data.paddle_counts || {});
+      renderMissing(data.missing_chars || []);
     } catch (error) {
       console.error('Fixing 数据加载失败:', error);
       clear(grid);
@@ -83,7 +82,7 @@
 
     const card = el('div', {
       className: `card ${cardClass}`,
-      onclick: () => openSegmentModal(item.char, item.instance_id),
+      onclick: () => openOcrModalForChar(item.char),
     });
     card.appendChild(renderStatusBadge(decision, status));
 
@@ -118,24 +117,16 @@
   function renderCardLabel(item) {
     const charName = el('span', {
       className: 'char-name',
-      title: '打开 OCR',
+      title: '打开 Filter',
       text: item.char,
       onclick: event => {
         event.stopPropagation();
         openOcrModalForChar(item.char);
       },
     });
-    const segmentButton = el('button', {
-      type: 'button',
-      text: '切割',
-      onclick: event => {
-        event.stopPropagation();
-        openSegmentModal(item.char, item.instance_id);
-      },
-    });
     const ocrButton = el('button', {
       type: 'button',
-      text: 'OCR',
+      text: 'Filter',
       onclick: event => {
         event.stopPropagation();
         openOcrModalForChar(item.char);
@@ -143,11 +134,11 @@
     });
     return el('div', { className: 'thumb-label' }, [
       charName,
-      el('div', { className: 'thumb-actions' }, [segmentButton, ocrButton]),
+      el('div', { className: 'thumb-actions' }, [ocrButton]),
     ]);
   }
 
-  function renderMissing(missingChars, paddleCounts) {
+  function renderMissing(missingChars) {
     const grid = qs('#missing-grid');
     clear(grid);
     text(qs('#missing-summary'), `共 ${missingChars.length} 个`);
@@ -168,11 +159,6 @@
         text: char,
         onclick: () => openOcrModalForChar(char),
       });
-      const paddleCount = paddleCounts[char] || 0;
-      if (paddleCount > 0) {
-        button.classList.add('has-paddle');
-        button.title = `Paddle 候选 ${paddleCount} 个`;
-      }
       fragment.appendChild(el('div', { className: 'missing-item' }, [button]));
     }
     grid.appendChild(fragment);
@@ -186,12 +172,13 @@
 
   function openOcrModal(targetChar) {
     if (!requireBook()) return;
+    state.ocrModalDirty = false;
     const params = new URLSearchParams({ book: state.currentBook });
     if (targetChar) params.set('char', targetChar);
     if (new URLSearchParams(window.location.search).has('debug')) {
       params.set('debug', '1');
     }
-    qs('#ocr-frame').src = `/ocr_review?${params.toString()}`;
+    qs('#ocr-frame').src = `/filter?${params.toString()}`;
     qs('#ocr-modal').classList.add('active');
   }
 
@@ -203,42 +190,15 @@
     const frame = qs('#ocr-frame');
     frame.src = 'about:blank';
     qs('#ocr-modal').classList.remove('active');
-    setTimeout(reloadFixing, 500);
+    const shouldRefresh = state.ocrModalDirty;
+    state.ocrModalDirty = false;
+    if (shouldRefresh) {
+      setTimeout(reloadFixing, 200);
+    }
   }
 
   function refreshOcrFrame() {
     const frame = qs('#ocr-frame');
-    if (frame.src) frame.src = frame.src;
-  }
-
-  function openSegmentModalForBook() {
-    if (!requireBook()) return;
-    qs('#segment-frame').src = `/segment_review?book=${encodeURIComponent(state.currentBook)}`;
-    qs('#segment-modal').classList.add('active');
-  }
-
-  function openSegmentModal(char, instanceId) {
-    if (!requireBook()) return;
-    state.lastClickedChar = char;
-    state.lastClickedInstance = instanceId;
-    const params = new URLSearchParams({
-      book: state.currentBook,
-      char,
-      instance_id: instanceId,
-    });
-    qs('#segment-frame').src = `/segment_review?${params.toString()}`;
-    qs('#segment-modal').classList.add('active');
-  }
-
-  function closeSegmentModal() {
-    const frame = qs('#segment-frame');
-    frame.src = 'about:blank';
-    qs('#segment-modal').classList.remove('active');
-    setTimeout(reloadFixing, 500);
-  }
-
-  function refreshSegmentFrame() {
-    const frame = qs('#segment-frame');
     if (frame.src) frame.src = frame.src;
   }
 
@@ -269,21 +229,14 @@
   function bindStaticControls() {
     qs('#reload-fixing-btn').addEventListener('click', reloadFixing);
     qs('#open-ocr-modal-btn').addEventListener('click', () => openOcrModal());
-    qs('#open-segment-modal-btn').addEventListener('click', openSegmentModalForBook);
     qs('#refresh-montage-btn').addEventListener('click', refreshMontage);
     qs('#refresh-ocr-frame-btn').addEventListener('click', refreshOcrFrame);
     qs('#close-ocr-modal-btn').addEventListener('click', closeOcrModal);
-    qs('#refresh-segment-frame-btn').addEventListener('click', refreshSegmentFrame);
-    qs('#close-segment-modal-btn').addEventListener('click', closeSegmentModal);
     qs('#close-montage-modal-btn').addEventListener('click', closeMontageModal);
   }
 
   document.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
-    if (qs('#segment-modal').classList.contains('active')) {
-      closeSegmentModal();
-      return;
-    }
     if (qs('#montage-modal').classList.contains('active')) {
       closeMontageModal();
       return;
@@ -296,10 +249,10 @@
   window.addEventListener('message', event => {
     if (event.origin !== window.location.origin) return;
     const data = event.data || {};
-    if (data.type === 'close-ocr-modal') {
+    if (data.type === 'filter-state-dirty') {
+      state.ocrModalDirty = true;
+    } else if (data.type === 'close-ocr-modal') {
       closeOcrModal();
-    } else if (data.type === 'close-segment-modal') {
-      closeSegmentModal();
     }
   });
 

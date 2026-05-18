@@ -33,6 +33,7 @@ REVIEW_RESULTS_PATH = MANUAL_RESULTS_DIR / 'review_results.json'
 REVIEW_BOOKS_DIR = MANUAL_RESULTS_DIR / 'review_books'
 SEGMENTATION_REVIEW_PATH = MANUAL_RESULTS_DIR / 'segmentation_review.json'
 SEGMENT_LOOKUP_PATH = MANUAL_RESULTS_DIR / 'segment_lookup.json'
+FILTER_CACHE_DIR = MANUAL_RESULTS_DIR / 'filter_cache'
 CONFIRMED_DIR = MANUAL_RESULTS_DIR / 'confirmed'
 # Backward alias. Manual final cuts are now treated as confirmed outputs.
 SEGMENTED_DIR = CONFIRMED_DIR

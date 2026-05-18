@@ -4,10 +4,9 @@
   <div class="container">
     <h1>古籍字形审查系统</h1>
     <div class="menu">
-      <a class="btn" href="{{ url_for('ocr_review_page') }}">第一轮审查（文字筛选）</a>
-      <a class="btn" href="{{ url_for('segment_review_page') }}">第二轮审查（字符切割）</a>
-      <a class="btn" href="{{ url_for('fixing_page') }}">Fixing（问题集中处理）</a>
-      <a class="btn" href="{{ url_for('paddle_review_page') }}">Paddle 复核</a>
+      <a class="btn" href="{{ url_for('filter_page') }}">Filter（快速筛选）</a>
+      <a class="btn" href="{{ url_for('review_page') }}">Review（总览修正）</a>
+      <a class="btn" href="{{ url_for('paddle_review_page') }}">Paddle 复核（Deprecated）</a>
     </div>
   </div>
 {% endblock %}

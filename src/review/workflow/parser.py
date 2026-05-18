@@ -30,7 +30,7 @@ PIPELINE_EPILOG = """
   ./pipeline ocr data/results/preprocessed/demo_preprocessed.jpg
   ./pipeline ocr data/results/preprocessed/ --max-volumes 5
 
-  # 完整流程
+  # 旧的 all 仅到 OCR
   ./pipeline all data/raw/demo.jpg
   ./pipeline all data/raw/ --max-volumes 5
 
@@ -39,6 +39,16 @@ PIPELINE_EPILOG = """
 
   # 标准字匹配（默认只生成分片 matched_books）
   ./pipeline match data/results/ocr
+
+  # 预计算 filter 阶段（按 OCR 宽度按需 segment + padded LiveText reOCR）
+  ./pipeline prepare-filter
+  ./pipeline prepare-filter --books 01_1127_尚书正义
+
+  # 当前推荐全链路
+  ./pipeline preprocess data/raw/ --max-volumes 5
+  ./pipeline ocr data/results/preprocessed/ --max-volumes 5
+  ./pipeline match data/results/ocr
+  ./pipeline prepare-filter
 
   # 如需生成聚合文件（供旧 crop 工具使用）
   ./pipeline match data/results/ocr -o data/results/matched_by_book.json
@@ -79,7 +89,7 @@ def create_parser() -> argparse.ArgumentParser:
     parser_ocr.add_argument("--max-volumes", type=int, metavar="N", help="限制每本书最多处理的册数（如 5）")
     parser_ocr.add_argument("--workers", type=int, default=1, metavar="N", help="并发线程数（默认 1）")
 
-    parser_all = subparsers.add_parser("all", help="完整流程（预处理 + OCR）")
+    parser_all = subparsers.add_parser("all", help="预处理 + OCR（不含 match / prepare-filter）")
     parser_all.add_argument("input", help="输入图片或目录")
     parser_all.add_argument("--force", action="store_true", help="强制重新处理所有文件（忽略进度记录）")
     parser_all.add_argument("--max-volumes", type=int, metavar="N", help="限制每本书最多处理的册数（如 5）")
@@ -89,6 +99,21 @@ def create_parser() -> argparse.ArgumentParser:
     parser_match.add_argument("ocr_dir", help="OCR 结果目录")
     parser_match.add_argument("-o", "--output", help="输出聚合 JSON 路径（可选，不填则只生成分片）")
     parser_match.add_argument("--standard-chars", help="标准字 JSON 文件路径（可选）")
+
+    parser_prepare_filter = subparsers.add_parser("prepare-filter", help="预计算 filter 阶段数据")
+    parser_prepare_filter.add_argument("--books", nargs="+", help="仅处理指定书籍")
+    parser_prepare_filter.add_argument("--chars", nargs="+", help="仅处理指定字符")
+    parser_prepare_filter.add_argument("--limit-chars", type=int, default=None, help="每本书仅处理前 N 个字（调试用）")
+    parser_prepare_filter.add_argument("--limit-instances", type=int, default=None, help="每个字仅处理前 N 个实例（调试用）")
+    parser_prepare_filter.add_argument("--workers", type=int, default=8, metavar="N", help="按书并行的进程数（默认 8）")
+    parser_prepare_filter.add_argument(
+        "--target-samples-per-char",
+        type=int,
+        default=10,
+        help="每个字最多保留多少个 reOCR 合格样本（默认 10）",
+    )
+    parser_prepare_filter.add_argument("--force", action="store_true", help="强制重新计算已存在的 preview/reOCR")
+    parser_prepare_filter.add_argument("--checkpoint-items", type=int, default=1000, help="每处理 N 个已变更实例落盘一次（默认 1000）")
 
     parser_crop = subparsers.add_parser("crop", help="裁切字符图像")
     parser_crop.add_argument("matched_chars_json", help="匹配结果 JSON 文件（聚合或单本书分片）")
@@ -115,4 +140,3 @@ def create_parser() -> argparse.ArgumentParser:
     parser_paddle.add_argument("--workers", type=int, default=config.PADDLE_CONFIG.get("workers", 1), help="Paddle 并发进程数（默认 1）")
 
     return parser
-

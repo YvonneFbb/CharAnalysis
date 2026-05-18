@@ -38,11 +38,45 @@ def segment_character(
         metadata: 元数据（bbox、参数等）
         processed_roi: 经过noise+CC处理后的ROI图像（用于bbox预览）
     """
-    # 加载图片
     img = cv2.imread(preprocessed_image_path)
     if img is None:
         raise ValueError(f"无法加载图片: {preprocessed_image_path}")
+    return _segment_character_from_loaded_image(img, bbox, custom_params=custom_params, padding=padding)
 
+
+def segment_character_from_image(
+    image: np.ndarray,
+    bbox: Dict[str, int],
+    custom_params: Optional[Dict] = None,
+    padding: int = 10,
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, Dict, np.ndarray]:
+    """
+    对单个字符进行精确切割（参考 ref/charsis/src/segmentation）
+
+    Args:
+        image: 已加载的预处理图片
+        bbox: OCR bbox (keys: x, y, width, height)
+        custom_params: 自定义参数（可选）
+        padding: bbox 扩展的边距（像素，默认10）
+
+    Returns:
+        roi_image: 原始 ROI 图像（彩色）
+        segmented_image: 切割后的字符图像（彩色，应用了CC效果）
+        debug_image: 调试可视化图像（4行布局）
+        metadata: 元数据（bbox、参数等）
+        processed_roi: 经过noise+CC处理后的ROI图像（用于bbox预览）
+    """
+    if image is None or image.size == 0:
+        raise ValueError("输入图片为空")
+    return _segment_character_from_loaded_image(image, bbox, custom_params=custom_params, padding=padding)
+
+
+def _segment_character_from_loaded_image(
+    img: np.ndarray,
+    bbox: Dict[str, int],
+    custom_params: Optional[Dict] = None,
+    padding: int = 10,
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, Dict, np.ndarray]:
     H, W = img.shape[:2]
 
     # 合并自定义参数（保持默认配置不被修改）

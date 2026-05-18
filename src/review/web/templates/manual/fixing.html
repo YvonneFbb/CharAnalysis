@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
-{% block title %}问题集中处理（Fixing）{% endblock %}
+{% block title %}Review 阶段{% endblock %}
 {% block styles %}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/fixing.css') }}">
 {% endblock %}
 {% block content %}
 <div class="container">
-  <h1>问题集中处理（Fixing）</h1>
+  <h1>Review 阶段</h1>
   <div class="fixing-wrap">
     <aside class="fixing-sidebar">
       <div>
@@ -27,8 +27,7 @@
         <div class="stat" id="fixed-box-stat"></div>
       </div>
       <div class="ocr-segment-buttons">
-        <button class="btn" id="open-ocr-modal-btn">打开 OCR 筛选（当前书）</button>
-        <button class="btn btn-primary" id="open-segment-modal-btn">打开切割审查列表</button>
+        <button class="btn" id="open-ocr-modal-btn">打开 Filter（当前书）</button>
       </div>
       <div class="montage-panel">
         <div class="toolbar montage-toolbar">
@@ -51,27 +50,13 @@
   <div class="iframe-modal" id="ocr-modal">
     <div class="iframe-container">
       <div class="iframe-header">
-        <strong>第一轮 OCR 筛选</strong>
+        <strong>Filter 阶段</strong>
         <div class="spacer"></div>
         <button class="btn" id="refresh-ocr-frame-btn">刷新</button>
         <button class="close-btn" id="close-ocr-modal-btn">&times;</button>
       </div>
       <div class="iframe-body">
         <iframe id="ocr-frame" src=""></iframe>
-      </div>
-    </div>
-  </div>
-
-  <div class="iframe-modal" id="segment-modal">
-    <div class="iframe-container">
-      <div class="iframe-header">
-        <strong>第二轮切割审查</strong>
-        <div class="spacer"></div>
-        <button class="btn" id="refresh-segment-frame-btn">刷新</button>
-        <button class="close-btn" id="close-segment-modal-btn">&times;</button>
-      </div>
-      <div class="iframe-body">
-        <iframe id="segment-frame" src=""></iframe>
       </div>
     </div>
   </div>

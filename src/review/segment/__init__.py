@@ -4,7 +4,7 @@
 参考 ref/charsis/src/segmentation 的实现进行整理
 """
 
-from .core import segment_character, adjust_bbox
+from .core import segment_character, segment_character_from_image, adjust_bbox
 from .config import (
     NOISE_REMOVAL_CONFIG,
     CC_FILTER_CONFIG,
@@ -16,6 +16,7 @@ from .config import (
 
 __all__ = [
     'segment_character',
+    'segment_character_from_image',
     'adjust_bbox',
     'get_default_params',
     'merge_params',

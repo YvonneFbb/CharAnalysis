@@ -45,6 +45,12 @@ def _import_paddle_core():
     return paddle_core
 
 
+def _import_prepare_filter_stage():
+    from src.review.filter import prepare_filter_stage
+
+    return prepare_filter_stage
+
+
 def _common_options(args: Namespace) -> Tuple[bool, Optional[int], int, Optional[dict]]:
     force = bool(getattr(args, "force", False))
     max_volumes = getattr(args, "max_volumes", None)
@@ -457,6 +463,27 @@ def cmd_crop(args: Namespace) -> int:
         return 1
 
 
+def cmd_prepare_filter(args: Namespace) -> int:
+    prepare_filter_stage = _import_prepare_filter_stage()
+    try:
+        return prepare_filter_stage.run_prepare_filter(
+            books=args.books,
+            chars=args.chars,
+            limit_chars=args.limit_chars,
+            limit_instances=args.limit_instances,
+            workers=args.workers,
+            force=bool(args.force),
+            checkpoint_items=args.checkpoint_items,
+            target_samples_per_char=args.target_samples_per_char,
+        )
+    except Exception as e:
+        print(f"错误：prepare-filter 失败: {e}")
+        import traceback
+
+        traceback.print_exc()
+        return 1
+
+
 def cmd_config(_: Namespace) -> int:
     summary = config.config_summary()
 
@@ -520,6 +547,7 @@ COMMAND_HANDLERS: Dict[str, CommandHandler] = {
     "ocr": cmd_ocr,
     "all": cmd_all,
     "match": cmd_match,
+    "prepare-filter": cmd_prepare_filter,
     "crop": cmd_crop,
     "config": cmd_config,
     "paddle": cmd_paddle,

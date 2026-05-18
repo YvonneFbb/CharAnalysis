@@ -23,7 +23,7 @@ import sys
 import traceback
 from datetime import datetime, timezone
 import time
-from typing import List, Tuple, Optional, Dict
+from typing import List, Optional, Dict, Tuple
 
 # 添加项目根目录到 sys.path
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -32,21 +32,25 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from src.review import config as review_config
 from src.review.identity import (
     get_confirmed_path as _get_confirmed_path,
-    make_instance_id as _make_instance_id,
     normalize_to_preprocessed_path,
     set_confirmed_path as _set_confirmed_path,
 )
-from src.review.storage.common import acquire_file_lock as _acquire_book_lock
 from src.review.storage.paddle_books import (
     list_paddle_books,
     read_paddle_book,
     write_paddle_book,
 )
 from src.review.storage.review_books import (
+    FILTER_REOCR_PAD_DEFAULT,
+    ensure_char_item as _ensure_char_item,
+    iter_accepted_items,
     list_review_books,
+    make_empty_char_entry,
     read_all_review_books,
     read_review_book,
     review_book_lock_path,
+    source_from_matched_instance as _source_from_matched_instance,
+    utc_now_iso,
     write_review_book,
 )
 
@@ -84,6 +88,7 @@ REVIEW_BOOKS_DIR = review_config.REVIEW_BOOKS_DIR
 # 切割相关路径
 SEGMENTATION_REVIEW_PATH = review_config.SEGMENTATION_REVIEW_PATH
 CONFIRMED_DIR = review_config.CONFIRMED_DIR
+PADDLE_CONFIG = review_config.PADDLE_CONFIG
 
 # 标记功能路径
 SEGMENT_MARKS_PATH = review_config.SEGMENT_MARKS_PATH
@@ -269,233 +274,250 @@ def ensure_standard_chars_data():
         print(f"[懒加载] 标准字数据加载完成：{standard_chars_data['total_methods']} 个分类法")
 
 
-def _derive_lookup_from_review(review: Dict) -> Dict:
-    """
-    从 review_books 的 instances 与 matched_by_book.json 推导 lookup 结构：
-    { 'books': { book: { char: { instance_id: {bbox, source_image, ...} } } } }
-    - 如果 review 内部已有 'lookup' 字段，则优先直接拷贝
-    - 否则按 instances + matched_by_book 补齐
-    """
-    out = { 'version': 1, 'books': {} }
-    books = (review or {}).get('books', {})
-    for book_name, book_obj in books.items():
-        matched_book = ensure_matched_book_data(book_name)
-        if not matched_book:
+def _invalidate_lookup_book(book_name: str) -> None:
+    if segment_lookup_data is not None:
+        segment_lookup_data.get('books', {}).pop(book_name, None)
+
+
+def _source_from_lookup_entry(instance_id: str, entry: Optional[Dict]) -> Dict:
+    entry = entry or {}
+    bbox = entry.get('bbox') or {}
+    return {
+        'instance_id': instance_id,
+        'index': entry.get('index'),
+        'bbox': bbox,
+        'source_image': normalize_to_preprocessed_path(entry.get('source_image', '')),
+        'confidence': entry.get('confidence', 0.0),
+        'volume': entry.get('volume'),
+        'page': entry.get('page'),
+        'char_index': entry.get('char_index'),
+        'width': int(entry.get('width') or bbox.get('width') or 0),
+        'height': int(entry.get('height') or bbox.get('height') or 0),
+    }
+
+
+def _matched_sources_for_char(book_name: str, char: str) -> List[Dict]:
+    book_data = ensure_matched_book_data(book_name) or {}
+    chars = book_data.get('chars') or {}
+    instances = chars.get(char) or []
+    out: List[Dict] = []
+    for idx, inst in enumerate(instances):
+        if not isinstance(inst, dict):
             continue
-        out_book = {}
-        for char, char_obj in book_obj.items():
-            if not isinstance(char_obj, dict):
-                continue
-            # 如果已有 lookup，直接使用
-            if 'lookup' in char_obj and isinstance(char_obj['lookup'], dict):
-                out_book[char] = char_obj['lookup']
-                continue
-            if char not in matched_book.get('chars', {}):
-                continue
-            matched_list = matched_book['chars'][char]
-            instances = char_obj.get('instances', {}) or {}
-            look = {}
-            for idx_str, selected in instances.items():
-                if not selected:
-                    continue
-                try:
-                    idx = int(idx_str)
-                    if idx < 0 or idx >= len(matched_list):
-                        continue
-                except Exception:
-                    continue
-                inst = matched_list[idx]
-                instance_id = f"册{inst['volume']:02d}_page{inst['page'].split('_')[-1]}_idx{inst['char_index']}"
-                src = normalize_to_preprocessed_path(inst.get('source_image', ''))
-                look[instance_id] = {
-                    'bbox': inst.get('bbox', {}),
-                    'source_image': src,
-                    'confidence': inst.get('confidence', 0.0),
-                    'volume': inst.get('volume'),
-                    'page': inst.get('page'),
-                    'char_index': inst.get('char_index')
-                }
-            if look:
-                out_book[char] = look
-        if out_book:
-            out['books'][book_name] = out_book
+        out.append(_source_from_matched_instance(inst, index=idx))
     return out
 
 
-def _sync_lookup_for_char(book_name: str, char: str, char_obj: Dict) -> set:
-    """确保指定字符的 lookup 与 instances 同步，返回被移除的实例 ID 集合。"""
-    ensure_segment_lookup_data()
-    matched_book = ensure_matched_book_data(book_name)
-    if not matched_book:
-        char_obj['lookup'] = {}
-        return set()
+def _find_source_for_instance(book_name: str, char: str, instance_id: str) -> Optional[Dict]:
+    book_obj = read_review_book(book_name) or {}
+    char_obj = book_obj.get(char) or {}
+    item = (char_obj.get('items') or {}).get(instance_id)
+    if isinstance(item, dict) and isinstance(item.get('source'), dict):
+        source = dict(item.get('source') or {})
+        source.setdefault('instance_id', instance_id)
+        return source
 
-    matched_list = matched_book.get('chars', {}).get(char)
-    if not matched_list:
-        char_obj['lookup'] = {}
-        return set()
+    for source in _matched_sources_for_char(book_name, char):
+        if source.get('instance_id') == instance_id:
+            return source
 
-    instances = char_obj.get('instances', {}) or {}
-    new_lookup = {}
-    selected_ids = set()
+    lookup_book = get_lookup_book(book_name) or {}
+    lookup_entry = (lookup_book.get(char) or {}).get(instance_id)
+    if isinstance(lookup_entry, dict):
+        return _source_from_lookup_entry(instance_id, lookup_entry)
+    return None
 
-    for idx_str, selected in instances.items():
-        if not selected:
-            continue
-        try:
-            idx = int(idx_str)
-            if idx < 0 or idx >= len(matched_list):
-                continue
-            inst = matched_list[idx]
-        except Exception:
-            continue
 
-        inst_id = _make_instance_id(inst)
-        selected_ids.add(inst_id)
-        src = normalize_to_preprocessed_path(inst.get('source_image', ''))
-        new_lookup[inst_id] = {
-            'bbox': inst.get('bbox', {}),
-            'source_image': src,
-            'confidence': inst.get('confidence', 0.0),
-            'volume': inst.get('volume'),
-            'page': inst.get('page'),
-            'char_index': inst.get('char_index'),
-            'index': idx
+def _review_state_to_legacy_entry(item: Dict) -> Dict:
+    review_state = dict((item or {}).get('review') or {})
+    status = review_state.get('status')
+    if status == 'confirmed':
+        legacy_status = 'confirmed'
+    elif status == 'dropped':
+        legacy_status = 'dropped'
+    else:
+        legacy_status = 'unreviewed'
+    decision = review_state.get('decision')
+    if not decision:
+        decision = 'drop' if legacy_status == 'dropped' else 'unknown'
+    payload = {
+        'status': legacy_status,
+        'method': review_state.get('method'),
+        'timestamp': review_state.get('timestamp'),
+        'decision': decision,
+    }
+    return _set_confirmed_path(payload, _get_confirmed_path(review_state))
+
+
+def _review_state_from_legacy_entry(entry: Dict) -> Dict:
+    entry = dict(entry or {})
+    status = entry.get('status')
+    decision = (entry.get('decision') or '').lower()
+    if status == 'confirmed':
+        review_status = 'confirmed'
+        if decision == 'drop':
+            decision = 'need'
+    elif status == 'dropped' or decision == 'drop':
+        review_status = 'dropped'
+        decision = 'drop'
+    else:
+        review_status = 'pending'
+        if decision not in ('need', 'unknown'):
+            decision = 'unknown'
+    payload = {
+        'status': review_status,
+        'method': entry.get('method'),
+        'timestamp': entry.get('timestamp') or utc_now_iso(),
+        'decision': decision,
+    }
+    return _set_confirmed_path(payload, _get_confirmed_path(entry))
+
+
+def _image_path_to_data_url(path: Optional[Path]) -> Optional[str]:
+    if path is None or not path.exists():
+        return None
+    try:
+        raw = path.read_bytes()
+    except Exception:
+        return None
+    return 'data:image/png;base64,' + base64.b64encode(raw).decode('ascii')
+
+
+def _normalize_filter_pad(filter_state: Dict) -> int:
+    raw_pad = filter_state.get('reocr_pad')
+    if raw_pad in (None, '', 0, 6):
+        return FILTER_REOCR_PAD_DEFAULT
+    return int(raw_pad)
+
+
+def _filter_payload_from_item(
+    book_name: str,
+    char: str,
+    source: Optional[Dict],
+    item: Optional[Dict],
+    include_image: bool = True,
+) -> Dict:
+    source = dict(source or {})
+    item = dict(item or {})
+    filter_state = dict(item.get('filter') or {})
+    review_state = dict(item.get('review') or {})
+
+    preview_rel = _get_confirmed_path(review_state) or filter_state.get('segmented_preview_path')
+    preview_abs = (PROJECT_ROOT / preview_rel) if preview_rel else None
+    preview_image = _image_path_to_data_url(preview_abs) if include_image else None
+
+    error_message = filter_state.get('reocr_error')
+
+    reocr_state = filter_state.get('reocr_state')
+    if reocr_state not in {'ready', 'error', 'pending'}:
+        if error_message:
+            reocr_state = 'error'
+        elif filter_state.get('reocr_matches') is None:
+            reocr_state = 'pending'
+        else:
+            reocr_state = 'ready'
+    elif reocr_state == 'error' and error_message is None:
+        reocr_state = 'pending'
+
+    segmented_width = int(filter_state.get('segmented_width') or 0)
+    segmented_height = int(filter_state.get('segmented_height') or 0)
+    original_width = int(source.get('width') or 0)
+    original_height = int(source.get('height') or 0)
+
+    payload = {
+        'book': book_name,
+        'char': char,
+        'instance_id': source.get('instance_id'),
+        'filter_status': filter_state.get('status', 'pending'),
+        'review_status': review_state.get('status', 'pending'),
+        'review_decision': review_state.get('decision', 'need'),
+        'width': original_width,
+        'height': original_height,
+        'original_width': original_width,
+        'original_height': original_height,
+        'segmented_width': segmented_width,
+        'segmented_height': segmented_height,
+        'volume': source.get('volume'),
+        'page': source.get('page'),
+        'char_index': source.get('char_index'),
+        'bbox': source.get('bbox') or {},
+        'source_image': source.get('source_image'),
+        'preview_path': preview_rel,
+        'preview_image': preview_image,
+        'reocr_text': filter_state.get('reocr_text'),
+        'reocr_confidence': filter_state.get('reocr_confidence'),
+        'reocr_matches': filter_state.get('reocr_matches'),
+        'reocr_state': reocr_state,
+        'reocr_pad': _normalize_filter_pad(filter_state),
+    }
+    if error_message:
+        payload['error'] = error_message
+    return payload
+
+
+def _filter_item_visible(payload: Dict, include_mismatch: bool) -> bool:
+    if payload.get('filter_status') == 'accepted':
+        return True
+    if payload.get('reocr_matches') is True:
+        return True
+    if include_mismatch:
+        return payload.get('reocr_state') in {'ready', 'error'}
+    return False
+
+
+def _filter_payload_priority(payload: Dict) -> Tuple[int, int]:
+    """
+    Default filter browsing should surface truly usable samples first.
+    Keep accepted items visible, but do not let stale accepted/pending rows
+    crowd out fresh reOCR matches on the first page.
+    """
+    if payload.get('reocr_matches') is True:
+        return (0, 0)
+    if payload.get('filter_status') == 'accepted':
+        state = payload.get('reocr_state')
+        if state == 'ready':
+            return (1, 0)
+        if state == 'error':
+            return (2, 0)
+        return (3, 0)
+    if payload.get('reocr_state') == 'ready':
+        return (4, 0)
+    if payload.get('reocr_state') == 'error':
+        return (5, 0)
+    return (6, 0)
+
+
+def _accepted_lookup_from_book(book_obj: Dict) -> Dict:
+    out: Dict[str, Dict] = {}
+    for char, instance_id, item in iter_accepted_items(book_obj):
+        source = dict(item.get('source') or {})
+        out.setdefault(char, {})[instance_id] = {
+            'bbox': source.get('bbox', {}),
+            'source_image': source.get('source_image'),
+            'confidence': source.get('confidence'),
+            'volume': source.get('volume'),
+            'page': source.get('page'),
+            'char_index': source.get('char_index'),
+            'index': source.get('index'),
+            'width': source.get('width'),
+            'height': source.get('height'),
         }
-
-    old_lookup = char_obj.get('lookup') or {}
-    removed_ids = set(old_lookup.keys()) - selected_ids
-    char_obj['lookup'] = new_lookup
-
-    book_cache = segment_lookup_data.setdefault('books', {}).setdefault(book_name, {})
-    book_cache[char] = new_lookup
-
-    return removed_ids
+    return out
 
 
 def _ensure_lookup_for_book(book_name: str) -> Dict:
-    """确保书内所有字符 lookup 可用（按需补齐），返回 lookup 映射。"""
     ensure_segment_lookup_data()
     book_obj = read_review_book(book_name) or {}
-    if not isinstance(book_obj, dict):
-        segment_lookup_data['books'][book_name] = {}
-        return segment_lookup_data['books'][book_name]
-
-    updated = False
-    removed_by_char: Dict[str, set] = {}
-    for char, char_obj in book_obj.items():
-        if not isinstance(char_obj, dict):
-            continue
-        lookup_map = char_obj.get('lookup') or {}
-        seg_map = char_obj.get('segments') or {}
-        instances = char_obj.get('instances') or {}
-        need_sync = char_obj.get('_lookup_dirty') or ('lookup' not in char_obj)
-        if not need_sync:
-            if instances and not lookup_map:
-                need_sync = True
-            elif lookup_map and not instances:
-                need_sync = True
-            elif seg_map and any(k not in lookup_map for k in seg_map.keys()):
-                need_sync = True
-        if not need_sync:
-            continue
-        removed_ids = _sync_lookup_for_char(book_name, char, char_obj)
-        lookup_ids = set((char_obj.get('lookup') or {}).keys())
-        if seg_map:
-            stale_ids = set(seg_map.keys()) - lookup_ids
-            if stale_ids:
-                for inst_id in stale_ids:
-                    seg_map.pop(inst_id, None)
-                if seg_map:
-                    char_obj['segments'] = seg_map
-                else:
-                    char_obj.pop('segments', None)
-                removed_ids = set(removed_ids) | stale_ids
-        char_obj.pop('_lookup_dirty', None)
-        book_obj[char] = char_obj
-        updated = True
-        if removed_ids:
-            removed_by_char[char] = removed_ids
-
-    if updated:
-        try:
-            write_review_book(book_name, book_obj, skip_backup=True)
-        except Exception:
-            pass
-        for char, removed_ids in removed_by_char.items():
-            _remove_segmentation_entries(book_name, char, removed_ids)
-
-    out_book = {}
-    for char, char_obj in book_obj.items():
-        if not isinstance(char_obj, dict):
-            continue
-        out_book[char] = char_obj.get('lookup') or {}
+    out_book = _accepted_lookup_from_book(book_obj)
     segment_lookup_data['books'][book_name] = out_book
     return out_book
 
 
-def _remove_segmentation_entries(book_name: str, char: str, instance_ids: set):
-    """删除指定实例的切割状态，并删除对应图片。"""
-    if not instance_ids:
-        return
-    try:
-        import fcntl
-    except Exception:
-        fcntl = None
-
-    lock_path = _review_book_lock_path(book_name)
-    lock_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(lock_path, 'a+') as lock_fp:
-        if fcntl:
-            try:
-                fcntl.flock(lock_fp.fileno(), fcntl.LOCK_EX)
-            except Exception:
-                pass
-
-        book_obj = read_review_book(book_name) or {}
-        changed = False
-
-        if book_obj and isinstance(book_obj, dict):
-            char_obj = book_obj.get(char) or {}
-            seg_map = char_obj.get('segments') or {}
-            for inst_id in instance_ids:
-                entry = seg_map.pop(inst_id, None)
-                if entry:
-                    seg_rel = _get_confirmed_path(entry)
-                    if seg_rel:
-                        seg_abs = PROJECT_ROOT / seg_rel
-                        try:
-                            if seg_abs.exists():
-                                seg_abs.unlink()
-                        except Exception:
-                            pass
-                    changed = True
-            if seg_map:
-                char_obj['segments'] = seg_map
-                book_obj[char] = char_obj
-            else:
-                if 'segments' in char_obj:
-                    char_obj.pop('segments', None)
-                    book_obj[char] = char_obj
-
-        if changed:
-            try:
-                write_review_book(book_name, book_obj)
-            except Exception:
-                pass
-
-        if fcntl:
-            try:
-                fcntl.flock(lock_fp.fileno(), fcntl.LOCK_UN)
-            except Exception:
-                pass
-
-
 def ensure_segment_lookup_data():
-    """初始化内存 lookup 缓存，用于 Fixing/Segment 快速访问。"""
+    """初始化 accepted sample lookup 缓存，用于 review/fixing 快速访问。"""
     global segment_lookup_data
     if segment_lookup_data is None:
-        segment_lookup_data = { 'version': 1, 'books': {} }
+        segment_lookup_data = {'version': 3, 'books': {}}
 
 
 def get_standard_char_order_map() -> Dict[str, int]:
@@ -534,7 +556,7 @@ def get_standard_char_order_map() -> Dict[str, int]:
     return _standard_char_order_map
 
 def get_lookup_book(book_name: str) -> Optional[Dict]:
-    """返回某本书在内存中的 lookup 映射（直接来自 OCR 结果，不再补齐切割实例）。"""
+    """返回某本书当前 filter 接受集合的 lookup 映射。"""
     ensure_segment_lookup_data()
     if not book_name:
         return None
@@ -554,22 +576,18 @@ def _read_review_results() -> Dict:
 
 def read_review_data() -> dict:
     """
-    兼容接口：返回切割状态视图（源自 review_books/*.json 的 segments 字段）。
-    结构与旧 segmentation_review.json 保持一致：{version, books{book{char{inst_id: entry}}}}
+    兼容接口：返回 review 阶段视图。
+    只暴露 filter.accepted 的实例，结构保持旧 segmentation_review.json 兼容。
     """
     rr = read_all_review_books()
-    out = {'version': rr.get('version', 2), 'books': {}}
-    books = rr.get('books', {})
-    for book, chars in books.items():
-        if not isinstance(chars, dict):
+    out = {'version': 3, 'books': {}}
+    books = rr.get('books') or {}
+    for book, book_obj in books.items():
+        if not isinstance(book_obj, dict):
             continue
-        book_out = {}
-        for char, char_obj in chars.items():
-            if not isinstance(char_obj, dict):
-                continue
-            seg_map = char_obj.get('segments', {})
-            if seg_map:
-                book_out[char] = seg_map
+        book_out: Dict[str, Dict] = {}
+        for char, instance_id, item in iter_accepted_items(book_obj):
+            book_out.setdefault(char, {})[instance_id] = _review_state_to_legacy_entry(item)
         if book_out:
             out['books'][book] = book_out
     return out
@@ -577,60 +595,62 @@ def read_review_data() -> dict:
 
 def build_combined_book(book_name: str) -> dict:
     """
-    构建统一视图：以 OCR 选中的 lookup 为主，叠加切割状态。
+    构建统一视图：以 filter.accepted 的实例为主，叠加 review 状态。
     返回结构：{ char: { inst_id: {selected, bbox, source_image, ...,
                                  status, decision, confirmed_path, method, timestamp} } }
     """
-    lookup_book = get_lookup_book(book_name) or {}
-    seg_data = read_review_data()
-    seg_book = (seg_data.get('books') or {}).get(book_name, {})
-
-    combined = {}
-    for char, inst_map in lookup_book.items():
-        seg_char = seg_book.get(char, {})
-        combined_char = {}
-        for inst_id, info in inst_map.items():
-            seg_entry = seg_char.get(inst_id, {})
-            merged = {
-                'selected': True,
-                'bbox': info.get('bbox', {}),
-                'source_image': info.get('source_image'),
-                'confidence': info.get('confidence'),
-                'volume': info.get('volume'),
-                'page': info.get('page'),
-                'char_index': info.get('char_index'),
-                'index': info.get('index'),
-                'status': seg_entry.get('status', 'unreviewed'),
-                'decision': seg_entry.get('decision'),
-                'confirmed_path': _get_confirmed_path(seg_entry),
-                'segmented_path': _get_confirmed_path(seg_entry),
-                'method': seg_entry.get('method'),
-                'timestamp': seg_entry.get('timestamp')
-            }
-            combined_char[inst_id] = merged
-        combined[char] = combined_char
+    book_obj = read_review_book(book_name) or {}
+    combined: Dict[str, Dict] = {}
+    for char, instance_id, item in iter_accepted_items(book_obj):
+        source = dict(item.get('source') or {})
+        review_entry = _review_state_to_legacy_entry(item)
+        combined.setdefault(char, {})[instance_id] = {
+            'selected': True,
+            'bbox': source.get('bbox', {}),
+            'source_image': source.get('source_image'),
+            'confidence': source.get('confidence'),
+            'volume': source.get('volume'),
+            'page': source.get('page'),
+            'char_index': source.get('char_index'),
+            'index': source.get('index'),
+            'width': source.get('width'),
+            'height': source.get('height'),
+            'status': review_entry.get('status', 'unreviewed'),
+            'decision': review_entry.get('decision'),
+            'confirmed_path': _get_confirmed_path(review_entry),
+            'segmented_path': _get_confirmed_path(review_entry),
+            'method': review_entry.get('method'),
+            'timestamp': review_entry.get('timestamp'),
+        }
     return combined
 
 def write_review_data(seg_view: dict):
     """
-    将切割状态写回 review_books/*.json 的 segments 字段。
-    仅更新 segments，不改动 instances/lookup/timestamp。
-    同时写出兼容文件 segmentation_review.json（派生视图），便于旧脚本使用。
+    将 review 视图写回 review_books/*.json 的 items[*].review 字段。
+    同时写出兼容视图 segmentation_review.json，便于旧脚本使用。
     """
-    # 按书写入分片文件的 segments 字段
     for book, chars in (seg_view.get('books') or {}).items():
         if not isinstance(chars, dict):
             continue
         book_obj = read_review_book(book) or {}
-        for char, seg_map in chars.items():
-            if not isinstance(seg_map, dict):
+        for char, review_map in chars.items():
+            if not isinstance(review_map, dict):
                 continue
-            char_obj = book_obj.setdefault(char, {})
-            char_obj['segments'] = seg_map
-        try:
-            write_review_book(book, book_obj)
-        except Exception:
-            pass
+            for instance_id, entry in review_map.items():
+                if not isinstance(entry, dict):
+                    continue
+                source = _find_source_for_instance(book, char, instance_id)
+                item = _ensure_char_item(book_obj, char, instance_id, source=source)
+                item['review'] = _review_state_from_legacy_entry(entry)
+                filter_state = item.setdefault('filter', {})
+                if filter_state.get('status') != 'accepted':
+                    filter_state['status'] = 'accepted'
+                    filter_state['timestamp'] = filter_state.get('timestamp') or utc_now_iso()
+            char_obj = book_obj.setdefault(char, make_empty_char_entry())
+            if isinstance(char_obj, dict):
+                char_obj['updated_at'] = utc_now_iso()
+        write_review_book(book, book_obj)
+        _invalidate_lookup_book(book)
 
     # 同步输出派生视图 segmentation_review.json，保持兼容
     try:
@@ -643,7 +663,7 @@ def write_review_data(seg_view: dict):
         pass
 
 def update_review_entry(book_name: str, char: str, instance_id: str, entry: dict):
-    """对切割状态进行加锁的读-改-写更新（存于 review_books/*.json 的 segments）。"""
+    """对 review 状态进行加锁的读-改-写更新（存于 review_books/*.json 的 items[*].review）。"""
     entry = _set_confirmed_path(dict(entry), _get_confirmed_path(entry))
     try:
         import fcntl  # POSIX
@@ -660,11 +680,17 @@ def update_review_entry(book_name: str, char: str, instance_id: str, entry: dict
                 pass
 
         book_obj = read_review_book(book_name) or {}
-        char_obj = book_obj.setdefault(char, {})
-        seg_map = char_obj.setdefault('segments', {})
-        seg_map[instance_id] = entry
-        char_obj['segments'] = seg_map
-        book_obj[char] = char_obj
+        source = _find_source_for_instance(book_name, char, instance_id)
+        item = _ensure_char_item(book_obj, char, instance_id, source=source)
+        item['review'] = _review_state_from_legacy_entry(entry)
+        filter_state = item.setdefault('filter', {})
+        if filter_state.get('status') != 'accepted':
+            filter_state['status'] = 'accepted'
+            filter_state['timestamp'] = filter_state.get('timestamp') or utc_now_iso()
+        char_obj = book_obj.setdefault(char, make_empty_char_entry())
+        if isinstance(char_obj, dict):
+            char_obj['updated_at'] = utc_now_iso()
+            book_obj[char] = char_obj
         write_review_book(book_name, book_obj)
 
         if fcntl:
@@ -694,7 +720,7 @@ def get_books():
 @app.route('/api/books_simple', methods=['GET'])
 def get_books_simple():
     """获取书籍列表（轻量级，用于切割审查界面）"""
-    books = list_review_books()
+    books = [name for name in list_review_books() if get_lookup_book(name)]
     books_list = [{'name': name} for name in books]
     return jsonify({
         'success': True,
@@ -762,6 +788,273 @@ def get_book_chars(book_name):
         'total_instances': book_data.get('total_instances', 0),
         'methods': methods_with_chars
     })
+
+
+@app.route('/api/filter/books', methods=['GET'])
+def api_filter_books():
+    return get_books()
+
+
+@app.route('/api/filter/book/<book_name>', methods=['GET'])
+def api_filter_book(book_name: str):
+    """返回 filter 阶段按 84 法组织的字符列表与进度统计。"""
+    ensure_standard_chars_data()
+    book_data = ensure_matched_book_data(book_name)
+    if not book_data:
+        return jsonify({'success': False, 'error': '书籍不存在'}), 404
+
+    matched_chars = book_data.get('chars') or {}
+    review_book = read_review_book(book_name) or {}
+
+    methods_with_chars = []
+    processed_chars = set()
+    accepted_instances = 0
+    rejected_instances = 0
+
+    for char, char_entry in review_book.items():
+        if not isinstance(char_entry, dict):
+            continue
+        items = char_entry.get('items') or {}
+        char_processed = False
+        for item in items.values():
+            if not isinstance(item, dict):
+                continue
+            filter_state = item.get('filter') or {}
+            status = filter_state.get('status', 'pending')
+            if status != 'pending':
+                char_processed = True
+            if status == 'accepted':
+                accepted_instances += 1
+            elif status == 'rejected':
+                rejected_instances += 1
+        if char_processed:
+            processed_chars.add(char)
+
+    for method in standard_chars_data['methods']:
+        method_chars = []
+        for char in method['chars']:
+            instances = matched_chars.get(char) or []
+            if not instances:
+                continue
+            items = ((review_book.get(char) or {}).get('items') or {})
+            processed = 0
+            accepted = 0
+            rejected = 0
+            prepared = 0
+            matched = 0
+            failed = 0
+            for item in items.values():
+                if not isinstance(item, dict):
+                    continue
+                filter_state = item.get('filter') or {}
+                status = filter_state.get('status', 'pending')
+                reocr_state = filter_state.get('reocr_state')
+                if status != 'pending':
+                    processed += 1
+                if status == 'accepted':
+                    accepted += 1
+                elif status == 'rejected':
+                    rejected += 1
+                if reocr_state in {'ready', 'error'}:
+                    prepared += 1
+                if filter_state.get('reocr_matches') is True:
+                    matched += 1
+                elif reocr_state == 'error':
+                    failed += 1
+            method_chars.append({
+                'char': char,
+                'count': len(instances),
+                'processed': processed,
+                'accepted': accepted,
+                'rejected': rejected,
+                'prepared': prepared,
+                'matched': matched,
+                'failed': failed,
+            })
+
+        if method_chars:
+            methods_with_chars.append({
+                'id': method['id'],
+                'name': method['name'],
+                'description': method.get('description', ''),
+                'chars': method_chars,
+            })
+
+    return jsonify({
+        'success': True,
+        'book_name': book_name,
+        'total_chars': book_data.get('total_standard_chars', 0),
+        'total_instances': book_data.get('total_instances', 0),
+        'processed_chars': len(processed_chars),
+        'accepted_instances': accepted_instances,
+        'rejected_instances': rejected_instances,
+        'methods': methods_with_chars,
+    })
+
+
+@app.route('/api/filter/items', methods=['GET'])
+def api_filter_items():
+    """按字符读取预计算 filter 候选，默认只返回 reOCR 匹配项与既有 accepted 项。"""
+    try:
+        book_name = request.args.get('book')
+        char = request.args.get('char')
+        page = max(1, int(request.args.get('page', '1') or '1'))
+        page_size = max(1, min(100, int(request.args.get('page_size', '20') or '20')))
+        sort_mode = (request.args.get('sort', 'width_desc') or 'width_desc').lower()
+        include_mismatch = (request.args.get('include_mismatch', '0') or '0').lower() in ('1', 'true', 'yes')
+
+        if not book_name or not char:
+            return jsonify({'success': False, 'error': '缺少必要参数'}), 400
+
+        review_book = read_review_book(book_name) or {}
+        review_items = (((review_book.get(char) or {}).get('items')) or {})
+
+        source_map: Dict[str, Dict] = {}
+        for source in _matched_sources_for_char(book_name, char):
+            instance_id = source.get('instance_id')
+            if instance_id:
+                source_map[instance_id] = source
+        for instance_id, item in review_items.items():
+            if instance_id in source_map:
+                continue
+            if not isinstance(item, dict):
+                continue
+            stored_source = item.get('source')
+            if isinstance(stored_source, dict) and stored_source.get('instance_id'):
+                source_map[instance_id] = dict(stored_source)
+
+        sources = list(source_map.values())
+        if not sources:
+            return jsonify({
+                'success': True,
+                'book': book_name,
+                'char': char,
+                'page': page,
+                'page_size': page_size,
+                'total_candidates': 0,
+                'items': [],
+                'has_more': False,
+                'include_mismatch': include_mismatch,
+                'sort': sort_mode,
+            })
+
+        if sort_mode == 'width_desc':
+            sources.sort(key=lambda source: (-int(source.get('width') or 0), source.get('instance_id') or ''))
+        else:
+            sources.sort(key=lambda source: (int(source.get('index') or 0), source.get('instance_id') or ''))
+
+        visible_meta: List[Dict] = []
+        for source in sources:
+            item = review_items.get(source.get('instance_id')) if isinstance(review_items, dict) else None
+            payload = _filter_payload_from_item(book_name, char, source, item, include_image=False)
+            if _filter_item_visible(payload, include_mismatch):
+                visible_meta.append({
+                    'source': source,
+                    'item': item,
+                    'payload': payload,
+                })
+
+        if sort_mode == 'width_desc':
+            visible_meta.sort(key=lambda meta: (
+                _filter_payload_priority(meta['payload']),
+                -int((meta['source'] or {}).get('width') or 0),
+                -int((meta['source'] or {}).get('height') or 0),
+                (meta['source'] or {}).get('instance_id') or '',
+            ))
+        else:
+            visible_meta.sort(key=lambda meta: (
+                _filter_payload_priority(meta['payload']),
+                int((meta['source'] or {}).get('index') or 0),
+                (meta['source'] or {}).get('instance_id') or '',
+            ))
+
+        start = (page - 1) * page_size
+
+        page_meta = visible_meta[start:start + page_size]
+        page_items = [
+            _filter_payload_from_item(book_name, char, meta['source'], meta['item'], include_image=True)
+            for meta in page_meta
+        ]
+        has_more = start + page_size < len(visible_meta)
+
+        return jsonify({
+            'success': True,
+            'book': book_name,
+            'char': char,
+            'page': page,
+            'page_size': page_size,
+            'total_candidates': len(sources),
+            'items': page_items,
+            'has_more': has_more,
+            'include_mismatch': include_mismatch,
+            'sort': sort_mode,
+            'truncated_scan': False,
+        })
+    except Exception as e:
+        print(f'❌ /api/filter/items 失败: {e}')
+        print(traceback.format_exc())
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/filter/decision', methods=['POST'])
+def api_filter_decision():
+    """更新 filter 阶段单个实例的接受状态。"""
+    try:
+        data = request.get_json() or {}
+        book_name = data.get('book')
+        char = data.get('char')
+        instance_id = data.get('instance_id')
+        status = (data.get('status') or '').lower()
+        if status not in {'pending', 'accepted', 'rejected'}:
+            return jsonify({'success': False, 'error': 'status 只支持 pending/accepted/rejected'}), 400
+        if not all([book_name, char, instance_id]):
+            return jsonify({'success': False, 'error': '缺少必要参数'}), 400
+
+        try:
+            import fcntl
+        except Exception:
+            fcntl = None
+
+        source = _find_source_for_instance(book_name, char, instance_id)
+        lock_path = _review_book_lock_path(book_name)
+        lock_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(lock_path, 'a+') as lock_fp:
+            if fcntl:
+                try:
+                    fcntl.flock(lock_fp.fileno(), fcntl.LOCK_EX)
+                except Exception:
+                    pass
+
+            book_obj = read_review_book(book_name) or {}
+            item = _ensure_char_item(book_obj, char, instance_id, source=source)
+            filter_state = item.setdefault('filter', {})
+            filter_state['status'] = status
+            filter_state['timestamp'] = utc_now_iso()
+            current_pad = filter_state.get('reocr_pad')
+            filter_state['reocr_pad'] = FILTER_REOCR_PAD_DEFAULT if current_pad in (None, '', 0, 6) else int(current_pad)
+            char_obj = book_obj.setdefault(char, make_empty_char_entry())
+            if isinstance(char_obj, dict):
+                char_obj['updated_at'] = utc_now_iso()
+                book_obj[char] = char_obj
+            write_review_book(book_name, book_obj)
+
+            if fcntl:
+                try:
+                    fcntl.flock(lock_fp.fileno(), fcntl.LOCK_UN)
+                except Exception:
+                    pass
+
+        _invalidate_lookup_book(book_name)
+
+        source = source or _find_source_for_instance(book_name, char, instance_id) or {'instance_id': instance_id}
+        updated_book = read_review_book(book_name) or {}
+        updated_item = ((((updated_book.get(char) or {}).get('items')) or {}).get(instance_id)) or {}
+        item_payload = _filter_payload_from_item(book_name, char, source, updated_item, include_image=True)
+        return jsonify({'success': True, 'item': item_payload})
+    except Exception as e:
+        print(f'❌ /api/filter/decision 失败: {e}')
+        print(traceback.format_exc())
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 @app.route('/api/instances', methods=['GET'])
@@ -956,178 +1249,26 @@ def api_ping():
 
 @app.route('/api/save_review', methods=['POST'])
 def save_review():
-    """保存审查结果到服务器（v2格式：字符级别时间戳合并）"""
-    try:
-        global segment_lookup_data
-        req_start = time.perf_counter()
-        # 记录请求信息
-        content_length = request.content_length
-        size_kb = (content_length / 1024.0) if content_length else 0
-        app.logger.info(
-            '[save_review] from=%s origin=%s referer=%s ua=%s size=%.2fKB',
-            request.remote_addr,
-            request.headers.get('Origin'),
-            request.headers.get('Referer'),
-            request.headers.get('User-Agent'),
-            size_kb
-        )
-
-        # 解析 JSON（设置超时和大小限制）
-        try:
-            client_results = request.get_json(force=True, silent=False)
-        except Exception as e:
-            print(f'❌ 解析 JSON 失败: {e}')
-            import traceback
-            print(traceback.format_exc())
-            return jsonify({
-                'success': False,
-                'error': f'无法解析请求数据: {str(e)}'
-            }), 400
-
-        if not client_results:
-            print('❌ 请求数据为空')
-            return jsonify({'success': False, 'error': '请求数据为空'}), 400
-
-        # 严格校验客户端数据
-        valid, error = validate_data_format(client_results)
-        if not valid:
-            print(f'❌ 客户端数据格式错误: {error}')
-            return jsonify({'success': False, 'error': f'客户端数据格式错误: {error}'}), 400
-
-        # 逐书加锁写入，避免全局覆盖
-        client_books = client_results.get('books', {})
-        app.logger.info('[save_review] books=%s', ','.join(client_books.keys()))
-
-        def merge_char(server_char_data: dict, client_char_data: dict):
-            """返回合并后的字符数据，保留服务器 segments 与 lookup/instances 一致性。"""
-            merged = dict(client_char_data)
-            # 如果客户端没有 segments，则沿用服务器的 segments
-            if 'segments' not in merged and isinstance(server_char_data, dict):
-                if 'segments' in server_char_data:
-                    merged['segments'] = server_char_data['segments']
-            else:
-                # 双方都有时，合并（客户端覆盖同名实例）
-                if isinstance(server_char_data, dict):
-                    srv_seg = server_char_data.get('segments', {}) or {}
-                    cli_seg = merged.get('segments', {}) or {}
-                    merged['segments'] = {**srv_seg, **cli_seg}
-            return merged
-
-        for book_name, client_book in client_books.items():
-            lock_path = _review_book_lock_path(book_name)
-            lock_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(lock_path, 'a+') as lock_fp:
-                lock_ok = _acquire_book_lock(lock_fp, timeout_sec=2.0)
-                if not lock_ok:
-                    app.logger.warning('[save_review] lock busy book=%s', book_name)
-                    return jsonify({'success': False, 'error': f'书籍 "{book_name}" 正在被占用，稍后再试'}), 423
-
-                book_start = time.perf_counter()
-                server_book = read_review_book(book_name) or {}
-
-                # 字符级别比较时间戳
-                for char, client_char_data in client_book.items():
-                    server_char_data = server_book.get(char)
-
-                    # 如果服务器没有这个字符，直接添加
-                    if not server_char_data:
-                        client_char_data['_lookup_dirty'] = True
-                        client_char_data.pop('lookup', None)
-                        server_book[char] = client_char_data
-                        print(f'  {book_name}: 新增字符 "{char}"')
-                        continue
-
-                    # 比较时间戳（统一转换为 UTC 时间戳进行比较）
-                    from datetime import datetime, timezone
-
-                    def parse_timestamp(ts_str):
-                        """解析 ISO 格式时间戳，统一转换为 UTC 时间戳（秒）"""
-                        if not ts_str:
-                            return 0
-                        try:
-                            # 替换 'Z' 为 '+00:00' 以兼容 Python < 3.11
-                            ts_str = ts_str.replace('Z', '+00:00')
-                            dt = datetime.fromisoformat(ts_str)
-                            # 如果是 naive datetime，假定为 UTC
-                            if dt.tzinfo is None:
-                                dt = dt.replace(tzinfo=timezone.utc)
-                            return dt.timestamp()
-                        except Exception as e:
-                            print(f'    解析时间戳失败: {ts_str}, 错误: {e}')
-                            return 0
-
-                    client_timestamp = parse_timestamp(client_char_data.get('timestamp', '1970-01-01T00:00:00'))
-                    server_timestamp = parse_timestamp(server_char_data.get('timestamp', '1970-01-01T00:00:00'))
-
-                    # 如果实例集合有变化，优先接受客户端更新（避免时间戳漂移导致不更新）
-                    def instance_keys(data):
-                        inst = (data or {}).get('instances') or {}
-                        return {k for k, v in inst.items() if v}
-
-                    client_keys = instance_keys(client_char_data)
-                    server_keys = instance_keys(server_char_data)
-
-                    if client_keys != server_keys or client_timestamp > server_timestamp:
-                        merged_char = merge_char(server_char_data, client_char_data)
-                        if client_keys != server_keys:
-                            # 强制刷新时间戳，避免客户端时间戳未更新导致“看起来没保存”
-                            merged_char['timestamp'] = datetime.now(timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
-                            merged_char['_lookup_dirty'] = True
-                            merged_char.pop('lookup', None)
-                        server_book[char] = merged_char
-                    else:
-                        # 服务器更新较新，保留服务器；但可选择合并客户端 segments（此处保留服务器为准）
-                        pass
-
-                try:
-                    write_review_book(book_name, server_book)
-                except Exception:
-                    pass
-
-                try:
-                    import fcntl
-                    fcntl.flock(lock_fp.fileno(), fcntl.LOCK_UN)
-                except Exception:
-                    pass
-                app.logger.info('[save_review] book=%s done in %.2fms', book_name, (time.perf_counter() - book_start) * 1000)
-
-        # 刷新缓存：确保 OCR 修改立即反映到切割/修正界面
-        if segment_lookup_data is not None:
-            for book_name in client_books.keys():
-                segment_lookup_data.get('books', {}).pop(book_name, None)
-
-        app.logger.info('[save_review] total %.2fms', (time.perf_counter() - req_start) * 1000)
-        return jsonify({
-            'success': True,
-            'message': '审查结果已保存 (v2格式)'
-        })
-
-    except Exception as e:
-        import traceback
-        print(f'保存审查结果失败: {str(e)}')
-        print(traceback.format_exc())
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
+    return jsonify({
+        'success': False,
+        'error': '旧版 /api/save_review 已停用，请使用新的 /api/filter/decision 接口。'
+    }), 410
 
 
 @app.route('/api/load_review', methods=['GET'])
 def load_review():
-    """从服务器加载审查结果（v2格式，严格校验）"""
+    """兼容接口：返回 review 阶段视图。"""
     try:
         book_only = request.args.get('book')
+        review_data = read_review_data()
         if book_only:
-            # 优先读取单书分片文件
-            book_chars = read_review_book(book_only)
+            book_chars = (review_data.get('books') or {}).get(book_only)
             if book_chars is None:
-                return jsonify({'success': True, 'data': {'version': 2, 'books': {}}})
-            return jsonify({'success': True, 'data': {'version': 2, 'books': {book_only: book_chars}}})
-
-        results = read_all_review_books()
+                return jsonify({'success': True, 'data': {'version': 3, 'books': {}}})
+            return jsonify({'success': True, 'data': {'version': 3, 'books': {book_only: book_chars}}})
         return jsonify({
             'success': True,
-            'data': results
+            'data': review_data
         })
 
     except Exception as e:
@@ -2295,6 +2436,7 @@ def api_paddle_decision():
 
 @app.route('/paddle_review')
 def paddle_review_page():
+    """Deprecated：保留旧的 Paddle 复核入口。"""
     try:
         return render_template('paddle/paddle_review.html')
     except Exception:
@@ -2303,11 +2445,8 @@ def paddle_review_page():
 
 @app.route('/fixing')
 def fixing_page():
-    """Fixing 页面（问题集中处理，读取 review_books 派生视图）"""
-    try:
-        return render_template('manual/fixing.html')
-    except Exception:
-        return 'Fixing 页面未生成', 404
+    """兼容旧入口，重定向到 /review。"""
+    return redirect(url_for('review_page'))
 
 @app.route('/')
 def index():
@@ -2324,9 +2463,9 @@ def index():
         return '入口页面未生成', 404
 
 
-@app.route('/ocr_review')
-def ocr_review_page():
-    """第一轮审查界面（OCR/文字审查）——优先模板，其次兼容旧文件名"""
+@app.route('/filter')
+def filter_page():
+    """第一阶段 filter 界面（OCR + segment + reOCR）。"""
     # 优先模板
     tpl_path = TEMPLATE_DIR / 'manual/ocr_review.html'
     if tpl_path.exists():
@@ -2340,17 +2479,30 @@ def ocr_review_page():
     if old_path.exists():
         with open(old_path, 'r', encoding='utf-8') as f:
             return f.read()
-    return 'OCR 审查界面未生成', 404
+    return 'Filter 页面未生成', 404
+
+@app.route('/ocr_review')
+def ocr_review_page():
+    """兼容旧入口，重定向到 /filter。"""
+    return redirect(url_for('filter_page'))
+
 
 @app.route('/review')
-def review_page_compat():
-    """兼容旧路径，重定向到 /ocr_review"""
-    return redirect(url_for('ocr_review_page'))
+def review_page():
+    """第二阶段 review 界面（总览预览 + 问题修正）。"""
+    tpl_path = TEMPLATE_DIR / 'manual/fixing.html'
+    if tpl_path.exists():
+        return render_template('manual/fixing.html')
+    html_path = PROJECT_ROOT / 'data/results/fixing.html'
+    if html_path.exists():
+        with open(html_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    return 'Review 页面未生成', 404
 
 
 @app.route('/segment_review')
 def segment_review_page():
-    """第二轮切割审查界面（优先模板，其次兼容旧文件）"""
+    """保留旧的单字精修页入口，默认不再在主 UI 中暴露。"""
     tpl_path = TEMPLATE_DIR / 'manual/segment_review_app.html'
     if tpl_path.exists():
         return render_template('manual/segment_review_app.html')
@@ -2358,7 +2510,7 @@ def segment_review_page():
     if html_path.exists():
         with open(html_path, 'r', encoding='utf-8') as f:
             return f.read()
-    return '切割审查界面未生成', 404
+    return 'Segment Review 页面未生成', 404
 
 
 def main():
@@ -2413,19 +2565,19 @@ def main():
     print(f"    局域网访问：http://{local_ip}:5001/")
     if len(local_ips) > 1:
         print(f"    其他可选地址：{', '.join(local_ips[1:])}")
-    print("\n  【第一轮审查】文字筛选（OCR 审查）")
-    print(f"    本机访问：http://localhost:5001/ocr_review")
-    print(f"    局域网访问：http://{local_ip}:5001/ocr_review")
-    print("\n  【第二轮审查】字符切割")
-    print(f"    本机访问：http://localhost:5001/segment_review")
-    print(f"    局域网访问：http://{local_ip}:5001/segment_review")
-    print("\n  【Paddle 复核】Paddle 自动筛选后复核")
+    print("\n  【Filter】OCR + segment + reOCR 快速筛选")
+    print(f"    本机访问：http://localhost:5001/filter")
+    print(f"    局域网访问：http://{local_ip}:5001/filter")
+    print("\n  【Review】总览预览与问题修正")
+    print(f"    本机访问：http://localhost:5001/review")
+    print(f"    局域网访问：http://{local_ip}:5001/review")
+    print("\n  【Paddle 复核（Deprecated）】保留旧入口")
     print(f"    本机访问：http://localhost:5001/paddle_review")
     print(f"    局域网访问：http://{local_ip}:5001/paddle_review")
     print("\n按 Ctrl+C 停止服务器")
     print("=" * 70 + "\n")
 
-    app.run(host='0.0.0.0', port=5001, debug=True, use_reloader=False)
+    app.run(host='0.0.0.0', port=5001, debug=True, use_reloader=False, threaded=False)
 
 
 if __name__ == '__main__':

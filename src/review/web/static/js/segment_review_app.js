@@ -332,7 +332,7 @@ const API_BASE = window.ReviewApi.apiBase();
                 document.getElementById('stat-unreviewed').textContent = unreviewedCount;
 
                 if (charList.children.length === 0) {
-                    charList.innerHTML = '<p style="text-align: center; color: #999; padding: 40px 0;">该书籍没有通过第一轮审查的字符</p>';
+                    charList.innerHTML = '<p style="text-align: center; color: #999; padding: 40px 0;">该书籍当前没有 filter accepted 的字符</p>';
                 }
             } catch (error) {
                 console.error('加载书籍数据失败:', error);
@@ -362,7 +362,7 @@ const API_BASE = window.ReviewApi.apiBase();
                 currentInstances = data.instance_ids;
 
                 if (currentInstances.length === 0) {
-                    alert('该字符没有通过第一轮审查的实例');
+                    alert('该字符当前没有 filter accepted 的实例');
                     return;
                 }
 

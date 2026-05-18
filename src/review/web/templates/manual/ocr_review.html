@@ -9,13 +9,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>古籍字形审查系统</h1>
-            <p>基于《大字结构八十四法》标准字集的字形审查工具</p>
-            <div class="header-actions">
-                <button class="btn-header" id="export-results-btn">💾 导出审查结果</button>
-                <button class="btn-header" id="import-results-btn">📁 导入审查结果</button>
-                <input type="file" id="import-file" class="hidden-input" accept=".json">
-            </div>
+            <h1>Filter 阶段</h1>
+            <p>按 OCR 字符分组，展示离线预计算的 segment + reOCR 候选，用于快速拿到可用样本。</p>
         </div>
 
         <div class="content">
@@ -29,8 +24,9 @@
             <div class="book-info" id="book-info">
                 <span class="stat">标准字：<strong id="stat-chars">0</strong> 个</span>
                 <span class="stat">总实例：<strong id="stat-instances">0</strong> 个</span>
-                <span class="stat">已审查：<strong id="stat-reviewed">0</strong> 个字符</span>
-                <span class="stat">进度：<strong id="stat-progress">0%</strong></span>
+                <span class="stat">已处理字符：<strong id="stat-processed">0</strong> 个</span>
+                <span class="stat">已接受：<strong id="stat-accepted">0</strong> 个实例</span>
+                <span class="stat">已拒绝：<strong id="stat-rejected">0</strong> 个实例</span>
             </div>
 
             <div class="methods-container" id="methods-container">
@@ -42,36 +38,34 @@
     <div class="modal" id="review-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modal-title">审查字符</h2>
+                <h2 id="modal-title">筛选字符</h2>
                 <button class="close-btn" id="close-review-modal-btn">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="loading" id="modal-loading">加载中...</div>
+                <div class="modal-note" id="modal-note">默认只显示宽度优先且 reOCR 匹配的候选；已接受样本会始终保留。reOCR 是 workflow 中对 segment 结果外扩约 4px 后做的 LiveText 复核。</div>
                 <div class="instances-grid is-hidden" id="instances-grid"></div>
             </div>
             <div class="modal-footer">
                 <div class="pagination" id="pagination">
                     <button id="prev-page">上一页</button>
-                    <span id="page-info">第 1/1 页</span>
+                    <span id="page-info">第 1 页</span>
                     <button id="next-page">下一页</button>
                     <label class="sort-toggle sort-toggle-wide">
-                        <input type="checkbox" id="sort-width-toggle">
+                        <input type="checkbox" id="sort-width-toggle" checked>
                         按宽度排序
                     </label>
                     <label class="sort-toggle sort-toggle-narrow">
-                        <input type="checkbox" id="sort-paddle-toggle">
-                        按 Paddle 排序
+                        <input type="checkbox" id="show-mismatch-toggle">
+                        显示不匹配
                     </label>
                 </div>
-                <div class="actions">
-                    <button class="btn-clear-all" id="clear-selections-btn">取消全部选择</button>
-                </div>
+                <div class="actions" id="modal-summary"></div>
             </div>
         </div>
     </div>
 
     <script src="{{ url_for('static', filename='js/api.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/ocr_review_store.js') }}"></script>
     <script src="{{ url_for('static', filename='js/ocr_review.js') }}"></script>
 </body>
 </html>
