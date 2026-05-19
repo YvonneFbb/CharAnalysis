@@ -45,6 +45,7 @@ data/results/manual/review_books/_backups/
 
 !data/results/manual/confirmed/
 !data/results/manual/confirmed/**
+data/results/manual/filter_cache/
 
 # 其余结果层保持忽略：可重建、体量大或只是缓存
 data/results/_cache/

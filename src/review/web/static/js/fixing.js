@@ -5,7 +5,8 @@
 
   const state = {
     currentBook: null,
-    ocrModalDirty: false,
+    filterModalDirty: false,
+    segmentModalDirty: false,
   };
 
   async function loadBooks() {
@@ -82,7 +83,7 @@
 
     const card = el('div', {
       className: `card ${cardClass}`,
-      onclick: () => openOcrModalForChar(item.char),
+      onclick: () => openSegmentModalForItem(item),
     });
     card.appendChild(renderStatusBadge(decision, status));
 
@@ -117,11 +118,19 @@
   function renderCardLabel(item) {
     const charName = el('span', {
       className: 'char-name',
-      title: '打开 Filter',
+      title: '打开 Review 微调',
       text: item.char,
       onclick: event => {
         event.stopPropagation();
-        openOcrModalForChar(item.char);
+        openSegmentModalForItem(item);
+      },
+    });
+    const reviewButton = el('button', {
+      type: 'button',
+      text: 'Review',
+      onclick: event => {
+        event.stopPropagation();
+        openSegmentModalForItem(item);
       },
     });
     const ocrButton = el('button', {
@@ -129,12 +138,12 @@
       text: 'Filter',
       onclick: event => {
         event.stopPropagation();
-        openOcrModalForChar(item.char);
+        openFilterModalForChar(item.char);
       },
     });
     return el('div', { className: 'thumb-label' }, [
       charName,
-      el('div', { className: 'thumb-actions' }, [ocrButton]),
+      el('div', { className: 'thumb-actions' }, [reviewButton, ocrButton]),
     ]);
   }
 
@@ -157,7 +166,7 @@
         className: 'missing-chip',
         type: 'button',
         text: char,
-        onclick: () => openOcrModalForChar(char),
+        onclick: () => openFilterModalForChar(char),
       });
       fragment.appendChild(el('div', { className: 'missing-item' }, [button]));
     }
@@ -170,9 +179,9 @@
     return false;
   }
 
-  function openOcrModal(targetChar) {
+  function openFilterModal(targetChar) {
     if (!requireBook()) return;
-    state.ocrModalDirty = false;
+    state.filterModalDirty = false;
     const params = new URLSearchParams({ book: state.currentBook });
     if (targetChar) params.set('char', targetChar);
     if (new URLSearchParams(window.location.search).has('debug')) {
@@ -182,23 +191,52 @@
     qs('#ocr-modal').classList.add('active');
   }
 
-  function openOcrModalForChar(char) {
-    openOcrModal(char);
+  function openFilterModalForChar(char) {
+    openFilterModal(char);
   }
 
-  function closeOcrModal() {
+  function closeFilterModal() {
     const frame = qs('#ocr-frame');
     frame.src = 'about:blank';
     qs('#ocr-modal').classList.remove('active');
-    const shouldRefresh = state.ocrModalDirty;
-    state.ocrModalDirty = false;
+    const shouldRefresh = state.filterModalDirty;
+    state.filterModalDirty = false;
     if (shouldRefresh) {
       setTimeout(reloadFixing, 200);
     }
   }
 
-  function refreshOcrFrame() {
+  function refreshFilterFrame() {
     const frame = qs('#ocr-frame');
+    if (frame.src) frame.src = frame.src;
+  }
+
+  function openSegmentModalForItem(item) {
+    if (!requireBook()) return;
+    state.segmentModalDirty = false;
+    const params = new URLSearchParams({ book: state.currentBook });
+    if (item && item.char) params.set('char', item.char);
+    if (item && item.instance_id) params.set('instance_id', item.instance_id);
+    if (new URLSearchParams(window.location.search).has('debug')) {
+      params.set('debug', '1');
+    }
+    qs('#segment-frame').src = `/segment_review?${params.toString()}`;
+    qs('#segment-modal').classList.add('active');
+  }
+
+  function closeSegmentModal() {
+    const frame = qs('#segment-frame');
+    frame.src = 'about:blank';
+    qs('#segment-modal').classList.remove('active');
+    const shouldRefresh = state.segmentModalDirty;
+    state.segmentModalDirty = false;
+    if (shouldRefresh) {
+      setTimeout(reloadFixing, 200);
+    }
+  }
+
+  function refreshSegmentFrame() {
+    const frame = qs('#segment-frame');
     if (frame.src) frame.src = frame.src;
   }
 
@@ -228,10 +266,12 @@
 
   function bindStaticControls() {
     qs('#reload-fixing-btn').addEventListener('click', reloadFixing);
-    qs('#open-ocr-modal-btn').addEventListener('click', () => openOcrModal());
+    qs('#open-ocr-modal-btn').addEventListener('click', () => openFilterModal());
     qs('#refresh-montage-btn').addEventListener('click', refreshMontage);
-    qs('#refresh-ocr-frame-btn').addEventListener('click', refreshOcrFrame);
-    qs('#close-ocr-modal-btn').addEventListener('click', closeOcrModal);
+    qs('#refresh-ocr-frame-btn').addEventListener('click', refreshFilterFrame);
+    qs('#close-ocr-modal-btn').addEventListener('click', closeFilterModal);
+    qs('#refresh-segment-frame-btn').addEventListener('click', refreshSegmentFrame);
+    qs('#close-segment-modal-btn').addEventListener('click', closeSegmentModal);
     qs('#close-montage-modal-btn').addEventListener('click', closeMontageModal);
   }
 
@@ -241,8 +281,12 @@
       closeMontageModal();
       return;
     }
+    if (qs('#segment-modal').classList.contains('active')) {
+      closeSegmentModal();
+      return;
+    }
     if (qs('#ocr-modal').classList.contains('active')) {
-      closeOcrModal();
+      closeFilterModal();
     }
   });
 
@@ -250,9 +294,13 @@
     if (event.origin !== window.location.origin) return;
     const data = event.data || {};
     if (data.type === 'filter-state-dirty') {
-      state.ocrModalDirty = true;
+      state.filterModalDirty = true;
     } else if (data.type === 'close-ocr-modal') {
-      closeOcrModal();
+      closeFilterModal();
+    } else if (data.type === 'segment-state-dirty') {
+      state.segmentModalDirty = true;
+    } else if (data.type === 'close-segment-modal') {
+      closeSegmentModal();
     }
   });
 

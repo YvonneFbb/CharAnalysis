@@ -39,6 +39,13 @@ const API_BASE = window.ReviewApi.apiBase();
         let isImageMagnified = false;     // 图片是否已放大150%
         const paramsManager = window.SegmentReviewParams.createManager({ apiBase: API_BASE });
 
+        function notifyParentDirty() {
+            if (window.self === window.top) return;
+            try {
+                window.top.postMessage({ type: 'segment-state-dirty' }, window.location.origin);
+            } catch (_) {}
+        }
+
         // ==================== 初始化 ====================
 
         function bindStaticControls() {
@@ -608,6 +615,7 @@ const API_BASE = window.ReviewApi.apiBase();
                 // 更新状态
                 if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
                 reviewStatus[currentChar][instanceId] = { status: 'confirmed', decision: 'need' };
+                notifyParentDirty();
 
                 if (currentInstanceIndex < currentInstances.length - 1) {
                     loadNextInstance();
@@ -651,6 +659,7 @@ const API_BASE = window.ReviewApi.apiBase();
                 // 更新前端状态与徽标
                 if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
                 reviewStatus[currentChar][instanceId] = { status: 'unreviewed', decision: 'unknown' };
+                notifyParentDirty();
                 document.getElementById('instance-info').innerHTML = '<span class="status-badge">未审查</span>';
 
                 // 刷新外层统计
@@ -680,6 +689,7 @@ const API_BASE = window.ReviewApi.apiBase();
 
                 if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
                 reviewStatus[currentChar][instanceId] = { status: 'dropped', decision: 'drop' };
+                notifyParentDirty();
                 document.getElementById('instance-info').innerHTML = '<span class="status-badge warning">已标记不需要</span>';
                 const segContainer = document.getElementById('segmented-container');
                 const imgEl = segContainer ? segContainer.querySelector('img') : null;

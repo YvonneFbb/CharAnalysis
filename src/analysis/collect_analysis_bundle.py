@@ -33,7 +33,12 @@ from src.analysis.image_metrics import center_crop_fixed_box, percentile
 from src.analysis.montage import build_montage, make_tile
 from src.review import config as review_config
 from src.review.identity import get_confirmed_path
-from src.review.storage.review_books import REVIEW_BOOKS_DIR, list_review_books, read_review_book
+from src.review.storage.review_books import (
+    REVIEW_BOOKS_DIR,
+    iter_confirmed_items,
+    list_review_books,
+    read_review_book,
+)
 
 CONFIRMED_DIR = review_config.CONFIRMED_DIR
 
@@ -45,48 +50,38 @@ def collect_book_entries(book_name: str, use_fixed_box: bool) -> Tuple[List[Dict
     skipped_unmatched = 0
     missing_lookup = 0
 
-    for char, char_obj in book_obj.items():
-        if not isinstance(char_obj, dict):
+    for char, inst_id, item in iter_confirmed_items(book_obj):
+        review_state = item.get('review') or {}
+        source = item.get('source') or {}
+        seg_rel = get_confirmed_path(review_state)
+        if not seg_rel:
+            missing_images += 1
             continue
-        segments = char_obj.get('segments') or {}
-        lookup = char_obj.get('lookup') or {}
-        for inst_id, seg in segments.items():
-            if not isinstance(seg, dict):
-                continue
-            if seg.get('status') != 'confirmed':
-                continue
-            if seg.get('decision') == 'drop':
-                continue
-            seg_rel = get_confirmed_path(seg)
-            if not seg_rel:
-                missing_images += 1
-                continue
-            abs_path = PROJECT_ROOT / seg_rel
-            if not abs_path.exists():
-                missing_images += 1
-                continue
-            info = lookup.get(inst_id) or {}
-            if not info:
-                missing_lookup += 1
-            entries.append({
-                'char': char,
-                'instance_id': inst_id,
-                'confirmed_path': seg_rel,
-                'segmented_path': seg_rel,
-                'image_name': abs_path.name,
-                'status': seg.get('status'),
-                'decision': seg.get('decision'),
-                'method': seg.get('method'),
-                'timestamp': seg.get('timestamp'),
-                'bbox': info.get('bbox'),
-                'source_image': info.get('source_image'),
-                'confidence': info.get('confidence'),
-                'volume': info.get('volume'),
-                'page': info.get('page'),
-                'char_index': info.get('char_index'),
-                'index': info.get('index'),
-                'lookup_missing': not bool(info)
-            })
+        abs_path = PROJECT_ROOT / seg_rel
+        if not abs_path.exists():
+            missing_images += 1
+            continue
+        if not source:
+            missing_lookup += 1
+        entries.append({
+            'char': char,
+            'instance_id': inst_id,
+            'confirmed_path': seg_rel,
+            'segmented_path': seg_rel,
+            'image_name': abs_path.name,
+            'status': review_state.get('status'),
+            'decision': review_state.get('decision'),
+            'method': review_state.get('method'),
+            'timestamp': review_state.get('timestamp'),
+            'bbox': source.get('bbox'),
+            'source_image': source.get('source_image'),
+            'confidence': source.get('confidence'),
+            'volume': source.get('volume'),
+            'page': source.get('page'),
+            'char_index': source.get('char_index'),
+            'index': source.get('index'),
+            'lookup_missing': not bool(source)
+        })
 
     meta = {
         'total': len(entries),

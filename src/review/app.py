@@ -13,6 +13,7 @@ import logging
 from flask_cors import CORS
 import json
 import os
+from collections import OrderedDict
 from pathlib import Path
 import cv2
 import numpy as np
@@ -35,6 +36,9 @@ from src.review.identity import (
     normalize_to_preprocessed_path,
     set_confirmed_path as _set_confirmed_path,
 )
+from src.review.matched_dedupe import MATCHED_SCHEMA_VERSION, cluster_records_by_page_overlap, dedupe_matched_book_data
+from src.review.storage.reocr_books import DEFAULT_REOCR_ENGINE, normalize_engine_name, read_reocr_book
+from src.review.storage.segment_books import read_segment_book
 from src.review.storage.paddle_books import (
     list_paddle_books,
     read_paddle_book,
@@ -84,6 +88,8 @@ MATCHED_INDEX_PATH = review_config.MATCHED_INDEX_PATH
 STANDARD_CHARS_JSON_PATH = review_config.STANDARD_CHARS_JSON
 PREPROCESSED_DIR = review_config.PREPROCESSED_DIR
 REVIEW_BOOKS_DIR = review_config.REVIEW_BOOKS_DIR
+SEGMENT_BOOKS_DIR = review_config.SEGMENT_BOOKS_DIR
+REOCR_BOOKS_DIR = review_config.REOCR_BOOKS_DIR
 
 # 切割相关路径
 SEGMENTATION_REVIEW_PATH = review_config.SEGMENTATION_REVIEW_PATH
@@ -101,9 +107,16 @@ matched_data = None  # 旧的整库加载（尽量避免使用）
 matched_books_cache: Dict[str, dict] = {}
 matched_books_cache_mtime = 0.0
 matched_index_cache: Optional[Dict] = None
+segment_books_cache: Dict[str, Optional[Dict]] = {}
+segment_books_cache_mtime = 0.0
+reocr_books_cache: Dict[Tuple[str, str], Optional[Dict]] = {}
+reocr_books_cache_mtime: Dict[str, float] = {}
 standard_chars_data = None
 segment_lookup_data = None  # 内存中的查找索引（随 review_books 分片保存同步写入）
 _standard_char_order_map: Optional[Dict[str, int]] = None
+MATCHED_INDEX_SCHEMA_VERSION = MATCHED_SCHEMA_VERSION
+_atlas_image_cache: "OrderedDict[str, Image.Image]" = OrderedDict()
+ATLAS_IMAGE_CACHE_SIZE = 8
 
 
 def _ensure_cache_dirs():
@@ -134,6 +147,21 @@ def _matched_books_mtime() -> float:
     return 0.0
 
 
+def _segment_books_mtime() -> float:
+    if not SEGMENT_BOOKS_DIR.exists():
+        return 0.0
+    mtimes = [p.stat().st_mtime for p in SEGMENT_BOOKS_DIR.glob('*.json')]
+    return max(mtimes) if mtimes else 0.0
+
+
+def _reocr_books_mtime(engine: str) -> float:
+    engine_dir = REOCR_BOOKS_DIR / normalize_engine_name(engine)
+    if not engine_dir.exists():
+        return 0.0
+    mtimes = [p.stat().st_mtime for p in engine_dir.glob('*.json')]
+    return max(mtimes) if mtimes else 0.0
+
+
 def ensure_matched_index() -> Dict:
     """获取书籍索引与统计信息（从缓存读取，过期则重建）。"""
     global matched_index_cache
@@ -146,7 +174,10 @@ def ensure_matched_index() -> Dict:
         try:
             with open(MATCHED_INDEX_PATH, 'r', encoding='utf-8') as f:
                 idx = json.load(f)
-            if idx.get('source_mtime', 0) == src_mtime:
+            if (
+                idx.get('source_mtime', 0) == src_mtime
+                and int(idx.get('schema_version') or 0) == MATCHED_INDEX_SCHEMA_VERSION
+            ):
                 matched_index_cache = idx
                 return matched_index_cache
         except Exception:
@@ -160,7 +191,7 @@ def ensure_matched_index() -> Dict:
                 with open(path, 'r', encoding='utf-8') as f:
                     payload = json.load(f)
                 book_name = payload.get('book') or path.stem
-                book_data = _extract_book_payload(payload, book_name)
+                book_data = dedupe_matched_book_data(_extract_book_payload(payload, book_name))
                 if not isinstance(book_data, dict):
                     continue
                 idx_books[book_name] = {
@@ -175,14 +206,18 @@ def ensure_matched_index() -> Dict:
             data = json.load(f)
         books = data.get('books', {})
         for name, b in books.items():
+            book_data = dedupe_matched_book_data(b)
+            if not isinstance(book_data, dict):
+                continue
             idx_books[name] = {
-                'total_standard_chars': b.get('total_standard_chars', 0),
-                'total_instances': b.get('total_instances', 0)
+                'total_standard_chars': book_data.get('total_standard_chars', 0),
+                'total_instances': book_data.get('total_instances', 0)
             }
 
     matched_index_cache = {
         'books': idx_books,
-        'source_mtime': src_mtime
+        'source_mtime': src_mtime,
+        'schema_version': MATCHED_INDEX_SCHEMA_VERSION,
     }
     with open(MATCHED_INDEX_PATH, 'w', encoding='utf-8') as f:
         json.dump(matched_index_cache, f, ensure_ascii=False, indent=2)
@@ -221,7 +256,7 @@ def ensure_matched_book_data(book_name: str) -> Optional[Dict]:
         try:
             with open(book_path, 'r', encoding='utf-8') as f:
                 payload = json.load(f)
-            data = _extract_book_payload(payload, book_name)
+            data = dedupe_matched_book_data(_extract_book_payload(payload, book_name))
             if data:
                 matched_books_cache[book_name] = data
                 return data
@@ -241,7 +276,7 @@ def ensure_matched_book_data(book_name: str) -> Optional[Dict]:
         try:
             with open(shard_path, 'r', encoding='utf-8') as f:
                 shard = json.load(f)
-            data = shard.get('data')
+            data = dedupe_matched_book_data(shard.get('data'))
             if data:
                 matched_books_cache[book_name] = data
                 return data
@@ -252,11 +287,46 @@ def ensure_matched_book_data(book_name: str) -> Optional[Dict]:
         with open(MATCHED_JSON_PATH, 'r', encoding='utf-8') as f:
             full = json.load(f)
         _build_shards_once(full)
-        book = (full.get('books') or {}).get(book_name)
+        book = dedupe_matched_book_data((full.get('books') or {}).get(book_name))
         if book:
             matched_books_cache[book_name] = book
             return book
     return None
+
+
+def ensure_segment_book_data(book_name: str) -> Optional[Dict]:
+    global segment_books_cache_mtime
+
+    current_mtime = _segment_books_mtime()
+    if current_mtime != segment_books_cache_mtime:
+        segment_books_cache.clear()
+        segment_books_cache_mtime = current_mtime
+
+    if book_name in segment_books_cache:
+        return segment_books_cache[book_name]
+
+    data = read_segment_book(book_name)
+    segment_books_cache[book_name] = data
+    return data
+
+
+def ensure_reocr_book_data(book_name: str, engine: str = DEFAULT_REOCR_ENGINE) -> Optional[Dict]:
+    engine_name = normalize_engine_name(engine)
+    current_mtime = _reocr_books_mtime(engine_name)
+    cached_mtime = reocr_books_cache_mtime.get(engine_name, 0.0)
+    if current_mtime != cached_mtime:
+        stale_keys = [key for key in reocr_books_cache if key[0] == engine_name]
+        for stale_key in stale_keys:
+            reocr_books_cache.pop(stale_key, None)
+        reocr_books_cache_mtime[engine_name] = current_mtime
+
+    cache_key = (engine_name, book_name)
+    if cache_key in reocr_books_cache:
+        return reocr_books_cache[cache_key]
+
+    data = read_reocr_book(book_name, engine_name)
+    reocr_books_cache[cache_key] = data
+    return data
 
 
 def _resolve_standard_chars_path() -> Path:
@@ -282,6 +352,13 @@ def _invalidate_lookup_book(book_name: str) -> None:
 def _source_from_lookup_entry(instance_id: str, entry: Optional[Dict]) -> Dict:
     entry = entry or {}
     bbox = entry.get('bbox') or {}
+    canonical_source = entry.get('canonical_source')
+    ocr_sources = list(entry.get('ocr_sources') or [])
+    if not ocr_sources and canonical_source:
+        ocr_sources = [canonical_source]
+    ocr_variant_count = int(entry.get('ocr_variant_count') or 0)
+    if ocr_variant_count <= 0:
+        ocr_variant_count = max(1, len(ocr_sources)) if ocr_sources else 0
     return {
         'instance_id': instance_id,
         'index': entry.get('index'),
@@ -293,6 +370,10 @@ def _source_from_lookup_entry(instance_id: str, entry: Optional[Dict]) -> Dict:
         'char_index': entry.get('char_index'),
         'width': int(entry.get('width') or bbox.get('width') or 0),
         'height': int(entry.get('height') or bbox.get('height') or 0),
+        'canonical_source': canonical_source,
+        'ocr_sources': ocr_sources,
+        'ocr_variant_count': ocr_variant_count,
+        'ocr_variants': list(entry.get('ocr_variants') or []),
     }
 
 
@@ -383,11 +464,87 @@ def _image_path_to_data_url(path: Optional[Path]) -> Optional[str]:
     return 'data:image/png;base64,' + base64.b64encode(raw).decode('ascii')
 
 
-def _normalize_filter_pad(filter_state: Dict) -> int:
-    raw_pad = filter_state.get('reocr_pad')
-    if raw_pad in (None, '', 0, 6):
-        return FILTER_REOCR_PAD_DEFAULT
-    return int(raw_pad)
+def _load_cached_atlas_image(relpath: str) -> Optional[Image.Image]:
+    if not relpath:
+        return None
+    atlas_path = PROJECT_ROOT / relpath
+    if not atlas_path.exists():
+        return None
+    cache_key = str(atlas_path.resolve())
+    cached = _atlas_image_cache.get(cache_key)
+    if cached is not None:
+        _atlas_image_cache.move_to_end(cache_key)
+        return cached
+    try:
+        with Image.open(atlas_path) as img:
+            atlas = img.convert('RGB').copy()
+    except Exception:
+        return None
+    _atlas_image_cache[cache_key] = atlas
+    _atlas_image_cache.move_to_end(cache_key)
+    while len(_atlas_image_cache) > ATLAS_IMAGE_CACHE_SIZE:
+        _atlas_image_cache.popitem(last=False)
+    return atlas
+
+
+def _atlas_crop_to_data_url(relpath: Optional[str], bbox: Optional[Dict]) -> Optional[str]:
+    atlas = _load_cached_atlas_image(str(relpath or ''))
+    if atlas is None:
+        return None
+    bbox = dict(bbox or {})
+    x = int(bbox.get('x') or 0)
+    y = int(bbox.get('y') or 0)
+    width = int(bbox.get('width') or 0)
+    height = int(bbox.get('height') or 0)
+    if width <= 0 or height <= 0:
+        return None
+    try:
+        cropped = atlas.crop((x, y, x + width, y + height))
+        with io.BytesIO() as buffer:
+            cropped.save(buffer, format='PNG')
+            return 'data:image/png;base64,' + base64.b64encode(buffer.getvalue()).decode('ascii')
+    except Exception:
+        return None
+
+
+def _resolve_filter_preview(
+    review_state: Optional[Dict],
+    segment_state: Optional[Dict],
+    include_image: bool,
+) -> Tuple[Optional[str], Optional[str]]:
+    review_state = dict(review_state or {})
+    segment_state = dict(segment_state or {})
+
+    confirmed_rel = _get_confirmed_path(review_state)
+    if confirmed_rel:
+        confirmed_abs = PROJECT_ROOT / confirmed_rel
+        if confirmed_abs.exists():
+            return confirmed_rel, (_image_path_to_data_url(confirmed_abs) if include_image else None)
+        return confirmed_rel, None
+
+    atlas_relpath = segment_state.get('atlas_relpath')
+    atlas_bbox = segment_state.get('atlas_bbox') or {}
+    if atlas_relpath and int(atlas_bbox.get('width') or 0) > 0 and int(atlas_bbox.get('height') or 0) > 0:
+        return str(atlas_relpath), (_atlas_crop_to_data_url(atlas_relpath, atlas_bbox) if include_image else None)
+    return None, None
+
+
+def _segment_sort_width(source: Optional[Dict], segment_state: Optional[Dict]) -> int:
+    segment_state = dict(segment_state or {})
+    width = int(segment_state.get('segmented_width') or 0)
+    if width > 0:
+        return width
+    source = dict(source or {})
+    return int(source.get('width') or 0)
+
+
+def _segment_sort_height(source: Optional[Dict], segment_state: Optional[Dict]) -> int:
+    segment_state = dict(segment_state or {})
+    height = int(segment_state.get('segmented_height') or 0)
+    if height > 0:
+        return height
+    source = dict(source or {})
+    return int(source.get('height') or 0)
 
 
 def _filter_payload_from_item(
@@ -395,32 +552,32 @@ def _filter_payload_from_item(
     char: str,
     source: Optional[Dict],
     item: Optional[Dict],
+    segment_item: Optional[Dict],
+    reocr_item: Optional[Dict],
     include_image: bool = True,
+    engine: str = DEFAULT_REOCR_ENGINE,
 ) -> Dict:
     source = dict(source or {})
     item = dict(item or {})
     filter_state = dict(item.get('filter') or {})
     review_state = dict(item.get('review') or {})
+    segment_state = dict(segment_item or {})
+    reocr_state_data = dict(reocr_item or {})
 
-    preview_rel = _get_confirmed_path(review_state) or filter_state.get('segmented_preview_path')
-    preview_abs = (PROJECT_ROOT / preview_rel) if preview_rel else None
-    preview_image = _image_path_to_data_url(preview_abs) if include_image else None
+    if review_state.get('status') == 'dropped' or review_state.get('decision') == 'drop':
+        return {}
 
-    error_message = filter_state.get('reocr_error')
+    preview_rel, preview_image = _resolve_filter_preview(review_state, segment_state, include_image)
 
-    reocr_state = filter_state.get('reocr_state')
+    error_message = reocr_state_data.get('error') or segment_state.get('error')
+    reocr_state = str(reocr_state_data.get('state') or 'pending')
     if reocr_state not in {'ready', 'error', 'pending'}:
-        if error_message:
-            reocr_state = 'error'
-        elif filter_state.get('reocr_matches') is None:
-            reocr_state = 'pending'
-        else:
-            reocr_state = 'ready'
-    elif reocr_state == 'error' and error_message is None:
         reocr_state = 'pending'
+    if segment_state.get('state') == 'error' and reocr_state == 'pending':
+        reocr_state = 'error'
 
-    segmented_width = int(filter_state.get('segmented_width') or 0)
-    segmented_height = int(filter_state.get('segmented_height') or 0)
+    segmented_width = int(segment_state.get('segmented_width') or 0)
+    segmented_height = int(segment_state.get('segmented_height') or 0)
     original_width = int(source.get('width') or 0)
     original_height = int(source.get('height') or 0)
 
@@ -442,13 +599,18 @@ def _filter_payload_from_item(
         'char_index': source.get('char_index'),
         'bbox': source.get('bbox') or {},
         'source_image': source.get('source_image'),
+        'canonical_source': source.get('canonical_source'),
+        'ocr_sources': list(source.get('ocr_sources') or []),
+        'ocr_variant_count': int(source.get('ocr_variant_count') or 0),
         'preview_path': preview_rel,
         'preview_image': preview_image,
-        'reocr_text': filter_state.get('reocr_text'),
-        'reocr_confidence': filter_state.get('reocr_confidence'),
-        'reocr_matches': filter_state.get('reocr_matches'),
+        'segment_state': segment_state.get('state') or 'pending',
+        'reocr_text': reocr_state_data.get('text'),
+        'reocr_confidence': reocr_state_data.get('confidence'),
+        'reocr_matches': reocr_state_data.get('matches'),
         'reocr_state': reocr_state,
-        'reocr_pad': _normalize_filter_pad(filter_state),
+        'reocr_pad': int(reocr_state_data.get('pad') or FILTER_REOCR_PAD_DEFAULT),
+        'reocr_engine': normalize_engine_name(engine),
     }
     if error_message:
         payload['error'] = error_message
@@ -456,6 +618,8 @@ def _filter_payload_from_item(
 
 
 def _filter_item_visible(payload: Dict, include_mismatch: bool) -> bool:
+    if not payload:
+        return False
     if payload.get('filter_status') == 'accepted':
         return True
     if payload.get('reocr_matches') is True:
@@ -487,6 +651,49 @@ def _filter_payload_priority(payload: Dict) -> Tuple[int, int]:
     return (6, 0)
 
 
+def _filter_candidate_preference(
+    source: Optional[Dict],
+    item: Optional[Dict],
+    segment_item: Optional[Dict],
+    reocr_item: Optional[Dict],
+) -> Tuple[int, int, int, int, str]:
+    source = dict(source or {})
+    item = dict(item or {})
+    filter_state = dict(item.get('filter') or {})
+    review_state = dict(item.get('review') or {})
+    segment_state = dict(segment_item or {})
+    reocr_state = dict(reocr_item or {})
+
+    if review_state.get('status') == 'confirmed' or _get_confirmed_path(review_state):
+        state_score = 6
+    elif review_state.get('status') == 'dropped' or review_state.get('decision') == 'drop':
+        state_score = 5
+    elif filter_state.get('status') == 'accepted':
+        state_score = 4
+    elif filter_state.get('status') == 'rejected':
+        state_score = 3
+    elif reocr_state.get('matches') is True:
+        state_score = 2
+    elif reocr_state.get('state') in {'ready', 'error'} or segment_state.get('state') in {'ready', 'error'}:
+        state_score = 1
+    else:
+        state_score = 0
+
+    return (
+        state_score,
+        _segment_sort_width(source, segment_state),
+        -int(source.get('index') or 10**9),
+        1 if segment_state.get('state') == 'ready' else 0,
+        source.get('instance_id') or '',
+    )
+
+
+def _item_is_review_dropped(item: Optional[Dict]) -> bool:
+    item = item or {}
+    review_state = item.get('review') or {}
+    return review_state.get('status') == 'dropped' or review_state.get('decision') == 'drop'
+
+
 def _accepted_lookup_from_book(book_obj: Dict) -> Dict:
     out: Dict[str, Dict] = {}
     for char, instance_id, item in iter_accepted_items(book_obj):
@@ -501,6 +708,10 @@ def _accepted_lookup_from_book(book_obj: Dict) -> Dict:
             'index': source.get('index'),
             'width': source.get('width'),
             'height': source.get('height'),
+            'canonical_source': source.get('canonical_source'),
+            'ocr_sources': list(source.get('ocr_sources') or []),
+            'ocr_variant_count': int(source.get('ocr_variant_count') or 0),
+            'ocr_variants': list(source.get('ocr_variants') or []),
         }
     return out
 
@@ -805,6 +1016,9 @@ def api_filter_book(book_name: str):
 
     matched_chars = book_data.get('chars') or {}
     review_book = read_review_book(book_name) or {}
+    segment_book = ensure_segment_book_data(book_name) or {}
+    engine_name = normalize_engine_name(request.args.get('engine') or DEFAULT_REOCR_ENGINE)
+    reocr_book = ensure_reocr_book_data(book_name, engine_name) or {}
 
     methods_with_chars = []
     processed_chars = set()
@@ -818,6 +1032,8 @@ def api_filter_book(book_name: str):
         char_processed = False
         for item in items.values():
             if not isinstance(item, dict):
+                continue
+            if _item_is_review_dropped(item):
                 continue
             filter_state = item.get('filter') or {}
             status = filter_state.get('status', 'pending')
@@ -837,6 +1053,8 @@ def api_filter_book(book_name: str):
             if not instances:
                 continue
             items = ((review_book.get(char) or {}).get('items') or {})
+            segment_items = ((segment_book.get(char) or {}).get('items') or {})
+            reocr_items = ((reocr_book.get(char) or {}).get('items') or {})
             processed = 0
             accepted = 0
             rejected = 0
@@ -846,20 +1064,27 @@ def api_filter_book(book_name: str):
             for item in items.values():
                 if not isinstance(item, dict):
                     continue
+                if _item_is_review_dropped(item):
+                    continue
                 filter_state = item.get('filter') or {}
                 status = filter_state.get('status', 'pending')
-                reocr_state = filter_state.get('reocr_state')
                 if status != 'pending':
                     processed += 1
                 if status == 'accepted':
                     accepted += 1
                 elif status == 'rejected':
                     rejected += 1
-                if reocr_state in {'ready', 'error'}:
+            for instance_id, segment_item in segment_items.items():
+                review_item = items.get(instance_id)
+                if _item_is_review_dropped(review_item):
+                    continue
+                segment_state = str((segment_item or {}).get('state') or 'pending')
+                reocr_state = str(((reocr_items.get(instance_id) or {}).get('state')) or 'pending')
+                if segment_state in {'ready', 'error'} or reocr_state in {'ready', 'error'}:
                     prepared += 1
-                if filter_state.get('reocr_matches') is True:
+                if (reocr_items.get(instance_id) or {}).get('matches') is True:
                     matched += 1
-                elif reocr_state == 'error':
+                elif segment_state == 'error' or reocr_state == 'error':
                     failed += 1
             method_chars.append({
                 'char': char,
@@ -902,29 +1127,72 @@ def api_filter_items():
         page_size = max(1, min(100, int(request.args.get('page_size', '20') or '20')))
         sort_mode = (request.args.get('sort', 'width_desc') or 'width_desc').lower()
         include_mismatch = (request.args.get('include_mismatch', '0') or '0').lower() in ('1', 'true', 'yes')
+        engine_name = normalize_engine_name(request.args.get('engine') or DEFAULT_REOCR_ENGINE)
 
         if not book_name or not char:
             return jsonify({'success': False, 'error': '缺少必要参数'}), 400
 
         review_book = read_review_book(book_name) or {}
         review_items = (((review_book.get(char) or {}).get('items')) or {})
+        segment_book = ensure_segment_book_data(book_name) or {}
+        segment_items = (((segment_book.get(char) or {}).get('items')) or {})
+        reocr_book = ensure_reocr_book_data(book_name, engine_name) or {}
+        reocr_items = (((reocr_book.get(char) or {}).get('items')) or {})
 
-        source_map: Dict[str, Dict] = {}
+        candidates: List[Dict] = []
+
+        def register_candidate(source: Optional[Dict], item: Optional[Dict], segment_item: Optional[Dict], reocr_item: Optional[Dict]) -> None:
+            if not isinstance(source, dict):
+                return
+            candidates.append({
+                'source': dict(source),
+                'item': item if isinstance(item, dict) else None,
+                'segment_item': segment_item if isinstance(segment_item, dict) else None,
+                'reocr_item': reocr_item if isinstance(reocr_item, dict) else None,
+            })
+
         for source in _matched_sources_for_char(book_name, char):
             instance_id = source.get('instance_id')
-            if instance_id:
-                source_map[instance_id] = source
-        for instance_id, item in review_items.items():
-            if instance_id in source_map:
-                continue
+            register_candidate(
+                source,
+                review_items.get(instance_id) if instance_id else None,
+                segment_items.get(instance_id) if instance_id else None,
+                reocr_items.get(instance_id) if instance_id else None,
+            )
+        for item in review_items.values():
             if not isinstance(item, dict):
                 continue
             stored_source = item.get('source')
-            if isinstance(stored_source, dict) and stored_source.get('instance_id'):
-                source_map[instance_id] = dict(stored_source)
+            if isinstance(stored_source, dict):
+                instance_id = stored_source.get('instance_id')
+                register_candidate(
+                    stored_source,
+                    item,
+                    segment_items.get(instance_id) if instance_id else None,
+                    reocr_items.get(instance_id) if instance_id else None,
+                )
 
-        sources = list(source_map.values())
-        if not sources:
+        grouped_meta: List[Dict] = []
+        for group in cluster_records_by_page_overlap(
+            candidates,
+            source_getter=lambda candidate: candidate.get('source'),
+        ):
+            best_candidate = max(
+                group,
+                key=lambda candidate: _filter_candidate_preference(
+                    candidate.get('source'),
+                    candidate.get('item'),
+                    candidate.get('segment_item'),
+                    candidate.get('reocr_item'),
+                ),
+            )
+            grouped_meta.append({
+                'source': best_candidate.get('source') or {},
+                'item': best_candidate.get('item'),
+                'segment_item': best_candidate.get('segment_item'),
+                'reocr_item': best_candidate.get('reocr_item'),
+            })
+        if not grouped_meta:
             return jsonify({
                 'success': True,
                 'book': book_name,
@@ -939,26 +1207,44 @@ def api_filter_items():
             })
 
         if sort_mode == 'width_desc':
-            sources.sort(key=lambda source: (-int(source.get('width') or 0), source.get('instance_id') or ''))
+            grouped_meta.sort(key=lambda meta: (
+                -_segment_sort_width(meta.get('source'), meta.get('segment_item')),
+                -_segment_sort_height(meta.get('source'), meta.get('segment_item')),
+                (meta['source'] or {}).get('instance_id') or '',
+            ))
         else:
-            sources.sort(key=lambda source: (int(source.get('index') or 0), source.get('instance_id') or ''))
+            grouped_meta.sort(key=lambda meta: (int((meta['source'] or {}).get('index') or 0), (meta['source'] or {}).get('instance_id') or ''))
 
         visible_meta: List[Dict] = []
-        for source in sources:
-            item = review_items.get(source.get('instance_id')) if isinstance(review_items, dict) else None
-            payload = _filter_payload_from_item(book_name, char, source, item, include_image=False)
+        for meta in grouped_meta:
+            source = meta['source']
+            item = meta.get('item')
+            payload = _filter_payload_from_item(
+                book_name,
+                char,
+                source,
+                item,
+                meta.get('segment_item'),
+                meta.get('reocr_item'),
+                include_image=False,
+                engine=engine_name,
+            )
+            if not payload:
+                continue
             if _filter_item_visible(payload, include_mismatch):
                 visible_meta.append({
                     'source': source,
                     'item': item,
+                    'segment_item': meta.get('segment_item'),
+                    'reocr_item': meta.get('reocr_item'),
                     'payload': payload,
                 })
 
         if sort_mode == 'width_desc':
             visible_meta.sort(key=lambda meta: (
                 _filter_payload_priority(meta['payload']),
-                -int((meta['source'] or {}).get('width') or 0),
-                -int((meta['source'] or {}).get('height') or 0),
+                -_segment_sort_width(meta.get('source'), meta.get('segment_item')),
+                -_segment_sort_height(meta.get('source'), meta.get('segment_item')),
                 (meta['source'] or {}).get('instance_id') or '',
             ))
         else:
@@ -972,7 +1258,16 @@ def api_filter_items():
 
         page_meta = visible_meta[start:start + page_size]
         page_items = [
-            _filter_payload_from_item(book_name, char, meta['source'], meta['item'], include_image=True)
+            _filter_payload_from_item(
+                book_name,
+                char,
+                meta['source'],
+                meta['item'],
+                meta.get('segment_item'),
+                meta.get('reocr_item'),
+                include_image=True,
+                engine=engine_name,
+            )
             for meta in page_meta
         ]
         has_more = start + page_size < len(visible_meta)
@@ -983,11 +1278,12 @@ def api_filter_items():
             'char': char,
             'page': page,
             'page_size': page_size,
-            'total_candidates': len(sources),
+            'total_candidates': len(grouped_meta),
             'items': page_items,
             'has_more': has_more,
             'include_mismatch': include_mismatch,
             'sort': sort_mode,
+            'engine': engine_name,
             'truncated_scan': False,
         })
     except Exception as e:
@@ -1005,6 +1301,7 @@ def api_filter_decision():
         char = data.get('char')
         instance_id = data.get('instance_id')
         status = (data.get('status') or '').lower()
+        engine_name = normalize_engine_name(data.get('engine') or DEFAULT_REOCR_ENGINE)
         if status not in {'pending', 'accepted', 'rejected'}:
             return jsonify({'success': False, 'error': 'status 只支持 pending/accepted/rejected'}), 400
         if not all([book_name, char, instance_id]):
@@ -1030,8 +1327,6 @@ def api_filter_decision():
             filter_state = item.setdefault('filter', {})
             filter_state['status'] = status
             filter_state['timestamp'] = utc_now_iso()
-            current_pad = filter_state.get('reocr_pad')
-            filter_state['reocr_pad'] = FILTER_REOCR_PAD_DEFAULT if current_pad in (None, '', 0, 6) else int(current_pad)
             char_obj = book_obj.setdefault(char, make_empty_char_entry())
             if isinstance(char_obj, dict):
                 char_obj['updated_at'] = utc_now_iso()
@@ -1049,7 +1344,18 @@ def api_filter_decision():
         source = source or _find_source_for_instance(book_name, char, instance_id) or {'instance_id': instance_id}
         updated_book = read_review_book(book_name) or {}
         updated_item = ((((updated_book.get(char) or {}).get('items')) or {}).get(instance_id)) or {}
-        item_payload = _filter_payload_from_item(book_name, char, source, updated_item, include_image=True)
+        segment_book = ensure_segment_book_data(book_name) or {}
+        reocr_book = ensure_reocr_book_data(book_name, engine_name) or {}
+        item_payload = _filter_payload_from_item(
+            book_name,
+            char,
+            source,
+            updated_item,
+            (((segment_book.get(char) or {}).get('items')) or {}).get(instance_id),
+            (((reocr_book.get(char) or {}).get('items')) or {}).get(instance_id),
+            include_image=True,
+            engine=engine_name,
+        )
         return jsonify({'success': True, 'item': item_payload})
     except Exception as e:
         print(f'❌ /api/filter/decision 失败: {e}')

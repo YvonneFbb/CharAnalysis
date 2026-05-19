@@ -6,8 +6,8 @@
 并为每个小图添加淡色边框。
 
 数据来源（唯一）：data/results/manual/review_books/*.json
-  - 仅采集 segments 中 status == "confirmed" 且 decision != "drop" 的实例
-  - 使用其中的 confirmed_path 加载图片（相对项目根目录；兼容旧 segmented_path）
+  - 仅采集 items[*].review 中 status == "confirmed" 且 decision != "drop" 的实例
+  - 使用 review.confirmed_path 加载图片（相对项目根目录）
 
 输出：data/exports/montage/{book}.png
 
@@ -43,48 +43,19 @@ EXPORT_DIR = PROJECT_ROOT / 'data/exports/montage'
 from src.analysis.image_metrics import center_crop_fixed_box, percentile
 from src.analysis.montage import build_montage, hex_to_rgb, make_tile
 from src.review.identity import get_confirmed_path
-from src.review.storage.review_books import list_review_books, read_all_review_books
+from src.review.storage.review_books import iter_confirmed_items, list_review_books, read_review_book
 
 
-def load_review_segments() -> Dict:
-    """返回切割状态视图（books->char->instance_id->entry），来自分片文件。"""
-    data = read_all_review_books()
-    out = {'version': 2, 'books': {}}
-    for book, chars in (data.get('books') or {}).items():
-        book_out = {}
-        for char, char_obj in chars.items():
-            if not isinstance(char_obj, dict):
-                continue
-            seg_map = char_obj.get('segments', {})
-            if seg_map:
-                book_out[char] = seg_map
-        if book_out:
-            out['books'][book] = book_out
-    return out
-
-
-def iter_confirmed_instances(review_data: Dict, book: str) -> List[Tuple[str, str, Path]]:
+def iter_confirmed_instances(book: str) -> List[Tuple[str, str, Path]]:
     """返回该书所有已确认且非 drop 的 (char, instance_id, abs_image_path)。"""
     out: List[Tuple[str, str, Path]] = []
-    books = review_data.get('books', {})
-    if book not in books:
-        return out
-    book_obj: Dict = books[book]
-    for ch, inst_map in book_obj.items():
-        if not isinstance(inst_map, dict):
+    book_obj = read_review_book(book) or {}
+    for ch, inst_id, item in iter_confirmed_items(book_obj):
+        seg_rel = get_confirmed_path(item.get('review') or {})
+        if not seg_rel:
             continue
-        for inst_id, entry in inst_map.items():
-            if not isinstance(entry, dict):
-                continue
-            if entry.get('status') != 'confirmed':
-                continue
-            if entry.get('decision') == 'drop':
-                continue
-            seg_rel = get_confirmed_path(entry)
-            if not seg_rel:
-                continue
-            abs_path = PROJECT_ROOT / seg_rel
-            out.append((ch, inst_id, abs_path))
+        abs_path = PROJECT_ROOT / seg_rel
+        out.append((ch, inst_id, abs_path))
     # 排序：按字符、实例ID
     out.sort(key=lambda x: (x[0], x[1]))
     return out
@@ -103,11 +74,9 @@ def open_confirmed_image(abs_path: Path) -> Optional[Image.Image]:
         return None
 
 
-def list_books(review_data: Dict) -> List[str]:
+def list_books() -> List[str]:
     books = list_review_books()
-    if books:
-        return books
-    return sorted((review_data.get('books') or {}).keys())
+    return books
 
 
 def main():
@@ -130,16 +99,15 @@ def main():
 
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
 
-    review = load_review_segments()
-    books = args.books if args.books else list_books(review)
+    books = args.books if args.books else list_books()
 
     if not books:
-        print('未找到任何书籍（segmented 或 lookup 都为空）。')
+        print('未找到任何书籍（review_books 为空）。')
         return
 
     for book in books:
         print(f'▶ 处理书籍：{book}')
-        items = iter_confirmed_instances(review, book)
+        items = iter_confirmed_instances(book)
         # 如果用户限定了书名但该书没有已确认实例，仍生成一张空白提示？这里选择跳过并提示
         tiles: List[Image.Image] = []
         missing = 0

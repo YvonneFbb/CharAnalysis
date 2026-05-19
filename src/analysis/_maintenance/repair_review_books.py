@@ -125,6 +125,10 @@ def _merge_source(item: Dict, fallback: Optional[Dict]) -> bool:
         return False
     source = item.setdefault('source', {})
     changed = False
+    normalized_image = normalize_to_preprocessed_path(source.get('source_image', ''))
+    if source.get('source_image') != normalized_image:
+        source['source_image'] = normalized_image
+        changed = True
     for key, value in fallback.items():
         current = source.get(key)
         if current in (None, ''):

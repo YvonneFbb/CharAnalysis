@@ -76,24 +76,32 @@ def build_report() -> Dict:
             if not isinstance(char_obj, dict):
                 continue
             review_chars += 1
-            instances = char_obj.get("instances") or {}
-            lookup = char_obj.get("lookup") or {}
-            segments = char_obj.get("segments") or {}
-            selected_instances += sum(1 for selected in instances.values() if selected)
-            lookup_entries += len(lookup)
-            if not segments:
-                chars_without_segments += 1
-            for seg in segments.values():
-                if not isinstance(seg, dict):
+            items = char_obj.get("items") or {}
+            selected_for_char = 0
+            sourced_for_char = 0
+            confirmed_for_char = 0
+            for item in items.values():
+                if not isinstance(item, dict):
                     continue
-                if seg.get("status") != "confirmed":
+                filter_state = item.get("filter") or {}
+                review_state = item.get("review") or {}
+                if filter_state.get("status") == "accepted":
+                    selected_instances += 1
+                    selected_for_char += 1
+                if item.get("source"):
+                    lookup_entries += 1
+                    sourced_for_char += 1
+                if review_state.get("status") != "confirmed":
                     continue
                 confirmed_segments += 1
-                if seg.get("decision") != "drop":
+                confirmed_for_char += 1
+                if review_state.get("decision") != "drop":
                     confirmed_non_drop += 1
-                seg_rel = get_confirmed_path(seg)
+                seg_rel = get_confirmed_path(review_state)
                 if seg_rel and not (PROJECT_ROOT / seg_rel).exists():
                     missing_segment_images += 1
+            if selected_for_char == 0 and confirmed_for_char == 0:
+                chars_without_segments += 1
 
     paddle_chars = 0
     paddle_items = 0
@@ -141,7 +149,7 @@ def build_report() -> Dict:
         issues.append(AuditIssue("warn", "analysis_manifest_missing", "analysis/manifest.json is missing or unreadable"))
 
     if lookup_entries < selected_instances:
-        issues.append(AuditIssue("warn", "lookup_gap", f"lookup_entries ({lookup_entries}) < selected_instances ({selected_instances})"))
+        issues.append(AuditIssue("warn", "lookup_gap", f"source-backed items ({lookup_entries}) < accepted filter items ({selected_instances})"))
 
     if missing_segment_images:
         issues.append(AuditIssue("warn", "missing_segment_images", f"{missing_segment_images} confirmed segment images are missing on disk"))

@@ -10,6 +10,7 @@ from tqdm import tqdm
 
 from src.review import config as review_config
 from src.review.config import PROJECT_ROOT
+from src.review.matched_dedupe import MATCHED_SCHEMA_VERSION, dedupe_matched_book_data
 from src.review.utils.file_filter import extract_book_name, extract_volume_number
 
 
@@ -143,6 +144,11 @@ def match_ocr_results_by_book(ocr_dir: str, standard_chars: Set[str], char_to_me
         except Exception as e:
             tqdm.write(f"✗ 处理失败: {os.path.relpath(ocr_file, PROJECT_ROOT)} - {str(e)}")
 
+    for book_name, book_data in list(books_data.items()):
+        deduped_book = dedupe_matched_book_data(book_data)
+        if isinstance(deduped_book, dict):
+            books_data[book_name] = deduped_book
+
     # 转换 chars_coverage 为数量
     chars_coverage_count = {char: len(books) for char, books in chars_coverage.items()}
 
@@ -166,6 +172,8 @@ def match_ocr_results_by_book(ocr_dir: str, standard_chars: Set[str], char_to_me
         print(f"  {char}: {count} 本书")
 
     return {
+        'schema_version': MATCHED_SCHEMA_VERSION,
+        'dedupe_policy': 'same_char_same_page_near_overlapping_bbox',
         'books': books_data,
         'summary': {
             'total_books': len(books_data),
@@ -215,20 +223,24 @@ def save_matched_books(matched_data: Dict):
     output_dir.mkdir(parents=True, exist_ok=True)
     index = {
         'books': {},
-        'source_mtime': 0
+        'source_mtime': 0,
+        'schema_version': MATCHED_SCHEMA_VERSION,
     }
     for book_name, book_data in books.items():
         try:
+            deduped_book = dedupe_matched_book_data(book_data)
+            if not isinstance(deduped_book, dict):
+                continue
             book_path = output_dir / f'{book_name}.json'
             payload = {
                 'book': book_name,
-                'data': book_data
+                'data': deduped_book
             }
             with open(book_path, 'w', encoding='utf-8') as f:
                 json.dump(payload, f, ensure_ascii=False, indent=2)
             index['books'][book_name] = {
-                'total_standard_chars': book_data.get('total_standard_chars', 0),
-                'total_instances': book_data.get('total_instances', 0)
+                'total_standard_chars': deduped_book.get('total_standard_chars', 0),
+                'total_instances': deduped_book.get('total_instances', 0)
             }
         except Exception:
             continue

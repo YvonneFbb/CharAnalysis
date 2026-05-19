@@ -20,6 +20,9 @@ PREPROCESSED_DIR = RESULTS_DIR / 'preprocessed'
 OCR_DIR = RESULTS_DIR / 'ocr'
 MANUAL_RESULTS_DIR = RESULTS_DIR / 'manual'
 PADDLE_RESULTS_DIR = RESULTS_DIR / 'paddle'
+SEGMENT_BOOKS_DIR = RESULTS_DIR / 'segment_books'
+SEGMENT_ATLAS_DIR = RESULTS_DIR / 'segment_atlas'
+REOCR_BOOKS_DIR = RESULTS_DIR / 'reocr_books'
 
 # 匹配/索引相关路径
 MATCHED_JSON_PATH = RESULTS_DIR / 'matched_by_book.json'

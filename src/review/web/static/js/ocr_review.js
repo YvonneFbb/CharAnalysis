@@ -299,8 +299,8 @@
 
       const info = document.createElement('div');
       info.className = 'instance-info';
-      const sizeText = item.segmented_width && item.segmented_width !== item.width
-        ? `OCR宽 ${item.width || 0}px · 高 ${item.height || 0}px · Segment宽 ${item.segmented_width || 0}px`
+      const sizeText = item.segmented_width
+        ? `Segment宽 ${item.segmented_width || 0}px · 高 ${item.segmented_height || 0}px · OCR宽 ${item.width || 0}px`
         : `OCR宽 ${item.width || 0}px · 高 ${item.height || 0}px`;
       info.innerHTML = [
         `册${String(item.volume || '').padStart(2, '0')} · ${item.page || '-'}`,
@@ -383,7 +383,9 @@
       info.className = 'instance-info';
       info.innerHTML = [
         `册${String(item.volume || '').padStart(2, '0')} · ${item.page || '-'}`,
-        `宽 ${item.width || 0}px · 高 ${item.height || 0}px`,
+        item.segmented_width
+          ? `Segment宽 ${item.segmented_width || 0}px · 高 ${item.segmented_height || 0}px · OCR宽 ${item.width || 0}px`
+          : `OCR宽 ${item.width || 0}px · 高 ${item.height || 0}px`,
         item.reocr_text ? `reOCR: ${item.reocr_text} (${formatConfidence(item.reocr_confidence)})` : 'reOCR: -',
       ].map(text => `<div>${text}</div>`).join('');
 

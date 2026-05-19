@@ -17,13 +17,14 @@ from src.review.identity import (
     normalize_to_preprocessed_path,
     set_confirmed_path,
 )
+from src.review.matched_dedupe import cluster_records_by_page_overlap
 from src.review.storage.common import fsync_dir
 
 
 REVIEW_BOOKS_DIR = review_config.REVIEW_BOOKS_DIR
 REVIEW_BOOK_BACKUP_KEEP = 5
 REVIEW_BOOK_BACKUP_COOLDOWN = 60
-REVIEW_BOOK_VERSION = 3
+REVIEW_BOOK_VERSION = 4
 FILTER_REOCR_PAD_DEFAULT = 4
 
 
@@ -72,20 +73,57 @@ def _normalize_bbox(bbox: Optional[Dict]) -> Dict:
     }
 
 
+def _normalize_ocr_variants(variants: Optional[list]) -> list[Dict]:
+    out: list[Dict] = []
+    for variant in variants or []:
+        if not isinstance(variant, dict):
+            continue
+        out.append({
+            "source_kind": str(variant.get("source_kind") or ""),
+            "source_image": str(variant.get("source_image") or ""),
+            "normalized_source_image": normalize_to_preprocessed_path(
+                str(variant.get("source_image") or variant.get("normalized_source_image") or "")
+            ),
+            "ocr_file": str(variant.get("ocr_file") or ""),
+            "char_index": variant.get("char_index"),
+            "confidence": variant.get("confidence"),
+        })
+    return out
+
+
 def _normalize_source(source: Optional[Dict], instance_id: str) -> Dict:
     source = source or {}
     bbox = _normalize_bbox(source.get("bbox"))
+    normalized_source_image = normalize_to_preprocessed_path(source.get("source_image", ""))
+    canonical_source = source.get("canonical_source")
+    if not canonical_source:
+        raw_source_image = str(source.get("source_image") or "")
+        if normalized_source_image and normalized_source_image == raw_source_image:
+            canonical_source = "preprocessed" if "/preprocessed/" in raw_source_image else None
+        elif normalized_source_image:
+            canonical_source = "preprocessed"
+    ocr_sources = [str(name) for name in (source.get("ocr_sources") or []) if str(name)]
+    if not ocr_sources and canonical_source:
+        ocr_sources = [str(canonical_source)]
+    ocr_variant_count = int(source.get("ocr_variant_count") or 0)
+    ocr_variants = _normalize_ocr_variants(source.get("ocr_variants"))
+    if ocr_variant_count <= 0:
+        ocr_variant_count = len(ocr_variants) if ocr_variants else max(1, len(ocr_sources))
     return {
         "instance_id": instance_id,
         "index": source.get("index"),
         "bbox": bbox,
-        "source_image": source.get("source_image"),
+        "source_image": normalized_source_image,
         "confidence": source.get("confidence"),
         "volume": source.get("volume"),
         "page": source.get("page"),
         "char_index": source.get("char_index"),
         "width": int(source.get("width") or bbox.get("width") or 0),
         "height": int(source.get("height") or bbox.get("height") or 0),
+        "canonical_source": canonical_source,
+        "ocr_sources": ocr_sources,
+        "ocr_variant_count": ocr_variant_count,
+        "ocr_variants": ocr_variants,
     }
 
 
@@ -96,21 +134,11 @@ def _normalize_filter(filter_state: Optional[Dict], review_state: Optional[Dict]
     status = filter_state.get("status")
     if status not in {"pending", "accepted", "rejected"}:
         review_status = review_state.get("status")
-        status = "accepted" if review_status in {"confirmed", "dropped"} else "pending"
+        status = "accepted" if review_status == "confirmed" else "pending"
 
     return {
         "status": status,
         "timestamp": filter_state.get("timestamp"),
-        "segmented_preview_path": filter_state.get("segmented_preview_path"),
-        "segmented_width": int(filter_state.get("segmented_width") or 0),
-        "segmented_height": int(filter_state.get("segmented_height") or 0),
-        "reocr_text": filter_state.get("reocr_text"),
-        "reocr_confidence": filter_state.get("reocr_confidence"),
-        "reocr_matches": filter_state.get("reocr_matches"),
-        "reocr_pad": int(filter_state.get("reocr_pad") or FILTER_REOCR_PAD_DEFAULT),
-        "reocr_state": filter_state.get("reocr_state"),
-        "reocr_error": filter_state.get("reocr_error"),
-        "reocr_context_checked": bool(filter_state.get("reocr_context_checked") or False),
     }
 
 
@@ -145,6 +173,53 @@ def _normalize_item(instance_id: str, item: Optional[Dict]) -> Dict:
     }
 
 
+def _review_item_preference(instance_id: str, item: Optional[Dict]):
+    item = item or {}
+    source = item.get("source") or {}
+    filter_state = item.get("filter") or {}
+    review_state = item.get("review") or {}
+    confirmed_path = get_confirmed_path(review_state)
+
+    if review_state.get("status") == "confirmed" or confirmed_path:
+        state_score = 6
+    elif review_state.get("status") == "dropped" or review_state.get("decision") == "drop":
+        state_score = 5
+    elif filter_state.get("status") == "accepted":
+        state_score = 4
+    elif filter_state.get("status") == "rejected":
+        state_score = 3
+    else:
+        state_score = 0
+
+    return (
+        state_score,
+        int(source.get("width") or 0),
+        -int(source.get("index") or 10**9),
+        review_state.get("timestamp") or filter_state.get("timestamp") or "",
+        instance_id,
+    )
+
+
+def _dedupe_normalized_items(items: Dict[str, Dict]) -> Dict[str, Dict]:
+    normalized_pairs = [
+        (instance_id, item)
+        for instance_id, item in items.items()
+        if isinstance(item, dict)
+    ]
+    grouped_pairs = cluster_records_by_page_overlap(
+        normalized_pairs,
+        source_getter=lambda pair: ((pair[1] or {}).get("source") or {}),
+    )
+    deduped: Dict[str, Dict] = {}
+    for group in grouped_pairs:
+        best_instance_id, best_item = max(
+            group,
+            key=lambda pair: _review_item_preference(pair[0], pair[1]),
+        )
+        deduped[best_instance_id] = best_item
+    return deduped
+
+
 def _legacy_source_from_lookup(instance_id: str, lookup_entry: Optional[Dict]) -> Dict:
     return _normalize_source(lookup_entry, instance_id)
 
@@ -154,16 +229,6 @@ def _legacy_filter_from_segment(segment_entry: Optional[Dict], updated_at: Optio
     return {
         "status": "accepted",
         "timestamp": segment_entry.get("timestamp") or updated_at,
-        "segmented_preview_path": get_confirmed_path(segment_entry),
-        "segmented_width": int(segment_entry.get("segmented_width") or 0),
-        "segmented_height": int(segment_entry.get("segmented_height") or 0),
-        "reocr_text": None,
-        "reocr_confidence": None,
-        "reocr_matches": None,
-        "reocr_pad": FILTER_REOCR_PAD_DEFAULT,
-        "reocr_state": None,
-        "reocr_error": None,
-        "reocr_context_checked": False,
     }
 
 
@@ -181,6 +246,10 @@ def source_from_matched_instance(inst: Optional[Dict], index: Optional[int] = No
         "char_index": inst.get("char_index"),
         "width": int(inst.get("width") or bbox.get("width") or 0),
         "height": int(inst.get("height") or bbox.get("height") or 0),
+        "canonical_source": inst.get("canonical_source"),
+        "ocr_sources": list(inst.get("ocr_sources") or []),
+        "ocr_variant_count": int(inst.get("ocr_variant_count") or 0),
+        "ocr_variants": _normalize_ocr_variants(inst.get("ocr_variants")),
     }
 
 
@@ -202,16 +271,6 @@ def ensure_char_item(
             "filter": {
                 "status": "pending",
                 "timestamp": None,
-                "segmented_preview_path": None,
-                "segmented_width": 0,
-                "segmented_height": 0,
-                "reocr_text": None,
-                "reocr_confidence": None,
-                "reocr_matches": None,
-                "reocr_pad": FILTER_REOCR_PAD_DEFAULT,
-                "reocr_state": None,
-                "reocr_error": None,
-                "reocr_context_checked": False,
             },
             "review": {
                 "status": "pending",
@@ -229,6 +288,13 @@ def ensure_char_item(
         for key, value in normalized_source.items():
             if current_source.get(key) in (None, "", 0):
                 current_source[key] = value
+        current_variant_count = int(current_source.get("ocr_variant_count") or 0)
+        next_variant_count = int(normalized_source.get("ocr_variant_count") or 0)
+        if next_variant_count > current_variant_count:
+            current_source["canonical_source"] = normalized_source.get("canonical_source")
+            current_source["ocr_sources"] = list(normalized_source.get("ocr_sources") or [])
+            current_source["ocr_variant_count"] = next_variant_count
+            current_source["ocr_variants"] = list(normalized_source.get("ocr_variants") or [])
 
     char_obj["items"] = items
     char_obj["updated_at"] = utc_now_iso()
@@ -261,11 +327,11 @@ def _legacy_review_from_segment(segment_entry: Optional[Dict]) -> Dict:
 def normalize_char_entry(char_entry: Optional[Dict]) -> Dict:
     char_entry = char_entry or {}
     if "items" in char_entry and isinstance(char_entry["items"], dict):
-        items = {
+        items = _dedupe_normalized_items({
             instance_id: _normalize_item(instance_id, item)
             for instance_id, item in char_entry["items"].items()
             if isinstance(item, dict)
-        }
+        })
         return {
             "updated_at": char_entry.get("updated_at") or char_entry.get("timestamp"),
             "items": items,
@@ -283,6 +349,7 @@ def normalize_char_entry(char_entry: Optional[Dict]) -> Dict:
             "filter": _legacy_filter_from_segment(seg, updated_at),
             "review": _legacy_review_from_segment(seg),
         })
+    items = _dedupe_normalized_items(items)
 
     return {
         "updated_at": updated_at,
@@ -315,7 +382,11 @@ def iter_book_items(book_data: Optional[Dict]) -> Iterator[Tuple[str, str, Dict]
 
 def iter_accepted_items(book_data: Optional[Dict]) -> Iterator[Tuple[str, str, Dict]]:
     for char, instance_id, item in iter_book_items(book_data):
-        if (item.get("filter") or {}).get("status") == "accepted":
+        filter_state = item.get("filter") or {}
+        review_state = item.get("review") or {}
+        if review_state.get("status") == "dropped" or review_state.get("decision") == "drop":
+            continue
+        if filter_state.get("status") == "accepted":
             yield char, instance_id, item
 
 

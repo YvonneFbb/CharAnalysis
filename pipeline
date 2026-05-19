@@ -3,9 +3,12 @@
 古籍文字识别与分析流水线
 
 使用方法:
-  ./pipeline preprocess <input>     # 预处理单张图片或目录
-  ./pipeline ocr <input>            # OCR 识别单张图片或目录
-  ./pipeline all <input>            # 完整流程（预处理 + OCR）
+  ./pipeline convert <input>        # 阶段 0: 批量 PDF -> 页图
+  ./pipeline preprocess <input>     # 阶段 1: 图像预处理
+  ./pipeline ocr <input>            # 阶段 2: 整页 OCR
+  ./pipeline match <ocr_dir>        # 阶段 3: 标准字匹配
+  ./pipeline segment                # 阶段 4: 单字切割 atlas
+  ./pipeline reocr                  # 阶段 5: 二次 OCR
 """
 
 if __name__ == '__main__':
@@ -15,6 +18,16 @@ if __name__ == '__main__':
     # 添加项目根目录到 Python 路径
     _THIS_FILE = os.path.abspath(__file__)
     _REPO_ROOT = os.path.dirname(_THIS_FILE)
+    _VENV_PYTHON = os.path.join(_REPO_ROOT, '.venv', 'bin', 'python')
+
+    # Prefer the repo-local virtualenv so `./pipeline ...` runs with the
+    # dependencies used during development.
+    if os.path.exists(_VENV_PYTHON):
+        active_prefix = os.path.realpath(getattr(sys, 'prefix', ''))
+        target_prefix = os.path.realpath(os.path.join(_REPO_ROOT, '.venv'))
+        if active_prefix != target_prefix:
+            os.execv(_VENV_PYTHON, [_VENV_PYTHON, _THIS_FILE, *sys.argv[1:]])
+
     if _REPO_ROOT not in sys.path:
         sys.path.insert(0, _REPO_ROOT)
 
