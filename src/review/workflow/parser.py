@@ -14,9 +14,10 @@ PIPELINE_DESCRIPTION = """
   阶段 0  convert / pdf2images   原始 PDF -> 页图
   阶段 1  preprocess             页图预处理
   阶段 2  ocr                    整页 OCR
-  阶段 3  match                  标准字匹配
-  阶段 4  segment                单字切割并写入 atlas
-  阶段 5  reocr                  对切割结果做二次 OCR
+阶段 3  match                  标准字匹配
+阶段 4  segment                单字切割并写入 atlas
+阶段 5  reocr                  对全部 segment 结果做二次 OCR
+阶段 6  cluster                基于 segment + reocr 做后置筛选
 """
 
 
@@ -28,6 +29,7 @@ PIPELINE_EPILOG = """
   ./pipeline match data/results/ocr
   ./pipeline segment --workers 8
   ./pipeline reocr --workers 8
+  ./pipeline cluster --workers 8
 
 局部重跑:
   ./pipeline segment --books 01_1127_尚书正义 --chars 宣 意
@@ -38,7 +40,12 @@ PIPELINE_EPILOG = """
 """
 
 
-VISIBLE_COMMANDS_METAVAR = "{convert,pdf2images,preprocess,ocr,match,segment,reocr,config}"
+VISIBLE_COMMANDS_METAVAR = "{convert,pdf2images,preprocess,ocr,match,segment,cluster,reocr,config}"
+
+DEFAULT_TARGET_LIMIT = int(config.FILTER_CONFIG.get("target_matches_per_char", 15) or 15)
+DEFAULT_REOCR_PAD = int(config.PADDLE_CONFIG.get("reocr_pad", 12) or 12)
+DEFAULT_PADDLE_BATCH_SIZE = int(config.PADDLE_CONFIG.get("batch_size", 8) or 8)
+DEFAULT_REOCR_TARGET_MATCHES = int(config.FILTER_CONFIG.get("reocr_target_matches_per_char", 0) or 0)
 
 
 def _add_hidden_parser(subparsers, name: str, **kwargs):
@@ -102,14 +109,32 @@ def _register_stage_three_five_parsers(subparsers) -> None:
     _add_book_char_scope_args(parser_segment, default_workers=8)
     parser_segment.add_argument("--force", action="store_true", help="强制重建指定书籍的 segment atlas")
 
-    parser_reocr = subparsers.add_parser("reocr", help="阶段 5: 对 segment atlas 执行 reOCR")
+    parser_cluster = subparsers.add_parser("cluster", help="阶段 6: 基于 segment + reOCR 做后置筛选")
+    _add_book_char_scope_args(parser_cluster, default_workers=8)
+    parser_cluster.add_argument("--force", action="store_true", help="强制重建指定书籍的 cluster 结果")
+    parser_cluster.add_argument(
+        "--target-limit",
+        type=int,
+        default=DEFAULT_TARGET_LIMIT,
+        help=f"每字预选的候选上限（默认 {DEFAULT_TARGET_LIMIT}）",
+    )
+
+    parser_reocr = subparsers.add_parser("reocr", help="阶段 5: 对全部 segment 结果执行 reOCR")
     _add_book_char_scope_args(parser_reocr, default_workers=8)
     parser_reocr.add_argument("--force", action="store_true", help="强制重跑已存在的 reOCR 结果")
-    parser_reocr.add_argument("--engine", choices=["livetext", "paddle"], default="livetext", help="reOCR 引擎（默认 livetext）")
-    parser_reocr.add_argument("--pad", type=int, default=4, help="segment crop 外扩像素（默认 4）")
+    parser_reocr.add_argument("--engine", choices=["livetext", "paddle", "both"], default="livetext", help="reOCR 引擎（默认 livetext；both 表示两套都跑）")
+    parser_reocr.add_argument("--pad", type=int, default=DEFAULT_REOCR_PAD, help=f"reOCR 白边像素，LiveText/Paddle 共用（默认 {DEFAULT_REOCR_PAD}）")
     parser_reocr.add_argument("--paddle-url", default=None, help="PaddleOCR HTTP 服务地址（仅 --engine paddle 生效）")
     parser_reocr.add_argument("--timeout", type=int, default=config.PADDLE_CONFIG.get("timeout", 20), help="reOCR 超时（秒）")
-    parser_reocr.add_argument("--batch-size", type=int, default=config.PADDLE_CONFIG.get("batch_size", 32), help="Paddle 批处理大小（默认 32）")
+    parser_reocr.add_argument("--batch-size", type=int, default=DEFAULT_PADDLE_BATCH_SIZE, help=f"Paddle 批处理大小（默认 {DEFAULT_PADDLE_BATCH_SIZE}）")
+    parser_reocr.add_argument("--tmp-dir", default=None, help="LiveText 临时 PNG 目录；可指向 ramdisk")
+    parser_reocr.add_argument("--sheet-max-slots", type=int, default=None, help="同字拼图单批最大 slot 数；默认使用配置值")
+    parser_reocr.add_argument(
+        "--target-matches",
+        type=int,
+        default=DEFAULT_REOCR_TARGET_MATCHES,
+        help=f"每个字拿到多少个 reOCR 匹配样本后早停；0 表示全量（默认 {DEFAULT_REOCR_TARGET_MATCHES}）",
+    )
 
 
 def _register_utility_parsers(subparsers) -> None:
@@ -126,11 +151,25 @@ def _register_legacy_parsers(subparsers) -> None:
     parser_prepare_filter = _add_hidden_parser(subparsers, "prepare-filter")
     _add_book_char_scope_args(parser_prepare_filter, default_workers=8)
     parser_prepare_filter.add_argument("--force", action="store_true", help="强制重新计算已存在的 preview/reOCR")
-    parser_prepare_filter.add_argument("--reocr-engine", choices=["livetext", "paddle"], default="livetext", help="reOCR 引擎（默认 livetext）")
-    parser_prepare_filter.add_argument("--reocr-pad", type=int, default=4, help="segment crop 外扩像素（默认 4）")
+    parser_prepare_filter.add_argument(
+        "--target-limit",
+        type=int,
+        default=DEFAULT_TARGET_LIMIT,
+        help=f"每字预选的候选上限（默认 {DEFAULT_TARGET_LIMIT}）",
+    )
+    parser_prepare_filter.add_argument("--reocr-engine", choices=["livetext", "paddle", "both"], default="livetext", help="reOCR 引擎（默认 livetext；both 表示两套都跑）")
+    parser_prepare_filter.add_argument("--reocr-pad", type=int, default=DEFAULT_REOCR_PAD, help=f"reOCR 白边像素，LiveText/Paddle 共用（默认 {DEFAULT_REOCR_PAD}）")
     parser_prepare_filter.add_argument("--paddle-url", default=None, help="PaddleOCR HTTP 服务地址（仅 paddle 生效）")
     parser_prepare_filter.add_argument("--timeout", type=int, default=config.PADDLE_CONFIG.get("timeout", 20), help="reOCR 超时（秒）")
-    parser_prepare_filter.add_argument("--batch-size", type=int, default=config.PADDLE_CONFIG.get("batch_size", 32), help="Paddle 批处理大小（默认 32）")
+    parser_prepare_filter.add_argument("--batch-size", type=int, default=DEFAULT_PADDLE_BATCH_SIZE, help=f"Paddle 批处理大小（默认 {DEFAULT_PADDLE_BATCH_SIZE}）")
+    parser_prepare_filter.add_argument("--tmp-dir", default=None, help="LiveText 临时 PNG 目录；可指向 ramdisk")
+    parser_prepare_filter.add_argument("--sheet-max-slots", type=int, default=None, help="同字拼图单批最大 slot 数；默认使用配置值")
+    parser_prepare_filter.add_argument(
+        "--target-matches",
+        type=int,
+        default=DEFAULT_REOCR_TARGET_MATCHES,
+        help=f"每个字拿到多少个 reOCR 匹配样本后早停；0 表示全量（默认 {DEFAULT_REOCR_TARGET_MATCHES}）",
+    )
 
     parser_crop = _add_hidden_parser(subparsers, "crop")
     parser_crop.add_argument("matched_chars_json", help="匹配结果 JSON 文件（聚合或单本书分片）")

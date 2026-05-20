@@ -9,6 +9,7 @@ from src.review import config
 from src.review.workflow.common import (
     common_options,
     dispatch_input_path,
+    import_cluster_books_stage,
     import_livetext,
     import_match_standard_chars,
     import_pdf_converter,
@@ -203,6 +204,26 @@ def cmd_segment(args: Namespace) -> int:
         return 1
 
 
+def cmd_cluster(args: Namespace) -> int:
+    cluster_books_stage = import_cluster_books_stage()
+    try:
+        return cluster_books_stage.run_cluster_books(
+            books=args.books,
+            chars=args.chars,
+            limit_chars=args.limit_chars,
+            limit_instances=args.limit_instances,
+            workers=args.workers,
+            force=bool(args.force),
+            target_limit=args.target_limit,
+        )
+    except Exception as exc:
+        print(f"错误：cluster 失败: {exc}")
+        import traceback
+
+        traceback.print_exc()
+        return 1
+
+
 def cmd_reocr(args: Namespace) -> int:
     reocr_books_stage = import_reocr_books_stage()
     try:
@@ -218,6 +239,9 @@ def cmd_reocr(args: Namespace) -> int:
             paddle_url=args.paddle_url,
             timeout=args.timeout,
             batch_size=args.batch_size,
+            tmp_dir=args.tmp_dir,
+            sheet_max_slots=args.sheet_max_slots,
+            target_matches=args.target_matches,
         )
     except Exception as exc:
         print(f"错误：reocr 失败: {exc}")
@@ -261,6 +285,7 @@ PRIMARY_COMMAND_HANDLERS = {
     "ocr": cmd_ocr,
     "match": cmd_match,
     "segment": cmd_segment,
+    "cluster": cmd_cluster,
     "reocr": cmd_reocr,
     "config": cmd_config,
 }

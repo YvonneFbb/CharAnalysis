@@ -38,6 +38,7 @@ from src.review.identity import (
 )
 from src.review.matched_dedupe import MATCHED_SCHEMA_VERSION, cluster_records_by_page_overlap, dedupe_matched_book_data
 from src.review.storage.reocr_books import DEFAULT_REOCR_ENGINE, normalize_engine_name, read_reocr_book
+from src.review.storage.cluster_books import read_cluster_book
 from src.review.storage.segment_books import read_segment_book
 from src.review.storage.paddle_books import (
     list_paddle_books,
@@ -89,6 +90,7 @@ STANDARD_CHARS_JSON_PATH = review_config.STANDARD_CHARS_JSON
 PREPROCESSED_DIR = review_config.PREPROCESSED_DIR
 REVIEW_BOOKS_DIR = review_config.REVIEW_BOOKS_DIR
 SEGMENT_BOOKS_DIR = review_config.SEGMENT_BOOKS_DIR
+CLUSTER_BOOKS_DIR = review_config.CLUSTER_BOOKS_DIR
 REOCR_BOOKS_DIR = review_config.REOCR_BOOKS_DIR
 
 # 切割相关路径
@@ -109,6 +111,8 @@ matched_books_cache_mtime = 0.0
 matched_index_cache: Optional[Dict] = None
 segment_books_cache: Dict[str, Optional[Dict]] = {}
 segment_books_cache_mtime = 0.0
+cluster_books_cache: Dict[str, Optional[Dict]] = {}
+cluster_books_cache_mtime = 0.0
 reocr_books_cache: Dict[Tuple[str, str], Optional[Dict]] = {}
 reocr_books_cache_mtime: Dict[str, float] = {}
 standard_chars_data = None
@@ -151,6 +155,13 @@ def _segment_books_mtime() -> float:
     if not SEGMENT_BOOKS_DIR.exists():
         return 0.0
     mtimes = [p.stat().st_mtime for p in SEGMENT_BOOKS_DIR.glob('*.json')]
+    return max(mtimes) if mtimes else 0.0
+
+
+def _cluster_books_mtime() -> float:
+    if not CLUSTER_BOOKS_DIR.exists():
+        return 0.0
+    mtimes = [p.stat().st_mtime for p in CLUSTER_BOOKS_DIR.glob('*.json')]
     return max(mtimes) if mtimes else 0.0
 
 
@@ -307,6 +318,22 @@ def ensure_segment_book_data(book_name: str) -> Optional[Dict]:
 
     data = read_segment_book(book_name)
     segment_books_cache[book_name] = data
+    return data
+
+
+def ensure_cluster_book_data(book_name: str) -> Optional[Dict]:
+    global cluster_books_cache_mtime
+
+    current_mtime = _cluster_books_mtime()
+    if current_mtime != cluster_books_cache_mtime:
+        cluster_books_cache.clear()
+        cluster_books_cache_mtime = current_mtime
+
+    if book_name in cluster_books_cache:
+        return cluster_books_cache[book_name]
+
+    data = read_cluster_book(book_name)
+    cluster_books_cache[book_name] = data
     return data
 
 
@@ -649,6 +676,14 @@ def _filter_payload_priority(payload: Dict) -> Tuple[int, int]:
     if payload.get('reocr_state') == 'error':
         return (5, 0)
     return (6, 0)
+
+
+def _cluster_item_selected(cluster_item: Optional[Dict]) -> bool:
+    return bool((cluster_item or {}).get('selected'))
+
+
+def _has_any_cluster_selection(cluster_items: Optional[Dict]) -> bool:
+    return any(_cluster_item_selected(item) for item in ((cluster_items or {}).values()))
 
 
 def _filter_candidate_preference(
@@ -1017,6 +1052,7 @@ def api_filter_book(book_name: str):
     matched_chars = book_data.get('chars') or {}
     review_book = read_review_book(book_name) or {}
     segment_book = ensure_segment_book_data(book_name) or {}
+    cluster_book = ensure_cluster_book_data(book_name) or {}
     engine_name = normalize_engine_name(request.args.get('engine') or DEFAULT_REOCR_ENGINE)
     reocr_book = ensure_reocr_book_data(book_name, engine_name) or {}
 
@@ -1054,6 +1090,7 @@ def api_filter_book(book_name: str):
                 continue
             items = ((review_book.get(char) or {}).get('items') or {})
             segment_items = ((segment_book.get(char) or {}).get('items') or {})
+            cluster_items = ((cluster_book.get(char) or {}).get('items') or {})
             reocr_items = ((reocr_book.get(char) or {}).get('items') or {})
             processed = 0
             accepted = 0
@@ -1074,11 +1111,16 @@ def api_filter_book(book_name: str):
                     accepted += 1
                 elif status == 'rejected':
                     rejected += 1
-            for instance_id, segment_item in segment_items.items():
+            cluster_gate_enabled = _has_any_cluster_selection(cluster_items)
+            iterable_ids = set(cluster_items.keys()) if cluster_gate_enabled else set(segment_items.keys()) | set(reocr_items.keys())
+            for instance_id in iterable_ids:
+                cluster_item = cluster_items.get(instance_id) or {}
                 review_item = items.get(instance_id)
                 if _item_is_review_dropped(review_item):
                     continue
-                segment_state = str((segment_item or {}).get('state') or 'pending')
+                if cluster_gate_enabled and not _cluster_item_selected(cluster_item):
+                    continue
+                segment_state = str((segment_items.get(instance_id) or {}).get('state') or 'pending')
                 reocr_state = str(((reocr_items.get(instance_id) or {}).get('state')) or 'pending')
                 if segment_state in {'ready', 'error'} or reocr_state in {'ready', 'error'}:
                     prepared += 1
@@ -1136,6 +1178,8 @@ def api_filter_items():
         review_items = (((review_book.get(char) or {}).get('items')) or {})
         segment_book = ensure_segment_book_data(book_name) or {}
         segment_items = (((segment_book.get(char) or {}).get('items')) or {})
+        cluster_book = ensure_cluster_book_data(book_name) or {}
+        cluster_items = (((cluster_book.get(char) or {}).get('items')) or {})
         reocr_book = ensure_reocr_book_data(book_name, engine_name) or {}
         reocr_items = (((reocr_book.get(char) or {}).get('items')) or {})
 
@@ -1151,11 +1195,23 @@ def api_filter_items():
                 'reocr_item': reocr_item if isinstance(reocr_item, dict) else None,
             })
 
+        cluster_gate_enabled = _has_any_cluster_selection(cluster_items)
+        selected_instance_ids = {
+            instance_id
+            for instance_id, cluster_item in cluster_items.items()
+            if isinstance(cluster_item, dict) and _cluster_item_selected(cluster_item)
+        }
+
         for source in _matched_sources_for_char(book_name, char):
             instance_id = source.get('instance_id')
+            item = review_items.get(instance_id) if instance_id else None
+            if cluster_gate_enabled and instance_id and instance_id not in selected_instance_ids:
+                filter_state = dict((item or {}).get('filter') or {})
+                if filter_state.get('status') != 'accepted':
+                    continue
             register_candidate(
                 source,
-                review_items.get(instance_id) if instance_id else None,
+                item,
                 segment_items.get(instance_id) if instance_id else None,
                 reocr_items.get(instance_id) if instance_id else None,
             )

@@ -28,7 +28,12 @@ from src.review.utils.file_filter import find_images_recursive, filter_files_by_
 
 
 
-def ocr_image(image_path: str, output_path: str = None, verbose: bool = True) -> Dict[str, Any]:
+def ocr_image(
+    image_path: str,
+    output_path: str = None,
+    verbose: bool = True,
+    save_output: bool = True,
+) -> Dict[str, Any]:
     """
     对图片进行 OCR 识别
 
@@ -139,21 +144,21 @@ def ocr_image(image_path: str, output_path: str = None, verbose: bool = True) ->
             'full_text': ''.join([c['text'] for c in characters]),
         }
 
-        # 保存结果
-        if output_path is None:
-            # 默认保存到 OCR_DIR
-            input_path_obj = Path(image_path)
-            output_filename = f"{input_path_obj.stem}_ocr.json"
-            output_path = os.path.join(OCR_DIR, output_filename)
+        if save_output:
+            if output_path is None:
+                input_path_obj = Path(image_path)
+                output_filename = f"{input_path_obj.stem}_ocr.json"
+                output_path = os.path.join(OCR_DIR, output_filename)
 
-        ensure_dir(os.path.dirname(output_path))
+            ensure_dir(os.path.dirname(output_path))
 
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(result, f, ensure_ascii=False, indent=2)
+            with open(output_path, 'w', encoding='utf-8') as f:
+                json.dump(result, f, ensure_ascii=False, indent=2)
 
         if verbose:
             print(f"✓ OCR 完成，识别到 {len(characters)} 个字符")
-            print(f"✓ 结果已保存至 {output_path}")
+            if save_output and output_path:
+                print(f"✓ 结果已保存至 {output_path}")
 
         return result
 

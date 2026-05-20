@@ -25,7 +25,7 @@ REVIEW_BOOKS_DIR = review_config.REVIEW_BOOKS_DIR
 REVIEW_BOOK_BACKUP_KEEP = 5
 REVIEW_BOOK_BACKUP_COOLDOWN = 60
 REVIEW_BOOK_VERSION = 4
-FILTER_REOCR_PAD_DEFAULT = 4
+FILTER_REOCR_PAD_DEFAULT = int(review_config.PADDLE_CONFIG.get("reocr_pad", 12) or 12)
 
 
 def safe_book_name(book_name: str) -> str:

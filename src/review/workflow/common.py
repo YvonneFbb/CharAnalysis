@@ -46,6 +46,12 @@ def import_segment_books_stage():
     return segment_books_stage
 
 
+def import_cluster_books_stage():
+    from src.review.filter import cluster_books_stage
+
+    return cluster_books_stage
+
+
 def import_reocr_books_stage():
     from src.review.filter import reocr_books_stage
 

@@ -37,11 +37,8 @@ data/results/*
 !data/results/manual/
 data/results/manual/*
 
-!data/results/manual/review_books/
-data/results/manual/review_books/*
-!data/results/manual/review_books/*.json
-data/results/manual/review_books/*.lock
-data/results/manual/review_books/_backups/
+# review_books 是本地运行状态，不再作为同步真源
+data/results/manual/review_books/
 
 !data/results/manual/confirmed/
 !data/results/manual/confirmed/**
@@ -54,6 +51,10 @@ data/results/matched_by_book.json
 data/results/ocr/
 data/results/paddle/
 data/results/preprocessed/
+data/results/segment_books/
+data/results/segment_atlas/
+data/results/cluster_books/
+data/results/reocr_books/
 data/results/cropped_cache/
 data/results/index.html
 data/results/manual/review_results.json
@@ -68,6 +69,10 @@ data/analysis_backup.zip
 # 临时文件
 *.log
 *.tmp
+.codex_tmp_pdf_text.txt
+paper-full.docx
+DATA_SYNC.md
+test/
 
 
 src/paper/figures

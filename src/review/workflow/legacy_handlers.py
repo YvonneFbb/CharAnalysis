@@ -77,6 +77,8 @@ def cmd_prepare_filter(args: Namespace) -> int:
             paddle_url=args.paddle_url,
             timeout=args.timeout,
             batch_size=args.batch_size,
+            target_limit=args.target_limit,
+            target_matches=args.target_matches,
         )
     except Exception as exc:
         print(f"错误：prepare-filter 失败: {exc}")
@@ -114,7 +116,7 @@ def cmd_paddle(args: Namespace) -> int:
         limit_instances=args.limit_instances,
         workers=args.workers,
         force=False,
-        pad=4,
+        pad=int(config.PADDLE_CONFIG.get("reocr_pad", 12) or 12),
         paddle_url=args.paddle_url or config.PADDLE_CONFIG.get("url"),
         timeout=args.timeout,
         batch_size=args.batch_size,

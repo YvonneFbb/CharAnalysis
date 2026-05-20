@@ -3,6 +3,7 @@
 
 包含路径配置、预处理参数、OCR 参数等
 """
+import os
 from pathlib import Path
 
 # ============================================================================
@@ -22,6 +23,7 @@ MANUAL_RESULTS_DIR = RESULTS_DIR / 'manual'
 PADDLE_RESULTS_DIR = RESULTS_DIR / 'paddle'
 SEGMENT_BOOKS_DIR = RESULTS_DIR / 'segment_books'
 SEGMENT_ATLAS_DIR = RESULTS_DIR / 'segment_atlas'
+CLUSTER_BOOKS_DIR = RESULTS_DIR / 'cluster_books'
 REOCR_BOOKS_DIR = RESULTS_DIR / 'reocr_books'
 
 # 匹配/索引相关路径
@@ -104,13 +106,33 @@ VOLUME_OVERRIDES = {
 # ============================================================================
 
 PADDLE_CONFIG = {
-    'url': 'http://172.16.1.154:8000',
+    'url': os.environ.get('PADDLE_OCR_URL', 'http://192.168.31.80:8000'),
     'timeout': 20,
     'topk': 16,
     'min_conf': 0.8,
-    'batch_size': 32,
+    'batch_size': 8,
     'workers': 1,
     'require_match': True,
+    'reocr_pad': 12,
+    'text_det_unclip_ratio': 1.3,
+    'use_doc_orientation_classify': False,
+    'use_doc_unwarping': False,
+    'use_textline_orientation': False,
+    'text_recognition_batch_size': 8,
+}
+
+FILTER_CONFIG = {
+    'target_matches_per_char': 15,
+    'reocr_target_matches_per_char': 0,
+    'cluster_min_split_gap_px': 6,
+    'cluster_min_split_ratio': 1.3,
+    'cluster_min_group_count': 2,
+    'confirmed_width_tolerance_ratio': 0.25,
+    'confirmed_width_tolerance_min_px': 6,
+    'reocr_sheet_max_slots': 32,
+    'reocr_sheet_gutter_px': 40,
+    'reocr_sheet_margin_px': 32,
+    'reocr_sheet_max_edge': 3072,
 }
 
 # ============================================================================
@@ -159,6 +181,9 @@ def config_summary():
             'raw_dir': str(RAW_DIR),
             'preprocessed_dir': str(PREPROCESSED_DIR),
             'ocr_dir': str(OCR_DIR),
+            'segment_books_dir': str(SEGMENT_BOOKS_DIR),
+            'cluster_books_dir': str(CLUSTER_BOOKS_DIR),
+            'reocr_books_dir': str(REOCR_BOOKS_DIR),
         },
         'preprocess': {
             'clahe_enabled': PREPROCESS_CLAHE_CONFIG['enabled'],
@@ -173,6 +198,7 @@ def config_summary():
         'ocr': OCR_CONFIG,
         'volume_overrides': VOLUME_OVERRIDES,
         'paddle': PADDLE_CONFIG,
+        'filter': FILTER_CONFIG,
     }
 
 # 启动时校验配置

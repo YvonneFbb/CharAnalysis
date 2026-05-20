@@ -11,6 +11,7 @@ from typing import Dict, Iterable, List, Optional, Tuple
 
 import cv2
 import numpy as np
+from tqdm import tqdm
 
 from src.review import config as review_config
 from src.review.identity import make_instance_id
@@ -316,32 +317,65 @@ def run_segment_books(
     total_processed = 0
     total_skipped = 0
     total_errors = 0
+    progress_desc = "segment进度" if int(workers or 1) <= 1 else f"segment进度 ({workers}进程)"
 
     print("流程: matched -> segment -> segment_books + atlas")
     print(f"books={len(tasks)} workers={workers} force={int(bool(force))}")
 
-    if int(workers or 1) <= 1:
-        for task in tasks:
-            result = _segment_book_worker(task)
-            total_processed += int(result.get("processed") or 0)
-            total_skipped += int(result.get("skipped") or 0)
-            total_errors += int(result.get("errors") or 0)
-            print(
-                f"[segment] {result['book']}: processed={result.get('processed', 0)} "
-                f"skipped={result.get('skipped', 0)} errors={result.get('errors', 0)}"
-            )
-    else:
-        with concurrent.futures.ProcessPoolExecutor(max_workers=int(workers or 1)) as executor:
-            futures = [executor.submit(_segment_book_worker, task) for task in tasks]
-            for future in concurrent.futures.as_completed(futures):
-                result = future.result()
+    with tqdm(total=len(tasks), desc=progress_desc, unit="book", dynamic_ncols=True) as pbar:
+        pbar.set_postfix({
+            "processed": total_processed,
+            "skipped": total_skipped,
+            "errors": total_errors,
+        }, refresh=False)
+
+        if int(workers or 1) <= 1:
+            for task in tasks:
+                result = _segment_book_worker(task)
                 total_processed += int(result.get("processed") or 0)
                 total_skipped += int(result.get("skipped") or 0)
                 total_errors += int(result.get("errors") or 0)
-                print(
+                pbar.update(1)
+                pbar.set_postfix({
+                    "processed": total_processed,
+                    "skipped": total_skipped,
+                    "errors": total_errors,
+                }, refresh=False)
+                tqdm.write(
                     f"[segment] {result['book']}: processed={result.get('processed', 0)} "
                     f"skipped={result.get('skipped', 0)} errors={result.get('errors', 0)}"
                 )
+        else:
+            with concurrent.futures.ProcessPoolExecutor(max_workers=int(workers or 1)) as executor:
+                future_to_book = {
+                    executor.submit(_segment_book_worker, task): task[0]
+                    for task in tasks
+                }
+                for future in concurrent.futures.as_completed(future_to_book):
+                    book_name = future_to_book[future]
+                    try:
+                        result = future.result()
+                    except Exception as exc:
+                        result = {
+                            "book": book_name,
+                            "processed": 0,
+                            "skipped": 0,
+                            "errors": 1,
+                            "error": str(exc),
+                        }
+                    total_processed += int(result.get("processed") or 0)
+                    total_skipped += int(result.get("skipped") or 0)
+                    total_errors += int(result.get("errors") or 0)
+                    pbar.update(1)
+                    pbar.set_postfix({
+                        "processed": total_processed,
+                        "skipped": total_skipped,
+                        "errors": total_errors,
+                    }, refresh=False)
+                    tqdm.write(
+                        f"[segment] {result['book']}: processed={result.get('processed', 0)} "
+                        f"skipped={result.get('skipped', 0)} errors={result.get('errors', 0)}"
+                    )
 
     print(
         f"[segment] done: books={len(tasks)} processed={total_processed} "

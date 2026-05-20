@@ -138,6 +138,16 @@ def call_paddle_ocr(img_bgr, paddle_url: str, timeout: int) -> Tuple[str, float]
     return parse_paddle_response(payload)
 
 
+def call_paddle_ocr_payload(img_bgr, paddle_url: str, timeout: int) -> object:
+    b64 = encode_png_b64(img_bgr)
+    form = urllib.parse.urlencode({"image_base64": b64}).encode("utf-8")
+    url = _resolve_paddle_url(paddle_url)
+    req = urllib.request.Request(url, data=form, headers={"Content-Type": "application/x-www-form-urlencoded"})
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        data = resp.read()
+    return json.loads(data.decode("utf-8"))
+
+
 def _resolve_paddle_batch_url(paddle_url: str) -> str:
     url = paddle_url.strip()
     if url.endswith("/ocr/batch"):
@@ -180,14 +190,17 @@ def _parse_batch_payload(payload: object, count: int) -> List[Tuple[str, float]]
     return results[:count]
 
 
-def call_paddle_batch(images: List[bytes], paddle_url: str, timeout: int) -> List[Tuple[str, float]]:
+def call_paddle_batch(images: List[bytes], paddle_url: str, timeout: int, return_payload: bool = False):
     if not images:
         return []
     if len(images) == 1:
         dummy = cv2.imdecode(np.frombuffer(images[0], dtype=np.uint8), cv2.IMREAD_COLOR)
         if dummy is None:
-            return [("", 0.0)]
-        return [call_paddle_ocr(dummy, paddle_url, timeout)]
+            return [{}] if return_payload else [("", 0.0)]
+        if return_payload:
+            return [call_paddle_ocr_payload(dummy, paddle_url, timeout)]
+        result = call_paddle_ocr(dummy, paddle_url, timeout)
+        return [result]
     boundary, body = _encode_multipart(images)
     url = _resolve_paddle_batch_url(paddle_url)
     req = urllib.request.Request(
@@ -198,9 +211,36 @@ def call_paddle_batch(images: List[bytes], paddle_url: str, timeout: int) -> Lis
             "Content-Length": str(len(body)),
         },
     )
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        data = resp.read()
-    payload = json.loads(data.decode("utf-8"))
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            data = resp.read()
+        payload = json.loads(data.decode("utf-8"))
+    except Exception:
+        fallback_results = []
+        for image_bytes in images:
+            dummy = cv2.imdecode(np.frombuffer(image_bytes, dtype=np.uint8), cv2.IMREAD_COLOR)
+            if dummy is None:
+                fallback_results.append({} if return_payload else ("", 0.0))
+                continue
+            if return_payload:
+                fallback_results.append(call_paddle_ocr_payload(dummy, paddle_url, timeout))
+            else:
+                fallback_results.append(call_paddle_ocr(dummy, paddle_url, timeout))
+        return fallback_results
+    if return_payload:
+        items = None
+        if isinstance(payload, dict):
+            if isinstance(payload.get("results"), list):
+                items = payload.get("results")
+            elif isinstance(payload.get("data"), list):
+                items = payload.get("data")
+        elif isinstance(payload, list):
+            items = payload
+        if not items:
+            items = [payload] if payload else []
+        if len(items) < len(images):
+            items = list(items) + ([{}] * (len(images) - len(items)))
+        return list(items)[: len(images)]
     return _parse_batch_payload(payload, len(images))
 
 def rank_candidates(candidates: List[Dict], topk: int | None) -> List[Dict]:

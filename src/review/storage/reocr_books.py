@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict, Iterator, Optional, Tuple
+from typing import Dict, Iterator, List, Optional, Tuple
 
 from src.review import config as review_config
 from src.review.storage.common import atomic_write_json, read_json_file
@@ -11,13 +11,77 @@ from src.review.storage.review_books import safe_book_name, utc_now_iso
 
 
 REOCR_BOOKS_DIR = review_config.REOCR_BOOKS_DIR
-REOCR_BOOK_VERSION = 1
+REOCR_BOOK_VERSION = 2
 DEFAULT_REOCR_ENGINE = "livetext"
+VALID_REOCR_ENGINES = ("livetext", "paddle")
+
+
+def _normalize_bbox(bbox: Optional[Dict]) -> Dict:
+    bbox = bbox or {}
+    return {
+        "x": int(bbox.get("x", 0) or 0),
+        "y": int(bbox.get("y", 0) or 0),
+        "width": int(bbox.get("width", 0) or 0),
+        "height": int(bbox.get("height", 0) or 0),
+    }
+
+
+def _normalize_polygon(points: Optional[List]) -> List[Dict]:
+    out: List[Dict] = []
+    if not isinstance(points, list):
+        return out
+    for point in points:
+        if isinstance(point, dict):
+            out.append({
+                "x": int(point.get("x", 0) or 0),
+                "y": int(point.get("y", 0) or 0),
+            })
+        elif isinstance(point, (list, tuple)) and len(point) >= 2:
+            out.append({
+                "x": int(point[0] or 0),
+                "y": int(point[1] or 0),
+            })
+    return out
+
+
+def _normalize_detection(det: Optional[Dict]) -> Dict:
+    det = det or {}
+    bbox_cell = det.get("bbox_cell")
+    if bbox_cell is None:
+        bbox_cell = det.get("bbox_input")
+    if bbox_cell is None:
+        bbox_cell = det.get("bbox_padded")
+    return {
+        "text": det.get("text"),
+        "confidence": det.get("confidence"),
+        "bbox_cell": _normalize_bbox(bbox_cell),
+    }
+
+
+def _normalize_primary_detection(det: Optional[Dict]):
+    if not isinstance(det, dict):
+        return None
+    has_signal = (
+        det.get("text") not in (None, "")
+        or det.get("confidence") not in (None, 0, 0.0)
+        or any(int((_normalize_bbox(det.get("bbox_cell") or det.get("bbox_input") or det.get("bbox_padded"))).get(k) or 0) != 0 for k in ("x", "y", "width", "height"))
+    )
+    return _normalize_detection(det) if has_signal else None
+
+
+def _normalize_detections(detections: Optional[List]) -> List[Dict]:
+    out: List[Dict] = []
+    if not isinstance(detections, list):
+        return out
+    for det in detections:
+        if isinstance(det, dict):
+            out.append(_normalize_detection(det))
+    return out
 
 
 def normalize_engine_name(engine: Optional[str]) -> str:
     engine_name = str(engine or DEFAULT_REOCR_ENGINE).strip().lower()
-    if engine_name not in {"livetext", "paddle"}:
+    if engine_name not in VALID_REOCR_ENGINES:
         raise ValueError(f"不支持的 reOCR engine: {engine}")
     return engine_name
 
@@ -58,6 +122,13 @@ def _normalize_item(item: Optional[Dict]) -> Dict:
         "error": item.get("error"),
         "pad": int(item.get("pad") or 0),
         "duration_ms": int(item.get("duration_ms") or 0),
+        "ocr_mode": item.get("ocr_mode"),
+        "cell_size": {
+            "width": int((((item.get("cell_size") or item.get("input_image") or {})).get("width")) or 0),
+            "height": int((((item.get("cell_size") or item.get("input_image") or {})).get("height")) or 0),
+        },
+        "detection_count": int(item.get("detection_count") or len(item.get("detections") or [])),
+        "primary_detection": _normalize_primary_detection(item.get("primary_detection")),
     }
 
 
@@ -125,4 +196,3 @@ def iter_reocr_items(book_data: Optional[Dict]) -> Iterator[Tuple[str, str, Dict
         items = char_entry.get("items") or {}
         for instance_id, item in items.items():
             yield char, instance_id, item
-
