@@ -8,9 +8,10 @@
   let hasMore = false;
   let totalCandidates = 0;
   let sortByWidth = true;
-  let showMismatch = false;
+  let viewMode = 'usable';
   let deepLinkChar = null;
   let parentDirtyNotified = false;
+  let currentPreviewScale = 1;
 
   function qs(id) {
     return document.getElementById(id);
@@ -27,10 +28,8 @@
       sortByWidth = !!event.target.checked;
       if (currentChar) loadPage(1);
     });
-    qs('show-mismatch-toggle').addEventListener('change', event => {
-      showMismatch = !!event.target.checked;
-      if (currentChar) loadPage(1);
-    });
+    qs('view-usable-toggle').addEventListener('click', () => setViewMode('usable'));
+    qs('view-failed-toggle').addEventListener('click', () => setViewMode('failure'));
 
     document.addEventListener('keydown', event => {
       const modal = qs('review-modal');
@@ -48,8 +47,29 @@
     });
   }
 
+  function setViewMode(mode) {
+    if (mode === viewMode) return;
+    viewMode = mode;
+    syncViewModeButtons();
+    if (currentChar) loadPage(1);
+  }
+
+  function syncViewModeButtons() {
+    const usable = qs('view-usable-toggle');
+    const failed = qs('view-failed-toggle');
+    if (usable) usable.classList.toggle('active', viewMode === 'usable');
+    if (failed) failed.classList.toggle('active', viewMode === 'failure');
+    const note = qs('modal-note');
+    if (note) {
+      note.textContent = viewMode === 'failure'
+        ? '当前展示 filter 失败样本：reOCR 失败或 small。'
+        : '默认展示 large 和 confirmed；需要排查问题时可切到 filter 失败查看 small / reOCR 失败。';
+    }
+  }
+
   async function initialize() {
     bindControls();
+    syncViewModeButtons();
     await loadBooks();
     await handleDeepLink();
   }
@@ -207,6 +227,7 @@
     qs('modal-title').textContent = `筛选字符：${char}`;
     qs('modal-summary').textContent = '';
     qs('review-modal').classList.add('active');
+    syncViewModeButtons();
     loadPage(1);
   }
 
@@ -223,11 +244,11 @@
         page,
         page_size: PAGE_SIZE,
         sort: sortByWidth ? 'width_desc' : 'default',
-        include_mismatch: showMismatch ? 1 : 0,
+        view: viewMode,
       });
       hasMore = !!data.has_more;
       totalCandidates = data.total_candidates || 0;
-      qs('modal-title').textContent = `筛选字符：${currentChar}（OCR ${totalCandidates} 项）`;
+      qs('modal-title').textContent = `筛选字符：${currentChar}（${viewMode === 'failure' ? 'filter 失败' : '可用样本'} / OCR ${totalCandidates} 项）`;
       qs('page-info').textContent = `第 ${currentPage} 页`;
       qs('prev-page').disabled = currentPage <= 1;
       qs('next-page').disabled = !hasMore;
@@ -247,6 +268,21 @@
   function createStatusBadge(item) {
     const badge = document.createElement('div');
     badge.className = 'instance-badges';
+
+    const sizeTag = document.createElement('span');
+    sizeTag.className = `instance-tag instance-tag-${item.size_group || 'single'}`;
+    sizeTag.textContent =
+      item.is_large ? 'large' :
+      item.is_small ? 'small' :
+      'single';
+    badge.appendChild(sizeTag);
+
+    if (item.is_confirmed) {
+      const confirmedTag = document.createElement('span');
+      confirmedTag.className = 'instance-tag instance-tag-confirmed';
+      confirmedTag.textContent = 'confirmed';
+      badge.appendChild(confirmedTag);
+    }
 
     const filterTag = document.createElement('span');
     const status = item.filter_status || 'pending';
@@ -272,6 +308,98 @@
     return badge;
   }
 
+  function getPreviewBaseSize(item) {
+    const ocrWidth = Number(item.width || item.original_width || item.segmented_width || 0);
+    const ocrHeight = Number(item.height || item.original_height || item.segmented_height || 0);
+    const imageWidth = Number(item.segmented_width || item.width || item.original_width || 0);
+    const imageHeight = Number(item.segmented_height || item.height || item.original_height || 0);
+    return {
+      ocrWidth: Math.max(1, ocrWidth || 1),
+      ocrHeight: Math.max(1, ocrHeight || 1),
+      imageWidth: Math.max(1, imageWidth || 1),
+      imageHeight: Math.max(1, imageHeight || 1),
+    };
+  }
+
+  function computePreviewScale(items) {
+    const maxDim = Math.max(
+      1,
+      ...items.map(item => {
+        const size = getPreviewBaseSize(item);
+        return Math.max(size.ocrWidth, size.ocrHeight);
+      }),
+    );
+    return Math.min(4, Math.max(1, 150 / maxDim));
+  }
+
+  function createPreviewWrap(item, scale) {
+    const previewWrap = document.createElement('div');
+    previewWrap.className = 'instance-preview';
+
+    if (!item.preview_image) {
+      previewWrap.innerHTML = '<div class="preview-missing">预览缺失</div>';
+      return previewWrap;
+    }
+
+    const size = getPreviewBaseSize(item);
+    const stage = document.createElement('div');
+    stage.className = 'instance-preview-stage';
+    stage.style.width = `${Math.round(size.ocrWidth * scale)}px`;
+    stage.style.height = `${Math.round(size.ocrHeight * scale)}px`;
+
+    const img = document.createElement('img');
+    img.src = item.preview_image;
+    img.alt = item.char || currentChar;
+    img.style.width = `${Math.round(size.imageWidth * scale)}px`;
+    img.style.height = `${Math.round(size.imageHeight * scale)}px`;
+    stage.appendChild(img);
+    previewWrap.appendChild(stage);
+    return previewWrap;
+  }
+
+  function buildInfoHtml(item) {
+    const sizeText = item.segmented_width
+      ? `Segment宽 ${item.segmented_width || 0}px · 高 ${item.segmented_height || 0}px · OCR宽 ${item.width || 0}px`
+      : `OCR宽 ${item.width || 0}px · 高 ${item.height || 0}px`;
+    return [
+      `册${String(item.volume || '').padStart(2, '0')} · ${item.page || '-'}`,
+      sizeText,
+      item.reocr_text ? `reOCR: ${item.reocr_text} (${formatConfidence(item.reocr_confidence)})` : 'reOCR: -',
+    ].map(text => `<div>${text}</div>`).join('');
+  }
+
+  function renderCard(item) {
+    const card = document.createElement('div');
+    card.className = 'instance-item';
+    applyCardState(card, item);
+
+    card.appendChild(createPreviewWrap(item, currentPreviewScale));
+
+    const info = document.createElement('div');
+    info.className = 'instance-info';
+    info.innerHTML = buildInfoHtml(item);
+
+    card.appendChild(info);
+    card.appendChild(createStatusBadge(item));
+
+    const actions = document.createElement('div');
+    actions.className = 'instance-actions';
+    actions.appendChild(createDecisionButton('接受', 'accepted', item, card));
+    actions.appendChild(createDecisionButton('拒绝', 'rejected', item, card));
+    if ((item.filter_status || 'pending') !== 'pending') {
+      actions.appendChild(createDecisionButton('待定', 'pending', item, card));
+    }
+    card.appendChild(actions);
+
+    if (item.error) {
+      const error = document.createElement('div');
+      error.className = 'instance-error';
+      error.textContent = item.error;
+      card.appendChild(error);
+    }
+    return card;
+  }
+
   function renderInstances(items) {
     const grid = qs('instances-grid');
     grid.innerHTML = '';
@@ -281,55 +409,10 @@
       return;
     }
 
+    currentPreviewScale = computePreviewScale(items);
+
     items.forEach(item => {
-      const card = document.createElement('div');
-      card.className = 'instance-item';
-      applyCardState(card, item);
-
-      const previewWrap = document.createElement('div');
-      previewWrap.className = 'instance-preview';
-      if (item.preview_image) {
-        const img = document.createElement('img');
-        img.src = item.preview_image;
-        img.alt = item.char || currentChar;
-        previewWrap.appendChild(img);
-      } else {
-        previewWrap.innerHTML = '<div class="preview-missing">预览缺失</div>';
-      }
-
-      const info = document.createElement('div');
-      info.className = 'instance-info';
-      const sizeText = item.segmented_width
-        ? `Segment宽 ${item.segmented_width || 0}px · 高 ${item.segmented_height || 0}px · OCR宽 ${item.width || 0}px`
-        : `OCR宽 ${item.width || 0}px · 高 ${item.height || 0}px`;
-      info.innerHTML = [
-        `册${String(item.volume || '').padStart(2, '0')} · ${item.page || '-'}`,
-        sizeText,
-        item.reocr_text ? `reOCR: ${item.reocr_text} (${formatConfidence(item.reocr_confidence)})` : 'reOCR: -',
-      ].map(text => `<div>${text}</div>`).join('');
-
-      const badges = createStatusBadge(item);
-
-      const actions = document.createElement('div');
-      actions.className = 'instance-actions';
-      actions.appendChild(createDecisionButton('接受', 'accepted', item, card));
-      actions.appendChild(createDecisionButton('拒绝', 'rejected', item, card));
-      if ((item.filter_status || 'pending') !== 'pending') {
-        actions.appendChild(createDecisionButton('待定', 'pending', item, card));
-      }
-
-      if (item.error) {
-        const error = document.createElement('div');
-        error.className = 'instance-error';
-        error.textContent = item.error;
-        card.appendChild(error);
-      }
-
-      card.appendChild(previewWrap);
-      card.appendChild(info);
-      card.appendChild(badges);
-      card.appendChild(actions);
-      grid.appendChild(card);
+      grid.appendChild(renderCard(item));
     });
 
     grid.classList.remove('is-hidden');
@@ -365,42 +448,8 @@
         status,
       });
       Object.assign(item, data.item || {});
-      card.innerHTML = '';
-      applyCardState(card, item);
-
-      const previewWrap = document.createElement('div');
-      previewWrap.className = 'instance-preview';
-      if (item.preview_image) {
-        const img = document.createElement('img');
-        img.src = item.preview_image;
-        img.alt = item.char || currentChar;
-        previewWrap.appendChild(img);
-      } else {
-        previewWrap.innerHTML = '<div class="preview-missing">预览缺失</div>';
-      }
-
-      const info = document.createElement('div');
-      info.className = 'instance-info';
-      info.innerHTML = [
-        `册${String(item.volume || '').padStart(2, '0')} · ${item.page || '-'}`,
-        item.segmented_width
-          ? `Segment宽 ${item.segmented_width || 0}px · 高 ${item.segmented_height || 0}px · OCR宽 ${item.width || 0}px`
-          : `OCR宽 ${item.width || 0}px · 高 ${item.height || 0}px`,
-        item.reocr_text ? `reOCR: ${item.reocr_text} (${formatConfidence(item.reocr_confidence)})` : 'reOCR: -',
-      ].map(text => `<div>${text}</div>`).join('');
-
-      card.appendChild(previewWrap);
-      card.appendChild(info);
-      card.appendChild(createStatusBadge(item));
-
-      const actions = document.createElement('div');
-      actions.className = 'instance-actions';
-      actions.appendChild(createDecisionButton('接受', 'accepted', item, card));
-      actions.appendChild(createDecisionButton('拒绝', 'rejected', item, card));
-      if ((item.filter_status || 'pending') !== 'pending') {
-        actions.appendChild(createDecisionButton('待定', 'pending', item, card));
-      }
-      card.appendChild(actions);
+      const nextCard = renderCard(item);
+      card.replaceWith(nextCard);
       notifyParentDirty();
     } catch (error) {
       console.error('更新筛选状态失败:', error);

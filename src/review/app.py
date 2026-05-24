@@ -107,14 +107,14 @@ CONFIRMED_DIR.mkdir(parents=True, exist_ok=True)
 # 加载数据（懒加载 / 分片缓存）
 matched_data = None  # 旧的整库加载（尽量避免使用）
 matched_books_cache: Dict[str, dict] = {}
-matched_books_cache_mtime = 0.0
+matched_books_cache_mtime: Dict[str, float] = {}
 matched_index_cache: Optional[Dict] = None
 segment_books_cache: Dict[str, Optional[Dict]] = {}
-segment_books_cache_mtime = 0.0
+segment_books_cache_mtime: Dict[str, float] = {}
 cluster_books_cache: Dict[str, Optional[Dict]] = {}
-cluster_books_cache_mtime = 0.0
+cluster_books_cache_mtime: Dict[str, float] = {}
 reocr_books_cache: Dict[Tuple[str, str], Optional[Dict]] = {}
-reocr_books_cache_mtime: Dict[str, float] = {}
+reocr_books_cache_mtime: Dict[Tuple[str, str], float] = {}
 standard_chars_data = None
 segment_lookup_data = None  # 内存中的查找索引（随 review_books 分片保存同步写入）
 _standard_char_order_map: Optional[Dict[str, int]] = None
@@ -141,6 +141,16 @@ def _extract_book_payload(payload: Optional[Dict], book_name: Optional[str] = No
     return None
 
 
+def _load_prepared_matched_book(path: Path, book_name: str) -> Optional[Dict]:
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            payload = json.load(f)
+        book_data = _extract_book_payload(payload, book_name)
+        return book_data if isinstance(book_data, dict) else None
+    except Exception:
+        return None
+
+
 def _matched_books_mtime() -> float:
     if MATCHED_BOOKS_DIR.exists():
         mtimes = [p.stat().st_mtime for p in MATCHED_BOOKS_DIR.glob('*.json')]
@@ -151,26 +161,11 @@ def _matched_books_mtime() -> float:
     return 0.0
 
 
-def _segment_books_mtime() -> float:
-    if not SEGMENT_BOOKS_DIR.exists():
+def _safe_path_mtime(path: Path) -> float:
+    try:
+        return path.stat().st_mtime
+    except Exception:
         return 0.0
-    mtimes = [p.stat().st_mtime for p in SEGMENT_BOOKS_DIR.glob('*.json')]
-    return max(mtimes) if mtimes else 0.0
-
-
-def _cluster_books_mtime() -> float:
-    if not CLUSTER_BOOKS_DIR.exists():
-        return 0.0
-    mtimes = [p.stat().st_mtime for p in CLUSTER_BOOKS_DIR.glob('*.json')]
-    return max(mtimes) if mtimes else 0.0
-
-
-def _reocr_books_mtime(engine: str) -> float:
-    engine_dir = REOCR_BOOKS_DIR / normalize_engine_name(engine)
-    if not engine_dir.exists():
-        return 0.0
-    mtimes = [p.stat().st_mtime for p in engine_dir.glob('*.json')]
-    return max(mtimes) if mtimes else 0.0
 
 
 def ensure_matched_index() -> Dict:
@@ -198,19 +193,14 @@ def ensure_matched_index() -> Dict:
     if MATCHED_BOOKS_DIR.exists() and list(MATCHED_BOOKS_DIR.glob('*.json')):
         print(f"[索引] 构建 matched_books 索引：{MATCHED_BOOKS_DIR}")
         for path in MATCHED_BOOKS_DIR.glob('*.json'):
-            try:
-                with open(path, 'r', encoding='utf-8') as f:
-                    payload = json.load(f)
-                book_name = payload.get('book') or path.stem
-                book_data = dedupe_matched_book_data(_extract_book_payload(payload, book_name))
-                if not isinstance(book_data, dict):
-                    continue
-                idx_books[book_name] = {
-                    'total_standard_chars': book_data.get('total_standard_chars', 0),
-                    'total_instances': book_data.get('total_instances', 0)
-                }
-            except Exception:
+            book_name = path.stem
+            book_data = _load_prepared_matched_book(path, book_name)
+            if not isinstance(book_data, dict):
                 continue
+            idx_books[book_name] = {
+                'total_standard_chars': book_data.get('total_standard_chars', 0),
+                'total_instances': book_data.get('total_instances', 0)
+            }
     elif MATCHED_JSON_PATH.exists():
         print(f"[索引] 构建 matched_by_book 索引（首次较慢）：{MATCHED_JSON_PATH}")
         with open(MATCHED_JSON_PATH, 'r', encoding='utf-8') as f:
@@ -253,29 +243,25 @@ def _build_shards_once(full_data: Optional[Dict] = None):
 
 
 def ensure_matched_book_data(book_name: str) -> Optional[Dict]:
-    """按需加载某本书的匹配数据（优先读取分片，缺失则一次性分片）。"""
-    global matched_books_cache_mtime
+    """按需加载某本书的匹配数据（优先读取 per-book 文件并按 mtime 缓存）。"""
     if not book_name:
         return None
     _ensure_cache_dirs()
-    src_mtime = _matched_books_mtime()
-    if src_mtime and src_mtime != matched_books_cache_mtime:
-        matched_books_cache.clear()
-        matched_books_cache_mtime = src_mtime
     book_path = MATCHED_BOOKS_DIR / f"{book_name}.json"
+    book_mtime = _safe_path_mtime(book_path)
+    cached_mtime = matched_books_cache_mtime.get(book_name, -1.0)
+    if book_name in matched_books_cache and book_mtime > 0 and cached_mtime == book_mtime:
+        return matched_books_cache[book_name]
     if book_path.exists():
-        try:
-            with open(book_path, 'r', encoding='utf-8') as f:
-                payload = json.load(f)
-            data = dedupe_matched_book_data(_extract_book_payload(payload, book_name))
-            if data:
-                matched_books_cache[book_name] = data
-                return data
-        except Exception:
-            pass
+        data = _load_prepared_matched_book(book_path, book_name)
+        if data:
+            matched_books_cache[book_name] = data
+            matched_books_cache_mtime[book_name] = book_mtime
+            return data
     shard_path = MATCHED_SHARDS_DIR / f"{book_name}.json"
     if book_name in matched_books_cache:
         return matched_books_cache[book_name]
+    src_mtime = _matched_books_mtime()
     # 如果分片存在且不过期，直接加载
     shard_ok = False
     if shard_path.exists():
@@ -290,6 +276,7 @@ def ensure_matched_book_data(book_name: str) -> Optional[Dict]:
             data = dedupe_matched_book_data(shard.get('data'))
             if data:
                 matched_books_cache[book_name] = data
+                matched_books_cache_mtime[book_name] = _safe_path_mtime(shard_path)
                 return data
         except Exception:
             pass
@@ -301,58 +288,49 @@ def ensure_matched_book_data(book_name: str) -> Optional[Dict]:
         book = dedupe_matched_book_data((full.get('books') or {}).get(book_name))
         if book:
             matched_books_cache[book_name] = book
+            matched_books_cache_mtime[book_name] = _safe_path_mtime(book_path)
             return book
     return None
 
 
 def ensure_segment_book_data(book_name: str) -> Optional[Dict]:
-    global segment_books_cache_mtime
-
-    current_mtime = _segment_books_mtime()
-    if current_mtime != segment_books_cache_mtime:
-        segment_books_cache.clear()
-        segment_books_cache_mtime = current_mtime
-
-    if book_name in segment_books_cache:
+    path = SEGMENT_BOOKS_DIR / f'{book_name}.json'
+    current_mtime = _safe_path_mtime(path)
+    cached_mtime = segment_books_cache_mtime.get(book_name, -1.0)
+    if book_name in segment_books_cache and current_mtime == cached_mtime:
         return segment_books_cache[book_name]
 
     data = read_segment_book(book_name)
     segment_books_cache[book_name] = data
+    segment_books_cache_mtime[book_name] = current_mtime
     return data
 
 
 def ensure_cluster_book_data(book_name: str) -> Optional[Dict]:
-    global cluster_books_cache_mtime
-
-    current_mtime = _cluster_books_mtime()
-    if current_mtime != cluster_books_cache_mtime:
-        cluster_books_cache.clear()
-        cluster_books_cache_mtime = current_mtime
-
-    if book_name in cluster_books_cache:
+    path = CLUSTER_BOOKS_DIR / f'{book_name}.json'
+    current_mtime = _safe_path_mtime(path)
+    cached_mtime = cluster_books_cache_mtime.get(book_name, -1.0)
+    if book_name in cluster_books_cache and current_mtime == cached_mtime:
         return cluster_books_cache[book_name]
 
     data = read_cluster_book(book_name)
     cluster_books_cache[book_name] = data
+    cluster_books_cache_mtime[book_name] = current_mtime
     return data
 
 
 def ensure_reocr_book_data(book_name: str, engine: str = DEFAULT_REOCR_ENGINE) -> Optional[Dict]:
     engine_name = normalize_engine_name(engine)
-    current_mtime = _reocr_books_mtime(engine_name)
-    cached_mtime = reocr_books_cache_mtime.get(engine_name, 0.0)
-    if current_mtime != cached_mtime:
-        stale_keys = [key for key in reocr_books_cache if key[0] == engine_name]
-        for stale_key in stale_keys:
-            reocr_books_cache.pop(stale_key, None)
-        reocr_books_cache_mtime[engine_name] = current_mtime
-
     cache_key = (engine_name, book_name)
-    if cache_key in reocr_books_cache:
+    path = REOCR_BOOKS_DIR / engine_name / f'{book_name}.json'
+    current_mtime = _safe_path_mtime(path)
+    cached_mtime = reocr_books_cache_mtime.get(cache_key, -1.0)
+    if cache_key in reocr_books_cache and current_mtime == cached_mtime:
         return reocr_books_cache[cache_key]
 
     data = read_reocr_book(book_name, engine_name)
     reocr_books_cache[cache_key] = data
+    reocr_books_cache_mtime[cache_key] = current_mtime
     return data
 
 
@@ -574,6 +552,20 @@ def _segment_sort_height(source: Optional[Dict], segment_state: Optional[Dict]) 
     return int(source.get('height') or 0)
 
 
+def _normalize_filter_view_mode(view_mode: Optional[str]) -> str:
+    mode = str(view_mode or 'usable').strip().lower()
+    if mode in {'failure', 'failed', 'fail', 'error'}:
+        return 'failure'
+    if mode == 'all':
+        return 'all'
+    return 'usable'
+
+
+def _is_review_confirmed(review_state: Optional[Dict]) -> bool:
+    review_state = dict(review_state or {})
+    return review_state.get('status') == 'confirmed' or bool(_get_confirmed_path(review_state))
+
+
 def _filter_payload_from_item(
     book_name: str,
     char: str,
@@ -581,6 +573,8 @@ def _filter_payload_from_item(
     item: Optional[Dict],
     segment_item: Optional[Dict],
     reocr_item: Optional[Dict],
+    cluster_item: Optional[Dict] = None,
+    cluster_mode: str = 'single',
     include_image: bool = True,
     engine: str = DEFAULT_REOCR_ENGINE,
 ) -> Dict:
@@ -590,6 +584,7 @@ def _filter_payload_from_item(
     review_state = dict(item.get('review') or {})
     segment_state = dict(segment_item or {})
     reocr_state_data = dict(reocr_item or {})
+    cluster_state = dict(cluster_item or {})
 
     if review_state.get('status') == 'dropped' or review_state.get('decision') == 'drop':
         return {}
@@ -607,6 +602,7 @@ def _filter_payload_from_item(
     segmented_height = int(segment_state.get('segmented_height') or 0)
     original_width = int(source.get('width') or 0)
     original_height = int(source.get('height') or 0)
+    size_group = str(cluster_state.get('size_group') or 'single')
 
     payload = {
         'book': book_name,
@@ -638,44 +634,63 @@ def _filter_payload_from_item(
         'reocr_state': reocr_state,
         'reocr_pad': int(reocr_state_data.get('pad') or FILTER_REOCR_PAD_DEFAULT),
         'reocr_engine': normalize_engine_name(engine),
+        'cluster_mode': str(cluster_mode or 'single'),
+        'cluster_selected': bool(cluster_state.get('selected', False)),
+        'size_group': size_group,
+        'is_large': size_group == 'large',
+        'is_small': size_group == 'small',
+        'is_single': size_group == 'single',
+        'is_confirmed': _is_review_confirmed(review_state),
     }
     if error_message:
         payload['error'] = error_message
     return payload
 
 
-def _filter_item_visible(payload: Dict, include_mismatch: bool) -> bool:
+def _filter_item_visible(payload: Dict, view_mode: str) -> bool:
     if not payload:
         return False
-    if payload.get('filter_status') == 'accepted':
+    if payload.get('review_status') == 'dropped' or payload.get('review_decision') == 'drop':
+        return False
+    if view_mode == 'all':
         return True
-    if payload.get('reocr_matches') is True:
+    if view_mode == 'failure':
+        return payload.get('is_small') or payload.get('reocr_state') == 'error'
+    if payload.get('is_confirmed') or payload.get('filter_status') == 'accepted':
         return True
-    if include_mismatch:
-        return payload.get('reocr_state') in {'ready', 'error'}
-    return False
+    if payload.get('cluster_mode') == 'split':
+        return payload.get('is_large') and payload.get('reocr_matches') is True
+    return payload.get('reocr_matches') is True
 
 
-def _filter_payload_priority(payload: Dict) -> Tuple[int, int]:
+def _filter_payload_priority(payload: Dict, view_mode: str) -> Tuple[int, int]:
     """
     Default filter browsing should surface truly usable samples first.
     Keep accepted items visible, but do not let stale accepted/pending rows
     crowd out fresh reOCR matches on the first page.
     """
-    if payload.get('reocr_matches') is True:
-        return (0, 0)
-    if payload.get('filter_status') == 'accepted':
-        state = payload.get('reocr_state')
-        if state == 'ready':
+    if view_mode == 'failure':
+        if payload.get('reocr_state') == 'error':
+            return (0, 0)
+        if payload.get('is_small'):
             return (1, 0)
-        if state == 'error':
+        return (2, 0)
+    if payload.get('is_confirmed') or payload.get('filter_status') == 'accepted':
+        return (0, 0)
+    if payload.get('cluster_mode') == 'split':
+        if payload.get('is_large'):
+            return (1, 0)
+        if payload.get('is_single'):
             return (2, 0)
-        return (3, 0)
+        if payload.get('is_small'):
+            return (3, 0)
+    if payload.get('reocr_matches') is True:
+        return (2, 0)
     if payload.get('reocr_state') == 'ready':
-        return (4, 0)
+        return (3, 0)
     if payload.get('reocr_state') == 'error':
-        return (5, 0)
-    return (6, 0)
+        return (4, 0)
+    return (5, 0)
 
 
 def _cluster_item_selected(cluster_item: Optional[Dict]) -> bool:
@@ -719,6 +734,40 @@ def _filter_candidate_preference(
         _segment_sort_width(source, segment_state),
         -int(source.get('index') or 10**9),
         1 if segment_state.get('state') == 'ready' else 0,
+        source.get('instance_id') or '',
+    )
+
+
+def _filter_data_candidate_preference(
+    source: Optional[Dict],
+    item: Optional[Dict],
+    segment_item: Optional[Dict],
+    reocr_item: Optional[Dict],
+    cluster_item: Optional[Dict],
+) -> Tuple[int, int, int, int, str]:
+    source = dict(source or {})
+    segment_state = dict(segment_item or {})
+    reocr_state = dict(reocr_item or {})
+    cluster_state = dict(cluster_item or {})
+
+    if reocr_state.get('matches') is True:
+        state_score = 5
+    elif str(reocr_state.get('state') or 'pending') == 'ready':
+        state_score = 4
+    elif str(segment_state.get('state') or 'pending') == 'ready':
+        state_score = 3
+    elif cluster_state:
+        state_score = 2
+    elif source:
+        state_score = 1
+    else:
+        state_score = 0
+
+    return (
+        state_score,
+        _segment_sort_width(source, segment_state),
+        _segment_sort_height(source, segment_state),
+        1 if cluster_state.get('selected') else 0,
         source.get('instance_id') or '',
     )
 
@@ -1168,7 +1217,7 @@ def api_filter_items():
         page = max(1, int(request.args.get('page', '1') or '1'))
         page_size = max(1, min(100, int(request.args.get('page_size', '20') or '20')))
         sort_mode = (request.args.get('sort', 'width_desc') or 'width_desc').lower()
-        include_mismatch = (request.args.get('include_mismatch', '0') or '0').lower() in ('1', 'true', 'yes')
+        view_mode = _normalize_filter_view_mode(request.args.get('view') or request.args.get('mode'))
         engine_name = normalize_engine_name(request.args.get('engine') or DEFAULT_REOCR_ENGINE)
 
         if not book_name or not char:
@@ -1179,6 +1228,8 @@ def api_filter_items():
         segment_book = ensure_segment_book_data(book_name) or {}
         segment_items = (((segment_book.get(char) or {}).get('items')) or {})
         cluster_book = ensure_cluster_book_data(book_name) or {}
+        cluster_entry = dict(cluster_book.get(char) or {})
+        cluster_mode = str(cluster_entry.get('mode') or 'single')
         cluster_items = (((cluster_book.get(char) or {}).get('items')) or {})
         reocr_book = ensure_reocr_book_data(book_name, engine_name) or {}
         reocr_items = (((reocr_book.get(char) or {}).get('items')) or {})
@@ -1195,20 +1246,9 @@ def api_filter_items():
                 'reocr_item': reocr_item if isinstance(reocr_item, dict) else None,
             })
 
-        cluster_gate_enabled = _has_any_cluster_selection(cluster_items)
-        selected_instance_ids = {
-            instance_id
-            for instance_id, cluster_item in cluster_items.items()
-            if isinstance(cluster_item, dict) and _cluster_item_selected(cluster_item)
-        }
-
         for source in _matched_sources_for_char(book_name, char):
             instance_id = source.get('instance_id')
             item = review_items.get(instance_id) if instance_id else None
-            if cluster_gate_enabled and instance_id and instance_id not in selected_instance_ids:
-                filter_state = dict((item or {}).get('filter') or {})
-                if filter_state.get('status') != 'accepted':
-                    continue
             register_candidate(
                 source,
                 item,
@@ -1233,7 +1273,7 @@ def api_filter_items():
             candidates,
             source_getter=lambda candidate: candidate.get('source'),
         ):
-            best_candidate = max(
+            review_candidate = max(
                 group,
                 key=lambda candidate: _filter_candidate_preference(
                     candidate.get('source'),
@@ -1242,11 +1282,28 @@ def api_filter_items():
                     candidate.get('reocr_item'),
                 ),
             )
+            data_candidate = max(
+                group,
+                key=lambda candidate: _filter_data_candidate_preference(
+                    candidate.get('source'),
+                    candidate.get('item'),
+                    candidate.get('segment_item'),
+                    candidate.get('reocr_item'),
+                    cluster_items.get(((candidate.get('source') or {}).get('instance_id')) or ''),
+                ),
+            )
+            review_item = review_candidate.get('item') if isinstance(review_candidate.get('item'), dict) else None
+            data_item = data_candidate.get('item') if isinstance(data_candidate.get('item'), dict) else None
+            merged_item = dict(data_item or {})
+            if review_item:
+                merged_item['filter'] = dict(review_item.get('filter') or merged_item.get('filter') or {})
+                merged_item['review'] = dict(review_item.get('review') or merged_item.get('review') or {})
             grouped_meta.append({
-                'source': best_candidate.get('source') or {},
-                'item': best_candidate.get('item'),
-                'segment_item': best_candidate.get('segment_item'),
-                'reocr_item': best_candidate.get('reocr_item'),
+                'source': data_candidate.get('source') or review_candidate.get('source') or {},
+                'item': merged_item if merged_item else review_item or data_item,
+                'segment_item': data_candidate.get('segment_item'),
+                'reocr_item': data_candidate.get('reocr_item'),
+                'cluster_item': cluster_items.get(((data_candidate.get('source') or {}).get('instance_id')) or ''),
             })
         if not grouped_meta:
             return jsonify({
@@ -1258,7 +1315,7 @@ def api_filter_items():
                 'total_candidates': 0,
                 'items': [],
                 'has_more': False,
-                'include_mismatch': include_mismatch,
+                'view': view_mode,
                 'sort': sort_mode,
             })
 
@@ -1282,30 +1339,33 @@ def api_filter_items():
                 item,
                 meta.get('segment_item'),
                 meta.get('reocr_item'),
+                meta.get('cluster_item'),
+                cluster_mode=cluster_mode,
                 include_image=False,
                 engine=engine_name,
             )
             if not payload:
                 continue
-            if _filter_item_visible(payload, include_mismatch):
+            if _filter_item_visible(payload, view_mode):
                 visible_meta.append({
                     'source': source,
                     'item': item,
                     'segment_item': meta.get('segment_item'),
                     'reocr_item': meta.get('reocr_item'),
+                    'cluster_item': meta.get('cluster_item'),
                     'payload': payload,
                 })
 
         if sort_mode == 'width_desc':
             visible_meta.sort(key=lambda meta: (
-                _filter_payload_priority(meta['payload']),
+                _filter_payload_priority(meta['payload'], view_mode),
                 -_segment_sort_width(meta.get('source'), meta.get('segment_item')),
                 -_segment_sort_height(meta.get('source'), meta.get('segment_item')),
                 (meta['source'] or {}).get('instance_id') or '',
             ))
         else:
             visible_meta.sort(key=lambda meta: (
-                _filter_payload_priority(meta['payload']),
+                _filter_payload_priority(meta['payload'], view_mode),
                 int((meta['source'] or {}).get('index') or 0),
                 (meta['source'] or {}).get('instance_id') or '',
             ))
@@ -1321,6 +1381,8 @@ def api_filter_items():
                 meta['item'],
                 meta.get('segment_item'),
                 meta.get('reocr_item'),
+                meta.get('cluster_item'),
+                cluster_mode=cluster_mode,
                 include_image=True,
                 engine=engine_name,
             )
@@ -1337,7 +1399,7 @@ def api_filter_items():
             'total_candidates': len(grouped_meta),
             'items': page_items,
             'has_more': has_more,
-            'include_mismatch': include_mismatch,
+            'view': view_mode,
             'sort': sort_mode,
             'engine': engine_name,
             'truncated_scan': False,
@@ -1401,6 +1463,7 @@ def api_filter_decision():
         updated_book = read_review_book(book_name) or {}
         updated_item = ((((updated_book.get(char) or {}).get('items')) or {}).get(instance_id)) or {}
         segment_book = ensure_segment_book_data(book_name) or {}
+        cluster_book = ensure_cluster_book_data(book_name) or {}
         reocr_book = ensure_reocr_book_data(book_name, engine_name) or {}
         item_payload = _filter_payload_from_item(
             book_name,
@@ -1409,6 +1472,8 @@ def api_filter_decision():
             updated_item,
             (((segment_book.get(char) or {}).get('items')) or {}).get(instance_id),
             (((reocr_book.get(char) or {}).get('items')) or {}).get(instance_id),
+            (((cluster_book.get(char) or {}).get('items')) or {}).get(instance_id),
+            cluster_mode=str((cluster_book.get(char) or {}).get('mode') or 'single'),
             include_image=True,
             engine=engine_name,
         )

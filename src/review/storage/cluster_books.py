@@ -11,7 +11,7 @@ from src.review.storage.review_books import safe_book_name, utc_now_iso
 
 
 CLUSTER_BOOKS_DIR = review_config.CLUSTER_BOOKS_DIR
-CLUSTER_BOOK_VERSION = 1
+CLUSTER_BOOK_VERSION = 2
 
 
 def cluster_book_path(book_name: str) -> Path:
@@ -26,12 +26,18 @@ def list_cluster_books() -> list[str]:
 
 def _normalize_item(item: Optional[Dict]) -> Dict:
     item = dict(item or {})
+    ocr_width = int(item.get("ocr_width") or item.get("width") or 0)
+    ocr_height = int(item.get("ocr_height") or item.get("height") or 0)
     return {
         "selected": bool(item.get("selected", False)),
         "size_group": str(item.get("size_group") or "single"),
         "size_rank": int(item.get("size_rank") or 0),
-        "width": int(item.get("width") or 0),
-        "height": int(item.get("height") or 0),
+        "width": ocr_width,
+        "height": ocr_height,
+        "ocr_width": ocr_width,
+        "ocr_height": ocr_height,
+        "segmented_width": int(item.get("segmented_width") or 0),
+        "segmented_height": int(item.get("segmented_height") or 0),
         "confirmed_distance": float(item.get("confirmed_distance") or 0.0),
         "reocr_matches": bool(item.get("reocr_matches", False)),
         "reocr_state_rank": int(item.get("reocr_state_rank") or 0),

@@ -31,40 +31,78 @@ def _median_int(values: Sequence[int]) -> int:
     return int(round(float(median(values))))
 
 
-def _trimmed_candidates(rows: Sequence[Tuple[str, int, int, int, int]]) -> List[Tuple[str, int, int, int, int]]:
-    if len(rows) <= 4:
-        return list(rows)
-    sorted_rows = sorted(rows, key=lambda row: (row[1], row[2], row[0]))
-    trim = min(2, len(sorted_rows) // 10)
-    if trim <= 0 or len(sorted_rows) - trim * 2 < 2:
-        return sorted_rows
-    return sorted_rows[trim:len(sorted_rows) - trim]
+def _split_width_clusters(rows: Sequence[Tuple[str, int, int, int, int, int, int]]) -> Tuple[int, List[Tuple[str, int, int, int, int, int, int]], List[Tuple[str, int, int, int, int, int, int]]]:
+    if len(rows) < 2:
+        return 0, list(rows), []
+    widths = [int(row[1]) for row in rows if int(row[1]) > 0]
+    if len(widths) < 2:
+        return 0, list(rows), []
+
+    center_low = float(min(widths))
+    center_high = float(max(widths))
+    if abs(center_high - center_low) < 1e-6:
+        return 0, list(rows), []
+
+    lower_rows: List[Tuple[str, int, int, int, int, int, int]] = []
+    upper_rows: List[Tuple[str, int, int, int, int, int, int]] = []
+    for _ in range(32):
+        lower_rows = []
+        upper_rows = []
+        for row in rows:
+            width = float(row[1])
+            if abs(width - center_low) <= abs(width - center_high):
+                lower_rows.append(row)
+            else:
+                upper_rows.append(row)
+        if not lower_rows or not upper_rows:
+            return 0, list(rows), []
+        next_low = sum(float(row[1]) for row in lower_rows) / len(lower_rows)
+        next_high = sum(float(row[1]) for row in upper_rows) / len(upper_rows)
+        if abs(next_low - center_low) < 1e-6 and abs(next_high - center_high) < 1e-6:
+            center_low = next_low
+            center_high = next_high
+            break
+        center_low = next_low
+        center_high = next_high
+
+    if center_low > center_high:
+        center_low, center_high = center_high, center_low
+        lower_rows, upper_rows = upper_rows, lower_rows
+
+    threshold = int(round((center_low + center_high) / 2.0))
+    lower_rows = [row for row in rows if row[1] <= threshold]
+    upper_rows = [row for row in rows if row[1] > threshold]
+    return threshold, lower_rows, upper_rows
 
 
 def _sort_rows_for_target(
-    rows: Sequence[Tuple[str, int, int, int, int]],
+    rows: Sequence[Tuple[str, int, int, int, int, int, int]],
     *,
     confirmed_width: int,
-) -> List[Tuple[str, int, int, int, int]]:
+) -> List[Tuple[str, int, int, int, int, int, int]]:
     if confirmed_width > 0:
         return sorted(
             rows,
             key=lambda row: (
-                -int(row[3]),
-                int(row[4]),
+                -int(row[5]),
+                int(row[6]),
                 abs(int(row[1]) - confirmed_width),
                 -int(row[1]),
                 -int(row[2]),
+                -int(row[3]),
+                -int(row[4]),
                 row[0],
             ),
         )
     return sorted(
         rows,
         key=lambda row: (
-            -int(row[3]),
-            int(row[4]),
+            -int(row[5]),
+            int(row[6]),
             -int(row[1]),
             -int(row[2]),
+            -int(row[3]),
+            -int(row[4]),
             row[0],
         ),
     )
@@ -84,17 +122,21 @@ def _cluster_char(
         for _char, instance_id, item in iter_confirmed_items({char: review_char_entry})
     }
 
-    candidates: List[Tuple[str, int, int, int, int]] = []
+    candidates: List[Tuple[str, int, int, int, int, int, int]] = []
     for instance_id, segment_item in (segment_items or {}).items():
         if not isinstance(segment_item, dict):
             continue
         if str(segment_item.get("state") or "pending") != "ready":
             continue
-        width = int(segment_item.get("segmented_width") or 0)
-        height = int(segment_item.get("segmented_height") or 0)
-        if width <= 0 or height <= 0:
+        ocr_width = int(((segment_item.get("source_bbox") or {}).get("width")) or 0)
+        ocr_height = int(((segment_item.get("source_bbox") or {}).get("height")) or 0)
+        segmented_width = int(segment_item.get("segmented_width") or 0)
+        segmented_height = int(segment_item.get("segmented_height") or 0)
+        if ocr_width <= 0 or ocr_height <= 0:
             continue
         reocr_item = (reocr_items or {}).get(instance_id) or {}
+        if reocr_item.get("matches") is not True:
+            continue
         match_rank = 1 if reocr_item.get("matches") is True else 0
         state_rank = 0
         reocr_state = str(reocr_item.get("state") or "pending")
@@ -102,9 +144,9 @@ def _cluster_char(
             state_rank = 1
         elif reocr_state == "error":
             state_rank = 2
-        candidates.append((str(instance_id), width, height, match_rank, state_rank))
+        candidates.append((str(instance_id), ocr_width, ocr_height, segmented_width, segmented_height, match_rank, state_rank))
         if instance_id in confirmed_map:
-            confirmed_widths.append(width)
+            confirmed_widths.append(ocr_width)
 
     if not candidates:
         return {
@@ -124,30 +166,20 @@ def _cluster_char(
             "items": {},
         }
 
-    candidates.sort(key=lambda row: (-row[3], int(row[4]), -row[1], -row[2], row[0]))
-    trimmed = _trimmed_candidates(candidates)
-    widths = sorted(width for _, width, _, _, _ in trimmed)
+    candidates.sort(key=lambda row: (-row[5], int(row[6]), -row[1], -row[2], -row[3], -row[4], row[0]))
     confirmed_width = _median_int(confirmed_widths)
-    gap_split_idx = -1
-    gap_value = 0
-    for idx in range(1, len(widths)):
-        gap = int(widths[idx] - widths[idx - 1])
-        if gap >= MIN_SPLIT_GAP_PX and gap > gap_value:
-            gap_split_idx = idx
-            gap_value = gap
 
     mode = "single"
     target_group = "single"
     threshold = 0
-    upper: List[Tuple[str, int, int]] = []
-    lower: List[Tuple[str, int, int]] = []
-    if gap_split_idx > 0:
-        threshold = int((widths[gap_split_idx - 1] + widths[gap_split_idx]) / 2)
-        upper = [row for row in candidates if row[1] > threshold]
-        lower = [row for row in candidates if row[1] <= threshold]
+    upper: List[Tuple[str, int, int, int, int, int, int]] = []
+    lower: List[Tuple[str, int, int, int, int, int, int]] = []
+    threshold, lower, upper = _split_width_clusters(candidates)
+    if threshold > 0 and lower and upper:
         upper_med = _median_int([row[1] for row in upper])
         lower_med = _median_int([row[1] for row in lower])
         split_ratio = float(upper_med) / float(max(1, lower_med))
+        split_gap = min(row[1] for row in upper) - max(row[1] for row in lower)
         if (
             len(upper) >= MIN_GROUP_COUNT
             and len(lower) >= MIN_GROUP_COUNT
@@ -157,6 +189,10 @@ def _cluster_char(
         ):
             mode = "split"
             target_group = "large"
+        else:
+            threshold = 0
+            lower = []
+            upper = []
 
     if target_group == "large":
         target_rows = [row for row in candidates if row[1] > threshold]
@@ -198,23 +234,27 @@ def _cluster_char(
 
     selected_ids = {row[0] for row in selected_rows}
     items: Dict[str, Dict] = {}
-    for rank, (instance_id, width, height, match_rank, state_rank) in enumerate(candidates, start=1):
+    for rank, (instance_id, ocr_width, ocr_height, segmented_width, segmented_height, match_rank, state_rank) in enumerate(candidates, start=1):
         if mode == "split":
-            size_group = "large" if width > threshold else "small"
+            size_group = "large" if ocr_width > threshold else "small"
         else:
             size_group = "single"
         items[instance_id] = {
             "selected": instance_id in selected_ids,
             "size_group": size_group,
             "size_rank": rank,
-            "width": width,
-            "height": height,
+            "width": ocr_width,
+            "height": ocr_height,
+            "ocr_width": ocr_width,
+            "ocr_height": ocr_height,
+            "segmented_width": segmented_width,
+            "segmented_height": segmented_height,
             "reocr_matches": bool(match_rank),
             "reocr_state_rank": int(state_rank),
-            "confirmed_distance": float(abs(width - confirmed_width)) if confirmed_width > 0 else 0.0,
+            "confirmed_distance": float(abs(ocr_width - confirmed_width)) if confirmed_width > 0 else 0.0,
         }
 
-    def summarize(group_name: str, rows: Sequence[Tuple[str, int, int, int, int]]) -> Dict:
+    def summarize(group_name: str, rows: Sequence[Tuple[str, int, int, int, int, int, int]]) -> Dict:
         widths_local = [row[1] for row in rows]
         return {
             "count": len(rows),

@@ -298,13 +298,28 @@
 
         .instance-preview {
             width: 100%;
-            min-height: 120px;
+            min-height: 180px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 10px;
             background: #fafafa;
             border: 1px solid #eee;
+            overflow: auto;
+            padding: 10px;
+        }
+
+        .instance-preview-stage {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            background: #fff;
+        }
+
+        .instance-preview-stage img {
+            display: block;
+            flex: 0 0 auto;
         }
 
         .instance-item img {
@@ -383,6 +398,26 @@
             color: #ad2626;
         }
 
+        .instance-tag-large {
+            background: #e8f1ff;
+            color: #1d4ed8;
+        }
+
+        .instance-tag-small {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .instance-tag-single {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .instance-tag-confirmed {
+            background: #dff7ea;
+            color: #167f39;
+        }
+
         .instance-actions {
             display: flex;
             flex-wrap: wrap;
@@ -442,6 +477,32 @@
 
         .sort-toggle-narrow {
             margin-left: 8px;
+        }
+
+        .view-toggle {
+            display: inline-flex;
+            margin-left: 10px;
+            border: 1px solid #ddd;
+            background: white;
+            overflow: hidden;
+        }
+
+        .view-toggle-btn {
+            border: none;
+            background: white;
+            padding: 8px 14px;
+            font-size: 12px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .view-toggle-btn + .view-toggle-btn {
+            border-left: 1px solid #ddd;
+        }
+
+        .view-toggle-btn.active {
+            background: #111;
+            color: white;
         }
 
         .pagination button {
