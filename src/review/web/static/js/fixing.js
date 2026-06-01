@@ -7,6 +7,7 @@
     currentBook: null,
     filterModalDirty: false,
     segmentModalDirty: false,
+    montageLoaded: false,
   };
 
   async function loadBooks() {
@@ -27,6 +28,7 @@
     }
     select.addEventListener('change', () => {
       state.currentBook = select.value;
+      clearMontage();
       reloadFixing();
     });
   }
@@ -54,7 +56,6 @@
       text(qs('#summary'), `共 ${data.total} 项`);
       const Lb = data.fixed_box && data.fixed_box.L_b ? data.fixed_box.L_b : 0;
       text(qs('#fixed-box-stat'), Lb ? `固定框 L_b=${Lb}` : '');
-      refreshMontage();
       renderItems(data.items || []);
       renderMissing(data.missing_chars || []);
     } catch (error) {
@@ -75,44 +76,21 @@
   }
 
   function renderCard(item) {
-    const decision = item.decision || 'unknown';
-    const status = item.status || 'unreviewed';
-    const cardClass = decision === 'drop'
-      ? 'dropped'
-      : (status === 'pending_manual' ? 'pending' : (status === 'confirmed' ? 'confirmed' : 'unreviewed'));
-
     const card = el('div', {
-      className: `card ${cardClass}`,
+      className: 'card',
       onclick: () => openSegmentModalForItem(item),
     });
-    card.appendChild(renderStatusBadge(decision, status));
 
-    if (item.thumb) {
+    if (item.thumb || item.thumb_url) {
       card.appendChild(el('img', {
         className: 'thumb',
-        src: item.thumb,
+        src: item.thumb || item.thumb_url,
         alt: `${item.char}-${item.instance_id}`,
         loading: 'lazy',
       }));
     }
     card.appendChild(renderCardLabel(item));
     return card;
-  }
-
-  function renderStatusBadge(decision, status) {
-    let statusText = '未处理';
-    let statusClass = 'status-unreviewed';
-    if (decision === 'drop') {
-      statusText = '不需要';
-      statusClass = 'status-drop';
-    } else if (status === 'confirmed') {
-      statusText = '已确认';
-      statusClass = 'status-confirmed';
-    } else if (status === 'pending_manual') {
-      statusText = '待手动';
-      statusClass = 'status-pending';
-    }
-    return el('div', { className: `status-badge ${statusClass}`, text: statusText });
   }
 
   function renderCardLabel(item) {
@@ -220,6 +198,7 @@
     if (new URLSearchParams(window.location.search).has('debug')) {
       params.set('debug', '1');
     }
+    params.set('embedded', '1');
     qs('#segment-frame').src = `/segment_review?${params.toString()}`;
     qs('#segment-modal').classList.add('active');
   }
@@ -242,6 +221,7 @@
 
   function refreshMontage() {
     if (!state.currentBook) return;
+    state.montageLoaded = true;
     const montageUrl = url('/fixing_montage', {
       book: state.currentBook,
       use_fixed_box: 1,
@@ -252,6 +232,14 @@
     const image = qs('#montage-img');
     image.src = montageUrl;
     image.onclick = () => openMontageModal(montageUrl);
+  }
+
+  function clearMontage() {
+    state.montageLoaded = false;
+    const image = qs('#montage-img');
+    if (!image) return;
+    image.removeAttribute('src');
+    image.onclick = null;
   }
 
   function openMontageModal(src) {

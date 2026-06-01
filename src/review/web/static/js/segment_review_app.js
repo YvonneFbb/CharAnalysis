@@ -1,5 +1,6 @@
 (function () {
 const API_BASE = window.ReviewApi.apiBase();
+        const EMBEDDED_MODE = window.SEGMENT_REVIEW_EMBEDDED === true;
 
         let currentBook = null;
         let currentChar = null;
@@ -82,15 +83,23 @@ const API_BASE = window.ReviewApi.apiBase();
                 if (bookSelect) {
                     bookSelect.disabled = true;
                 }
-                await Promise.all([
-                    loadBooks(),
-                    loadStandardChars(),
-                    loadMarkedInstances(),
-                ]);
-                if (bookSelect) {
-                    bookSelect.disabled = false;
+                if (!EMBEDDED_MODE) {
+                    const initTasks = [
+                        loadBooks(),
+                        loadStandardChars(),
+                        loadMarkedInstances(),
+                    ];
+                    await Promise.all(initTasks);
+                    if (bookSelect) {
+                        bookSelect.disabled = false;
+                    }
+                    await handleDeepLink();
+                } else {
+                    if (bookSelect) {
+                        bookSelect.disabled = false;
+                    }
+                    await handleDeepLink();
                 }
-                await handleDeepLink();
             } catch (error) {
                 console.error('初始化过程中出错:', error);
             }
@@ -141,6 +150,13 @@ const API_BASE = window.ReviewApi.apiBase();
                 const ch = params.get('char');
                 const inst = params.get('instance_id');
                 if (!book) return;
+
+                if (EMBEDDED_MODE) {
+                    currentBook = book;
+                    if (!ch) return;
+                    await openCharReview(ch, null, { instanceId: inst, book });
+                    return;
+                }
 
                 // 选择书籍
                 const sel = document.getElementById('book-select');
@@ -350,13 +366,24 @@ const API_BASE = window.ReviewApi.apiBase();
 
         // ==================== 打开字符审查 ====================
 
-        async function openCharReview(char, charElement) {
+        async function openCharReview(char, charElement, options = {}) {
+            currentBook = options.book || currentBook;
             currentChar = char;
             currentCharElement = charElement;  // 保存字符元素引用，用于关闭时滚动定位
             // 标记该字符已访问，用于自动跳过跨组重复
             try { visitedChars.add(char); } catch (e) {}
 
             try {
+                const requestedInstanceId = options.instanceId || null;
+                if (EMBEDDED_MODE && requestedInstanceId) {
+                    currentInstances = [requestedInstanceId];
+                    document.getElementById('review-modal').classList.add('active');
+                    currentInstanceIndex = 0;
+                    initParamsPanel();
+                    await loadInstance();
+                    return;
+                }
+
                 // 从 lookup 文件获取该字符的所有 instance_id（O(1) 查询）
                 const response = await fetch(`${API_BASE}/segment_instance_ids?book=${encodeURIComponent(currentBook)}&char=${encodeURIComponent(char)}`);
                 const data = await response.json();
@@ -376,8 +403,11 @@ const API_BASE = window.ReviewApi.apiBase();
                 // 打开模态窗口
                 document.getElementById('review-modal').classList.add('active');
                 // 锁定 body 滚动，防止滚动穿透
-                document.body.style.overflow = 'hidden';
-                currentInstanceIndex = 0;
+                if (!EMBEDDED_MODE) {
+                    document.body.style.overflow = 'hidden';
+                }
+                const requestedIndex = requestedInstanceId ? currentInstances.indexOf(requestedInstanceId) : -1;
+                currentInstanceIndex = requestedIndex >= 0 ? requestedIndex : 0;
 
                 // 初始化参数面板（如果还没有初始化）
                 initParamsPanel();
@@ -601,7 +631,7 @@ const API_BASE = window.ReviewApi.apiBase();
                         char: currentChar,
                         instance_id: instanceId,
                         status: 'confirmed',
-                        method: 'auto',
+                        method: data.metadata?.method || 'auto',
                         segmented_image_base64: data.segmented_image,
                         decision: 'need'
                     })
@@ -1151,6 +1181,7 @@ const API_BASE = window.ReviewApi.apiBase();
                     entry.debug_image = segmentedDataUrl;
                     entry.processed_roi = segmentedDataUrl;
                     entry.metadata = entry.metadata || {};
+                    entry.metadata.method = 'manual_bbox';
                     entry.metadata.segmented_bbox = {
                         x: 0,
                         y: 0,
@@ -1201,6 +1232,7 @@ const API_BASE = window.ReviewApi.apiBase();
                 entry.debug_image = data.debug_image;
                 entry.processed_roi = data.processed_roi || null;
                 entry.metadata = data.metadata || entry.metadata || {};
+                entry.metadata.method = entry.metadata.method || 'manual_bbox';
                 segmentationData[instanceId] = entry;
 
                 processedRoiImage = data.processed_roi || data.segmented_image;
@@ -1326,6 +1358,7 @@ const API_BASE = window.ReviewApi.apiBase();
                 entry.debug_image = appliedImage;
                 entry.processed_roi = appliedImage;
                 entry.metadata = entry.metadata || {};
+                entry.metadata.method = 'manual_adjust';
                 entry.metadata.segmented_bbox = { x: 0, y: 0, width: w, height: h };
                 entry.metadata.roi_shape = [h, w, 3];
                 segmentationData[instanceId] = entry;
@@ -1383,6 +1416,8 @@ const API_BASE = window.ReviewApi.apiBase();
                 }
 
                 segmentationData[instanceId] = data;
+                data.metadata = data.metadata || {};
+                data.metadata.method = 'auto_custom_params';
 
                 if (data.metadata && data.metadata.segmented_bbox) {
                     currentSliderBbox = { ...data.metadata.segmented_bbox };
@@ -1478,6 +1513,14 @@ const API_BASE = window.ReviewApi.apiBase();
         }
 
         async function closeModal() {
+            if (EMBEDDED_MODE) {
+                if (window.self !== window.top) {
+                    try {
+                        window.top.postMessage({ type: 'close-segment-modal' }, window.location.origin);
+                    } catch (_) {}
+                    return;
+                }
+            }
             document.getElementById('review-modal').classList.remove('active');
             // 解锁 body 滚动
             document.body.style.overflow = '';

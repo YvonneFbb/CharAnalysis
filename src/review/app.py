@@ -49,6 +49,7 @@ from src.review.storage.review_books import (
     FILTER_REOCR_PAD_DEFAULT,
     ensure_char_item as _ensure_char_item,
     iter_accepted_items,
+    iter_char_items,
     list_review_books,
     make_empty_char_entry,
     read_all_review_books,
@@ -414,6 +415,28 @@ def _find_source_for_instance(book_name: str, char: str, instance_id: str) -> Op
     return None
 
 
+def _find_segment_instance_info(book_name: str, char: str, instance_id: str) -> Optional[Dict]:
+    """返回可用于单实例切割的 source_image/bbox 信息，不限制于 accepted lookup。"""
+    source = _find_source_for_instance(book_name, char, instance_id)
+    if not isinstance(source, dict):
+        return None
+    bbox = source.get('bbox') or {}
+    source_image = source.get('source_image')
+    if not isinstance(source_image, str) or not source_image:
+        return None
+    if not isinstance(bbox, dict) or not all(key in bbox for key in ('x', 'y', 'width', 'height')):
+        return None
+    return {
+        'source_image': source_image,
+        'bbox': bbox,
+        'width': int(source.get('width') or bbox.get('width') or 0),
+        'height': int(source.get('height') or bbox.get('height') or 0),
+        'volume': source.get('volume'),
+        'page': source.get('page'),
+        'char_index': source.get('char_index'),
+    }
+
+
 def _review_state_to_legacy_entry(item: Dict) -> Dict:
     review_state = dict((item or {}).get('review') or {})
     status = review_state.get('status')
@@ -512,11 +535,28 @@ def _atlas_crop_to_data_url(relpath: Optional[str], bbox: Optional[Dict]) -> Opt
         return None
 
 
+def _atlas_crop_to_image(relpath: Optional[str], bbox: Optional[Dict]) -> Optional[Image.Image]:
+    atlas = _load_cached_atlas_image(str(relpath or ''))
+    if atlas is None:
+        return None
+    bbox = dict(bbox or {})
+    x = int(bbox.get('x') or 0)
+    y = int(bbox.get('y') or 0)
+    width = int(bbox.get('width') or 0)
+    height = int(bbox.get('height') or 0)
+    if width <= 0 or height <= 0:
+        return None
+    try:
+        return atlas.crop((x, y, x + width, y + height)).copy()
+    except Exception:
+        return None
+
+
 def _resolve_filter_preview(
     review_state: Optional[Dict],
     segment_state: Optional[Dict],
     include_image: bool,
-) -> Tuple[Optional[str], Optional[str]]:
+) -> Tuple[Optional[str], Optional[str], int, int]:
     review_state = dict(review_state or {})
     segment_state = dict(segment_state or {})
 
@@ -524,14 +564,24 @@ def _resolve_filter_preview(
     if confirmed_rel:
         confirmed_abs = PROJECT_ROOT / confirmed_rel
         if confirmed_abs.exists():
-            return confirmed_rel, (_image_path_to_data_url(confirmed_abs) if include_image else None)
-        return confirmed_rel, None
+            try:
+                with Image.open(confirmed_abs) as confirmed_img:
+                    confirmed_w, confirmed_h = confirmed_img.size
+            except Exception:
+                confirmed_w, confirmed_h = 0, 0
+            return confirmed_rel, (_image_path_to_data_url(confirmed_abs) if include_image else None), int(confirmed_w), int(confirmed_h)
+        return confirmed_rel, None, 0, 0
 
     atlas_relpath = segment_state.get('atlas_relpath')
     atlas_bbox = segment_state.get('atlas_bbox') or {}
     if atlas_relpath and int(atlas_bbox.get('width') or 0) > 0 and int(atlas_bbox.get('height') or 0) > 0:
-        return str(atlas_relpath), (_atlas_crop_to_data_url(atlas_relpath, atlas_bbox) if include_image else None)
-    return None, None
+        return (
+            str(atlas_relpath),
+            (_atlas_crop_to_data_url(atlas_relpath, atlas_bbox) if include_image else None),
+            int(atlas_bbox.get('width') or 0),
+            int(atlas_bbox.get('height') or 0),
+        )
+    return None, None, 0, 0
 
 
 def _segment_sort_width(source: Optional[Dict], segment_state: Optional[Dict]) -> int:
@@ -589,7 +639,7 @@ def _filter_payload_from_item(
     if review_state.get('status') == 'dropped' or review_state.get('decision') == 'drop':
         return {}
 
-    preview_rel, preview_image = _resolve_filter_preview(review_state, segment_state, include_image)
+    preview_rel, preview_image, preview_width, preview_height = _resolve_filter_preview(review_state, segment_state, include_image)
 
     error_message = reocr_state_data.get('error') or segment_state.get('error')
     reocr_state = str(reocr_state_data.get('state') or 'pending')
@@ -598,8 +648,8 @@ def _filter_payload_from_item(
     if segment_state.get('state') == 'error' and reocr_state == 'pending':
         reocr_state = 'error'
 
-    segmented_width = int(segment_state.get('segmented_width') or 0)
-    segmented_height = int(segment_state.get('segmented_height') or 0)
+    segmented_width = int(preview_width or segment_state.get('segmented_width') or 0)
+    segmented_height = int(preview_height or segment_state.get('segmented_height') or 0)
     original_width = int(source.get('width') or 0)
     original_height = int(source.get('height') or 0)
     size_group = str(cluster_state.get('size_group') or 'single')
@@ -1370,6 +1420,24 @@ def api_filter_items():
                 (meta['source'] or {}).get('instance_id') or '',
             ))
 
+        preview_basis_width = 1
+        preview_basis_height = 1
+        for meta in grouped_meta:
+            item = meta.get('item')
+            if _item_is_review_dropped(item):
+                continue
+            review_state = dict((item or {}).get('review') or {})
+            segment_state = dict(meta.get('segment_item') or {})
+            _, _, preview_width, preview_height = _resolve_filter_preview(review_state, segment_state, False)
+            preview_basis_width = max(
+                preview_basis_width,
+                int(preview_width or _segment_sort_width(meta.get('source'), meta.get('segment_item')) or 0),
+            )
+            preview_basis_height = max(
+                preview_basis_height,
+                int(preview_height or _segment_sort_height(meta.get('source'), meta.get('segment_item')) or 0),
+            )
+
         start = (page - 1) * page_size
 
         page_meta = visible_meta[start:start + page_size]
@@ -1403,6 +1471,10 @@ def api_filter_items():
             'sort': sort_mode,
             'engine': engine_name,
             'truncated_scan': False,
+            'preview_basis': {
+                'segmented_width': preview_basis_width,
+                'segmented_height': preview_basis_height,
+            },
         })
     except Exception as e:
         print(f'❌ /api/filter/items 失败: {e}')
@@ -1737,18 +1809,9 @@ def api_segment_instances():
         if not all([book_name, char, instance_id]):
             return jsonify({'success': False, 'error': '缺少必要参数'}), 400
 
-        # 从派生的 lookup 结构直接获取实例信息（O(1) 查找）
-        lookup_book = get_lookup_book(book_name)
-        if not lookup_book:
-            return jsonify({'success': False, 'error': f'书籍不存在: {book_name}'}), 404
-        if char not in lookup_book:
-            return jsonify({'success': False, 'error': f'字符不存在: {char}'}), 404
-
-        lookup_char = lookup_book[char]
-        if instance_id not in lookup_char:
-            return jsonify({'success': False, 'error': f'实例不存在: {instance_id}（该实例未通过第一轮审查）'}), 404
-
-        instance_info = lookup_char[instance_id]
+        instance_info = _find_segment_instance_info(book_name, char, instance_id)
+        if not instance_info:
+            return jsonify({'success': False, 'error': f'实例不存在: {instance_id}'}), 404
 
         # 执行切割
         preprocessed_image = instance_info['source_image']
@@ -1769,13 +1832,8 @@ def api_segment_instances():
         entry_state = {}
         try:
             if not custom_params:
-                review_data = read_review_data()
-                saved = (
-                    review_data.get('books', {})
-                              .get(book_name, {})
-                              .get(char, {})
-                              .get(instance_id, {})
-                )
+                review_book = read_review_book(book_name) or {}
+                saved = _get_review_book_entry(review_book, char, instance_id)
                 if isinstance(saved, dict):
                     entry_state = saved
                 segmented_rel = _get_confirmed_path(saved) if isinstance(saved, dict) else None
@@ -1788,6 +1846,21 @@ def api_segment_instances():
                         saved_img = cv2.imread(str(seg_abs), cv2.IMREAD_UNCHANGED)
                         if saved_img is not None:
                             segmented_img = saved_img
+                            saved_method = str(saved.get('method') or '')
+                            if saved_method in {'manual_adjust', 'manual_bbox'}:
+                                processed_roi = saved_img
+                                debug_img = saved_img
+                                saved_h, saved_w = saved_img.shape[:2]
+                                saved_c = saved_img.shape[2] if len(saved_img.shape) == 3 else 1
+                                metadata = dict(metadata or {})
+                                metadata['segmented_bbox'] = {
+                                    'x': 0,
+                                    'y': 0,
+                                    'width': int(saved_w),
+                                    'height': int(saved_h),
+                                }
+                                metadata['roi_shape'] = [int(saved_h), int(saved_w), int(saved_c)]
+                                metadata['method'] = saved_method
         except Exception as _e:
             # 安静降级，不影响正常流程
             pass
@@ -1897,6 +1970,17 @@ def api_unconfirm_segmentation():
         if not all([book_name, char, instance_id]):
             return jsonify({'success': False, 'error': '缺少必要参数'}), 400
 
+        review_book = read_review_book(book_name) or {}
+        review_entry = _get_review_book_entry(review_book, char, instance_id)
+        segmented_path = _get_confirmed_path(review_entry)
+        if segmented_path:
+            seg_abs = PROJECT_ROOT / segmented_path
+            try:
+                if seg_abs.exists():
+                    seg_abs.unlink()
+            except Exception:
+                pass
+
         # 恢复为未审查（单文件加锁写入）
         from datetime import datetime, timezone
         update_review_entry(book_name, char, instance_id, _set_confirmed_path({
@@ -2000,14 +2084,9 @@ def api_adjust_bbox():
         if not all([book_name, char, instance_id, adjusted_bbox]):
             return jsonify({'success': False, 'error': '缺少必要参数'}), 400
 
-        # 从派生的 lookup 结构获取实例信息（惰性按书加载）
-        lookup_book = get_lookup_book(book_name)
-        if not lookup_book:
-            return jsonify({'success': False, 'error': '书籍不存在'}), 404
-        if char not in lookup_book or instance_id not in lookup_book[char]:
+        instance_info = _find_segment_instance_info(book_name, char, instance_id)
+        if not instance_info:
             return jsonify({'success': False, 'error': '未找到实例信息'}), 404
-
-        instance_info = lookup_book[char][instance_id]
 
         # 重新裁切
         preprocessed_image = instance_info['source_image']
@@ -2377,12 +2456,66 @@ def _iter_confirmed_entries(review: Dict, book_name: str) -> List[Tuple[str, str
     return out
 
 
+def _iter_confirmed_entries_from_book(book_obj: Optional[Dict]) -> List[Tuple[str, str, str]]:
+    """返回单书分片内所有已确认的 (char, instance_id, confirmed_rel_path)。"""
+    out: List[Tuple[str, str, str]] = []
+    for ch, inst_id, item in iter_accepted_items(book_obj or {}):
+        if not isinstance(item, dict):
+            continue
+        review_state = item.get('review') or {}
+        if not isinstance(review_state, dict):
+            continue
+        if review_state.get('status') != 'confirmed':
+            continue
+        seg_rel = _get_confirmed_path(review_state)
+        if not seg_rel:
+            continue
+        out.append((ch, inst_id, seg_rel))
+    out.sort(key=lambda x: (x[0], x[1]))
+    return out
+
+
+def _iter_fixing_entries_from_book(book_obj: Optional[Dict]) -> List[Tuple[str, str, Dict]]:
+    """返回 Review/Fixing 当前应展示的 accepted 实例集合。"""
+    out: List[Tuple[str, str, Dict]] = []
+    for ch, inst_id, item in iter_accepted_items(book_obj or {}):
+        if not isinstance(item, dict):
+            continue
+        out.append((ch, inst_id, item))
+    out.sort(key=lambda x: (x[0], x[1]))
+    return out
+
+
 def _compute_book_fixed_box_Lb(book_name: str, review: Dict) -> int:
     """按书籍计算固定框 L_b：P90(长边) × 1.05，向上取整。无数据则返回 0。"""
     try:
         import numpy as _np
         long_sides: List[float] = []
         for _, _, seg_rel in _iter_confirmed_entries(review, book_name):
+            abs_path = PROJECT_ROOT / seg_rel
+            if not abs_path.exists():
+                continue
+            try:
+                with Image.open(abs_path) as im:
+                    w, h = im.size
+                long_sides.append(float(max(w, h)))
+            except Exception:
+                continue
+        if not long_sides:
+            return 0
+        p90 = float(_np.percentile(_np.array(long_sides, dtype=float), 90))
+        from math import ceil
+        return int(ceil(p90 * 1.05))
+    except Exception:
+        return 0
+
+
+def _compute_book_fixed_box_Lb_from_book(book_obj: Optional[Dict]) -> int:
+    """按单书分片计算固定框 L_b。"""
+    try:
+        import numpy as _np
+        long_sides: List[float] = []
+        for _, _, seg_rel in _iter_confirmed_entries_from_book(book_obj):
             abs_path = PROJECT_ROOT / seg_rel
             if not abs_path.exists():
                 continue
@@ -2515,6 +2648,72 @@ def _render_thumb_base64(image: Image.Image, tile: int) -> Optional[str]:
         return None
 
 
+def _render_thumb_png_bytes(image: Image.Image, tile: int) -> Optional[bytes]:
+    """将任意 PIL Image 缩放到固定大小并返回 PNG 字节。"""
+    if image is None:
+        return None
+    try:
+        base = image
+        canvas = Image.new('RGB', (tile, tile), (255, 255, 255))
+        w, h = base.size
+        scale = min((tile - 4) / max(1, w), (tile - 4) / max(1, h))
+        new_w = max(1, int(round(w * scale)))
+        new_h = max(1, int(round(h * scale)))
+        resized = base.resize((new_w, new_h), Image.BICUBIC)
+        ox = (tile - new_w) // 2
+        oy = (tile - new_h) // 2
+        canvas.paste(resized.convert('RGB'), (ox, oy))
+        draw = ImageDraw.Draw(canvas)
+        draw.rectangle([0, 0, tile - 1, tile - 1], outline=(210, 210, 210))
+        buf = io.BytesIO()
+        canvas.save(buf, format='PNG')
+        return buf.getvalue()
+    except Exception:
+        return None
+
+
+def _build_fixing_thumb_image(
+    seg_rel: Optional[str],
+    inst_info: Optional[Dict],
+    segment_state: Optional[Dict],
+    Lb: int,
+    use_fixed_box: bool,
+) -> Optional[Image.Image]:
+    thumb_img = None
+    abs_path = PROJECT_ROOT / seg_rel if seg_rel else None
+    if abs_path and abs_path.exists():
+        try:
+            with Image.open(abs_path) as im:
+                thumb_img = im.convert('L')
+        except Exception:
+            thumb_img = None
+    if thumb_img is None:
+        segment_state = dict(segment_state or {})
+        atlas_relpath = segment_state.get('atlas_relpath')
+        atlas_bbox = segment_state.get('atlas_bbox') or {}
+        if atlas_relpath and int(atlas_bbox.get('width') or 0) > 0 and int(atlas_bbox.get('height') or 0) > 0:
+            try:
+                cropped = _atlas_crop_to_image(atlas_relpath, atlas_bbox)
+                if cropped is not None:
+                    thumb_img = cropped.convert('L')
+            except Exception:
+                thumb_img = None
+    if thumb_img is None:
+        thumb_img = _crop_roi_image(inst_info or {})
+    if thumb_img is None:
+        return None
+    if use_fixed_box and Lb and Lb > 0:
+        return _center_crop_fixed_box(thumb_img, Lb)
+    return thumb_img
+
+
+def _get_review_book_entry(book_obj: Optional[Dict], char: str, instance_id: str) -> Dict:
+    char_obj = (book_obj or {}).get(char) or {}
+    item = iter_char_items(char_obj).get(instance_id) or {}
+    review_state = item.get('review') or {}
+    return review_state if isinstance(review_state, dict) else {}
+
+
 @app.route('/api/fixing_items', methods=['GET'])
 def api_fixing_items():
     """
@@ -2528,6 +2727,7 @@ def api_fixing_items():
         page = int(request.args.get('page', '1') or '1')
         page_size = int(request.args.get('page_size', '50') or '50')
         image_mode = (request.args.get('image', 'thumb') or 'thumb').lower()
+        include_metrics = (request.args.get('include_metrics', '0') or '0').lower() in ('1', 'true', 'yes')
         try:
             bw_threshold = int(request.args.get('threshold', '128') or '128')
         except Exception:
@@ -2541,12 +2741,12 @@ def api_fixing_items():
         if not book_name:
             return jsonify({'success': False, 'error': '缺少参数 book'}), 400
 
+        book_obj = read_review_book(book_name) or {}
+        segment_book = ensure_segment_book_data(book_name) or {}
         lookup_book = get_lookup_book(book_name)
         if lookup_book is None:
             lookup_book = {}
-        review_all = read_review_data()
-        review_book = (review_all.get('books') or {}).get(book_name, {})
-        Lb = _compute_book_fixed_box_Lb(book_name, review_all)
+        Lb = _compute_book_fixed_box_Lb_from_book(book_obj)
         ensure_standard_chars_data()
         all_chars = standard_chars_data.get('all_chars') if isinstance(standard_chars_data, dict) else None
         if not isinstance(all_chars, list):
@@ -2571,15 +2771,15 @@ def api_fixing_items():
         all_instances = []
         for ch, inst_map in lookup_book.items():
             for inst_id, info in inst_map.items():
-                entry = (review_book.get(ch) or {}).get(inst_id, {})
-                seg_rel = _get_confirmed_path(entry)
-                status = entry.get('status', 'unreviewed')
-                method = entry.get('method')
-                metrics = {}
+                review_entry = _get_review_book_entry(book_obj, ch, inst_id)
+                seg_rel = _get_confirmed_path(review_entry)
+                status = review_entry.get('status', 'unreviewed')
+                method = review_entry.get('method')
+                metrics = None
                 abs_path = PROJECT_ROOT / seg_rel if seg_rel else None
-                if seg_rel and abs_path.exists():
+                if include_metrics and seg_rel and abs_path.exists():
                     metrics = _compute_metrics_for_entry(abs_path, Lb, bw_threshold=bw_threshold)
-                elif not seg_rel:
+                elif include_metrics and not seg_rel:
                     metrics = {'width': None, 'height': None, 'long_side': None,
                                'geom_face_ratio': None, 'black_ratio': None}
                 all_instances.append({
@@ -2588,11 +2788,13 @@ def api_fixing_items():
                     'instance_id': inst_id,
                     'confirmed_path': seg_rel,
                     'segmented_path': seg_rel,
+                    'segment_item': (((segment_book.get(ch) or {}).get('items')) or {}).get(inst_id),
                     'status': status,
                     'method': method,
-                    'decision': entry.get('decision', 'unknown'),
+                    'decision': review_entry.get('decision', 'unknown'),
                     'info': info,
-                    'metrics': metrics
+                    'metrics': metrics,
+                    'revision': review_entry.get('timestamp') or '',
                 })
 
         total = len(all_instances)
@@ -2619,26 +2821,30 @@ def api_fixing_items():
                 'status': item_data['status'],
                 'method': item_data['method'],
                 'decision': item_data.get('decision', 'unknown'),
-                'metrics': item_data['metrics']
             }
+            if include_metrics:
+                item['metrics'] = item_data['metrics']
             if image_mode == 'thumb':
-                thumb_img = None
-                if abs_path and abs_path.exists():
-                    try:
-                        with Image.open(abs_path) as im:
-                            thumb_img = im.convert('L')
-                    except Exception:
-                        thumb_img = None
-                if thumb_img is None:
-                    thumb_img = _crop_roi_image(item_data['info'])
-                if thumb_img is not None:
-                    if use_fixed_box and Lb and Lb > 0:
-                        thumb_source = _center_crop_fixed_box(thumb_img, Lb)
-                    else:
-                        thumb_source = thumb_img
-                    thumb_b64 = _render_thumb_base64(thumb_source, tile)
-                    if thumb_b64:
-                        item['thumb'] = thumb_b64
+                thumb_img = _build_fixing_thumb_image(
+                    seg_rel,
+                    item_data['info'],
+                    item_data.get('segment_item'),
+                    Lb,
+                    use_fixed_box,
+                )
+                thumb_b64 = _render_thumb_base64(thumb_img, tile) if thumb_img is not None else None
+                if thumb_b64:
+                    item['thumb'] = thumb_b64
+            elif image_mode == 'thumb_url':
+                item['thumb_url'] = url_for(
+                    'api_fixing_thumb',
+                    book=book_name,
+                    char=item_data['char'],
+                    instance_id=item_data['instance_id'],
+                    use_fixed_box=('1' if use_fixed_box else '0'),
+                    tile=tile,
+                    rev=item_data.get('revision') or '',
+                )
             items.append(item)
 
         return jsonify({
@@ -2659,6 +2865,45 @@ def api_fixing_items():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
+@app.route('/api/fixing_thumb', methods=['GET'])
+def api_fixing_thumb():
+    """返回 Review 卡片单项缩略图。"""
+    try:
+        book_name = request.args.get('book')
+        char = request.args.get('char')
+        instance_id = request.args.get('instance_id')
+        use_fixed_box = (request.args.get('use_fixed_box', '1') or '1').lower() in ('1', 'true', 'yes')
+        try:
+            tile = int(request.args.get('tile', '96') or '96')
+        except Exception:
+            tile = 96
+        if not book_name or not char or not instance_id:
+            return jsonify({'success': False, 'error': '缺少参数'}), 400
+
+        book_obj = read_review_book(book_name) or {}
+        Lb = _compute_book_fixed_box_Lb_from_book(book_obj)
+        lookup_book = get_lookup_book(book_name) or {}
+        inst_info = ((lookup_book.get(char) or {}).get(instance_id) or {})
+        review_entry = _get_review_book_entry(book_obj, char, instance_id)
+        seg_rel = _get_confirmed_path(review_entry)
+        segment_book = ensure_segment_book_data(book_name) or {}
+        segment_item = (((segment_book.get(char) or {}).get('items')) or {}).get(instance_id)
+        thumb_img = _build_fixing_thumb_image(seg_rel, inst_info, segment_item, Lb, use_fixed_box)
+        png_bytes = _render_thumb_png_bytes(thumb_img, tile) if thumb_img is not None else None
+        if not png_bytes:
+            return jsonify({'success': False, 'error': '无可用缩略图'}), 404
+        return send_file(
+            io.BytesIO(png_bytes),
+            mimetype='image/png',
+            as_attachment=False,
+            download_name=f'{book_name}-{char}-{instance_id}.png',
+        )
+    except Exception as e:
+        print(f'❌ /api/fixing_thumb 失败: {e}')
+        print(traceback.format_exc())
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 @app.route('/api/fixing_montage', methods=['GET'])
 def api_fixing_montage():
     """返回该书的拼贴图 PNG（二进制）。参数：book，use_fixed_box(0/1)，tile，cols。"""
@@ -2671,18 +2916,27 @@ def api_fixing_montage():
         if not book_name:
             return jsonify({'success': False, 'error': '缺少参数 book'}), 400
 
-        review = read_review_data()
-        entries = _iter_confirmed_entries(review, book_name)
-        Lb = _compute_book_fixed_box_Lb(book_name, review) if use_fixed_box else 0
+        book_obj = read_review_book(book_name) or {}
+        segment_book = ensure_segment_book_data(book_name) or {}
+        entries = _iter_fixing_entries_from_book(book_obj)
+        Lb = _compute_book_fixed_box_Lb_from_book(book_obj) if use_fixed_box else 0
 
         tiles: List[Image.Image] = []
-        for _, _, seg_rel in entries:
-            abs_path = PROJECT_ROOT / seg_rel
-            if not abs_path.exists():
+        for ch, inst_id, item in entries:
+            review_state = ((item or {}).get('review') or {})
+            seg_rel = _get_confirmed_path(review_state)
+            segment_item = (((segment_book.get(ch) or {}).get('items')) or {}).get(inst_id)
+            img = _build_fixing_thumb_image(
+                seg_rel,
+                (item or {}).get('source') or {},
+                segment_item,
+                0,
+                False,
+            )
+            if img is None:
                 continue
             try:
-                with Image.open(abs_path) as im:
-                    img = im.convert('L')
+                img = img.convert('L')
                 if use_fixed_box and Lb and Lb > 0:
                     roi = _center_crop_fixed_box(img, Lb)
                     # 缩放到 tile
@@ -2930,9 +3184,10 @@ def review_page():
 @app.route('/segment_review')
 def segment_review_page():
     """保留旧的单字精修页入口，默认不再在主 UI 中暴露。"""
+    embedded = (request.args.get('embedded', '0') or '0').lower() in ('1', 'true', 'yes')
     tpl_path = TEMPLATE_DIR / 'manual/segment_review_app.html'
     if tpl_path.exists():
-        return render_template('manual/segment_review_app.html')
+        return render_template('manual/segment_review_app.html', embedded=embedded)
     html_path = PROJECT_ROOT / 'data/results/segment_review_app.html'
     if html_path.exists():
         with open(html_path, 'r', encoding='utf-8') as f:
@@ -2944,6 +3199,21 @@ def main():
     """启动服务器"""
     # 使用懒加载机制，启动时不加载数据，只在访问相关页面时才加载
     import socket
+
+    def _env_flag(name: str, default: bool) -> bool:
+        raw = os.environ.get(name)
+        if raw is None:
+            return default
+        return str(raw).strip().lower() in ('1', 'true', 'yes', 'on')
+
+    def _env_int(name: str, default: int) -> int:
+        raw = os.environ.get(name)
+        if raw is None:
+            return default
+        try:
+            return int(raw)
+        except Exception:
+            return default
 
     def _collect_lan_ips() -> list:
         ips = set()
@@ -2984,27 +3254,45 @@ def main():
     print(f"确认结果目录：{CONFIRMED_DIR}")
     print("查找索引：内存派生自 review_books 分片（不再依赖独立文件）")
 
+    host = os.environ.get("CHAR_REVIEW_HOST", "0.0.0.0")
+    port = _env_int("CHAR_REVIEW_PORT", 5001)
+    debug = _env_flag("CHAR_REVIEW_DEBUG", False)
+    threaded = _env_flag("CHAR_REVIEW_THREADED", True)
+
     print("\n服务器启动中...")
     print("=" * 70)
     print("\n访问地址：")
     print("  【系统首页】选择审查模式")
-    print(f"    本机访问：http://localhost:5001/")
-    print(f"    局域网访问：http://{local_ip}:5001/")
+    print(f"    本机访问：http://127.0.0.1:{port}/")
+    print(f"    本机访问：http://localhost:{port}/")
+    print(f"    局域网访问：http://{local_ip}:{port}/")
     if len(local_ips) > 1:
         print(f"    其他可选地址：{', '.join(local_ips[1:])}")
     print("\n  【Filter】OCR + segment + reOCR 快速筛选")
-    print(f"    本机访问：http://localhost:5001/filter")
-    print(f"    局域网访问：http://{local_ip}:5001/filter")
+    print(f"    本机访问：http://127.0.0.1:{port}/filter")
+    print(f"    本机访问：http://localhost:{port}/filter")
+    print(f"    局域网访问：http://{local_ip}:{port}/filter")
     print("\n  【Review】总览预览与问题修正")
-    print(f"    本机访问：http://localhost:5001/review")
-    print(f"    局域网访问：http://{local_ip}:5001/review")
+    print(f"    本机访问：http://127.0.0.1:{port}/review")
+    print(f"    本机访问：http://localhost:{port}/review")
+    print(f"    局域网访问：http://{local_ip}:{port}/review")
     print("\n  【Paddle 复核（Deprecated）】保留旧入口")
-    print(f"    本机访问：http://localhost:5001/paddle_review")
-    print(f"    局域网访问：http://{local_ip}:5001/paddle_review")
+    print(f"    本机访问：http://127.0.0.1:{port}/paddle_review")
+    print(f"    本机访问：http://localhost:{port}/paddle_review")
+    print(f"    局域网访问：http://{local_ip}:{port}/paddle_review")
+    print("\n运行参数：")
+    print(f"  host={host} port={port} debug={int(debug)} threaded={int(threaded)}")
     print("\n按 Ctrl+C 停止服务器")
     print("=" * 70 + "\n")
 
-    app.run(host='0.0.0.0', port=5001, debug=True, use_reloader=False, threaded=False)
+    app.run(
+        host=host,
+        port=port,
+        debug=debug,
+        use_reloader=False,
+        use_debugger=debug,
+        threaded=threaded,
+    )
 
 
 if __name__ == '__main__':

@@ -6,7 +6,8 @@
     <title>Review 阶段</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/segment_review.css') }}">
 </head>
-<body>
+<body class="{% if embedded %}embedded-mode{% endif %}">
+    {% if not embedded %}
     <div class="container">
         <h1>Review 阶段</h1>
 
@@ -43,9 +44,10 @@
             <p class="empty-placeholder">请先选择书籍</p>
         </div>
     </div>
+    {% endif %}
 
     <!-- 审查模态窗口 -->
-    <div class="modal" id="review-modal">
+    <div class="modal{% if embedded %} active{% endif %}" id="review-modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modal-title">审查切割结果</h2>
@@ -226,6 +228,7 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+    <script>window.SEGMENT_REVIEW_EMBEDDED = {% if embedded %}true{% else %}false{% endif %};</script>
     <script src="{{ url_for('static', filename='js/segment_review_params.js') }}"></script>
     <script src="{{ url_for('static', filename='js/segment_review_app.js') }}"></script>
 </body>

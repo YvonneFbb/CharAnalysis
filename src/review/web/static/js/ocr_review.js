@@ -12,6 +12,8 @@
   let deepLinkChar = null;
   let parentDirtyNotified = false;
   let currentPreviewScale = 1;
+  let currentPreviewBasis = null;
+  let segmentModalDirty = false;
 
   function qs(id) {
     return document.getElementById(id);
@@ -22,6 +24,8 @@
       loadBook(event.target.value);
     });
     qs('close-review-modal-btn').addEventListener('click', closeModal);
+    qs('refresh-segment-frame-btn').addEventListener('click', refreshSegmentFrame);
+    qs('close-segment-modal-btn').addEventListener('click', closeSegmentModal);
     qs('prev-page').addEventListener('click', () => loadPage(currentPage - 1));
     qs('next-page').addEventListener('click', () => loadPage(currentPage + 1));
     qs('sort-width-toggle').addEventListener('change', event => {
@@ -32,6 +36,14 @@
     qs('view-failed-toggle').addEventListener('click', () => setViewMode('failure'));
 
     document.addEventListener('keydown', event => {
+      const segmentModal = qs('segment-modal');
+      if (segmentModal && segmentModal.classList.contains('active')) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeSegmentModal();
+        }
+        return;
+      }
       const modal = qs('review-modal');
       if (!modal.classList.contains('active')) return;
       if (event.key === 'Escape') {
@@ -43,6 +55,16 @@
       } else if (event.key === 'ArrowRight' && hasMore) {
         event.preventDefault();
         loadPage(currentPage + 1);
+      }
+    });
+
+    window.addEventListener('message', event => {
+      if (event.origin !== window.location.origin) return;
+      const data = event.data || {};
+      if (data.type === 'segment-state-dirty') {
+        segmentModalDirty = true;
+      } else if (data.type === 'close-segment-modal') {
+        closeSegmentModal();
       }
     });
   }
@@ -248,6 +270,7 @@
       });
       hasMore = !!data.has_more;
       totalCandidates = data.total_candidates || 0;
+      currentPreviewBasis = data.preview_basis || null;
       qs('modal-title').textContent = `筛选字符：${currentChar}（${viewMode === 'failure' ? 'filter 失败' : '可用样本'} / OCR ${totalCandidates} 项）`;
       qs('page-info').textContent = `第 ${currentPage} 页`;
       qs('prev-page').disabled = currentPage <= 1;
@@ -309,27 +332,34 @@
   }
 
   function getPreviewBaseSize(item) {
-    const ocrWidth = Number(item.width || item.original_width || item.segmented_width || 0);
-    const ocrHeight = Number(item.height || item.original_height || item.segmented_height || 0);
     const imageWidth = Number(item.segmented_width || item.width || item.original_width || 0);
     const imageHeight = Number(item.segmented_height || item.height || item.original_height || 0);
     return {
-      ocrWidth: Math.max(1, ocrWidth || 1),
-      ocrHeight: Math.max(1, ocrHeight || 1),
       imageWidth: Math.max(1, imageWidth || 1),
       imageHeight: Math.max(1, imageHeight || 1),
     };
   }
 
   function computePreviewScale(items) {
-    const maxDim = Math.max(
+    const fallbackWidth = Math.max(
       1,
       ...items.map(item => {
         const size = getPreviewBaseSize(item);
-        return Math.max(size.ocrWidth, size.ocrHeight);
+        return size.imageWidth;
       }),
     );
-    return Math.min(4, Math.max(1, 150 / maxDim));
+    const fallbackHeight = Math.max(
+      1,
+      ...items.map(item => {
+        const size = getPreviewBaseSize(item);
+        return size.imageHeight;
+      }),
+    );
+    const maxWidth = Math.max(1, Number(currentPreviewBasis?.segmented_width || 0) || fallbackWidth);
+    const maxHeight = Math.max(1, Number(currentPreviewBasis?.segmented_height || 0) || fallbackHeight);
+    const scaleByWidth = 140 / maxWidth;
+    const scaleByHeight = 180 / maxHeight;
+    return Math.max(0.1, Math.min(1, scaleByWidth, scaleByHeight));
   }
 
   function createPreviewWrap(item, scale) {
@@ -344,8 +374,8 @@
     const size = getPreviewBaseSize(item);
     const stage = document.createElement('div');
     stage.className = 'instance-preview-stage';
-    stage.style.width = `${Math.round(size.ocrWidth * scale)}px`;
-    stage.style.height = `${Math.round(size.ocrHeight * scale)}px`;
+    stage.style.width = `${Math.round(size.imageWidth * scale)}px`;
+    stage.style.height = `${Math.round(size.imageHeight * scale)}px`;
 
     const img = document.createElement('img');
     img.src = item.preview_image;
@@ -385,10 +415,10 @@
     const actions = document.createElement('div');
     actions.className = 'instance-actions';
     actions.appendChild(createDecisionButton('接受', 'accepted', item, card));
-    actions.appendChild(createDecisionButton('拒绝', 'rejected', item, card));
     if ((item.filter_status || 'pending') !== 'pending') {
       actions.appendChild(createDecisionButton('待定', 'pending', item, card));
     }
+    actions.appendChild(createSegmentButton(item));
     card.appendChild(actions);
 
     if (item.error) {
@@ -432,6 +462,17 @@
     return button;
   }
 
+  function createSegmentButton(item) {
+    const button = document.createElement('button');
+    button.className = 'instance-action-btn';
+    button.textContent = '微调';
+    button.addEventListener('click', event => {
+      event.stopPropagation();
+      openSegmentModal(item);
+    });
+    return button;
+  }
+
   function applyCardState(card, item) {
     card.classList.remove('status-pending', 'status-accepted', 'status-rejected');
     card.classList.add(`status-${item.filter_status || 'pending'}`);
@@ -463,6 +504,36 @@
     qs('review-modal').classList.remove('active');
     qs('instances-grid').classList.add('is-hidden');
     currentChar = null;
+  }
+
+  function openSegmentModal(item) {
+    segmentModalDirty = false;
+    const params = new URLSearchParams({
+      book: currentBook,
+      char: currentChar,
+      instance_id: item.instance_id,
+      embedded: '1',
+    });
+    qs('segment-frame').src = `/segment_review?${params.toString()}`;
+    qs('segment-modal').classList.add('active');
+  }
+
+  function refreshSegmentFrame() {
+    const frame = qs('segment-frame');
+    if (frame && frame.src) frame.src = frame.src;
+  }
+
+  async function closeSegmentModal() {
+    const frame = qs('segment-frame');
+    if (frame) frame.src = 'about:blank';
+    qs('segment-modal').classList.remove('active');
+    const shouldRefresh = segmentModalDirty;
+    segmentModalDirty = false;
+    if (shouldRefresh && currentChar) {
+      await loadPage(currentPage);
+      await refreshCurrentBookSidebar();
+      notifyParentDirty();
+    }
   }
 
   function notifyParentDirty() {

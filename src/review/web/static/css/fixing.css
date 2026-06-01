@@ -14,10 +14,10 @@
 .card.pending .thumb-label { background: rgba(255, 240, 205, 0.95); color: #7a5200; }
 .card.confirmed { background: #f3fbf6; border-color: #9ed3ac; }
 .card.confirmed .thumb-label { background: rgba(236, 250, 241, 0.95); color: #1f6a32; }
-.card.unreviewed { background: #ffffff; border-color: #dfe6ec; }
-.card.unreviewed .thumb-label { background: rgba(248,249,250,0.92); color: #4c5868; }
+.card.accepted { background: #f7fbff; border-color: #bcd6ef; }
+.card.accepted .thumb-label { background: rgba(240, 247, 255, 0.94); color: #1f4d7a; }
 .status-badge { position: absolute; top: 6px; left: 6px; font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 600; box-shadow: 0 2px 4px rgba(15,35,67,0.12); }
-.status-unreviewed { background: rgba(226, 240, 255, 0.95); color: #0f4c81; }
+.status-accepted { background: rgba(226, 240, 255, 0.95); color: #0f4c81; }
 .status-confirmed { background: rgba(220, 245, 230, 0.95); color: #1f6a32; }
 .status-pending { background: rgba(255, 233, 194, 0.95); color: #7a5200; }
 .status-drop { background: rgba(230, 233, 236, 0.95); color: #5b6470; }
