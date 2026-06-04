@@ -3,7 +3,7 @@
   "book": "34_1230_切韻指掌图",
   "chars": {
     "一": {
-      "updated_at": "2026-05-31T13:14:57.359Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0057_idx167": {
           "source": {
@@ -254,12 +254,12 @@
             "timestamp": "2026-05-31T13:14:56.736Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:56.736Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/一_册01_page0005_idx194.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/一_册01_page0005_idx194.png"
           }
         },
         "册01_page0005_idx199": {
@@ -548,18 +548,18 @@
             "timestamp": "2026-05-31T13:14:57.359Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:57.359Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/一_册01_page0007_idx51.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/一_册01_page0007_idx51.png"
           }
         }
       }
     },
     "丁": {
-      "updated_at": "2026-05-31T13:12:12.442Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0006_idx77": {
           "source": {
@@ -764,12 +764,12 @@
             "timestamp": "2026-05-31T13:12:12.442Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:12:12.442Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/丁_册01_page0003_idx18.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/丁_册01_page0003_idx18.png"
           }
         },
         "册01_page0006_idx10": {
@@ -819,12 +819,12 @@
             "timestamp": "2026-05-31T13:12:11.979Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:12:11.979Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/丁_册01_page0006_idx10.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/丁_册01_page0006_idx10.png"
           }
         },
         "册01_page0006_idx14": {
@@ -1124,7 +1124,7 @@
       }
     },
     "七": {
-      "updated_at": "2026-05-31T13:05:03.120Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0038_idx77": {
           "source": {
@@ -1256,12 +1256,12 @@
             "timestamp": "2026-05-31T13:05:03.120Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:05:03.120Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/七_册01_page0002_idx41.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/七_册01_page0002_idx41.png"
           }
         },
         "册01_page0028_idx43": {
@@ -1440,12 +1440,12 @@
             "timestamp": "2026-05-31T13:05:02.343Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:05:02.343Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/七_册01_page0023_idx197.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/七_册01_page0023_idx197.png"
           }
         },
         "册01_page0058_idx140": {
@@ -2292,7 +2292,7 @@
       }
     },
     "上": {
-      "updated_at": "2026-05-31T13:12:26.434Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0003_idx105": {
           "source": {
@@ -2433,12 +2433,12 @@
             "timestamp": "2026-05-31T13:12:25.552Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:12:25.552Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/上_册01_page0004_idx74.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/上_册01_page0004_idx74.png"
           }
         },
         "册01_page0010_idx0": {
@@ -2773,12 +2773,12 @@
             "timestamp": "2026-05-31T13:12:26.434Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:12:26.434Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/上_册01_page0004_idx172.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/上_册01_page0004_idx172.png"
           }
         },
         "册01_page0003_idx95": {
@@ -2839,7 +2839,7 @@
       }
     },
     "下": {
-      "updated_at": "2026-05-31T13:12:35.119Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0009_idx149": {
           "source": {
@@ -3265,12 +3265,12 @@
             "timestamp": "2026-05-31T13:12:35.119Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:12:35.119Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/下_册01_page0008_idx213.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/下_册01_page0008_idx213.png"
           }
         },
         "册01_page0012_idx47": {
@@ -3320,18 +3320,18 @@
             "timestamp": "2026-05-31T13:12:31.477Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:12:31.477Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/下_册01_page0012_idx47.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/下_册01_page0012_idx47.png"
           }
         }
       }
     },
     "不": {
-      "updated_at": "2026-05-31T13:03:02.604Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0057_idx180": {
           "source": {
@@ -3380,12 +3380,12 @@
             "timestamp": "2026-05-31T13:03:01.143Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-01T12:45:31.529906+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/不_册01_page0057_idx180.png",
-            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/不_册01_page0057_idx180.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册01_page0004_idx69": {
@@ -3472,12 +3472,12 @@
             "timestamp": "2026-05-31T13:03:00.337Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:03:00.337Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/不_册01_page0005_idx156.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/不_册01_page0005_idx156.png"
           }
         },
         "册01_page0005_idx149": {
@@ -3518,12 +3518,12 @@
             "timestamp": "2026-05-31T13:03:02.604Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:03:02.604Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/不_册01_page0005_idx149.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/不_册01_page0005_idx149.png"
           }
         },
         "册01_page0014_idx125": {
@@ -3610,12 +3610,12 @@
             "timestamp": "2026-05-31T13:02:59.446Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:02:59.446Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/不_册01_page0009_idx21.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/不_册01_page0009_idx21.png"
           }
         },
         "册01_page0005_idx181": {
@@ -3929,7 +3929,7 @@
       }
     },
     "中": {
-      "updated_at": "2026-05-31T13:03:13.335Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0009_idx196": {
           "source": {
@@ -4171,12 +4171,12 @@
             "timestamp": "2026-05-31T13:03:09.991Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:03:09.991Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/中_册01_page0009_idx203.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/中_册01_page0009_idx203.png"
           }
         },
         "册01_page0007_idx77": {
@@ -4318,12 +4318,12 @@
             "timestamp": "2026-05-31T13:03:13.335Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:03:13.335Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/中_册01_page0008_idx24.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/中_册01_page0008_idx24.png"
           }
         },
         "册01_page0056_idx73": {
@@ -4384,7 +4384,7 @@
       }
     },
     "乃": {
-      "updated_at": "2026-05-31T13:13:13.288Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0009_idx63": {
           "source": {
@@ -4479,12 +4479,12 @@
             "timestamp": "2026-05-31T13:13:13.288Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:13:13.288Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/乃_册01_page0005_idx144.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/乃_册01_page0005_idx144.png"
           }
         },
         "册01_page0048_idx83": {
@@ -4536,7 +4536,7 @@
       }
     },
     "之": {
-      "updated_at": "2026-05-31T13:05:36.319Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0003_idx68": {
           "source": {
@@ -4576,12 +4576,12 @@
             "timestamp": "2026-05-31T13:05:34.255Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-01T12:43:49.747856+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/之_册01_page0003_idx68.png",
-            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/之_册01_page0003_idx68.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册01_page0005_idx193": {
@@ -4787,12 +4787,12 @@
             "timestamp": "2026-05-31T13:05:32.786Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:05:32.786Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/之_册01_page0056_idx208.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/之_册01_page0056_idx208.png"
           }
         },
         "册01_page0057_idx22": {
@@ -5099,12 +5099,12 @@
             "timestamp": "2026-05-31T13:05:31.496Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:05:31.496Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/之_册01_page0004_idx185.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/之_册01_page0004_idx185.png"
           }
         },
         "册01_page0056_idx19": {
@@ -5145,12 +5145,12 @@
             "timestamp": "2026-05-31T13:05:36.319Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:05:36.319Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/之_册01_page0056_idx19.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/之_册01_page0056_idx19.png"
           }
         }
       }
@@ -5451,7 +5451,7 @@
       }
     },
     "也": {
-      "updated_at": "2026-05-31T13:05:07.577Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0003_idx178": {
           "source": {
@@ -5537,12 +5537,12 @@
             "timestamp": "2026-05-31T13:05:07.577Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:05:07.577Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/也_册01_page0005_idx203.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/也_册01_page0005_idx203.png"
           }
         },
         "册01_page0009_idx145": {
@@ -5730,12 +5730,12 @@
             "timestamp": "2026-05-31T13:05:06.343Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:05:06.343Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/也_册01_page0009_idx118.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/也_册01_page0009_idx118.png"
           }
         },
         "册01_page0006_idx144": {
@@ -5989,7 +5989,7 @@
       }
     },
     "了": {
-      "updated_at": "2026-05-31T13:15:07.574Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0017_idx66": {
           "source": {
@@ -6084,12 +6084,12 @@
             "timestamp": "2026-05-31T13:15:07.574Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:15:07.574Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/了_册01_page0003_idx145.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/了_册01_page0003_idx145.png"
           }
         }
       }
@@ -6192,7 +6192,7 @@
       }
     },
     "二": {
-      "updated_at": "2026-05-31T13:15:00.094Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0057_idx111": {
           "source": {
@@ -6774,12 +6774,12 @@
             "timestamp": "2026-05-31T13:14:59.174Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:59.174Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/二_册01_page0009_idx79.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/二_册01_page0009_idx79.png"
           }
         },
         "册01_page0003_idx84": {
@@ -6829,12 +6829,12 @@
             "timestamp": "2026-05-31T13:15:00.094Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:15:00.094Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/二_册01_page0003_idx84.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/二_册01_page0003_idx84.png"
           }
         }
       }
@@ -7181,7 +7181,7 @@
       }
     },
     "人": {
-      "updated_at": "2026-05-31T13:12:47.885Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0033_idx24": {
           "source": {
@@ -7359,12 +7359,12 @@
             "timestamp": "2026-05-31T13:12:47.885Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:12:47.885Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/人_册01_page0057_idx98.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/人_册01_page0057_idx98.png"
           }
         },
         "册01_page0013_idx69": {
@@ -7660,7 +7660,7 @@
       }
     },
     "來": {
-      "updated_at": "2026-05-31T13:09:46.069Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0009_idx166": {
           "source": {
@@ -7847,12 +7847,12 @@
             "timestamp": "2026-05-31T13:09:46.069Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:09:46.069Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/來_册01_page0005_idx176.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/來_册01_page0005_idx176.png"
           }
         },
         "册01_page0007_idx87": {
@@ -7939,12 +7939,12 @@
             "timestamp": "2026-05-31T13:09:44.808Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:09:44.808Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/來_册01_page0009_idx90.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/來_册01_page0009_idx90.png"
           }
         },
         "册01_page0047_idx2": {
@@ -8203,7 +8203,7 @@
       }
     },
     "入": {
-      "updated_at": "2026-05-31T13:12:45.591Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0027_idx121": {
           "source": {
@@ -8307,12 +8307,12 @@
             "timestamp": "2026-05-31T13:12:45.591Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:12:45.591Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/入_册01_page0004_idx76.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/入_册01_page0004_idx76.png"
           }
         },
         "册01_page0024_idx177": {
@@ -10502,7 +10502,7 @@
       }
     },
     "公": {
-      "updated_at": "2026-05-31T13:12:15.546Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0057_idx231": {
           "source": {
@@ -11103,12 +11103,12 @@
             "timestamp": "2026-05-31T13:12:14.302Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:12:14.302Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/公_册01_page0014_idx23.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/公_册01_page0014_idx23.png"
           }
         },
         "册01_page0056_idx89": {
@@ -11149,18 +11149,18 @@
             "timestamp": "2026-05-31T13:12:15.546Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:12:15.546Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/公_册01_page0056_idx89.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/公_册01_page0056_idx89.png"
           }
         }
       }
     },
     "其": {
-      "updated_at": "2026-05-31T13:07:30.619Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0005_idx152": {
           "source": {
@@ -11255,12 +11255,12 @@
             "timestamp": "2026-05-31T13:07:27.919Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:07:27.919Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/其_册01_page0009_idx47.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/其_册01_page0009_idx47.png"
           }
         },
         "册01_page0009_idx27": {
@@ -11420,12 +11420,12 @@
             "timestamp": "2026-05-31T13:07:26.524Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:07:26.524Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/其_册01_page0005_idx185.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/其_册01_page0005_idx185.png"
           }
         },
         "册01_page0003_idx94": {
@@ -11475,12 +11475,12 @@
             "timestamp": "2026-05-31T13:07:30.619Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:07:30.619Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/其_册01_page0003_idx94.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/其_册01_page0003_idx94.png"
           }
         },
         "册01_page0003_idx75": {
@@ -11585,18 +11585,18 @@
             "timestamp": "2026-05-31T13:07:28.928Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-01T12:33:16.134816+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/其_册01_page0007_idx200.png",
-            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/其_册01_page0007_idx200.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         }
       }
     },
     "具": {
-      "updated_at": "2026-05-31T13:07:49.308Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0008_idx101": {
           "source": {
@@ -11792,12 +11792,12 @@
             "timestamp": "2026-05-31T13:07:34.682Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:07:34.682Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/具_册01_page0008_idx111.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/具_册01_page0008_idx111.png"
           }
         },
         "册01_page0057_idx238": {
@@ -12266,12 +12266,12 @@
             "timestamp": "2026-05-31T13:07:55.954Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-01T12:33:18.300032+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/典_册01_page0028_idx86.png",
-            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/典_册01_page0028_idx86.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         }
       }
@@ -12430,7 +12430,7 @@
       }
     },
     "十": {
-      "updated_at": "2026-05-31T13:15:04.069Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0003_idx36": {
           "source": {
@@ -12966,12 +12966,12 @@
             "timestamp": "2026-05-31T13:15:03.273Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:15:03.273Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/十_册01_page0009_idx29.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/十_册01_page0009_idx29.png"
           }
         },
         "册01_page0009_idx9": {
@@ -13159,18 +13159,18 @@
             "timestamp": "2026-05-31T13:15:04.069Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:15:04.069Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/十_册01_page0008_idx130.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/十_册01_page0008_idx130.png"
           }
         }
       }
     },
     "千": {
-      "updated_at": "2026-05-31T13:04:47.939Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0009_idx76": {
           "source": {
@@ -13357,12 +13357,12 @@
             "timestamp": "2026-05-31T13:04:47.939Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:04:47.939Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/千_册01_page0014_idx92.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/千_册01_page0014_idx92.png"
           }
         },
         "册01_page0054_idx20": {
@@ -13520,7 +13520,7 @@
       }
     },
     "即": {
-      "updated_at": "2026-05-31T13:00:14.025Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0047_idx200": {
           "source": {
@@ -13661,12 +13661,12 @@
             "timestamp": "2026-05-31T13:00:13.315Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:00:13.315Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/即_册01_page0012_idx66.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/即_册01_page0012_idx66.png"
           }
         },
         "册01_page0012_idx85": {
@@ -13762,12 +13762,12 @@
             "timestamp": "2026-05-31T13:00:14.025Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:00:14.025Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/即_册01_page0005_idx121.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/即_册01_page0005_idx121.png"
           }
         },
         "册01_page0004_idx44": {
@@ -13865,7 +13865,7 @@
       }
     },
     "却": {
-      "updated_at": "2026-05-31T13:00:20.711Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0008_idx241": {
           "source": {
@@ -13914,12 +13914,12 @@
             "timestamp": "2026-05-31T13:00:20.149Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:00:20.149Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/却_册01_page0008_idx241.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/却_册01_page0008_idx241.png"
           }
         },
         "册01_page0007_idx24": {
@@ -14061,12 +14061,12 @@
             "timestamp": "2026-05-31T13:00:20.711Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-01T12:49:51.997382+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/却_册01_page0009_idx123.png",
-            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/却_册01_page0009_idx123.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册01_page0040_idx128": {
@@ -14127,7 +14127,7 @@
       }
     },
     "卷": {
-      "updated_at": "2026-05-31T13:03:39.136Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0030_idx112": {
           "source": {
@@ -14213,12 +14213,12 @@
             "timestamp": "2026-05-31T13:03:39.136Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:03:39.136Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/卷_册01_page0014_idx135.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/卷_册01_page0014_idx135.png"
           }
         },
         "册01_page0058_idx123": {
@@ -14270,7 +14270,7 @@
       }
     },
     "去": {
-      "updated_at": "2026-05-31T13:05:11.750Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0004_idx75": {
           "source": {
@@ -14319,12 +14319,12 @@
             "timestamp": "2026-05-31T13:05:11.750Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:05:11.750Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/去_册01_page0004_idx75.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/去_册01_page0004_idx75.png"
           }
         },
         "册01_page0004_idx14": {
@@ -14365,12 +14365,12 @@
             "timestamp": "2026-05-31T13:05:11.185Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:05:11.185Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/去_册01_page0004_idx14.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/去_册01_page0004_idx14.png"
           }
         },
         "册01_page0023_idx191": {
@@ -15084,7 +15084,7 @@
       }
     },
     "參": {
-      "updated_at": "2026-05-18T18:15:05.007Z",
+      "updated_at": "2026-06-04T03:45:53.531Z",
       "items": {
         "册01_page0025_idx30": {
           "source": {
@@ -15124,10 +15124,10 @@
             "timestamp": "2025-11-01T12:49:25.087352+00:00"
           },
           "review": {
-            "status": "confirmed",
-            "timestamp": "2025-11-01T12:49:25.087352+00:00",
+            "status": "dropped",
+            "timestamp": "2026-06-04T03:45:53.492222+00:00",
             "method": "auto",
-            "decision": "need",
+            "decision": "drop",
             "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/參_册01_page0025_idx30.png",
             "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/參_册01_page0025_idx30.png"
           }
@@ -15135,7 +15135,7 @@
       }
     },
     "及": {
-      "updated_at": "2026-05-31T13:08:43.175Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0026_idx63": {
           "source": {
@@ -15230,12 +15230,12 @@
             "timestamp": "2026-05-31T13:08:43.175Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:08:43.175Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/及_册01_page0005_idx167.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/及_册01_page0005_idx167.png"
           }
         },
         "册01_page0008_idx168": {
@@ -15541,7 +15541,7 @@
       }
     },
     "口": {
-      "updated_at": "2026-05-31T13:14:20.585Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0010_idx104": {
           "source": {
@@ -15682,12 +15682,12 @@
             "timestamp": "2026-05-31T13:14:20.585Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:20.585Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/口_册01_page0007_idx39.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/口_册01_page0007_idx39.png"
           }
         },
         "册01_page0028_idx36": {
@@ -16139,7 +16139,7 @@
       }
     },
     "合": {
-      "updated_at": "2026-05-31T13:10:28.876Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0015_idx153": {
           "source": {
@@ -16280,12 +16280,12 @@
             "timestamp": "2026-05-31T13:10:25.219Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:10:25.219Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/合_册01_page0015_idx19.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/合_册01_page0015_idx19.png"
           }
         },
         "册01_page0014_idx163": {
@@ -16510,12 +16510,12 @@
             "timestamp": "2026-05-31T13:10:28.876Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:10:28.876Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/合_册01_page0009_idx5.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/合_册01_page0009_idx5.png"
           }
         },
         "册01_page0009_idx84": {
@@ -16611,18 +16611,18 @@
             "timestamp": "2026-05-31T13:10:26.615Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-01T12:45:47.888146+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/合_册01_page0009_idx34.png",
-            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/合_册01_page0009_idx34.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         }
       }
     },
     "同": {
-      "updated_at": "2026-05-31T13:08:09.904Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0018_idx26": {
           "source": {
@@ -16882,12 +16882,12 @@
             "timestamp": "2026-05-31T13:08:09.904Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:08:09.904Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/同_册01_page0004_idx154.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/同_册01_page0004_idx154.png"
           }
         },
         "册01_page0004_idx159": {
@@ -17084,12 +17084,12 @@
             "timestamp": "2026-05-31T13:08:08.116Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:08:08.116Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/同_册01_page0004_idx150.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/同_册01_page0004_idx150.png"
           }
         },
         "册01_page0004_idx182": {
@@ -17607,7 +17607,7 @@
       }
     },
     "和": {
-      "updated_at": "2026-05-31T13:10:02.331Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0010_idx22": {
           "source": {
@@ -17656,12 +17656,12 @@
             "timestamp": "2026-05-31T13:10:01.581Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:10:01.581Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/和_册01_page0010_idx22.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/和_册01_page0010_idx22.png"
           }
         },
         "册01_page0005_idx146": {
@@ -17702,12 +17702,12 @@
             "timestamp": "2026-05-31T13:10:02.331Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:10:02.331Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/和_册01_page0005_idx146.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/和_册01_page0005_idx146.png"
           }
         },
         "册01_page0004_idx163": {
@@ -18670,7 +18670,7 @@
       }
     },
     "四": {
-      "updated_at": "2026-05-31T13:14:15.171Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0009_idx194": {
           "source": {
@@ -18802,12 +18802,12 @@
             "timestamp": "2026-05-31T13:14:15.171Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:15.171Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/四_册01_page0009_idx171.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/四_册01_page0009_idx171.png"
           }
         },
         "册01_page0004_idx156": {
@@ -18857,12 +18857,12 @@
             "timestamp": "2026-05-31T13:14:14.633Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:14.633Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/四_册01_page0004_idx156.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/四_册01_page0004_idx156.png"
           }
         },
         "册01_page0009_idx30": {
@@ -19277,7 +19277,7 @@
       }
     },
     "國": {
-      "updated_at": "2026-05-31T13:01:59.030Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0044_idx66": {
           "source": {
@@ -19418,12 +19418,12 @@
             "timestamp": "2026-05-31T13:01:59.030Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:01:59.030Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/國_册01_page0015_idx88.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/國_册01_page0015_idx88.png"
           }
         },
         "册01_page0056_idx60": {
@@ -19705,7 +19705,7 @@
       }
     },
     "土": {
-      "updated_at": "2026-05-31T13:12:09.635Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0015_idx18": {
           "source": {
@@ -19837,12 +19837,12 @@
             "timestamp": "2026-05-31T13:12:09.635Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:12:09.635Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/土_册01_page0007_idx231.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/土_册01_page0007_idx231.png"
           }
         },
         "册01_page0020_idx82": {
@@ -20097,7 +20097,7 @@
       }
     },
     "增": {
-      "updated_at": "2026-05-31T13:01:28.352Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0006_idx4": {
           "source": {
@@ -20201,12 +20201,12 @@
             "timestamp": "2026-05-31T13:01:28.352Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:01:28.352Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/增_册01_page0003_idx24.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/增_册01_page0003_idx24.png"
           }
         },
         "册01_page0006_idx25": {
@@ -20256,12 +20256,12 @@
             "timestamp": "2026-05-31T13:01:27.618Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:01:27.618Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/增_册01_page0006_idx25.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/增_册01_page0006_idx25.png"
           }
         },
         "册01_page0006_idx29": {
@@ -20414,7 +20414,7 @@
       }
     },
     "士": {
-      "updated_at": "2026-05-31T13:14:12.736Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0003_idx17": {
           "source": {
@@ -20730,12 +20730,12 @@
             "timestamp": "2026-05-31T13:14:12.736Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:12.736Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/士_册01_page0003_idx135.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/士_册01_page0003_idx135.png"
           }
         },
         "册01_page0038_idx30": {
@@ -20879,7 +20879,7 @@
       }
     },
     "外": {
-      "updated_at": "2026-05-31T13:11:02.593Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0009_idx115": {
           "source": {
@@ -21176,12 +21176,12 @@
             "timestamp": "2026-05-31T13:11:02.593Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:11:02.593Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/外_册01_page0008_idx71.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/外_册01_page0008_idx71.png"
           }
         },
         "册01_page0052_idx129": {
@@ -21222,12 +21222,12 @@
             "timestamp": "2026-05-31T13:11:01.948Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:11:01.948Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/外_册01_page0052_idx129.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/外_册01_page0052_idx129.png"
           }
         }
       }
@@ -21578,7 +21578,7 @@
       }
     },
     "天": {
-      "updated_at": "2026-05-31T13:05:20.585Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0003_idx166": {
           "source": {
@@ -21627,12 +21627,12 @@
             "timestamp": "2026-05-31T13:05:20.585Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:05:20.585Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/天_册01_page0003_idx166.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/天_册01_page0003_idx166.png"
           }
         },
         "册01_page0017_idx58": {
@@ -21932,7 +21932,7 @@
       }
     },
     "太": {
-      "updated_at": "2026-05-31T13:03:41.999Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0057_idx215": {
           "source": {
@@ -22036,12 +22036,12 @@
             "timestamp": "2026-05-31T13:03:41.999Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:03:41.999Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/太_册01_page0057_idx241.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/太_册01_page0057_idx241.png"
           }
         }
       }
@@ -22098,7 +22098,7 @@
       }
     },
     "好": {
-      "updated_at": "2026-05-31T13:14:43.599Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0017_idx45": {
           "source": {
@@ -22193,12 +22193,12 @@
             "timestamp": "2026-05-31T13:14:28.494Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:28.494Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/好_册01_page0008_idx245.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/好_册01_page0008_idx245.png"
           }
         },
         "册01_page0057_idx207": {
@@ -22942,7 +22942,7 @@
       }
     },
     "小": {
-      "updated_at": "2026-05-31T13:14:25.000Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0057_idx173": {
           "source": {
@@ -22991,12 +22991,12 @@
             "timestamp": "2026-05-31T13:14:25.000Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:25.000Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/小_册01_page0057_idx173.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/小_册01_page0057_idx173.png"
           }
         },
         "册01_page0046_idx182": {
@@ -23241,7 +23241,7 @@
       }
     },
     "少": {
-      "updated_at": "2026-05-31T13:11:49.338Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0017_idx60": {
           "source": {
@@ -23428,12 +23428,12 @@
             "timestamp": "2026-05-31T13:11:49.338Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:11:49.338Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/少_册01_page0008_idx180.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/少_册01_page0008_idx180.png"
           }
         },
         "册01_page0017_idx94": {
@@ -23485,7 +23485,7 @@
       }
     },
     "尤": {
-      "updated_at": "2026-05-31T13:11:26.781Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0057_idx157": {
           "source": {
@@ -23617,12 +23617,12 @@
             "timestamp": "2026-05-31T13:11:26.781Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:11:26.781Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/尤_册01_page0023_idx3.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/尤_册01_page0023_idx3.png"
           }
         },
         "册01_page0023_idx41": {
@@ -23895,7 +23895,7 @@
       }
     },
     "居": {
-      "updated_at": "2026-05-31T13:11:33.259Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0008_idx63": {
           "source": {
@@ -24036,12 +24036,12 @@
             "timestamp": "2026-05-31T13:11:33.259Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:11:33.259Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/居_册01_page0004_idx7.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/居_册01_page0004_idx7.png"
           }
         },
         "册01_page0014_idx39": {
@@ -24082,12 +24082,12 @@
             "timestamp": "2026-05-31T13:11:32.345Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:11:32.345Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/居_册01_page0014_idx39.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/居_册01_page0014_idx39.png"
           }
         },
         "册01_page0007_idx8": {
@@ -24240,7 +24240,7 @@
       }
     },
     "山": {
-      "updated_at": "2026-05-31T13:12:37.102Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0008_idx136": {
           "source": {
@@ -24289,12 +24289,12 @@
             "timestamp": "2026-05-31T13:12:37.102Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:12:37.102Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/山_册01_page0008_idx136.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/山_册01_page0008_idx136.png"
           }
         },
         "册01_page0002_idx1": {
@@ -24609,7 +24609,7 @@
       }
     },
     "平": {
-      "updated_at": "2026-05-31T13:04:51.779Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0005_idx132": {
           "source": {
@@ -25348,18 +25348,18 @@
             "timestamp": "2026-05-31T13:04:51.779Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:04:51.779Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/平_册01_page0007_idx107.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/平_册01_page0007_idx107.png"
           }
         }
       }
     },
     "年": {
-      "updated_at": "2026-05-31T13:03:20.118Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0056_idx64": {
           "source": {
@@ -25408,12 +25408,12 @@
             "timestamp": "2026-05-31T13:03:20.118Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:03:20.118Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/年_册01_page0056_idx64.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/年_册01_page0056_idx64.png"
           }
         },
         "册01_page0005_idx7": {
@@ -26317,7 +26317,7 @@
       }
     },
     "弼": {
-      "updated_at": "2026-05-31T13:01:47.014Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0034_idx126": {
           "source": {
@@ -26366,12 +26366,12 @@
             "timestamp": "2026-05-31T13:01:47.014Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:01:47.014Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/弼_册01_page0034_idx126.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/弼_册01_page0034_idx126.png"
           }
         },
         "册01_page0052_idx199": {
@@ -26483,7 +26483,7 @@
       }
     },
     "心": {
-      "updated_at": "2026-05-31T13:06:19.483Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0027_idx42": {
           "source": {
@@ -26633,12 +26633,12 @@
             "timestamp": "2026-05-31T13:06:12.621Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:06:12.621Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/心_册01_page0008_idx25.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/心_册01_page0008_idx25.png"
           }
         },
         "册01_page0033_idx130": {
@@ -27738,7 +27738,7 @@
       }
     },
     "必": {
-      "updated_at": "2026-05-31T13:06:44.899Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0005_idx199": {
           "source": {
@@ -27833,12 +27833,12 @@
             "timestamp": "2026-05-31T13:06:44.899Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:06:44.899Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/必_册01_page0005_idx163.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/必_册01_page0005_idx163.png"
           }
         },
         "册01_page0034_idx136": {
@@ -27925,12 +27925,12 @@
             "timestamp": "2026-05-31T13:06:42.738Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:06:42.738Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/必_册01_page0034_idx138.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/必_册01_page0034_idx138.png"
           }
         },
         "册01_page0052_idx213": {
@@ -28427,7 +28427,7 @@
       }
     },
     "成": {
-      "updated_at": "2026-05-31T13:06:05.465Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0007_idx75": {
           "source": {
@@ -28577,12 +28577,12 @@
             "timestamp": "2026-05-31T13:06:05.465Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:06:05.465Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/成_册01_page0003_idx66.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/成_册01_page0003_idx66.png"
           }
         },
         "册01_page0047_idx29": {
@@ -28994,7 +28994,7 @@
       }
     },
     "支": {
-      "updated_at": "2026-05-31T13:07:17.300Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0053_idx29": {
           "source": {
@@ -29080,12 +29080,12 @@
             "timestamp": "2026-05-31T13:07:17.300Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:07:17.300Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/支_册01_page0008_idx189.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/支_册01_page0008_idx189.png"
           }
         },
         "册01_page0051_idx8": {
@@ -29201,7 +29201,7 @@
       }
     },
     "數": {
-      "updated_at": "2026-05-31T13:01:23.224Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0008_idx40": {
           "source": {
@@ -29296,12 +29296,12 @@
             "timestamp": "2026-05-31T13:01:23.224Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:01:23.224Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/數_册01_page0056_idx53.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/數_册01_page0056_idx53.png"
           }
         },
         "册01_page0003_idx35": {
@@ -29546,7 +29546,7 @@
       }
     },
     "文": {
-      "updated_at": "2026-05-31T13:07:13.353Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0058_idx87": {
           "source": {
@@ -29632,12 +29632,12 @@
             "timestamp": "2026-05-31T13:06:59.999Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:06:59.999Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/文_册01_page0003_idx143.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/文_册01_page0003_idx143.png"
           }
         },
         "册01_page0034_idx23": {
@@ -29955,7 +29955,7 @@
       }
     },
     "日": {
-      "updated_at": "2026-05-31T13:14:23.013Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0009_idx91": {
           "source": {
@@ -30280,12 +30280,12 @@
             "timestamp": "2026-05-31T13:14:22.525Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:22.525Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/日_册01_page0009_idx148.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/日_册01_page0009_idx148.png"
           }
         },
         "册01_page0017_idx0": {
@@ -30611,12 +30611,12 @@
             "timestamp": "2026-05-31T13:14:23.013Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:23.013Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/日_册01_page0008_idx74.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/日_册01_page0008_idx74.png"
           }
         }
       }
@@ -30673,7 +30673,7 @@
       }
     },
     "昌": {
-      "updated_at": "2026-05-31T13:13:35.138Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0003_idx46": {
           "source": {
@@ -30814,18 +30814,18 @@
             "timestamp": "2026-05-31T13:13:35.138Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:13:35.138Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/昌_册01_page0041_idx70.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/昌_册01_page0041_idx70.png"
           }
         }
       }
     },
     "明": {
-      "updated_at": "2026-05-31T13:03:26.608Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0012_idx102": {
           "source": {
@@ -30874,12 +30874,12 @@
             "timestamp": "2026-05-31T13:03:26.608Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:03:26.608Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/明_册01_page0012_idx102.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/明_册01_page0012_idx102.png"
           }
         },
         "册01_page0009_idx71": {
@@ -30929,12 +30929,12 @@
             "timestamp": "2026-05-31T13:03:25.698Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:03:25.698Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/明_册01_page0009_idx71.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/明_册01_page0009_idx71.png"
           }
         },
         "册01_page0056_idx159": {
@@ -31547,7 +31547,7 @@
       }
     },
     "昔": {
-      "updated_at": "2026-05-18T18:17:12.525Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0045_idx41": {
           "source": {
@@ -31596,12 +31596,12 @@
             "timestamp": "2026-01-08T11:44:31.484250+00:00"
           },
           "review": {
-            "status": "dropped",
+            "status": "confirmed",
             "timestamp": "2026-01-08T11:44:31.484250+00:00",
-            "method": null,
-            "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "method": "auto",
+            "decision": "need",
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/昔_册01_page0045_idx41.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/昔_册01_page0045_idx41.png"
           }
         }
       }
@@ -31907,7 +31907,7 @@
       }
     },
     "月": {
-      "updated_at": "2026-05-31T13:14:09.754Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0038_idx150": {
           "source": {
@@ -32048,12 +32048,12 @@
             "timestamp": "2026-05-31T13:14:09.754Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:09.754Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/月_册01_page0011_idx58.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/月_册01_page0011_idx58.png"
           }
         },
         "册01_page0058_idx113": {
@@ -32103,12 +32103,12 @@
             "timestamp": "2026-05-31T13:14:09.075Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:09.075Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/月_册01_page0058_idx113.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/月_册01_page0058_idx113.png"
           }
         },
         "册01_page0031_idx175": {
@@ -32353,7 +32353,7 @@
       }
     },
     "朝": {
-      "updated_at": "2026-05-31T13:03:31.198Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0003_idx47": {
           "source": {
@@ -32595,18 +32595,18 @@
             "timestamp": "2026-05-31T13:03:31.198Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:03:31.198Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/朝_册01_page0016_idx47.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/朝_册01_page0016_idx47.png"
           }
         }
       }
     },
     "未": {
-      "updated_at": "2026-05-31T13:09:48.136Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0052_idx144": {
           "source": {
@@ -32710,12 +32710,12 @@
             "timestamp": "2026-05-31T13:09:48.136Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:09:48.136Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/未_册01_page0056_idx143.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/未_册01_page0056_idx143.png"
           }
         },
         "册01_page0058_idx30": {
@@ -32813,7 +32813,7 @@
       }
     },
     "本": {
-      "updated_at": "2026-05-31T13:13:32.886Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0004_idx52": {
           "source": {
@@ -32862,12 +32862,12 @@
             "timestamp": "2026-05-31T13:13:32.886Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:13:32.886Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/本_册01_page0004_idx52.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/本_册01_page0004_idx52.png"
           }
         },
         "册01_page0011_idx110": {
@@ -32963,12 +32963,12 @@
             "timestamp": "2026-05-31T13:13:30.546Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:13:30.546Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/本_册01_page0009_idx23.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/本_册01_page0009_idx23.png"
           }
         },
         "册01_page0005_idx158": {
@@ -33944,7 +33944,7 @@
       }
     },
     "林": {
-      "updated_at": "2026-05-31T13:13:53.680Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0027_idx27": {
           "source": {
@@ -34039,12 +34039,12 @@
             "timestamp": "2026-05-31T13:13:53.680Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:13:53.680Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/林_册01_page0003_idx15.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/林_册01_page0003_idx15.png"
           }
         },
         "册01_page0034_idx30": {
@@ -34529,7 +34529,7 @@
       }
     },
     "正": {
-      "updated_at": "2026-05-31T13:16:14.660Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0007_idx128": {
           "source": {
@@ -34771,12 +34771,12 @@
             "timestamp": "2026-05-31T13:13:27.628Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:13:27.628Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/正_册01_page0008_idx203.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/正_册01_page0008_idx203.png"
           }
         },
         "册01_page0056_idx135": {
@@ -35076,7 +35076,7 @@
       }
     },
     "此": {
-      "updated_at": "2026-05-31T13:04:57.951Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0005_idx143": {
           "source": {
@@ -35116,12 +35116,12 @@
             "timestamp": "2026-05-31T13:04:57.951Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:04:57.951Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/此_册01_page0005_idx143.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/此_册01_page0005_idx143.png"
           }
         },
         "册01_page0004_idx59": {
@@ -35272,12 +35272,12 @@
             "timestamp": "2026-05-31T13:04:56.451Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:04:56.451Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/此_册01_page0012_idx97.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/此_册01_page0012_idx97.png"
           }
         },
         "册01_page0057_idx120": {
@@ -35729,7 +35729,7 @@
       }
     },
     "母": {
-      "updated_at": "2026-05-31T13:13:11.351Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0009_idx187": {
           "source": {
@@ -35833,12 +35833,12 @@
             "timestamp": "2026-05-31T13:13:11.351Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:13:11.351Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/母_册01_page0010_idx31.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/母_册01_page0010_idx31.png"
           }
         },
         "册01_page0011_idx3": {
@@ -35888,12 +35888,12 @@
             "timestamp": "2026-05-31T13:13:06.260Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:13:06.260Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/母_册01_page0011_idx3.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/母_册01_page0011_idx3.png"
           }
         },
         "册01_page0004_idx88": {
@@ -36622,7 +36622,7 @@
       }
     },
     "海": {
-      "updated_at": "2026-05-31T13:12:05.118Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0049_idx32": {
           "source": {
@@ -36717,12 +36717,12 @@
             "timestamp": "2026-05-31T13:12:05.118Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:12:05.118Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/海_册01_page0056_idx22.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/海_册01_page0056_idx22.png"
           }
         },
         "册01_page0049_idx36": {
@@ -36884,7 +36884,7 @@
       }
     },
     "為": {
-      "updated_at": "2026-05-31T13:06:56.455Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0010_idx26": {
           "source": {
@@ -37438,12 +37438,12 @@
             "timestamp": "2026-05-31T13:06:53.030Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:06:53.030Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/為_册01_page0009_idx151.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/為_册01_page0009_idx151.png"
           }
         },
         "册01_page0008_idx52": {
@@ -37493,12 +37493,12 @@
             "timestamp": "2026-05-31T13:06:56.455Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:06:56.455Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/為_册01_page0008_idx52.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/為_册01_page0008_idx52.png"
           }
         }
       }
@@ -37601,7 +37601,7 @@
       }
     },
     "焉": {
-      "updated_at": "2026-05-31T13:06:51.231Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0057_idx176": {
           "source": {
@@ -37705,12 +37705,12 @@
             "timestamp": "2026-05-31T13:06:51.231Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:06:51.231Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/焉_册01_page0003_idx72.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/焉_册01_page0003_idx72.png"
           }
         },
         "册01_page0029_idx45": {
@@ -37771,7 +37771,7 @@
       }
     },
     "無": {
-      "updated_at": "2026-05-31T13:08:57.139Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0008_idx92": {
           "source": {
@@ -37811,12 +37811,12 @@
             "timestamp": "2026-05-31T13:08:56.468Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-12T02:33:23.142479+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/無_册01_page0008_idx92.png",
-            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/無_册01_page0008_idx92.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册01_page0010_idx37": {
@@ -37857,12 +37857,12 @@
             "timestamp": "2026-05-31T13:08:53.011Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:08:53.011Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/無_册01_page0010_idx37.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/無_册01_page0010_idx37.png"
           }
         },
         "册01_page0004_idx62": {
@@ -37912,12 +37912,12 @@
             "timestamp": "2026-05-31T13:08:52.118Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:08:52.118Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/無_册01_page0004_idx62.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/無_册01_page0004_idx62.png"
           }
         },
         "册01_page0057_idx27": {
@@ -38096,12 +38096,12 @@
             "timestamp": "2026-05-31T13:08:57.139Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:08:57.139Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/無_册01_page0057_idx62.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/無_册01_page0057_idx62.png"
           }
         },
         "册01_page0057_idx126": {
@@ -38208,7 +38208,7 @@
       }
     },
     "然": {
-      "updated_at": "2026-05-31T13:09:05.255Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0057_idx94": {
           "source": {
@@ -38395,12 +38395,12 @@
             "timestamp": "2026-05-31T13:09:04.502Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:09:04.502Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/然_册01_page0057_idx239.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/然_册01_page0057_idx239.png"
           }
         },
         "册01_page0057_idx122": {
@@ -38496,12 +38496,12 @@
             "timestamp": "2026-05-31T13:09:05.255Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:09:05.255Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/然_册01_page0056_idx127.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/然_册01_page0056_idx127.png"
           }
         },
         "册01_page0029_idx40": {
@@ -38654,7 +38654,7 @@
       }
     },
     "照": {
-      "updated_at": "2026-05-31T13:08:59.763Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0017_idx99": {
           "source": {
@@ -38841,12 +38841,12 @@
             "timestamp": "2026-05-31T13:08:59.763Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:08:59.763Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/照_册01_page0012_idx126.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/照_册01_page0012_idx126.png"
           }
         },
         "册01_page0031_idx11": {
@@ -39584,7 +39584,7 @@
       }
     },
     "玄": {
-      "updated_at": "2026-05-31T13:04:45.437Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0031_idx56": {
           "source": {
@@ -39716,12 +39716,12 @@
             "timestamp": "2026-05-31T13:04:45.437Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:04:45.437Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/玄_册01_page0008_idx47.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/玄_册01_page0008_idx47.png"
           }
         },
         "册01_page0031_idx68": {
@@ -40031,7 +40031,7 @@
       }
     },
     "瓜": {
-      "updated_at": "2026-05-31T13:02:57.197Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0038_idx39": {
           "source": {
@@ -40126,18 +40126,18 @@
             "timestamp": "2026-05-31T13:02:57.197Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:02:57.197Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/瓜_册01_page0015_idx21.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/瓜_册01_page0015_idx21.png"
           }
         }
       }
     },
     "田": {
-      "updated_at": "2026-05-31T13:08:24.603Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0028_idx59": {
           "source": {
@@ -40177,12 +40177,12 @@
             "timestamp": "2026-05-31T13:08:24.603Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:08:24.603Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/田_册01_page0028_idx59.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/田_册01_page0028_idx59.png"
           }
         },
         "册01_page0011_idx32": {
@@ -40704,7 +40704,7 @@
       }
     },
     "皆": {
-      "updated_at": "2026-05-31T13:01:16.589Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0009_idx86": {
           "source": {
@@ -40808,12 +40808,12 @@
             "timestamp": "2026-05-31T13:01:16.589Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:01:16.589Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/皆_册01_page0015_idx123.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/皆_册01_page0015_idx123.png"
           }
         },
         "册01_page0004_idx158": {
@@ -40918,12 +40918,12 @@
             "timestamp": "2026-05-31T13:01:15.784Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:01:15.784Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/皆_册01_page0012_idx95.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/皆_册01_page0012_idx95.png"
           }
         },
         "册01_page0012_idx130": {
@@ -41297,7 +41297,7 @@
       }
     },
     "目": {
-      "updated_at": "2026-05-31T13:14:06.231Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0003_idx146": {
           "source": {
@@ -41530,12 +41530,12 @@
             "timestamp": "2026-05-31T13:14:06.231Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:06.231Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/目_册01_page0018_idx117.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/目_册01_page0018_idx117.png"
           }
         },
         "册01_page0020_idx193": {
@@ -42057,7 +42057,7 @@
       }
     },
     "章": {
-      "updated_at": "2026-05-31T13:01:05.050Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0041_idx71": {
           "source": {
@@ -42097,12 +42097,12 @@
             "timestamp": "2026-05-31T13:01:05.050Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-12T02:30:27.947371+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/章_册01_page0041_idx71.png",
-            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/章_册01_page0041_idx71.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册01_page0010_idx78": {
@@ -42143,12 +42143,12 @@
             "timestamp": "2026-05-31T13:01:00.038Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:01:00.038Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/章_册01_page0010_idx78.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/章_册01_page0010_idx78.png"
           }
         },
         "册01_page0010_idx46": {
@@ -42189,12 +42189,12 @@
             "timestamp": "2026-05-31T13:01:00.686Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:01:00.686Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/章_册01_page0010_idx46.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/章_册01_page0010_idx46.png"
           }
         }
       }
@@ -42656,7 +42656,7 @@
       }
     },
     "羽": {
-      "updated_at": "2026-05-31T13:13:56.091Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0007_idx37": {
           "source": {
@@ -42751,12 +42751,12 @@
             "timestamp": "2026-05-31T13:13:56.091Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:13:56.091Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/羽_册01_page0007_idx256.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/羽_册01_page0007_idx256.png"
           }
         },
         "册01_page0013_idx6": {
@@ -42965,7 +42965,7 @@
       }
     },
     "而": {
-      "updated_at": "2026-05-31T13:02:03.748Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0003_idx42": {
           "source": {
@@ -43106,12 +43106,12 @@
             "timestamp": "2026-05-31T13:02:03.748Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:02:03.748Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/而_册01_page0009_idx142.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/而_册01_page0009_idx142.png"
           }
         },
         "册01_page0057_idx2": {
@@ -43253,12 +43253,12 @@
             "timestamp": "2026-05-31T13:02:03.115Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:02:03.115Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/而_册01_page0012_idx60.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/而_册01_page0012_idx60.png"
           }
         },
         "册01_page0057_idx157": {
@@ -43563,7 +43563,7 @@
       }
     },
     "聲": {
-      "updated_at": "2026-05-31T13:02:10.540Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0006_idx64": {
           "source": {
@@ -43906,12 +43906,12 @@
             "timestamp": "2026-05-31T13:02:10.540Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:02:10.540Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/聲_册01_page0005_idx1.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/聲_册01_page0005_idx1.png"
           }
         },
         "册01_page0005_idx130": {
@@ -44055,7 +44055,7 @@
       }
     },
     "自": {
-      "updated_at": "2026-05-31T13:14:04.167Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0003_idx28": {
           "source": {
@@ -44196,12 +44196,12 @@
             "timestamp": "2026-05-31T13:14:02.656Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:02.656Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/自_册01_page0005_idx122.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/自_册01_page0005_idx122.png"
           }
         },
         "册01_page0057_idx195": {
@@ -44297,12 +44297,12 @@
             "timestamp": "2026-05-31T13:14:04.167Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:14:04.167Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/自_册01_page0007_idx67.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/自_册01_page0007_idx67.png"
           }
         },
         "册01_page0051_idx119": {
@@ -44400,7 +44400,7 @@
       }
     },
     "至": {
-      "updated_at": "2026-05-31T13:00:00.618Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0004_idx40": {
           "source": {
@@ -44440,12 +44440,12 @@
             "timestamp": "2026-05-31T12:59:59.823Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-12T02:24:32.661129+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/至_册01_page0004_idx40.png",
-            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/至_册01_page0004_idx40.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册01_page0022_idx63": {
@@ -44532,12 +44532,12 @@
             "timestamp": "2026-05-31T13:00:00.618Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:00:00.618Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/至_册01_page0003_idx149.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/至_册01_page0003_idx149.png"
           }
         },
         "册01_page0051_idx108": {
@@ -44745,7 +44745,7 @@
       }
     },
     "與": {
-      "updated_at": "2026-05-31T13:08:03.412Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0021_idx57": {
           "source": {
@@ -44785,12 +44785,12 @@
             "timestamp": "2026-05-31T13:08:02.638Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-12T02:35:11.902056+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/與_册01_page0021_idx57.png",
-            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/與_册01_page0021_idx57.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册01_page0006_idx125": {
@@ -44996,12 +44996,12 @@
             "timestamp": "2026-05-31T13:08:03.412Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:08:03.412Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/與_册01_page0009_idx113.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/與_册01_page0009_idx113.png"
           }
         },
         "册01_page0009_idx77": {
@@ -45189,12 +45189,12 @@
             "timestamp": "2026-05-31T13:08:01.775Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:08:01.775Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/與_册01_page0009_idx127.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/與_册01_page0009_idx127.png"
           }
         },
         "册01_page0005_idx4": {
@@ -45389,7 +45389,7 @@
       }
     },
     "良": {
-      "updated_at": "2026-05-31T13:08:28.499Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0041_idx30": {
           "source": {
@@ -45475,12 +45475,12 @@
             "timestamp": "2026-05-31T13:08:28.499Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:08:28.499Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/良_册01_page0010_idx79.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/良_册01_page0010_idx79.png"
           }
         },
         "册01_page0010_idx48": {
@@ -45739,7 +45739,7 @@
       }
     },
     "菊": {
-      "updated_at": "2026-05-31T13:09:08.131Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0018_idx163": {
           "source": {
@@ -45834,12 +45834,12 @@
             "timestamp": "2026-05-31T13:09:07.508Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:09:07.508Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/菊_册01_page0014_idx48.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/菊_册01_page0014_idx48.png"
           }
         },
         "册01_page0014_idx33": {
@@ -45880,12 +45880,12 @@
             "timestamp": "2026-05-31T13:09:08.131Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:09:08.131Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/菊_册01_page0014_idx33.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/菊_册01_page0014_idx33.png"
           }
         },
         "册01_page0020_idx216": {
@@ -46181,7 +46181,7 @@
       }
     },
     "葛": {
-      "updated_at": "2026-05-31T13:09:10.159Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0036_idx106": {
           "source": {
@@ -46359,12 +46359,12 @@
             "timestamp": "2026-05-31T13:09:10.159Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:09:10.159Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/葛_册01_page0028_idx144.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/葛_册01_page0028_idx144.png"
           }
         },
         "册01_page0048_idx122": {
@@ -47010,7 +47010,7 @@
       }
     },
     "要": {
-      "updated_at": "2026-05-31T13:01:20.126Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0056_idx129": {
           "source": {
@@ -47059,12 +47059,12 @@
             "timestamp": "2026-05-31T13:01:20.126Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:01:20.126Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/要_册01_page0056_idx129.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/要_册01_page0056_idx129.png"
           }
         },
         "册01_page0017_idx91": {
@@ -47125,7 +47125,7 @@
       }
     },
     "見": {
-      "updated_at": "2026-05-31T13:11:20.689Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0013_idx12": {
           "source": {
@@ -47174,12 +47174,12 @@
             "timestamp": "2026-05-31T13:11:10.133Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2026-01-08T11:48:32.832987+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/見_册01_page0013_idx12.png",
-            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/見_册01_page0013_idx12.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册01_page0028_idx20": {
@@ -47643,12 +47643,12 @@
             "timestamp": "2026-05-31T13:11:10.698Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:11:10.698Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/見_册01_page0009_idx41.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/見_册01_page0009_idx41.png"
           }
         },
         "册01_page0004_idx66": {
@@ -47930,7 +47930,7 @@
       }
     },
     "識": {
-      "updated_at": "2026-05-31T13:06:10.024Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0005_idx184": {
           "source": {
@@ -48025,12 +48025,12 @@
             "timestamp": "2026-05-31T13:06:08.744Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:06:08.744Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/識_册01_page0004_idx72.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/識_册01_page0004_idx72.png"
           }
         },
         "册01_page0057_idx206": {
@@ -48236,12 +48236,12 @@
             "timestamp": "2026-05-31T13:06:10.024Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:06:10.024Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/識_册01_page0047_idx185.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/識_册01_page0047_idx185.png"
           }
         }
       }
@@ -48454,7 +48454,7 @@
       }
     },
     "谷": {
-      "updated_at": "2026-05-31T13:10:58.460Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0014_idx29": {
           "source": {
@@ -48549,12 +48549,12 @@
             "timestamp": "2026-05-31T13:10:58.460Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:10:58.460Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/谷_册01_page0014_idx46.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/谷_册01_page0014_idx46.png"
           }
         }
       }
@@ -48703,7 +48703,7 @@
       }
     },
     "辨": {
-      "updated_at": "2026-05-31T13:01:32.660Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0009_idx0": {
           "source": {
@@ -48807,12 +48807,12 @@
             "timestamp": "2026-05-31T13:01:32.660Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:01:32.660Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/辨_册01_page0009_idx182.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/辨_册01_page0009_idx182.png"
           }
         },
         "册01_page0009_idx89": {
@@ -48853,12 +48853,12 @@
             "timestamp": "2026-05-31T13:01:31.729Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:01:31.729Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/辨_册01_page0009_idx89.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/辨_册01_page0009_idx89.png"
           }
         },
         "册01_page0008_idx156": {
@@ -49706,7 +49706,7 @@
       }
     },
     "量": {
-      "updated_at": "2026-05-31T13:02:07.185Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0010_idx53": {
           "source": {
@@ -49856,12 +49856,12 @@
             "timestamp": "2026-05-31T13:02:07.185Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:02:07.185Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/量_册01_page0010_idx100.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/量_册01_page0010_idx100.png"
           }
         },
         "册01_page0022_idx17": {
@@ -50485,7 +50485,7 @@
       }
     },
     "面": {
-      "updated_at": "2026-05-31T13:08:22.231Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0030_idx164": {
           "source": {
@@ -50580,12 +50580,12 @@
             "timestamp": "2026-05-31T13:08:22.231Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:08:22.231Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/面_册01_page0009_idx45.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/面_册01_page0009_idx45.png"
           }
         },
         "册01_page0009_idx48": {
@@ -50635,12 +50635,12 @@
             "timestamp": "2026-05-31T13:08:21.579Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:08:21.579Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/面_册01_page0009_idx48.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/面_册01_page0009_idx48.png"
           }
         }
       }
@@ -51116,7 +51116,7 @@
       }
     },
     "馬": {
-      "updated_at": "2026-05-31T13:06:49.474Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0037_idx94": {
           "source": {
@@ -51202,12 +51202,12 @@
             "timestamp": "2026-05-31T13:06:49.474Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:06:49.474Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/馬_册01_page0037_idx84.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/馬_册01_page0037_idx84.png"
           }
         },
         "册01_page0056_idx162": {
@@ -51248,12 +51248,12 @@
             "timestamp": "2026-05-31T13:06:48.530Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T13:06:48.530Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/馬_册01_page0056_idx162.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/馬_册01_page0056_idx162.png"
           }
         },
         "册01_page0057_idx116": {
@@ -52336,7 +52336,7 @@
       }
     },
     "龜": {
-      "updated_at": "2025-10-29T09:42:12.834Z",
+      "updated_at": "2026-06-02T15:16:49.476Z",
       "items": {
         "册01_page0046_idx73": {
           "source": {
@@ -52376,12 +52376,12 @@
             "timestamp": "2025-11-12T02:26:07.644741+00:00"
           },
           "review": {
-            "status": "dropped",
+            "status": "confirmed",
             "timestamp": "2025-11-12T02:26:07.644741+00:00",
-            "method": null,
-            "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "method": "auto",
+            "decision": "need",
+            "confirmed_path": "data/results/manual/confirmed/34_1230_切韻指掌图/龜_册01_page0046_idx73.png",
+            "segmented_path": "data/results/manual/confirmed/34_1230_切韻指掌图/龜_册01_page0046_idx73.png"
           }
         }
       }

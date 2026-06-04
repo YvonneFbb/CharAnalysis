@@ -40,11 +40,25 @@ const API_BASE = window.ReviewApi.apiBase();
         let isImageMagnified = false;     // 图片是否已放大150%
         const paramsManager = window.SegmentReviewParams.createManager({ apiBase: API_BASE });
 
-        function notifyParentDirty() {
-            if (window.self === window.top) return;
+        function getEmbeddedHostWindow() {
+            if (window.self === window.top) return null;
             try {
-                window.top.postMessage({ type: 'segment-state-dirty' }, window.location.origin);
+                return window.parent || window.top;
+            } catch (_) {
+                return null;
+            }
+        }
+
+        function postToEmbeddedHost(type) {
+            const host = getEmbeddedHostWindow();
+            if (!host) return;
+            try {
+                host.postMessage({ type }, window.location.origin);
             } catch (_) {}
+        }
+
+        function notifyParentDirty() {
+            postToEmbeddedHost('segment-state-dirty');
         }
 
         // ==================== 初始化 ====================
@@ -52,7 +66,6 @@ const API_BASE = window.ReviewApi.apiBase();
         function bindStaticControls() {
             document.getElementById('close-review-modal-btn').addEventListener('click', closeModal);
             document.getElementById('confirm-segmentation-btn').addEventListener('click', confirmSegmentation);
-            document.getElementById('mark-not-needed-btn').addEventListener('click', markInstanceAsNotNeeded);
             document.getElementById('toggle-manual-adjust-btn').addEventListener('click', toggleManualAdjustPanel);
             document.getElementById('unconfirm-segmentation-btn').addEventListener('click', unconfirmSegmentation);
             document.getElementById('brush-black').addEventListener('click', () => setBrushColor('black'));
@@ -118,10 +131,8 @@ const API_BASE = window.ReviewApi.apiBase();
                 if (e.key === 'Escape') {
                     if (isModalOpen) {
                         closeModal();
-                    } else if (window.self !== window.top) {
-                        try {
-                            window.top.postMessage({ type: 'close-segment-modal' }, window.location.origin);
-                        } catch (_) {}
+                    } else if (getEmbeddedHostWindow()) {
+                        postToEmbeddedHost('close-segment-modal');
                     }
                     return;
                 }
@@ -664,7 +675,7 @@ const API_BASE = window.ReviewApi.apiBase();
 
         async function unconfirmSegmentation() {
             const instanceId = currentInstances[currentInstanceIndex];
-            if (!confirm('确认取消通过该实例吗？')) return;
+            if (!confirm('确认恢复该实例的默认 confirmed 图吗？\n手动微调会被撤销。')) return;
 
             try {
                 const response = await fetch(`${API_BASE}/unconfirm_segmentation`, {
@@ -686,51 +697,16 @@ const API_BASE = window.ReviewApi.apiBase();
                 }
                 if (!response.ok || !result.success) throw new Error((result && result.error) || '取消失败');
 
-                // 更新前端状态与徽标
-                if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
-                reviewStatus[currentChar][instanceId] = { status: 'unreviewed', decision: 'unknown' };
+                delete segmentationData[instanceId];
+                if (reviewStatus[currentChar]) {
+                    delete reviewStatus[currentChar][instanceId];
+                }
                 notifyParentDirty();
-                document.getElementById('instance-info').innerHTML = '<span class="status-badge">未审查</span>';
-
-                // 刷新外层统计
                 await loadBook(currentBook, { preserveVisited: true });
+                await loadInstance();
 
             } catch (e) {
                 alert('取消失败: ' + e.message);
-            }
-        }
-
-        async function markInstanceAsNotNeeded() {
-            const instanceId = currentInstances[currentInstanceIndex];
-            if (!confirm('确认将该实例标记为“不需要”？')) return;
-            try {
-                const response = await fetch(`${API_BASE}/mark_segmentation_decision`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        book: currentBook,
-                        char: currentChar,
-                        instance_id: instanceId,
-                        decision: 'drop'
-                    })
-                });
-                const result = await response.json();
-                if (!response.ok || !result.success) throw new Error(result.error || '标记失败');
-
-                if (!reviewStatus[currentChar]) reviewStatus[currentChar] = {};
-                reviewStatus[currentChar][instanceId] = { status: 'dropped', decision: 'drop' };
-                notifyParentDirty();
-                document.getElementById('instance-info').innerHTML = '<span class="status-badge warning">已标记不需要</span>';
-                const segContainer = document.getElementById('segmented-container');
-                const imgEl = segContainer ? segContainer.querySelector('img') : null;
-                if (imgEl) {
-                    imgEl.classList.add('not-needed-image');
-                } else if (segContainer) {
-                    segContainer.innerHTML = '<div class="not-needed-placeholder">该实例已标记为不需要</div>';
-                }
-                await loadBook(currentBook, { preserveVisited: true });
-            } catch (e) {
-                alert('标记失败: ' + e.message);
             }
         }
 
@@ -1514,10 +1490,8 @@ const API_BASE = window.ReviewApi.apiBase();
 
         async function closeModal() {
             if (EMBEDDED_MODE) {
-                if (window.self !== window.top) {
-                    try {
-                        window.top.postMessage({ type: 'close-segment-modal' }, window.location.origin);
-                    } catch (_) {}
+                if (getEmbeddedHostWindow()) {
+                    postToEmbeddedHost('close-segment-modal');
                     return;
                 }
             }

@@ -64,9 +64,11 @@ def build_report() -> Dict:
 
     review_chars = 0
     selected_instances = 0
+    accepted_final_samples = 0
     lookup_entries = 0
-    confirmed_segments = 0
-    confirmed_non_drop = 0
+    materialized_final_samples = 0
+    legacy_confirmed_segments = 0
+    legacy_confirmed_nonaccepted = 0
     missing_segment_images = 0
     chars_without_segments = 0
 
@@ -85,21 +87,28 @@ def build_report() -> Dict:
                     continue
                 filter_state = item.get("filter") or {}
                 review_state = item.get("review") or {}
+                review_dropped = review_state.get("status") == "dropped" or review_state.get("decision") == "drop"
                 if filter_state.get("status") == "accepted":
                     selected_instances += 1
                     selected_for_char += 1
+                    if not review_dropped:
+                        accepted_final_samples += 1
                 if item.get("source"):
                     lookup_entries += 1
                     sourced_for_char += 1
-                if review_state.get("status") != "confirmed":
-                    continue
-                confirmed_segments += 1
-                confirmed_for_char += 1
-                if review_state.get("decision") != "drop":
-                    confirmed_non_drop += 1
                 seg_rel = get_confirmed_path(review_state)
-                if seg_rel and not (PROJECT_ROOT / seg_rel).exists():
-                    missing_segment_images += 1
+                if review_state.get("status") == "confirmed":
+                    legacy_confirmed_segments += 1
+                    confirmed_for_char += 1
+                    if filter_state.get("status") != "accepted":
+                        legacy_confirmed_nonaccepted += 1
+                if filter_state.get("status") == "accepted" and not review_dropped and seg_rel:
+                    materialized_final_samples += 1
+                    if not (PROJECT_ROOT / seg_rel).exists():
+                        missing_segment_images += 1
+                elif seg_rel and review_state.get("status") == "confirmed" and filter_state.get("status") != "accepted":
+                    if not (PROJECT_ROOT / seg_rel).exists():
+                        missing_segment_images += 1
             if selected_for_char == 0 and confirmed_for_char == 0:
                 chars_without_segments += 1
 
@@ -137,12 +146,13 @@ def build_report() -> Dict:
             analysis_missing_lookup = sum((payload or {}).get("missing_lookup", 0) for payload in (manifest.get("books") or {}).values())
         if analysis_books and analysis_books != len(review_books):
             issues.append(AuditIssue("warn", "analysis_book_count_mismatch", f"analysis has {analysis_books} books, review_books has {len(review_books)}"))
-        if analysis_entries and analysis_entries != confirmed_non_drop - missing_segment_images:
+        expected_analysis_entries = materialized_final_samples - missing_segment_images
+        if analysis_entries and analysis_entries != expected_analysis_entries:
             issues.append(
                 AuditIssue(
                     "warn",
                     "analysis_entry_count_mismatch",
-                    f"analysis has {analysis_entries} entries, expected {confirmed_non_drop - missing_segment_images} from review_books",
+                    f"analysis has {analysis_entries} entries, expected {expected_analysis_entries} materialized accepted samples from review_books",
                 )
             )
     else:
@@ -153,6 +163,15 @@ def build_report() -> Dict:
 
     if missing_segment_images:
         issues.append(AuditIssue("warn", "missing_segment_images", f"{missing_segment_images} confirmed segment images are missing on disk"))
+
+    if legacy_confirmed_nonaccepted:
+        issues.append(
+            AuditIssue(
+                "info",
+                "legacy_confirmed_nonaccepted",
+                f"{legacy_confirmed_nonaccepted} non-accepted items still carry legacy confirmed review state/path",
+            )
+        )
 
     report = {
         "paths": {
@@ -176,9 +195,11 @@ def build_report() -> Dict:
             "book_count": len(review_books),
             "char_count": review_chars,
             "selected_instances": selected_instances,
+            "accepted_final_samples": accepted_final_samples,
             "lookup_entries": lookup_entries,
-            "confirmed_segments": confirmed_segments,
-            "confirmed_non_drop_segments": confirmed_non_drop,
+            "materialized_final_samples": materialized_final_samples,
+            "legacy_confirmed_segments": legacy_confirmed_segments,
+            "legacy_confirmed_nonaccepted": legacy_confirmed_nonaccepted,
             "chars_without_segments": chars_without_segments,
             "missing_segment_images": missing_segment_images,
         },
@@ -215,7 +236,11 @@ def main() -> None:
         print("=== Data Layout Audit ===")
         print(f"review_books: {report['review']['book_count']} books, {report['review']['char_count']} chars")
         print(f"selected_instances: {report['review']['selected_instances']}, lookup_entries: {report['review']['lookup_entries']}")
-        print(f"confirmed_non_drop_segments: {report['review']['confirmed_non_drop_segments']}")
+        print(
+            "accepted_final_samples: "
+            f"{report['review']['accepted_final_samples']}, "
+            f"materialized_final_samples: {report['review']['materialized_final_samples']}"
+        )
         print(f"matched_books_files: {report['inventory']['matched_books_files']}, matched_shards_files: {report['inventory']['matched_shards_files']}")
         print(f"analysis: version={report['analysis']['manifest_version']} books={report['analysis']['book_count']} entries={report['analysis']['entry_count']}")
         if report["issues"]:

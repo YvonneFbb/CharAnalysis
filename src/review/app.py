@@ -49,6 +49,8 @@ from src.review.storage.review_books import (
     FILTER_REOCR_PAD_DEFAULT,
     ensure_char_item as _ensure_char_item,
     iter_accepted_items,
+    iter_confirmed_items,
+    iter_filter_accepted_items,
     iter_char_items,
     list_review_books,
     make_empty_char_entry,
@@ -438,15 +440,17 @@ def _find_segment_instance_info(book_name: str, char: str, instance_id: str) -> 
 
 
 def _review_state_to_legacy_entry(item: Dict) -> Dict:
+    item = dict(item or {})
+    filter_state = dict(item.get('filter') or {})
     review_state = dict((item or {}).get('review') or {})
     status = review_state.get('status')
-    if status == 'confirmed':
-        legacy_status = 'confirmed'
-    elif status == 'dropped':
+    decision = review_state.get('decision')
+    if decision == 'drop' or status == 'dropped':
         legacy_status = 'dropped'
+    elif filter_state.get('status') == 'accepted' or status == 'confirmed':
+        legacy_status = 'confirmed'
     else:
         legacy_status = 'unreviewed'
-    decision = review_state.get('decision')
     if not decision:
         decision = 'drop' if legacy_status == 'dropped' else 'unknown'
     payload = {
@@ -611,9 +615,14 @@ def _normalize_filter_view_mode(view_mode: Optional[str]) -> str:
     return 'usable'
 
 
-def _is_review_confirmed(review_state: Optional[Dict]) -> bool:
+def _is_review_confirmed(review_state: Optional[Dict], filter_state: Optional[Dict] = None) -> bool:
     review_state = dict(review_state or {})
-    return review_state.get('status') == 'confirmed' or bool(_get_confirmed_path(review_state))
+    filter_state = dict(filter_state or {})
+    return (
+        filter_state.get('status') == 'accepted'
+        or review_state.get('status') == 'confirmed'
+        or bool(_get_confirmed_path(review_state))
+    )
 
 
 def _filter_payload_from_item(
@@ -690,7 +699,7 @@ def _filter_payload_from_item(
         'is_large': size_group == 'large',
         'is_small': size_group == 'small',
         'is_single': size_group == 'single',
-        'is_confirmed': _is_review_confirmed(review_state),
+        'is_confirmed': _is_review_confirmed(review_state, filter_state),
     }
     if error_message:
         payload['error'] = error_message
@@ -830,7 +839,7 @@ def _item_is_review_dropped(item: Optional[Dict]) -> bool:
 
 def _accepted_lookup_from_book(book_obj: Dict) -> Dict:
     out: Dict[str, Dict] = {}
-    for char, instance_id, item in iter_accepted_items(book_obj):
+    for char, instance_id, item in iter_filter_accepted_items(book_obj):
         source = dict(item.get('source') or {})
         out.setdefault(char, {})[instance_id] = {
             'bbox': source.get('bbox', {}),
@@ -922,7 +931,7 @@ def _read_review_results() -> Dict:
 def read_review_data() -> dict:
     """
     兼容接口：返回 review 阶段视图。
-    只暴露 filter.accepted 的实例，结构保持旧 segmentation_review.json 兼容。
+    只暴露 filter.accepted 的实例，包含 review.drop 残留，结构保持旧 segmentation_review.json 兼容。
     """
     rr = read_all_review_books()
     out = {'version': 3, 'books': {}}
@@ -931,7 +940,7 @@ def read_review_data() -> dict:
         if not isinstance(book_obj, dict):
             continue
         book_out: Dict[str, Dict] = {}
-        for char, instance_id, item in iter_accepted_items(book_obj):
+        for char, instance_id, item in iter_filter_accepted_items(book_obj):
             book_out.setdefault(char, {})[instance_id] = _review_state_to_legacy_entry(item)
         if book_out:
             out['books'][book] = book_out
@@ -946,7 +955,7 @@ def build_combined_book(book_name: str) -> dict:
     """
     book_obj = read_review_book(book_name) or {}
     combined: Dict[str, Dict] = {}
-    for char, instance_id, item in iter_accepted_items(book_obj):
+    for char, instance_id, item in iter_filter_accepted_items(book_obj):
         source = dict(item.get('source') or {})
         review_entry = _review_state_to_legacy_entry(item)
         combined.setdefault(char, {})[instance_id] = {
@@ -1503,6 +1512,8 @@ def api_filter_decision():
             fcntl = None
 
         source = _find_source_for_instance(book_name, char, instance_id)
+        segment_book = ensure_segment_book_data(book_name) or {}
+        segment_item = (((segment_book.get(char) or {}).get('items')) or {}).get(instance_id)
         lock_path = _review_book_lock_path(book_name)
         lock_path.parent.mkdir(parents=True, exist_ok=True)
         with open(lock_path, 'a+') as lock_fp:
@@ -1517,6 +1528,24 @@ def api_filter_decision():
             filter_state = item.setdefault('filter', {})
             filter_state['status'] = status
             filter_state['timestamp'] = utc_now_iso()
+            review_state = dict(item.get('review') or {})
+            if status == 'accepted':
+                confirmed_rel = _ensure_confirmed_asset_for_item(
+                    book_name,
+                    char,
+                    instance_id,
+                    review_state,
+                    segment_item,
+                    item.get('source') or source,
+                )
+                review_state['status'] = 'confirmed'
+                review_state['decision'] = 'need'
+                review_state['timestamp'] = review_state.get('timestamp') or utc_now_iso()
+                item['review'] = _set_confirmed_path(review_state, confirmed_rel)
+            else:
+                review_state['status'] = 'pending'
+                review_state['decision'] = 'need'
+                item['review'] = _set_confirmed_path(review_state, None)
             char_obj = book_obj.setdefault(char, make_empty_char_entry())
             if isinstance(char_obj, dict):
                 char_obj['updated_at'] = utc_now_iso()
@@ -1534,7 +1563,6 @@ def api_filter_decision():
         source = source or _find_source_for_instance(book_name, char, instance_id) or {'instance_id': instance_id}
         updated_book = read_review_book(book_name) or {}
         updated_item = ((((updated_book.get(char) or {}).get('items')) or {}).get(instance_id)) or {}
-        segment_book = ensure_segment_book_data(book_name) or {}
         cluster_book = ensure_cluster_book_data(book_name) or {}
         reocr_book = ensure_reocr_book_data(book_name, engine_name) or {}
         item_payload = _filter_payload_from_item(
@@ -1542,7 +1570,7 @@ def api_filter_decision():
             char,
             source,
             updated_item,
-            (((segment_book.get(char) or {}).get('items')) or {}).get(instance_id),
+            segment_item,
             (((reocr_book.get(char) or {}).get('items')) or {}).get(instance_id),
             (((cluster_book.get(char) or {}).get('items')) or {}).get(instance_id),
             cluster_mode=str((cluster_book.get(char) or {}).get('mode') or 'single'),
@@ -1834,14 +1862,15 @@ def api_segment_instances():
             if not custom_params:
                 review_book = read_review_book(book_name) or {}
                 saved = _get_review_book_entry(review_book, char, instance_id)
-                if isinstance(saved, dict):
-                    entry_state = saved
+                legacy_entry = _get_review_book_legacy_entry(review_book, char, instance_id)
+                if isinstance(legacy_entry, dict):
+                    entry_state = legacy_entry
                 segmented_rel = _get_confirmed_path(saved) if isinstance(saved, dict) else None
-                saved_status = saved.get('status') if isinstance(saved, dict) else None
+                saved_status = legacy_entry.get('status') if isinstance(legacy_entry, dict) else None
                 if segmented_rel:
                     # 转换为绝对路径
                     seg_abs = PROJECT_ROOT / segmented_rel
-                    if seg_abs.exists() and saved_status == 'confirmed':
+                    if seg_abs.exists() and (saved_status == 'confirmed' or segmented_rel):
                         # 使用已保存图片替换 segmented_img
                         saved_img = cv2.imread(str(seg_abs), cv2.IMREAD_UNCHANGED)
                         if saved_img is not None:
@@ -1952,7 +1981,7 @@ def api_save_segmentation():
 @app.route('/api/unconfirm_segmentation', methods=['POST'])
 def api_unconfirm_segmentation():
     """
-    取消已确认的切割结果（将状态恢复为未审查）
+    取消 review 微调，恢复到默认 confirmed 图。
 
     Request body:
     {
@@ -1971,7 +2000,8 @@ def api_unconfirm_segmentation():
             return jsonify({'success': False, 'error': '缺少必要参数'}), 400
 
         review_book = read_review_book(book_name) or {}
-        review_entry = _get_review_book_entry(review_book, char, instance_id)
+        review_item = _get_review_book_item(review_book, char, instance_id)
+        review_entry = (review_item.get('review') or {}) if isinstance(review_item, dict) else {}
         segmented_path = _get_confirmed_path(review_entry)
         if segmented_path:
             seg_abs = PROJECT_ROOT / segmented_path
@@ -1981,14 +2011,25 @@ def api_unconfirm_segmentation():
             except Exception:
                 pass
 
-        # 恢复为未审查（单文件加锁写入）
+        segment_book = ensure_segment_book_data(book_name) or {}
+        segment_item = (((segment_book.get(char) or {}).get('items')) or {}).get(instance_id)
+        confirmed_rel = _ensure_confirmed_asset_for_item(
+            book_name,
+            char,
+            instance_id,
+            {},
+            segment_item,
+            (review_item.get('source') or {}) if isinstance(review_item, dict) else {},
+        )
+
+        # 恢复到 review 默认态：仍在 accepted 集中，并重新挂回默认 confirmed 图。
         from datetime import datetime, timezone
         update_review_entry(book_name, char, instance_id, _set_confirmed_path({
-            'status': 'unreviewed',
-            'method': None,
+            'status': 'confirmed' if confirmed_rel else 'pending',
+            'method': 'auto' if confirmed_rel else None,
             'timestamp': datetime.now(timezone.utc).isoformat(),
-            'decision': 'unknown'
-        }, None))
+            'decision': 'need'
+        }, confirmed_rel))
 
         app.logger.info('[API] /unconfirm_segmentation done: %s/%s/%s', book_name, char, instance_id)
         return jsonify({'success': True})
@@ -2016,34 +2057,21 @@ def api_mark_segmentation_decision():
         if not all([book_name, char, instance_id]):
             return jsonify({'success': False, 'error': '缺少必要参数'}), 400
 
-        review_data = read_review_data()
-        entry = (
-            review_data.get('books', {})
-                      .get(book_name, {})
-                      .get(char, {})
-                      .get(instance_id, {})
-        ) or {}
+        review_book = read_review_book(book_name) or {}
+        entry = _get_review_book_legacy_entry(review_book, char, instance_id) or {}
 
-        status = entry.get('status', 'unreviewed')
+        status = entry.get('status', 'confirmed')
         method = entry.get('method')
         segmented_path = _get_confirmed_path(entry)
 
         if decision == 'drop':
             status = 'dropped'
-            method = None
-            if segmented_path:
-                seg_abs = PROJECT_ROOT / segmented_path
-                try:
-                    if seg_abs.exists():
-                        seg_abs.unlink()
-                except Exception:
-                    pass
-            segmented_path = None
-        elif decision == 'need':
-            if status == 'dropped':
-                status = 'unreviewed'
-        else:  # unknown
-            status = 'unreviewed'
+        else:
+            # review 只做少量例外覆盖：accepted 项默认就是 confirmed，
+            # 非 drop 决策恢复到默认保留态，而不重新引入 “未审查” 主状态。
+            status = 'confirmed'
+            if decision == 'unknown':
+                decision = 'need'
 
         update_review_entry(book_name, char, instance_id, _set_confirmed_path({
             'status': status,
@@ -2246,7 +2274,13 @@ def api_segment_book_chars():
         chars_info = {}
         for char, inst_map in combined_book.items():
             total_instances = len(inst_map)
-            confirmed = sum(1 for s in inst_map.values() if s.get('status') == 'confirmed')
+            confirmed = sum(
+                1
+                for s in inst_map.values()
+                if s.get('decision') != 'drop'
+                and s.get('status') == 'confirmed'
+                and (s.get('confirmed_path') or s.get('segmented_path'))
+            )
             dropped = sum(1 for s in inst_map.values() if s.get('decision') == 'drop')
             effective = max(0, total_instances - dropped)
 
@@ -2459,13 +2493,11 @@ def _iter_confirmed_entries(review: Dict, book_name: str) -> List[Tuple[str, str
 def _iter_confirmed_entries_from_book(book_obj: Optional[Dict]) -> List[Tuple[str, str, str]]:
     """返回单书分片内所有已确认的 (char, instance_id, confirmed_rel_path)。"""
     out: List[Tuple[str, str, str]] = []
-    for ch, inst_id, item in iter_accepted_items(book_obj or {}):
+    for ch, inst_id, item in iter_confirmed_items(book_obj or {}):
         if not isinstance(item, dict):
             continue
         review_state = item.get('review') or {}
         if not isinstance(review_state, dict):
-            continue
-        if review_state.get('status') != 'confirmed':
             continue
         seg_rel = _get_confirmed_path(review_state)
         if not seg_rel:
@@ -2476,9 +2508,20 @@ def _iter_confirmed_entries_from_book(book_obj: Optional[Dict]) -> List[Tuple[st
 
 
 def _iter_fixing_entries_from_book(book_obj: Optional[Dict]) -> List[Tuple[str, str, Dict]]:
-    """返回 Review/Fixing 当前应展示的 accepted 实例集合。"""
+    """返回 Review/Fixing 当前应展示的 filter.accepted 实例集合。"""
     out: List[Tuple[str, str, Dict]] = []
-    for ch, inst_id, item in iter_accepted_items(book_obj or {}):
+    for ch, inst_id, item in iter_filter_accepted_items(book_obj or {}):
+        if not isinstance(item, dict):
+            continue
+        out.append((ch, inst_id, item))
+    out.sort(key=lambda x: (x[0], x[1]))
+    return out
+
+
+def _iter_fixing_montage_entries_from_book(book_obj: Optional[Dict]) -> List[Tuple[str, str, Dict]]:
+    """返回 montage 应展示的最终 confirmed 实例集合。"""
+    out: List[Tuple[str, str, Dict]] = []
+    for ch, inst_id, item in iter_confirmed_items(book_obj or {}):
         if not isinstance(item, dict):
             continue
         out.append((ch, inst_id, item))
@@ -2714,6 +2757,82 @@ def _get_review_book_entry(book_obj: Optional[Dict], char: str, instance_id: str
     return review_state if isinstance(review_state, dict) else {}
 
 
+def _get_review_book_item(book_obj: Optional[Dict], char: str, instance_id: str) -> Dict:
+    char_obj = (book_obj or {}).get(char) or {}
+    item = iter_char_items(char_obj).get(instance_id) or {}
+    return item if isinstance(item, dict) else {}
+
+
+def _get_review_book_legacy_entry(book_obj: Optional[Dict], char: str, instance_id: str) -> Dict:
+    item = _get_review_book_item(book_obj, char, instance_id)
+    return _review_state_to_legacy_entry(item) if item else {}
+
+
+def _expected_confirmed_relpath(book_name: str, char: str, instance_id: str) -> str:
+    return f'data/results/manual/confirmed/{book_name}/{char}_{instance_id}.png'
+
+
+def _ensure_confirmed_asset_for_item(
+    book_name: str,
+    char: str,
+    instance_id: str,
+    review_state: Optional[Dict],
+    segment_state: Optional[Dict],
+    source_info: Optional[Dict] = None,
+) -> Optional[str]:
+    review_state = dict(review_state or {})
+    current_rel = _get_confirmed_path(review_state)
+    if current_rel:
+        current_abs = PROJECT_ROOT / current_rel
+        if current_abs.exists():
+            return current_rel
+
+    expected_rel = _expected_confirmed_relpath(book_name, char, instance_id)
+    expected_abs = PROJECT_ROOT / expected_rel
+    if expected_abs.exists():
+        return expected_rel
+
+    segment_state = dict(segment_state or {})
+    atlas_relpath = segment_state.get('atlas_relpath')
+    atlas_bbox = segment_state.get('atlas_bbox') or {}
+    if not atlas_relpath:
+        return None
+    if int(atlas_bbox.get('width') or 0) <= 0 or int(atlas_bbox.get('height') or 0) <= 0:
+        return None
+
+    cropped = _atlas_crop_to_image(atlas_relpath, atlas_bbox)
+    if cropped is not None:
+        expected_abs.parent.mkdir(parents=True, exist_ok=True)
+        cropped.convert('L').save(expected_abs, format='PNG')
+        return expected_rel
+
+    instance_info = _find_segment_instance_info(book_name, char, instance_id)
+    if instance_info:
+        preprocessed_image = instance_info.get('source_image')
+        bbox = instance_info.get('bbox')
+        if preprocessed_image and bbox:
+            try:
+                if not os.path.isabs(preprocessed_image):
+                    preprocessed_image = str(PROJECT_ROOT / preprocessed_image)
+                _roi_img, segmented_img, _debug_img, _metadata, _processed_roi = segment_character(
+                    preprocessed_image,
+                    bbox,
+                    custom_params=None,
+                )
+                expected_abs.parent.mkdir(parents=True, exist_ok=True)
+                cv2.imwrite(str(expected_abs), segmented_img)
+                return expected_rel
+            except Exception:
+                pass
+
+    roi_img = _crop_roi_image(source_info or {})
+    if roi_img is None:
+        return None
+    expected_abs.parent.mkdir(parents=True, exist_ok=True)
+    roi_img.convert('L').save(expected_abs, format='PNG')
+    return expected_rel
+
+
 @app.route('/api/fixing_items', methods=['GET'])
 def api_fixing_items():
     """
@@ -2772,9 +2891,10 @@ def api_fixing_items():
         for ch, inst_map in lookup_book.items():
             for inst_id, info in inst_map.items():
                 review_entry = _get_review_book_entry(book_obj, ch, inst_id)
+                legacy_entry = _get_review_book_legacy_entry(book_obj, ch, inst_id)
                 seg_rel = _get_confirmed_path(review_entry)
-                status = review_entry.get('status', 'unreviewed')
-                method = review_entry.get('method')
+                status = legacy_entry.get('status', 'unreviewed')
+                method = legacy_entry.get('method')
                 metrics = None
                 abs_path = PROJECT_ROOT / seg_rel if seg_rel else None
                 if include_metrics and seg_rel and abs_path.exists():
@@ -2791,10 +2911,10 @@ def api_fixing_items():
                     'segment_item': (((segment_book.get(ch) or {}).get('items')) or {}).get(inst_id),
                     'status': status,
                     'method': method,
-                    'decision': review_entry.get('decision', 'unknown'),
+                    'decision': legacy_entry.get('decision', 'unknown'),
                     'info': info,
                     'metrics': metrics,
-                    'revision': review_entry.get('timestamp') or '',
+                    'revision': legacy_entry.get('timestamp') or '',
                 })
 
         total = len(all_instances)
@@ -2913,13 +3033,15 @@ def api_fixing_montage():
         use_fixed_box = request.args.get('use_fixed_box', '1') in ('1', 'true', 'yes')
         tile = int(request.args.get('tile', '64') or '64')
         cols = int(request.args.get('cols', '50') or '50')
+        border = 1
         if not book_name:
             return jsonify({'success': False, 'error': '缺少参数 book'}), 400
 
         book_obj = read_review_book(book_name) or {}
         segment_book = ensure_segment_book_data(book_name) or {}
-        entries = _iter_fixing_entries_from_book(book_obj)
+        entries = _iter_fixing_montage_entries_from_book(book_obj)
         Lb = _compute_book_fixed_box_Lb_from_book(book_obj) if use_fixed_box else 0
+        tile_size = max(8, int(Lb) + border * 2 + 2) if (use_fixed_box and Lb > 0) else max(8, tile)
 
         tiles: List[Image.Image] = []
         for ch, inst_id, item in entries:
@@ -2939,30 +3061,26 @@ def api_fixing_montage():
                 img = img.convert('L')
                 if use_fixed_box and Lb and Lb > 0:
                     roi = _center_crop_fixed_box(img, Lb)
-                    # 缩放到 tile
+                    # 固定框 montage 使用原始 L_b 作为内容尺寸，不再压进前端传来的固定 tile。
+                    canvas = Image.new('RGB', (tile_size, tile_size), (255, 255, 255))
                     w, h = roi.size
-                    scale = min((tile - 2) / max(1, w), (tile - 2) / max(1, h))
-                    new_w = max(1, int(round(w * scale)))
-                    new_h = max(1, int(round(h * scale)))
-                    roi_resized = roi.resize((new_w, new_h), Image.BICUBIC)
-                    canvas = Image.new('RGB', (tile, tile), (255, 255, 255))
-                    ox = (tile - new_w) // 2
-                    oy = (tile - new_h) // 2
-                    canvas.paste(roi_resized.convert('RGB'), (ox, oy))
+                    ox = (tile_size - w) // 2
+                    oy = (tile_size - h) // 2
+                    canvas.paste(roi.convert('RGB'), (ox, oy))
                 else:
                     # 普通缩放
                     w, h = img.size
-                    scale = min((tile - 2) / max(1, w), (tile - 2) / max(1, h))
+                    scale = min((tile_size - 2) / max(1, w), (tile_size - 2) / max(1, h))
                     new_w = max(1, int(round(w * scale)))
                     new_h = max(1, int(round(h * scale)))
                     resized = img.resize((new_w, new_h), Image.BICUBIC)
-                    canvas = Image.new('RGB', (tile, tile), (255, 255, 255))
-                    ox = (tile - new_w) // 2
-                    oy = (tile - new_h) // 2
+                    canvas = Image.new('RGB', (tile_size, tile_size), (255, 255, 255))
+                    ox = (tile_size - new_w) // 2
+                    oy = (tile_size - new_h) // 2
                     canvas.paste(resized.convert('RGB'), (ox, oy))
                 # 淡边框
                 draw = ImageDraw.Draw(canvas)
-                draw.rectangle([0, 0, tile - 1, tile - 1], outline=(210, 210, 210))
+                draw.rectangle([0, 0, tile_size - 1, tile_size - 1], outline=(210, 210, 210))
                 tiles.append(canvas)
             except Exception:
                 continue
@@ -2972,13 +3090,13 @@ def api_fixing_montage():
 
         cols = max(1, cols)
         rows = ceil(len(tiles) / cols)
-        W = cols * tile
-        H = rows * tile
+        W = cols * tile_size
+        H = rows * tile_size
         out = Image.new('RGB', (W, H), (255, 255, 255))
         for idx, timg in enumerate(tiles):
             r = idx // cols
             c = idx % cols
-            out.paste(timg, (c * tile, r * tile))
+            out.paste(timg, (c * tile_size, r * tile_size))
 
         buf = io.BytesIO()
         out.save(buf, format='PNG')

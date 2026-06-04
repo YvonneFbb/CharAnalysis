@@ -180,12 +180,12 @@ def _review_item_preference(instance_id: str, item: Optional[Dict]):
     review_state = item.get("review") or {}
     confirmed_path = get_confirmed_path(review_state)
 
-    if review_state.get("status") == "confirmed" or confirmed_path:
+    if filter_state.get("status") == "accepted":
+        state_score = 6
+    elif review_state.get("status") == "confirmed" or confirmed_path:
         state_score = 6
     elif review_state.get("status") == "dropped" or review_state.get("decision") == "drop":
         state_score = 5
-    elif filter_state.get("status") == "accepted":
-        state_score = 4
     elif filter_state.get("status") == "rejected":
         state_score = 3
     else:
@@ -380,20 +380,27 @@ def iter_book_items(book_data: Optional[Dict]) -> Iterator[Tuple[str, str, Dict]
             yield char, instance_id, item
 
 
-def iter_accepted_items(book_data: Optional[Dict]) -> Iterator[Tuple[str, str, Dict]]:
+def iter_filter_accepted_items(book_data: Optional[Dict]) -> Iterator[Tuple[str, str, Dict]]:
     for char, instance_id, item in iter_book_items(book_data):
         filter_state = item.get("filter") or {}
-        review_state = item.get("review") or {}
-        if review_state.get("status") == "dropped" or review_state.get("decision") == "drop":
-            continue
         if filter_state.get("status") == "accepted":
             yield char, instance_id, item
 
 
+def iter_accepted_items(book_data: Optional[Dict]) -> Iterator[Tuple[str, str, Dict]]:
+    for char, instance_id, item in iter_filter_accepted_items(book_data):
+        review_state = item.get("review") or {}
+        if review_state.get("status") == "dropped" or review_state.get("decision") == "drop":
+            continue
+        yield char, instance_id, item
+
+
 def iter_confirmed_items(book_data: Optional[Dict]) -> Iterator[Tuple[str, str, Dict]]:
+    # Final exported samples are the retained review items that already have a
+    # materialized confirmed image on disk.
     for char, instance_id, item in iter_accepted_items(book_data):
-        review = item.get("review") or {}
-        if review.get("status") == "confirmed" and review.get("decision") != "drop":
+        review_state = item.get("review") or {}
+        if get_confirmed_path(review_state):
             yield char, instance_id, item
 
 

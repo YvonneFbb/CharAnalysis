@@ -3255,7 +3255,7 @@
       }
     },
     "七": {
-      "updated_at": "2026-05-28T03:44:48.599Z",
+      "updated_at": "2026-06-02T15:16:45.195Z",
       "items": {
         "册04_page0039_idx6": {
           "source": {
@@ -3295,12 +3295,12 @@
             "timestamp": "2026-05-28T03:44:48.599Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-10-30T19:21:00.526189+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/七_册04_page0039_idx6.png",
-            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/七_册04_page0039_idx6.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册05_page0003_idx96": {
@@ -3387,12 +3387,12 @@
             "timestamp": "2026-05-28T03:44:43.839Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:44:43.839Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/七_册01_page0008_idx62.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/七_册01_page0008_idx62.png"
           }
         },
         "册01_page0046_idx71": {
@@ -3635,12 +3635,12 @@
             "timestamp": "2026-05-28T03:44:45.911Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:44:45.911Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/七_册05_page0036_idx82.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/七_册05_page0036_idx82.png"
           }
         },
         "册03_page0017_idx169": {
@@ -3966,12 +3966,12 @@
             "timestamp": "2026-05-28T03:44:46.707Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:44:46.707Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/七_册03_page0003_idx157.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/七_册03_page0003_idx157.png"
           }
         },
         "册03_page0003_idx193": {
@@ -4297,12 +4297,12 @@
             "timestamp": "2026-05-28T03:44:47.775Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-10-30T19:21:01.580105+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/七_册04_page0032_idx192.png",
-            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/七_册04_page0032_idx192.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         }
       }
@@ -5490,7 +5490,7 @@
       }
     },
     "上": {
-      "updated_at": "2026-05-28T03:50:40.990Z",
+      "updated_at": "2026-06-02T15:16:45.195Z",
       "items": {
         "册04_page0036_idx121": {
           "source": {
@@ -5530,12 +5530,12 @@
             "timestamp": "2026-05-28T03:50:39.757Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-10-30T19:22:40.804887+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/上_册04_page0036_idx121.png",
-            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/上_册04_page0036_idx121.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册02_page0014_idx46": {
@@ -5925,12 +5925,12 @@
             "timestamp": "2026-05-28T03:50:37.945Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:50:37.945Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/上_册01_page0047_idx84.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/上_册01_page0047_idx84.png"
           }
         },
         "册02_page0026_idx147": {
@@ -6063,12 +6063,12 @@
             "timestamp": "2026-05-28T03:50:39.074Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:50:39.074Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/上_册01_page0006_idx411.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/上_册01_page0006_idx411.png"
           }
         },
         "册02_page0038_idx30": {
@@ -6771,18 +6771,18 @@
             "timestamp": "2026-05-28T03:50:40.990Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:50:40.990Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/上_册03_page0003_idx1.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/上_册03_page0003_idx1.png"
           }
         }
       }
     },
     "下": {
-      "updated_at": "2026-05-28T03:50:46.485Z",
+      "updated_at": "2026-06-02T15:16:45.195Z",
       "items": {
         "册04_page0035_idx60": {
           "source": {
@@ -7383,12 +7383,12 @@
             "timestamp": "2026-05-28T03:50:46.485Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:50:46.485Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/下_册02_page0040_idx25.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/下_册02_page0040_idx25.png"
           }
         },
         "册03_page0037_idx4": {
@@ -8038,7 +8038,7 @@
       }
     },
     "不": {
-      "updated_at": "2026-05-28T03:34:32.732Z",
+      "updated_at": "2026-06-02T15:16:45.195Z",
       "items": {
         "册01_page0007_idx152": {
           "source": {
@@ -8078,12 +8078,12 @@
             "timestamp": "2026-05-28T03:34:32.732Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-10-30T19:22:51.758069+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/不_册01_page0007_idx152.png",
-            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/不_册01_page0007_idx152.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册02_page0031_idx416": {
@@ -8216,12 +8216,12 @@
             "timestamp": "2026-05-28T03:34:17.702Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:34:17.702Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/不_册01_page0005_idx349.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/不_册01_page0005_idx349.png"
           }
         },
         "册01_page0006_idx11": {
@@ -8308,12 +8308,12 @@
             "timestamp": "2026-05-28T03:34:32.072Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:34:32.072Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/不_册05_page0017_idx51.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/不_册05_page0017_idx51.png"
           }
         },
         "册02_page0029_idx75": {
@@ -9347,12 +9347,12 @@
             "timestamp": "2026-05-28T03:34:18.496Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:34:18.496Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/不_册01_page0005_idx210.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/不_册01_page0005_idx210.png"
           }
         }
       }
@@ -12708,7 +12708,7 @@
       }
     },
     "主": {
-      "updated_at": "2026-05-18T17:16:50.390Z",
+      "updated_at": "2026-06-04T03:04:09.040Z",
       "items": {
         "册02_page0017_idx105": {
           "source": {
@@ -12749,11 +12749,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T09:19:48.717709+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:04:08.890099+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/主_册02_page0017_idx105.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/主_册02_page0017_idx105.png"
           }
         },
         "册05_page0003_idx119": {
@@ -14336,7 +14336,7 @@
       }
     },
     "之": {
-      "updated_at": "2026-05-28T03:45:31.090Z",
+      "updated_at": "2026-06-02T15:16:45.195Z",
       "items": {
         "册01_page0005_idx239": {
           "source": {
@@ -14707,12 +14707,12 @@
             "timestamp": "2026-05-28T03:45:30.271Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:45:30.271Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/之_册01_page0005_idx480.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/之_册01_page0005_idx480.png"
           }
         },
         "册01_page0006_idx244": {
@@ -14964,12 +14964,12 @@
             "timestamp": "2026-05-28T03:45:31.090Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:45:31.090Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/之_册01_page0005_idx318.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/之_册01_page0005_idx318.png"
           }
         }
       }
@@ -15643,7 +15643,7 @@
       }
     },
     "也": {
-      "updated_at": "2026-05-28T03:44:53.515Z",
+      "updated_at": "2026-06-02T15:16:45.195Z",
       "items": {
         "册01_page0035_idx117": {
           "source": {
@@ -15729,12 +15729,12 @@
             "timestamp": "2026-05-28T03:44:53.515Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:44:53.515Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/也_册01_page0005_idx378.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/也_册01_page0005_idx378.png"
           }
         },
         "册01_page0045_idx49": {
@@ -19461,7 +19461,7 @@
       }
     },
     "二": {
-      "updated_at": "2026-05-28T03:52:37.077Z",
+      "updated_at": "2026-06-02T15:16:45.195Z",
       "items": {
         "册02_page0003_idx52": {
           "source": {
@@ -20494,12 +20494,12 @@
             "timestamp": "2026-05-28T03:52:37.077Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:52:37.077Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/二_册02_page0040_idx30.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/二_册02_page0040_idx30.png"
           }
         },
         "册03_page0020_idx160": {
@@ -21577,7 +21577,7 @@
       }
     },
     "云": {
-      "updated_at": "2026-05-18T17:18:05.370Z",
+      "updated_at": "2026-06-02T15:16:45.195Z",
       "items": {
         "册02_page0024_idx69": {
           "source": {
@@ -21613,14 +21613,14 @@
             ]
           },
           "filter": {
-            "status": "accepted",
+            "status": "pending",
             "timestamp": "2025-11-11T09:19:40.463669+00:00"
           },
           "review": {
-            "status": "dropped",
+            "status": "pending",
             "timestamp": "2025-11-11T09:19:40.463669+00:00",
             "method": null,
-            "decision": "drop",
+            "decision": "need",
             "confirmed_path": null,
             "segmented_path": null
           }
@@ -22612,7 +22612,7 @@
       }
     },
     "人": {
-      "updated_at": "2026-05-28T03:51:22.727Z",
+      "updated_at": "2026-06-02T15:16:45.195Z",
       "items": {
         "册01_page0007_idx305": {
           "source": {
@@ -22652,12 +22652,12 @@
             "timestamp": "2026-05-28T03:51:21.080Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-10-30T19:10:34.908040+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/人_册01_page0007_idx305.png",
-            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/人_册01_page0007_idx305.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册05_page0030_idx8": {
@@ -22836,12 +22836,12 @@
             "timestamp": "2026-05-28T03:51:08.462Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:51:08.462Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/人_册01_page0005_idx345.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/人_册01_page0005_idx345.png"
           }
         },
         "册01_page0037_idx87": {
@@ -24454,18 +24454,18 @@
             "timestamp": "2026-05-28T03:51:22.727Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:51:22.727Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/人_册01_page0004_idx99.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/人_册01_page0004_idx99.png"
           }
         }
       }
     },
     "仁": {
-      "updated_at": "2026-05-28T03:48:41.397Z",
+      "updated_at": "2026-06-02T15:16:45.195Z",
       "items": {
         "册03_page0026_idx223": {
           "source": {
@@ -24560,12 +24560,12 @@
             "timestamp": "2026-05-28T03:48:41.397Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:48:41.397Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/仁_册01_page0004_idx128.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/仁_册01_page0004_idx128.png"
           }
         },
         "册01_page0003_idx71": {
@@ -26103,7 +26103,7 @@
       }
     },
     "入": {
-      "updated_at": "2026-05-28T03:50:58.604Z",
+      "updated_at": "2026-06-02T15:16:45.195Z",
       "items": {
         "册01_page0005_idx20": {
           "source": {
@@ -26382,12 +26382,12 @@
             "timestamp": "2026-05-28T03:50:58.604Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:50:58.604Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/入_册05_page0041_idx24.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/入_册05_page0041_idx24.png"
           }
         },
         "册05_page0014_idx71": {
@@ -27598,7 +27598,7 @@
       }
     },
     "八": {
-      "updated_at": "2026-05-28T03:51:03.821Z",
+      "updated_at": "2026-06-02T15:16:45.195Z",
       "items": {
         "册02_page0003_idx93": {
           "source": {
@@ -27960,12 +27960,12 @@
             "timestamp": "2026-05-28T03:51:02.677Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:51:02.677Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/八_册02_page0003_idx42.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/八_册02_page0003_idx42.png"
           }
         },
         "册01_page0008_idx42": {
@@ -28392,12 +28392,12 @@
             "timestamp": "2026-05-28T03:51:03.821Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:51:03.821Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/八_册05_page0003_idx163.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/八_册05_page0003_idx163.png"
           }
         },
         "册05_page0041_idx380": {
@@ -28734,7 +28734,7 @@
       }
     },
     "其": {
-      "updated_at": "2026-05-28T03:47:01.270Z",
+      "updated_at": "2026-06-02T15:16:45.195Z",
       "items": {
         "册01_page0007_idx191": {
           "source": {
@@ -29050,12 +29050,12 @@
             "timestamp": "2026-05-28T03:47:00.280Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:47:00.280Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/其_册01_page0006_idx250.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/其_册01_page0006_idx250.png"
           }
         },
         "册01_page0017_idx94": {
@@ -29151,12 +29151,12 @@
             "timestamp": "2026-05-28T03:47:01.270Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:47:01.270Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/其_册01_page0006_idx21.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/其_册01_page0006_idx21.png"
           }
         },
         "册01_page0005_idx439": {
@@ -29585,7 +29585,7 @@
       }
     },
     "具": {
-      "updated_at": "2026-05-28T03:47:04.738Z",
+      "updated_at": "2026-06-02T15:16:45.195Z",
       "items": {
         "册01_page0006_idx173": {
           "source": {
@@ -29763,12 +29763,12 @@
             "timestamp": "2026-05-28T03:47:04.738Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:47:04.738Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/具_册01_page0007_idx95.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/具_册01_page0007_idx95.png"
           }
         },
         "册04_page0035_idx41": {
@@ -33445,7 +33445,7 @@
       }
     },
     "十": {
-      "updated_at": "2026-05-28T03:52:42.520Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册02_page0003_idx53": {
           "source": {
@@ -34009,12 +34009,12 @@
             "timestamp": "2026-05-28T03:52:42.520Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:52:42.520Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/十_册01_page0008_idx114.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/十_册01_page0008_idx114.png"
           }
         },
         "册05_page0019_idx64": {
@@ -34202,18 +34202,18 @@
             "timestamp": "2026-05-28T03:52:40.315Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:52:40.315Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/十_册01_page0008_idx160.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/十_册01_page0008_idx160.png"
           }
         }
       }
     },
     "千": {
-      "updated_at": "2026-05-28T03:44:30.151Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册03_page0003_idx197": {
           "source": {
@@ -34391,12 +34391,12 @@
             "timestamp": "2026-05-28T03:44:30.151Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:44:30.151Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/千_册01_page0004_idx15.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/千_册01_page0004_idx15.png"
           }
         },
         "册05_page0041_idx17": {
@@ -35053,12 +35053,12 @@
             "timestamp": "2026-05-28T03:44:29.054Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:44:29.054Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/千_册01_page0004_idx27.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/千_册01_page0004_idx27.png"
           }
         },
         "册04_page0026_idx114": {
@@ -36094,7 +36094,7 @@
       }
     },
     "升": {
-      "updated_at": "2026-05-18T17:20:16.982Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0013_idx115": {
           "source": {
@@ -36130,14 +36130,14 @@
             ]
           },
           "filter": {
-            "status": "accepted",
+            "status": "pending",
             "timestamp": "2025-11-11T09:17:21.348819+00:00"
           },
           "review": {
-            "status": "dropped",
+            "status": "pending",
             "timestamp": "2025-11-11T09:17:21.348819+00:00",
             "method": null,
-            "decision": "drop",
+            "decision": "need",
             "confirmed_path": null,
             "segmented_path": null
           }
@@ -38951,7 +38951,7 @@
       }
     },
     "卷": {
-      "updated_at": "2026-05-28T03:43:24.415Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册05_page0041_idx388": {
           "source": {
@@ -39046,12 +39046,12 @@
             "timestamp": "2026-05-28T03:43:24.415Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:43:24.415Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/卷_册02_page0003_idx7.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/卷_册02_page0003_idx7.png"
           }
         },
         "册02_page0007_idx66": {
@@ -39489,7 +39489,7 @@
       }
     },
     "去": {
-      "updated_at": "2026-05-28T03:45:03.897Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册04_page0003_idx2": {
           "source": {
@@ -39529,12 +39529,12 @@
             "timestamp": "2026-05-28T03:45:03.897Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-10-30T19:14:42.648053+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/去_册04_page0003_idx2.png",
-            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/去_册04_page0003_idx2.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册01_page0005_idx17": {
@@ -39621,12 +39621,12 @@
             "timestamp": "2026-05-28T03:45:01.845Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:45:01.845Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/去_册01_page0005_idx27.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/去_册01_page0005_idx27.png"
           }
         },
         "册01_page0022_idx92": {
@@ -39722,12 +39722,12 @@
             "timestamp": "2026-05-28T03:45:03.147Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:45:03.147Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/去_册01_page0007_idx186.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/去_册01_page0007_idx186.png"
           }
         },
         "册05_page0042_idx39": {
@@ -41219,7 +41219,7 @@
       }
     },
     "及": {
-      "updated_at": "2026-05-28T03:47:40.089Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0007_idx74": {
           "source": {
@@ -42813,12 +42813,12 @@
             "timestamp": "2026-05-28T03:47:40.089Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:47:40.089Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/及_册01_page0006_idx384.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/及_册01_page0006_idx384.png"
           }
         },
         "册01_page0028_idx111": {
@@ -45017,12 +45017,12 @@
             "timestamp": "2026-05-28T03:47:52.166Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-10-30T19:20:43.286048+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/受_册05_page0030_idx31.png",
-            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/受_册05_page0030_idx31.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         }
       }
@@ -46307,7 +46307,7 @@
       }
     },
     "可": {
-      "updated_at": "2026-05-28T03:43:19.913Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0006_idx159": {
           "source": {
@@ -46945,12 +46945,12 @@
             "timestamp": "2026-05-28T03:43:19.913Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:43:19.913Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/可_册03_page0028_idx14.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/可_册03_page0028_idx14.png"
           }
         },
         "册02_page0026_idx172": {
@@ -47912,7 +47912,7 @@
       }
     },
     "合": {
-      "updated_at": "2026-05-28T03:48:55.127Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册05_page0024_idx67": {
           "source": {
@@ -48090,12 +48090,12 @@
             "timestamp": "2026-05-28T03:48:55.127Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:48:55.127Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/合_册05_page0003_idx152.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/合_册05_page0003_idx152.png"
           }
         },
         "册02_page0012_idx46": {
@@ -48855,7 +48855,7 @@
       }
     },
     "同": {
-      "updated_at": "2026-05-28T03:47:18.555Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0035_idx119": {
           "source": {
@@ -49474,12 +49474,12 @@
             "timestamp": "2026-05-28T03:47:12.693Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:47:12.693Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/同_册01_page0005_idx494.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/同_册01_page0005_idx494.png"
           }
         },
         "册04_page0024_idx31": {
@@ -50099,12 +50099,12 @@
             "timestamp": "2026-05-28T03:47:18.555Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:47:18.555Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/同_册01_page0004_idx203.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/同_册01_page0004_idx203.png"
           }
         }
       }
@@ -50759,7 +50759,7 @@
       }
     },
     "周": {
-      "updated_at": "2026-05-28T03:47:22.233Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0005_idx95": {
           "source": {
@@ -51075,12 +51075,12 @@
             "timestamp": "2026-05-28T03:47:22.233Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:47:22.233Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/周_册01_page0006_idx370.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/周_册01_page0006_idx370.png"
           }
         },
         "册04_page0011_idx87": {
@@ -52015,7 +52015,7 @@
       }
     },
     "和": {
-      "updated_at": "2026-05-28T03:48:46.889Z",
+      "updated_at": "2026-06-04T03:07:36.074Z",
       "items": {
         "册02_page0040_idx42": {
           "source": {
@@ -52051,14 +52051,14 @@
             ]
           },
           "filter": {
-            "status": "accepted",
-            "timestamp": "2025-11-11T09:23:24.997752+00:00"
+            "status": "pending",
+            "timestamp": "2026-06-04T03:07:36.074Z"
           },
           "review": {
-            "status": "dropped",
+            "status": "pending",
             "timestamp": "2025-11-11T09:23:24.997752+00:00",
-            "method": null,
-            "decision": "drop",
+            "method": "auto",
+            "decision": "need",
             "confirmed_path": null,
             "segmented_path": null
           }
@@ -53021,12 +53021,12 @@
             "timestamp": "2026-05-28T03:48:46.108Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:48:46.108Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/和_册01_page0047_idx97.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/和_册01_page0047_idx97.png"
           }
         },
         "册05_page0021_idx142": {
@@ -53205,12 +53205,12 @@
             "timestamp": "2026-05-28T03:48:46.889Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:48:46.889Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/和_册01_page0007_idx331.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/和_册01_page0007_idx331.png"
           }
         },
         "册04_page0010_idx82": {
@@ -53979,7 +53979,7 @@
       }
     },
     "咸": {
-      "updated_at": "2026-05-28T03:46:09.880Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0006_idx17": {
           "source": {
@@ -54019,12 +54019,12 @@
             "timestamp": "2026-05-28T03:46:09.880Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:46:09.880Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/咸_册01_page0006_idx17.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/咸_册01_page0006_idx17.png"
           }
         },
         "册02_page0003_idx83": {
@@ -54065,12 +54065,12 @@
             "timestamp": "2026-05-28T03:46:08.970Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:46:08.970Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/咸_册02_page0003_idx83.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/咸_册02_page0003_idx83.png"
           }
         },
         "册01_page0005_idx355": {
@@ -54918,7 +54918,7 @@
       }
     },
     "喜": {
-      "updated_at": "2026-05-28T03:44:17.147Z",
+      "updated_at": "2026-06-04T03:04:51.253Z",
       "items": {
         "册01_page0039_idx258": {
           "source": {
@@ -54958,10 +54958,10 @@
             "timestamp": "2025-10-30T19:28:22.696279+00:00"
           },
           "review": {
-            "status": "confirmed",
-            "timestamp": "2025-10-30T19:28:22.696279+00:00",
+            "status": "dropped",
+            "timestamp": "2026-06-04T03:04:51.103344+00:00",
             "method": "auto",
-            "decision": "need",
+            "decision": "drop",
             "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/喜_册01_page0039_idx258.png",
             "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/喜_册01_page0039_idx258.png"
           }
@@ -56229,7 +56229,7 @@
       }
     },
     "單": {
-      "updated_at": "2026-05-28T03:35:14.896Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册02_page0005_idx43": {
           "source": {
@@ -56609,12 +56609,12 @@
             "timestamp": "2026-05-28T03:35:14.896Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:35:14.896Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/單_册03_page0023_idx54.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/單_册03_page0023_idx54.png"
           }
         },
         "册03_page0013_idx21": {
@@ -57089,7 +57089,7 @@
       }
     },
     "四": {
-      "updated_at": "2026-05-28T03:52:14.240Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册02_page0024_idx259": {
           "source": {
@@ -57184,12 +57184,12 @@
             "timestamp": "2026-05-28T03:52:14.240Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:52:14.240Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/四_册01_page0007_idx244.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/四_册01_page0007_idx244.png"
           }
         },
         "册01_page0043_idx349": {
@@ -57230,12 +57230,12 @@
             "timestamp": "2026-05-28T03:52:12.375Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:52:12.375Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/四_册01_page0043_idx349.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/四_册01_page0043_idx349.png"
           }
         },
         "册05_page0041_idx0": {
@@ -58634,7 +58634,7 @@
       }
     },
     "國": {
-      "updated_at": "2026-05-28T03:23:48.107Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0005_idx227": {
           "source": {
@@ -59566,12 +59566,12 @@
             "timestamp": "2026-05-28T03:23:48.107Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:23:48.107Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/國_册01_page0006_idx160.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/國_册01_page0006_idx160.png"
           }
         },
         "册05_page0012_idx169": {
@@ -67983,7 +67983,7 @@
       }
     },
     "增": {
-      "updated_at": "2026-05-28T03:16:21.289Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0006_idx6": {
           "source": {
@@ -68023,12 +68023,12 @@
             "timestamp": "2026-05-28T03:16:06.302Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-10-30T19:12:54.994861+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/增_册01_page0006_idx6.png",
-            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/增_册01_page0006_idx6.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册01_page0004_idx141": {
@@ -69374,12 +69374,12 @@
             "timestamp": "2026-05-28T03:16:10.860Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:16:10.860Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/增_册01_page0004_idx146.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/增_册01_page0004_idx146.png"
           }
         },
         "册01_page0004_idx164": {
@@ -69431,7 +69431,7 @@
       }
     },
     "士": {
-      "updated_at": "2026-05-28T03:52:07.797Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册05_page0003_idx80": {
           "source": {
@@ -70740,12 +70740,12 @@
             "timestamp": "2026-05-28T03:52:05.514Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:52:05.514Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/士_册05_page0003_idx118.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/士_册05_page0003_idx118.png"
           }
         },
         "册03_page0003_idx87": {
@@ -70924,12 +70924,12 @@
             "timestamp": "2026-05-28T03:52:04.674Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:52:04.674Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/士_册03_page0003_idx229.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/士_册03_page0003_idx229.png"
           }
         },
         "册05_page0003_idx191": {
@@ -71200,12 +71200,12 @@
             "timestamp": "2026-05-28T03:52:07.797Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:52:07.797Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/士_册05_page0003_idx204.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/士_册05_page0003_idx204.png"
           }
         },
         "册02_page0023_idx40": {
@@ -71632,12 +71632,12 @@
             "timestamp": "2026-05-28T03:52:06.607Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-10-30T19:23:03.534772+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/士_册04_page0037_idx50.png",
-            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/士_册04_page0037_idx50.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         }
       }
@@ -73483,7 +73483,7 @@
       }
     },
     "大": {
-      "updated_at": "2026-05-28T03:45:15.445Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册02_page0016_idx62": {
           "source": {
@@ -74360,12 +74360,12 @@
             "timestamp": "2026-05-28T03:45:15.445Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:45:15.445Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/大_册01_page0007_idx50.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/大_册01_page0007_idx50.png"
           }
         },
         "册03_page0018_idx48": {
@@ -75629,12 +75629,12 @@
             "timestamp": "2026-05-28T03:45:11.551Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:45:11.551Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/大_册01_page0005_idx359.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/大_册01_page0005_idx359.png"
           }
         }
       }
@@ -77719,7 +77719,7 @@
       }
     },
     "夫": {
-      "updated_at": "2026-05-28T03:43:26.393Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册03_page0027_idx90": {
           "source": {
@@ -77805,12 +77805,12 @@
             "timestamp": "2026-05-28T03:43:26.393Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:43:26.393Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/夫_册01_page0007_idx320.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/夫_册01_page0007_idx320.png"
           }
         },
         "册05_page0042_idx358": {
@@ -78524,7 +78524,7 @@
       }
     },
     "好": {
-      "updated_at": "2026-05-28T03:52:27.541Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册03_page0027_idx60": {
           "source": {
@@ -80118,12 +80118,12 @@
             "timestamp": "2026-05-28T03:52:27.541Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:52:27.541Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/好_册01_page0006_idx434.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/好_册01_page0006_idx434.png"
           }
         },
         "册05_page0015_idx89": {
@@ -83068,7 +83068,7 @@
       }
     },
     "宁": {
-      "updated_at": "2026-05-28T03:43:14.306Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册03_page0010_idx132": {
           "source": {
@@ -83154,12 +83154,12 @@
             "timestamp": "2026-05-28T03:43:14.306Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:43:14.306Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/宁_册03_page0010_idx130.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/宁_册03_page0010_idx130.png"
           }
         },
         "册01_page0025_idx266": {
@@ -84809,7 +84809,7 @@
       }
     },
     "對": {
-      "updated_at": "2026-05-18T17:26:30.237Z",
+      "updated_at": "2026-06-04T03:04:56.102Z",
       "items": {
         "册05_page0036_idx96": {
           "source": {
@@ -84850,11 +84850,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T09:21:23.960542+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:04:55.936714+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/對_册05_page0036_idx96.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/對_册05_page0036_idx96.png"
           }
         },
         "册02_page0016_idx57": {
@@ -90338,7 +90338,7 @@
       }
     },
     "尤": {
-      "updated_at": "2026-05-28T03:49:33.436Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0005_idx51": {
           "source": {
@@ -90479,12 +90479,12 @@
             "timestamp": "2026-05-28T03:49:33.436Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:49:33.436Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/尤_册02_page0003_idx39.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/尤_册02_page0003_idx39.png"
           }
         },
         "册02_page0022_idx1": {
@@ -94409,7 +94409,7 @@
       }
     },
     "平": {
-      "updated_at": "2026-05-28T03:44:33.627Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册02_page0040_idx46": {
           "source": {
@@ -94449,12 +94449,12 @@
             "timestamp": "2026-05-28T03:44:33.627Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:44:33.627Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/平_册02_page0040_idx46.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/平_册02_page0040_idx46.png"
           }
         },
         "册01_page0008_idx5": {
@@ -96433,7 +96433,7 @@
       }
     },
     "庶": {
-      "updated_at": "2026-05-28T03:49:38.911Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0006_idx246": {
           "source": {
@@ -96528,12 +96528,12 @@
             "timestamp": "2026-05-28T03:49:38.911Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:49:38.911Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/庶_册01_page0006_idx33.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/庶_册01_page0006_idx33.png"
           }
         },
         "册03_page0013_idx17": {
@@ -105863,7 +105863,7 @@
       }
     },
     "志": {
-      "updated_at": "2026-05-28T03:46:15.897Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册04_page0003_idx28": {
           "source": {
@@ -105958,12 +105958,12 @@
             "timestamp": "2026-05-28T03:46:15.897Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:46:15.897Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/志_册01_page0007_idx46.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/志_册01_page0007_idx46.png"
           }
         },
         "册01_page0007_idx55": {
@@ -106114,12 +106114,12 @@
             "timestamp": "2026-05-28T03:46:14.921Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:46:14.921Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/志_册01_page0006_idx383.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/志_册01_page0006_idx383.png"
           }
         },
         "册04_page0036_idx86": {
@@ -106649,7 +106649,7 @@
       }
     },
     "意": {
-      "updated_at": "2026-05-28T03:15:41.730Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0005_idx340": {
           "source": {
@@ -106689,12 +106689,12 @@
             "timestamp": "2026-05-28T03:15:41.730Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:15:41.730Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/意_册01_page0005_idx340.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/意_册01_page0005_idx340.png"
           }
         },
         "册01_page0036_idx27": {
@@ -106891,12 +106891,12 @@
             "timestamp": "2026-05-28T03:15:40.847Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:15:40.847Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/意_册01_page0005_idx473.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/意_册01_page0005_idx473.png"
           }
         },
         "册04_page0006_idx29": {
@@ -107858,7 +107858,7 @@
       }
     },
     "成": {
-      "updated_at": "2026-05-28T03:46:05.974Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0007_idx198": {
           "source": {
@@ -107944,12 +107944,12 @@
             "timestamp": "2026-05-28T03:46:04.607Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:46:04.607Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/成_册01_page0006_idx291.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/成_册01_page0006_idx291.png"
           }
         },
         "册02_page0025_idx48": {
@@ -108174,12 +108174,12 @@
             "timestamp": "2026-05-28T03:46:05.974Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:46:05.974Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/成_册01_page0005_idx452.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/成_册01_page0005_idx452.png"
           }
         },
         "册01_page0004_idx180": {
@@ -109514,7 +109514,7 @@
       }
     },
     "才": {
-      "updated_at": "2026-05-28T03:50:35.021Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0036_idx77": {
           "source": {
@@ -109554,12 +109554,12 @@
             "timestamp": "2026-05-28T03:50:35.021Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:50:35.021Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/才_册01_page0036_idx77.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/才_册01_page0036_idx77.png"
           }
         },
         "册02_page0008_idx15": {
@@ -109655,12 +109655,12 @@
             "timestamp": "2026-05-28T03:50:34.239Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:50:34.239Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/才_册01_page0006_idx177.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/才_册01_page0006_idx177.png"
           }
         },
         "册05_page0012_idx38": {
@@ -110352,7 +110352,7 @@
       }
     },
     "支": {
-      "updated_at": "2026-05-28T03:46:49.995Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0005_idx29": {
           "source": {
@@ -110447,12 +110447,12 @@
             "timestamp": "2026-05-28T03:46:49.995Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:46:49.995Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/支_册01_page0008_idx32.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/支_册01_page0008_idx32.png"
           }
         },
         "册04_page0008_idx23": {
@@ -111010,7 +111010,7 @@
       }
     },
     "數": {
-      "updated_at": "2026-05-28T03:15:58.155Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0005_idx492": {
           "source": {
@@ -111234,12 +111234,12 @@
             "timestamp": "2026-05-28T03:15:58.155Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:15:58.155Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/數_册01_page0006_idx288.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/數_册01_page0006_idx288.png"
           }
         },
         "册02_page0011_idx118": {
@@ -116718,7 +116718,7 @@
       }
     },
     "文": {
-      "updated_at": "2026-05-28T03:46:46.813Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0039_idx317": {
           "source": {
@@ -116804,12 +116804,12 @@
             "timestamp": "2026-05-28T03:46:45.855Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:46:45.855Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/文_册01_page0008_idx83.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/文_册01_page0008_idx83.png"
           }
         },
         "册01_page0038_idx147": {
@@ -117172,12 +117172,12 @@
             "timestamp": "2026-05-28T03:46:46.813Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:46:46.813Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/文_册01_page0006_idx165.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/文_册01_page0006_idx165.png"
           }
         },
         "册05_page0008_idx110": {
@@ -121594,7 +121594,7 @@
       }
     },
     "昌": {
-      "updated_at": "2026-05-18T17:31:37.578Z",
+      "updated_at": "2026-06-04T03:04:20.896Z",
       "items": {
         "册02_page0032_idx171": {
           "source": {
@@ -121635,11 +121635,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T09:24:43.003219+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:04:20.738939+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/昌_册02_page0032_idx171.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/昌_册02_page0032_idx171.png"
           }
         },
         "册03_page0017_idx120": {
@@ -125936,7 +125936,7 @@
       }
     },
     "昔": {
-      "updated_at": "2026-05-28T03:15:53.118Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0005_idx314": {
           "source": {
@@ -126068,12 +126068,12 @@
             "timestamp": "2026-05-28T03:15:51.573Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:15:51.573Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/昔_册05_page0029_idx81.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/昔_册05_page0029_idx81.png"
           }
         },
         "册05_page0003_idx115": {
@@ -126123,12 +126123,12 @@
             "timestamp": "2026-05-28T03:15:53.118Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:15:53.118Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/昔_册05_page0003_idx115.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/昔_册05_page0003_idx115.png"
           }
         },
         "册01_page0004_idx197": {
@@ -126461,7 +126461,7 @@
       }
     },
     "曲": {
-      "updated_at": "2026-05-18T17:32:18.783Z",
+      "updated_at": "2026-06-04T03:04:19.360Z",
       "items": {
         "册01_page0044_idx10": {
           "source": {
@@ -126502,11 +126502,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T09:25:32.741537+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:04:19.209746+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/曲_册01_page0044_idx10.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/曲_册01_page0044_idx10.png"
           }
         },
         "册03_page0030_idx40": {
@@ -126926,7 +126926,7 @@
       }
     },
     "月": {
-      "updated_at": "2026-05-28T03:51:57.863Z",
+      "updated_at": "2026-06-04T03:05:06.186Z",
       "items": {
         "册05_page0003_idx60": {
           "source": {
@@ -127376,16 +127376,16 @@
             ]
           },
           "filter": {
-            "status": "pending",
-            "timestamp": null
+            "status": "accepted",
+            "timestamp": "2026-06-04T03:05:04.929Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-06-04T03:05:04.930Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/月_册05_page0014_idx136.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/月_册05_page0014_idx136.png"
           }
         },
         "册05_page0003_idx133": {
@@ -127974,13 +127974,13 @@
             ]
           },
           "filter": {
-            "status": "accepted",
-            "timestamp": "2026-05-28T03:51:57.863Z"
+            "status": "pending",
+            "timestamp": "2026-06-04T03:05:06.186Z"
           },
           "review": {
             "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "timestamp": "2026-05-28T03:51:57.863Z",
+            "method": "auto",
             "decision": "need",
             "confirmed_path": null,
             "segmented_path": null
@@ -128927,7 +128927,7 @@
       }
     },
     "朝": {
-      "updated_at": "2026-05-18T17:32:41.369Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册02_page0009_idx168": {
           "source": {
@@ -128963,14 +128963,14 @@
             ]
           },
           "filter": {
-            "status": "accepted",
+            "status": "pending",
             "timestamp": "2025-11-11T09:25:53.500180+00:00"
           },
           "review": {
-            "status": "dropped",
+            "status": "pending",
             "timestamp": "2025-11-11T09:25:53.500180+00:00",
             "method": null,
-            "decision": "drop",
+            "decision": "need",
             "confirmed_path": null,
             "segmented_path": null
           }
@@ -130008,7 +130008,7 @@
       }
     },
     "未": {
-      "updated_at": "2026-05-28T03:48:24.734Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册04_page0009_idx55": {
           "source": {
@@ -130287,12 +130287,12 @@
             "timestamp": "2026-05-28T03:48:24.734Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:48:24.734Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/未_册01_page0006_idx186.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/未_册01_page0006_idx186.png"
           }
         },
         "册01_page0005_idx306": {
@@ -130342,12 +130342,12 @@
             "timestamp": "2026-05-28T03:48:23.211Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:48:23.211Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/未_册01_page0005_idx306.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/未_册01_page0005_idx306.png"
           }
         },
         "册05_page0006_idx150": {
@@ -131530,7 +131530,7 @@
       }
     },
     "本": {
-      "updated_at": "2026-05-28T03:51:42.348Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0007_idx177": {
           "source": {
@@ -132407,12 +132407,12 @@
             "timestamp": "2026-05-28T03:51:42.348Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:51:42.348Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/本_册01_page0006_idx346.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/本_册01_page0006_idx346.png"
           }
         },
         "册01_page0003_idx8": {
@@ -132738,12 +132738,12 @@
             "timestamp": "2026-05-28T03:51:41.539Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:51:41.539Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/本_册01_page0002_idx27.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/本_册01_page0002_idx27.png"
           }
         }
       }
@@ -132993,7 +132993,7 @@
       }
     },
     "東": {
-      "updated_at": "2026-05-28T03:48:17.486Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册03_page0021_idx291": {
           "source": {
@@ -133364,12 +133364,12 @@
             "timestamp": "2026-05-28T03:48:17.486Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:48:17.486Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/東_册01_page0008_idx13.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/東_册01_page0008_idx13.png"
           }
         },
         "册04_page0026_idx68": {
@@ -134074,7 +134074,7 @@
       }
     },
     "林": {
-      "updated_at": "2026-05-28T03:51:44.857Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册02_page0034_idx126": {
           "source": {
@@ -135733,12 +135733,12 @@
             "timestamp": "2026-05-28T03:51:44.857Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:51:44.857Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/林_册01_page0006_idx316.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/林_册01_page0006_idx316.png"
           }
         },
         "册01_page0040_idx156": {
@@ -138914,7 +138914,7 @@
       }
     },
     "正": {
-      "updated_at": "2026-05-28T03:51:34.788Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册02_page0025_idx219": {
           "source": {
@@ -139000,12 +139000,12 @@
             "timestamp": "2026-05-28T03:51:34.281Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:51:34.281Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/正_册01_page0006_idx61.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/正_册01_page0006_idx61.png"
           }
         },
         "册01_page0007_idx262": {
@@ -139377,12 +139377,12 @@
             "timestamp": "2026-05-28T03:51:34.788Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:51:34.788Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/正_册01_page0006_idx154.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/正_册01_page0006_idx154.png"
           }
         },
         "册04_page0017_idx0": {
@@ -139967,7 +139967,7 @@
       }
     },
     "此": {
-      "updated_at": "2026-05-28T03:44:39.665Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册04_page0014_idx56": {
           "source": {
@@ -141543,12 +141543,12 @@
             "timestamp": "2026-05-28T03:44:39.665Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:44:39.665Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/此_册01_page0005_idx428.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/此_册01_page0005_idx428.png"
           }
         },
         "册01_page0005_idx369": {
@@ -141589,12 +141589,12 @@
             "timestamp": "2026-05-28T03:44:39.158Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:44:39.158Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/此_册01_page0005_idx369.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/此_册01_page0005_idx369.png"
           }
         },
         "册01_page0022_idx180": {
@@ -142851,7 +142851,7 @@
       }
     },
     "武": {
-      "updated_at": "2026-05-28T03:46:01.076Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册03_page0003_idx282": {
           "source": {
@@ -142937,12 +142937,12 @@
             "timestamp": "2026-05-28T03:46:01.076Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:46:01.076Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/武_册01_page0006_idx163.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/武_册01_page0006_idx163.png"
           }
         },
         "册01_page0006_idx385": {
@@ -142992,12 +142992,12 @@
             "timestamp": "2026-05-28T03:46:00.163Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:46:00.163Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/武_册01_page0006_idx385.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/武_册01_page0006_idx385.png"
           }
         },
         "册01_page0007_idx1": {
@@ -143992,7 +143992,7 @@
       }
     },
     "氏": {
-      "updated_at": "2026-05-28T03:47:31.535Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0014_idx62": {
           "source": {
@@ -144032,12 +144032,12 @@
             "timestamp": "2026-05-28T03:47:31.020Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:47:31.020Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/氏_册01_page0014_idx62.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/氏_册01_page0014_idx62.png"
           }
         },
         "册01_page0006_idx360": {
@@ -144078,12 +144078,12 @@
             "timestamp": "2026-05-28T03:47:31.535Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:47:31.535Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/氏_册01_page0006_idx360.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/氏_册01_page0006_idx360.png"
           }
         },
         "册05_page0042_idx106": {
@@ -146909,7 +146909,7 @@
       }
     },
     "海": {
-      "updated_at": "2026-05-28T03:50:22.952Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0041_idx67": {
           "source": {
@@ -147280,12 +147280,12 @@
             "timestamp": "2026-05-28T03:50:22.952Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:50:22.952Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/海_册01_page0002_idx9.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/海_册01_page0002_idx9.png"
           }
         },
         "册04_page0003_idx25": {
@@ -148091,7 +148091,7 @@
       }
     },
     "為": {
-      "updated_at": "2026-05-28T03:46:40.061Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0005_idx42": {
           "source": {
@@ -149290,12 +149290,12 @@
             "timestamp": "2026-05-28T03:46:29.008Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:46:29.008Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/為_册01_page0006_idx83.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/為_册01_page0006_idx83.png"
           }
         },
         "册01_page0020_idx78": {
@@ -152189,7 +152189,7 @@
       }
     },
     "無": {
-      "updated_at": "2026-05-28T03:47:57.731Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0005_idx244": {
           "source": {
@@ -152238,12 +152238,12 @@
             "timestamp": "2026-05-28T03:47:57.731Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:47:57.731Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/無_册01_page0005_idx244.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/無_册01_page0005_idx244.png"
           }
         },
         "册01_page0013_idx150": {
@@ -153564,7 +153564,7 @@
       }
     },
     "然": {
-      "updated_at": "2026-05-28T03:48:04.172Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册02_page0010_idx42": {
           "source": {
@@ -158884,12 +158884,12 @@
             "timestamp": "2026-05-28T03:48:04.172Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:48:04.172Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/然_册01_page0006_idx447.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/然_册01_page0006_idx447.png"
           }
         },
         "册05_page0035_idx15": {
@@ -162110,7 +162110,7 @@
       }
     },
     "玄": {
-      "updated_at": "2026-05-28T03:44:25.672Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0004_idx105": {
           "source": {
@@ -162214,12 +162214,12 @@
             "timestamp": "2026-05-28T03:44:25.672Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:44:25.672Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/玄_册01_page0006_idx57.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/玄_册01_page0006_idx57.png"
           }
         },
         "册05_page0042_idx212": {
@@ -162685,7 +162685,7 @@
       }
     },
     "王": {
-      "updated_at": "2026-05-28T03:51:30.288Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0006_idx364": {
           "source": {
@@ -162918,12 +162918,12 @@
             "timestamp": "2026-05-28T03:51:30.288Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:51:30.288Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/王_册01_page0004_idx81.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/王_册01_page0004_idx81.png"
           }
         },
         "册02_page0003_idx60": {
@@ -163387,12 +163387,12 @@
             "timestamp": "2026-05-28T03:51:29.444Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:51:29.444Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/王_册01_page0004_idx127.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/王_册01_page0004_idx127.png"
           }
         },
         "册04_page0028_idx101": {
@@ -165782,7 +165782,7 @@
       }
     },
     "界": {
-      "updated_at": "2026-05-18T17:37:40.248Z",
+      "updated_at": "2026-06-04T03:05:14.182Z",
       "items": {
         "册01_page0036_idx183": {
           "source": {
@@ -165823,11 +165823,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T09:26:37.062442+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:05:14.018647+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/界_册01_page0036_idx183.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/界_册01_page0036_idx183.png"
           }
         },
         "册04_page0030_idx26": {
@@ -167632,7 +167632,7 @@
       }
     },
     "皆": {
-      "updated_at": "2026-05-28T03:15:48.348Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0006_idx278": {
           "source": {
@@ -167764,12 +167764,12 @@
             "timestamp": "2026-05-28T03:15:48.348Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:15:48.348Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/皆_册01_page0008_idx64.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/皆_册01_page0008_idx64.png"
           }
         },
         "册03_page0038_idx19": {
@@ -169016,7 +169016,7 @@
       }
     },
     "目": {
-      "updated_at": "2026-05-28T03:52:01.285Z",
+      "updated_at": "2026-06-04T03:04:28.715Z",
       "items": {
         "册01_page0007_idx369": {
           "source": {
@@ -171116,12 +171116,12 @@
             "timestamp": "2026-05-28T03:52:01.285Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
-            "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "status": "dropped",
+            "timestamp": "2026-06-04T03:04:28.554554+00:00",
+            "method": "auto",
+            "decision": "drop",
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/目_册01_page0008_idx305.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/目_册01_page0008_idx305.png"
           }
         },
         "册01_page0008_idx241": {
@@ -173202,7 +173202,7 @@
       }
     },
     "禹": {
-      "updated_at": "2026-05-18T17:38:37.162Z",
+      "updated_at": "2026-06-04T03:05:17.887Z",
       "items": {
         "册01_page0039_idx307": {
           "source": {
@@ -173243,11 +173243,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T09:26:46.372891+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:05:17.727412+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/禹_册01_page0039_idx307.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/禹_册01_page0039_idx307.png"
           }
         },
         "册01_page0010_idx248": {
@@ -173299,7 +173299,7 @@
       }
     },
     "章": {
-      "updated_at": "2026-05-18T17:38:41.871Z",
+      "updated_at": "2026-06-04T03:06:09.038Z",
       "items": {
         "册05_page0041_idx57": {
           "source": {
@@ -173335,16 +173335,16 @@
             ]
           },
           "filter": {
-            "status": "pending",
-            "timestamp": null
+            "status": "accepted",
+            "timestamp": "2026-06-04T03:05:59.937Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-06-04T03:05:59.755939+00:00",
+            "method": "manual_adjust",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/章_册05_page0041_idx57.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/章_册05_page0041_idx57.png"
           }
         },
         "册03_page0010_idx51": {
@@ -173997,16 +173997,16 @@
             ]
           },
           "filter": {
-            "status": "accepted",
-            "timestamp": "2025-10-30T19:05:35.459604+00:00"
+            "status": "pending",
+            "timestamp": "2026-06-04T03:06:09.038Z"
           },
           "review": {
-            "status": "confirmed",
-            "timestamp": "2025-10-30T19:05:35.459604+00:00",
-            "method": "auto",
+            "status": "pending",
+            "timestamp": "2026-06-04T03:05:30.611205+00:00",
+            "method": "manual_adjust",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/章_册01_page0007_idx297.png",
-            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/章_册01_page0007_idx297.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         }
       }
@@ -175300,7 +175300,7 @@
       }
     },
     "纏": {
-      "updated_at": "2026-05-18T17:39:37.879Z",
+      "updated_at": "2026-06-04T03:06:13.578Z",
       "items": {
         "册02_page0034_idx8": {
           "source": {
@@ -175350,11 +175350,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T09:26:58.344682+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:06:13.419901+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/纏_册02_page0034_idx8.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/纏_册02_page0034_idx8.png"
           }
         },
         "册03_page0007_idx145": {
@@ -176957,7 +176957,7 @@
       }
     },
     "而": {
-      "updated_at": "2026-05-28T03:32:16.171Z",
+      "updated_at": "2026-06-04T03:06:48.651Z",
       "items": {
         "册01_page0007_idx228": {
           "source": {
@@ -177006,12 +177006,12 @@
             "timestamp": "2026-05-28T03:32:16.171Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-06-04T03:06:48.461019+00:00",
+            "method": "manual_adjust",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/而_册01_page0007_idx228.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/而_册01_page0007_idx228.png"
           }
         },
         "册01_page0014_idx45": {
@@ -177631,12 +177631,12 @@
             "timestamp": "2026-05-28T03:32:15.519Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:32:15.519Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/而_册01_page0007_idx204.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/而_册01_page0007_idx204.png"
           }
         },
         "册02_page0030_idx151": {
@@ -178796,7 +178796,7 @@
       }
     },
     "聲": {
-      "updated_at": "2026-05-28T03:32:34.944Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册02_page0003_idx6": {
           "source": {
@@ -179167,12 +179167,12 @@
             "timestamp": "2026-05-28T03:32:34.944Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:32:34.944Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/聲_册01_page0005_idx25.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/聲_册01_page0005_idx25.png"
           }
         },
         "册02_page0013_idx3": {
@@ -179608,12 +179608,12 @@
             "timestamp": "2026-05-28T03:32:31.965Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:32:31.965Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/聲_册01_page0047_idx86.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/聲_册01_page0047_idx86.png"
           }
         },
         "册02_page0009_idx29": {
@@ -180277,7 +180277,7 @@
       }
     },
     "自": {
-      "updated_at": "2026-05-28T03:51:52.778Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册05_page0031_idx132": {
           "source": {
@@ -181062,12 +181062,12 @@
             "timestamp": "2026-05-28T03:51:49.775Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:51:49.775Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/自_册01_page0006_idx446.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/自_册01_page0006_idx446.png"
           }
         },
         "册01_page0006_idx181": {
@@ -181669,12 +181669,12 @@
             "timestamp": "2026-05-28T03:51:52.035Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:51:52.035Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/自_册01_page0005_idx65.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/自_册01_page0005_idx65.png"
           }
         },
         "册04_page0042_idx2": {
@@ -181770,12 +181770,12 @@
             "timestamp": "2026-05-28T03:51:50.939Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:51:50.939Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/自_册01_page0004_idx222.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/自_册01_page0004_idx222.png"
           }
         },
         "册02_page0023_idx37": {
@@ -182340,12 +182340,12 @@
             "timestamp": "2026-05-28T03:51:52.778Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-10-30T19:27:55.360471+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/自_册04_page0008_idx115.png",
-            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/自_册04_page0008_idx115.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         }
       }
@@ -183285,7 +183285,7 @@
       }
     },
     "與": {
-      "updated_at": "2026-05-28T03:47:08.247Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册05_page0030_idx5": {
           "source": {
@@ -183904,12 +183904,12 @@
             "timestamp": "2026-05-28T03:47:08.247Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:47:08.247Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/與_册01_page0024_idx150.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/與_册01_page0024_idx150.png"
           }
         },
         "册01_page0024_idx60": {
@@ -187024,7 +187024,7 @@
       }
     },
     "英": {
-      "updated_at": "2026-05-28T03:46:56.638Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0005_idx190": {
           "source": {
@@ -187524,12 +187524,12 @@
             "timestamp": "2026-05-28T03:46:56.638Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:46:56.638Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/英_册01_page0006_idx361.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/英_册01_page0006_idx361.png"
           }
         },
         "册01_page0003_idx57": {
@@ -190554,7 +190554,7 @@
       }
     },
     "術": {
-      "updated_at": "2026-05-28T03:14:27.251Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册05_page0003_idx42": {
           "source": {
@@ -190870,12 +190870,12 @@
             "timestamp": "2026-05-28T03:14:27.251Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:14:27.251Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/術_册01_page0006_idx169.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/術_册01_page0006_idx169.png"
           }
         },
         "册04_page0005_idx5": {
@@ -193374,7 +193374,7 @@
       }
     },
     "要": {
-      "updated_at": "2026-05-18T17:41:58.274Z",
+      "updated_at": "2026-06-04T03:04:31.151Z",
       "items": {
         "册05_page0035_idx7": {
           "source": {
@@ -193415,11 +193415,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T09:27:21.036492+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:04:31.003356+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/要_册05_page0035_idx7.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/要_册05_page0035_idx7.png"
           }
         },
         "册03_page0005_idx83": {
@@ -198030,7 +198030,7 @@
       }
     },
     "識": {
-      "updated_at": "2026-05-18T17:42:48.409Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册02_page0026_idx112": {
           "source": {
@@ -198075,14 +198075,14 @@
             ]
           },
           "filter": {
-            "status": "accepted",
+            "status": "pending",
             "timestamp": "2025-11-11T09:28:41.753542+00:00"
           },
           "review": {
-            "status": "dropped",
+            "status": "pending",
             "timestamp": "2025-11-11T09:28:41.753542+00:00",
             "method": null,
-            "decision": "drop",
+            "decision": "need",
             "confirmed_path": null,
             "segmented_path": null
           }
@@ -204121,7 +204121,7 @@
       }
     },
     "道": {
-      "updated_at": "2026-05-28T03:45:25.252Z",
+      "updated_at": "2026-06-04T03:07:05.796Z",
       "items": {
         "册02_page0008_idx101": {
           "source": {
@@ -204492,12 +204492,12 @@
             "timestamp": "2026-05-28T03:45:23.695Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-06-04T03:07:05.606637+00:00",
+            "method": "manual_adjust",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/道_册01_page0004_idx67.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/道_册01_page0004_idx67.png"
           }
         },
         "册01_page0004_idx156": {
@@ -204538,12 +204538,12 @@
             "timestamp": "2026-05-28T03:45:25.252Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:45:25.252Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/道_册01_page0004_idx156.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/道_册01_page0004_idx156.png"
           }
         },
         "册03_page0005_idx195": {
@@ -205018,7 +205018,7 @@
       }
     },
     "醫": {
-      "updated_at": "2026-05-18T17:44:47.990Z",
+      "updated_at": "2026-06-04T03:04:32.303Z",
       "items": {
         "册04_page0015_idx70": {
           "source": {
@@ -205059,11 +205059,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T09:30:18.881153+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:04:32.153412+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/醫_册04_page0015_idx70.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/醫_册04_page0015_idx70.png"
           }
         },
         "册01_page0014_idx132": {
@@ -211338,7 +211338,7 @@
       }
     },
     "野": {
-      "updated_at": "2026-05-18T17:44:57.872Z",
+      "updated_at": "2026-06-04T03:04:34.344Z",
       "items": {
         "册02_page0036_idx153": {
           "source": {
@@ -211379,11 +211379,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T09:30:38.245940+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:04:33.391041+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/野_册02_page0036_idx153.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/野_册02_page0036_idx153.png"
           }
         },
         "册02_page0010_idx37": {
@@ -212415,7 +212415,7 @@
       }
     },
     "金": {
-      "updated_at": "2026-05-28T03:48:58.291Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0007_idx123": {
           "source": {
@@ -213108,12 +213108,12 @@
             "timestamp": "2026-05-28T03:48:58.291Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:48:58.291Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/金_册01_page0005_idx309.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/金_册01_page0005_idx309.png"
           }
         },
         "册04_page0026_idx87": {
@@ -215782,7 +215782,7 @@
       }
     },
     "閉": {
-      "updated_at": "2026-05-18T17:45:27.774Z",
+      "updated_at": "2026-06-04T03:07:59.965Z",
       "items": {
         "册05_page0037_idx203": {
           "source": {
@@ -215823,11 +215823,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T09:30:53.968169+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:07:59.803682+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/閉_册05_page0037_idx203.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/閉_册05_page0037_idx203.png"
           }
         },
         "册02_page0040_idx44": {
@@ -223295,7 +223295,7 @@
       }
     },
     "馬": {
-      "updated_at": "2026-05-28T03:46:23.864Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册03_page0003_idx189": {
           "source": {
@@ -223473,12 +223473,12 @@
             "timestamp": "2026-05-28T03:46:23.864Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:46:23.864Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/馬_册01_page0005_idx316.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/馬_册01_page0005_idx316.png"
           }
         },
         "册04_page0023_idx36": {
@@ -224413,7 +224413,7 @@
       }
     },
     "體": {
-      "updated_at": "2026-05-28T03:14:17.355Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0007_idx216": {
           "source": {
@@ -235003,12 +235003,12 @@
             "timestamp": "2026-05-28T03:14:16.413Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:14:16.413Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/體_册01_page0005_idx487.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/體_册01_page0005_idx487.png"
           }
         },
         "册05_page0039_idx101": {
@@ -237118,18 +237118,18 @@
             "timestamp": "2026-05-28T03:14:17.355Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:14:17.355Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/體_册05_page0041_idx352.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/體_册05_page0041_idx352.png"
           }
         }
       }
     },
     "鬢": {
-      "updated_at": "2025-10-28T12:11:06.157Z",
+      "updated_at": "2026-06-04T03:08:19.937Z",
       "items": {
         "册04_page0023_idx10": {
           "source": {
@@ -237169,12 +237169,12 @@
             "timestamp": "2025-11-11T09:34:08.197940+00:00"
           },
           "review": {
-            "status": "dropped",
-            "timestamp": "2025-11-11T09:34:08.197940+00:00",
-            "method": null,
-            "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "status": "confirmed",
+            "timestamp": "2026-06-04T03:08:19.752395+00:00",
+            "method": "manual_adjust",
+            "decision": "need",
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/鬢_册04_page0023_idx10.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/鬢_册04_page0023_idx10.png"
           }
         }
       }
@@ -251777,7 +251777,7 @@
       }
     },
     "齊": {
-      "updated_at": "2026-05-28T03:50:54.225Z",
+      "updated_at": "2026-06-02T15:16:45.196Z",
       "items": {
         "册01_page0031_idx101": {
           "source": {
@@ -251863,12 +251863,12 @@
             "timestamp": "2026-05-28T03:50:54.225Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-28T03:50:54.225Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/齊_册01_page0008_idx135.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/齊_册01_page0008_idx135.png"
           }
         },
         "册01_page0019_idx12": {
@@ -252610,7 +252610,7 @@
       }
     },
     "龜": {
-      "updated_at": "2026-05-18T17:51:10.849Z",
+      "updated_at": "2026-06-04T03:04:35.616Z",
       "items": {
         "册02_page0032_idx50": {
           "source": {
@@ -252651,11 +252651,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T09:32:34.104213+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:04:35.457813+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/15_1169_钜宋广韵/龜_册02_page0032_idx50.png",
+            "segmented_path": "data/results/manual/confirmed/15_1169_钜宋广韵/龜_册02_page0032_idx50.png"
           }
         },
         "册02_page0011_idx8": {

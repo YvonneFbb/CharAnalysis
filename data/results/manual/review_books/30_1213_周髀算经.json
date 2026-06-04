@@ -3,7 +3,7 @@
   "book": "30_1213_周髀算经",
   "chars": {
     "一": {
-      "updated_at": "2026-05-31T07:14:25.097Z",
+      "updated_at": "2026-06-02T15:16:48.350Z",
       "items": {
         "册02_page0008_idx3": {
           "source": {
@@ -319,12 +319,12 @@
             "timestamp": "2026-05-31T07:14:25.097Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:14:25.097Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/一_册02_page0014_idx15.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/一_册02_page0014_idx15.png"
           }
         },
         "册01_page0036_idx175": {
@@ -503,12 +503,12 @@
             "timestamp": "2026-05-31T07:14:23.053Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:14:23.053Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/一_册02_page0041_idx79.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/一_册02_page0041_idx79.png"
           }
         },
         "册02_page0041_idx81": {
@@ -1616,12 +1616,12 @@
             "timestamp": "2026-05-31T07:05:51.129Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-02T05:57:52.560057+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/七_册02_page0022_idx2.png",
-            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/七_册02_page0022_idx2.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册02_page0022_idx98": {
@@ -3084,7 +3084,7 @@
       }
     },
     "上": {
-      "updated_at": "2026-05-31T07:11:38.966Z",
+      "updated_at": "2026-06-02T15:16:48.350Z",
       "items": {
         "册02_page0004_idx40": {
           "source": {
@@ -3556,12 +3556,12 @@
             "timestamp": "2026-05-31T07:11:38.966Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:38.966Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/上_册02_page0009_idx62.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/上_册02_page0009_idx62.png"
           }
         },
         "册02_page0009_idx174": {
@@ -4025,12 +4025,12 @@
             "timestamp": "2026-05-31T07:11:38.007Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:38.007Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/上_册02_page0034_idx83.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/上_册02_page0034_idx83.png"
           }
         },
         "册01_page0018_idx85": {
@@ -4128,7 +4128,7 @@
       }
     },
     "下": {
-      "updated_at": "2026-05-31T07:11:42.865Z",
+      "updated_at": "2026-06-02T15:16:48.350Z",
       "items": {
         "册02_page0041_idx55": {
           "source": {
@@ -4563,12 +4563,12 @@
             "timestamp": "2026-05-31T07:11:42.024Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:42.024Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/下_册02_page0007_idx41.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/下_册02_page0007_idx41.png"
           }
         },
         "册02_page0032_idx10": {
@@ -4701,18 +4701,18 @@
             "timestamp": "2026-05-31T07:11:42.865Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:42.865Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/下_册02_page0003_idx5.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/下_册02_page0003_idx5.png"
           }
         }
       }
     },
     "不": {
-      "updated_at": "2026-05-31T07:11:29.520Z",
+      "updated_at": "2026-06-02T15:16:48.350Z",
       "items": {
         "册01_page0016_idx29": {
           "source": {
@@ -5359,12 +5359,12 @@
             "timestamp": "2026-05-31T07:03:26.965Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-02T06:00:12.410919+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/不_册02_page0017_idx476.png",
-            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/不_册02_page0017_idx476.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册02_page0022_idx150": {
@@ -5524,12 +5524,12 @@
             "timestamp": "2026-05-31T07:11:25.974Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2026-05-31T07:03:33.579795+00:00",
             "method": "manual_adjust",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/不_册01_page0040_idx193.png",
-            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/不_册01_page0040_idx193.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册02_page0007_idx42": {
@@ -5570,12 +5570,12 @@
             "timestamp": "2026-05-31T07:11:29.520Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:29.520Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/不_册02_page0007_idx42.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/不_册02_page0007_idx42.png"
           }
         }
       }
@@ -5917,7 +5917,7 @@
       }
     },
     "中": {
-      "updated_at": "2026-05-31T07:03:51.772Z",
+      "updated_at": "2026-06-02T15:16:48.350Z",
       "items": {
         "册02_page0003_idx101": {
           "source": {
@@ -6426,12 +6426,12 @@
             "timestamp": "2026-05-31T07:03:51.772Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:03:51.772Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/中_册02_page0008_idx259.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/中_册02_page0008_idx259.png"
           }
         },
         "册02_page0008_idx263": {
@@ -6667,7 +6667,7 @@
       }
     },
     "主": {
-      "updated_at": "2026-05-31T07:12:13.391Z",
+      "updated_at": "2026-06-02T15:16:48.350Z",
       "items": {
         "册02_page0029_idx65": {
           "source": {
@@ -6808,12 +6808,12 @@
             "timestamp": "2026-05-31T07:12:13.391Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:12:13.391Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/主_册02_page0029_idx68.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/主_册02_page0029_idx68.png"
           }
         },
         "册02_page0041_idx102": {
@@ -7371,7 +7371,7 @@
       }
     },
     "乃": {
-      "updated_at": "2026-05-31T07:12:10.885Z",
+      "updated_at": "2026-06-02T15:16:48.350Z",
       "items": {
         "册02_page0010_idx131": {
           "source": {
@@ -7411,12 +7411,12 @@
             "timestamp": "2026-05-31T07:12:10.885Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:12:10.885Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/乃_册02_page0010_idx131.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/乃_册02_page0010_idx131.png"
           }
         },
         "册02_page0041_idx2": {
@@ -7558,12 +7558,12 @@
             "timestamp": "2026-05-31T07:12:08.483Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:12:08.483Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/乃_册01_page0012_idx278.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/乃_册01_page0012_idx278.png"
           }
         },
         "册02_page0004_idx146": {
@@ -8986,7 +8986,7 @@
       }
     },
     "乖": {
-      "updated_at": "2026-05-18T17:58:27.141Z",
+      "updated_at": "2026-06-04T03:41:47.544Z",
       "items": {
         "册01_page0022_idx1": {
           "source": {
@@ -9027,11 +9027,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:14:51.788568+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:41:47.470608+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/乖_册01_page0022_idx1.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/乖_册01_page0022_idx1.png"
           }
         },
         "册01_page0020_idx51": {
@@ -9373,7 +9373,7 @@
       }
     },
     "也": {
-      "updated_at": "2026-05-31T07:06:09.181Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0003_idx288": {
           "source": {
@@ -9413,12 +9413,12 @@
             "timestamp": "2026-05-31T07:06:06.997Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-02T05:57:58.982810+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/也_册02_page0003_idx288.png",
-            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/也_册02_page0003_idx288.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册02_page0034_idx251": {
@@ -9606,12 +9606,12 @@
             "timestamp": "2026-05-31T07:06:09.181Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:06:09.181Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/也_册01_page0014_idx338.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/也_册01_page0014_idx338.png"
           }
         },
         "册01_page0024_idx273": {
@@ -10029,12 +10029,12 @@
             "timestamp": "2026-05-31T07:06:03.654Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:06:03.654Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/也_册02_page0040_idx11.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/也_册02_page0040_idx11.png"
           }
         },
         "册01_page0016_idx244": {
@@ -10084,18 +10084,18 @@
             "timestamp": "2026-05-31T07:06:04.341Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:06:04.341Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/也_册01_page0016_idx244.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/也_册01_page0016_idx244.png"
           }
         }
       }
     },
     "予": {
-      "updated_at": "2026-05-18T17:58:36.535Z",
+      "updated_at": "2026-06-04T03:41:48.519Z",
       "items": {
         "册01_page0015_idx74": {
           "source": {
@@ -10136,11 +10136,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:14:58.456712+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:41:48.446900+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/予_册01_page0015_idx74.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/予_册01_page0015_idx74.png"
           }
         },
         "册02_page0027_idx472": {
@@ -10192,7 +10192,7 @@
       }
     },
     "二": {
-      "updated_at": "2026-05-31T07:14:27.852Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0008_idx1": {
           "source": {
@@ -11050,12 +11050,12 @@
             "timestamp": "2026-05-31T07:14:27.174Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:14:27.174Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/二_册02_page0010_idx341.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/二_册02_page0010_idx341.png"
           }
         },
         "册02_page0010_idx343": {
@@ -11105,18 +11105,18 @@
             "timestamp": "2026-05-31T07:14:27.852Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:14:27.852Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/二_册02_page0010_idx343.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/二_册02_page0010_idx343.png"
           }
         }
       }
     },
     "于": {
-      "updated_at": "2026-05-18T17:58:44.613Z",
+      "updated_at": "2026-06-04T03:41:51.112Z",
       "items": {
         "册02_page0036_idx172": {
           "source": {
@@ -11157,11 +11157,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:15:09.776836+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:41:51.043018+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/于_册02_page0036_idx172.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/于_册02_page0036_idx172.png"
           }
         },
         "册02_page0014_idx55": {
@@ -11581,7 +11581,7 @@
       }
     },
     "云": {
-      "updated_at": "2026-05-31T07:06:31.357Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0040_idx159": {
           "source": {
@@ -12366,18 +12366,18 @@
             "timestamp": "2026-05-31T07:06:31.357Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:06:31.357Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/云_册01_page0013_idx57.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/云_册01_page0013_idx57.png"
           }
         }
       }
     },
     "人": {
-      "updated_at": "2026-05-31T07:11:59.968Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0003_idx71": {
           "source": {
@@ -12720,12 +12720,12 @@
             "timestamp": "2026-05-31T07:11:57.836Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:57.836Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/人_册01_page0015_idx150.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/人_册01_page0015_idx150.png"
           }
         },
         "册02_page0040_idx51": {
@@ -12766,12 +12766,12 @@
             "timestamp": "2026-05-31T07:11:59.968Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:59.968Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/人_册02_page0040_idx51.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/人_册02_page0040_idx51.png"
           }
         },
         "册01_page0028_idx309": {
@@ -13867,7 +13867,7 @@
       }
     },
     "入": {
-      "updated_at": "2026-05-31T07:11:49.934Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0009_idx179": {
           "source": {
@@ -13953,12 +13953,12 @@
             "timestamp": "2026-05-31T07:11:49.208Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:49.208Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/入_册02_page0010_idx250.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/入_册02_page0010_idx250.png"
           }
         },
         "册02_page0025_idx11": {
@@ -14293,12 +14293,12 @@
             "timestamp": "2026-05-31T07:11:49.934Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:49.934Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/入_册02_page0006_idx293.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/入_册02_page0006_idx293.png"
           }
         },
         "册02_page0024_idx327": {
@@ -14506,7 +14506,7 @@
       }
     },
     "八": {
-      "updated_at": "2026-05-31T07:11:54.826Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0036_idx182": {
           "source": {
@@ -15180,12 +15180,12 @@
             "timestamp": "2026-05-31T07:11:53.366Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:53.366Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/八_册02_page0022_idx272.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/八_册02_page0022_idx272.png"
           }
         },
         "册01_page0035_idx47": {
@@ -15235,18 +15235,18 @@
             "timestamp": "2026-05-31T07:11:54.826Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:54.826Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/八_册01_page0035_idx47.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/八_册01_page0035_idx47.png"
           }
         }
       }
     },
     "公": {
-      "updated_at": "2026-05-31T07:11:20.932Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0040_idx44": {
           "source": {
@@ -15332,12 +15332,12 @@
             "timestamp": "2026-05-31T07:11:20.932Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:20.932Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/公_册01_page0014_idx22.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/公_册01_page0014_idx22.png"
           }
         },
         "册01_page0005_idx39": {
@@ -15674,7 +15674,7 @@
       }
     },
     "其": {
-      "updated_at": "2026-05-31T07:08:14.531Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0041_idx26": {
           "source": {
@@ -16376,12 +16376,12 @@
             "timestamp": "2026-05-31T07:08:13.862Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:08:13.862Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/其_册02_page0040_idx108.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/其_册02_page0040_idx108.png"
           }
         },
         "册02_page0029_idx44": {
@@ -16422,18 +16422,18 @@
             "timestamp": "2026-05-31T07:08:14.531Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:08:14.531Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/其_册02_page0029_idx44.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/其_册02_page0029_idx44.png"
           }
         }
       }
     },
     "具": {
-      "updated_at": "2026-05-18T17:59:28.800Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0033_idx200": {
           "source": {
@@ -16469,14 +16469,14 @@
             ]
           },
           "filter": {
-            "status": "accepted",
+            "status": "pending",
             "timestamp": "2025-11-11T15:15:41.542523+00:00"
           },
           "review": {
-            "status": "dropped",
+            "status": "pending",
             "timestamp": "2025-11-11T15:15:41.542523+00:00",
             "method": null,
-            "decision": "drop",
+            "decision": "need",
             "confirmed_path": null,
             "segmented_path": null
           }
@@ -16820,7 +16820,7 @@
       }
     },
     "劉": {
-      "updated_at": "2026-05-18T17:59:31.889Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0021_idx125": {
           "source": {
@@ -16856,14 +16856,14 @@
             ]
           },
           "filter": {
-            "status": "accepted",
+            "status": "pending",
             "timestamp": "2025-11-11T15:16:06.075780+00:00"
           },
           "review": {
-            "status": "dropped",
+            "status": "pending",
             "timestamp": "2025-11-11T15:16:06.075780+00:00",
             "method": null,
-            "decision": "drop",
+            "decision": "need",
             "confirmed_path": null,
             "segmented_path": null
           }
@@ -16926,7 +16926,7 @@
       }
     },
     "十": {
-      "updated_at": "2026-05-31T07:14:35.260Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0031_idx444": {
           "source": {
@@ -17343,12 +17343,12 @@
             "timestamp": "2026-05-31T07:14:30.765Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:14:30.765Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/十_册02_page0038_idx205.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/十_册02_page0038_idx205.png"
           }
         },
         "册01_page0036_idx179": {
@@ -17499,12 +17499,12 @@
             "timestamp": "2026-05-31T07:14:35.260Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-02T05:54:10.864692+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/十_册02_page0028_idx452.png",
-            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/十_册02_page0028_idx452.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册01_page0036_idx237": {
@@ -17554,12 +17554,12 @@
             "timestamp": "2026-05-31T07:14:32.527Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:14:32.527Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/十_册01_page0036_idx237.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/十_册01_page0036_idx237.png"
           }
         },
         "册02_page0041_idx78": {
@@ -17600,18 +17600,18 @@
             "timestamp": "2026-05-31T07:14:33.930Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:14:33.930Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/十_册02_page0041_idx78.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/十_册02_page0041_idx78.png"
           }
         }
       }
     },
     "千": {
-      "updated_at": "2026-05-31T07:05:29.021Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0031_idx455": {
           "source": {
@@ -18451,12 +18451,12 @@
             "timestamp": "2026-05-31T07:05:29.021Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:05:29.021Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/千_册02_page0006_idx137.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/千_册02_page0006_idx137.png"
           }
         }
       }
@@ -18982,7 +18982,7 @@
       }
     },
     "南": {
-      "updated_at": "2026-05-31T07:02:34.718Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0039_idx75": {
           "source": {
@@ -19684,12 +19684,12 @@
             "timestamp": "2026-05-31T07:02:32.156Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:02:32.156Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/南_册02_page0006_idx316.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/南_册02_page0006_idx316.png"
           }
         },
         "册02_page0008_idx246": {
@@ -19739,12 +19739,12 @@
             "timestamp": "2026-05-31T07:02:34.718Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:02:34.718Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/南_册02_page0008_idx246.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/南_册02_page0008_idx246.png"
           }
         }
       }
@@ -20169,7 +20169,7 @@
       }
     },
     "即": {
-      "updated_at": "2026-05-31T07:01:03.937Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0009_idx2": {
           "source": {
@@ -20779,18 +20779,18 @@
             "timestamp": "2026-05-31T07:01:03.937Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:01:03.937Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/即_册01_page0011_idx300.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/即_册01_page0011_idx300.png"
           }
         }
       }
     },
     "卷": {
-      "updated_at": "2026-05-31T07:04:51.484Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0031_idx38": {
           "source": {
@@ -21014,12 +21014,12 @@
             "timestamp": "2026-05-31T07:04:49.526Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:04:49.526Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/卷_册02_page0040_idx79.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/卷_册02_page0040_idx79.png"
           }
         },
         "册02_page0040_idx158": {
@@ -21161,12 +21161,12 @@
             "timestamp": "2026-05-31T07:04:51.484Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:04:51.484Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/卷_册02_page0037_idx20.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/卷_册02_page0037_idx20.png"
           }
         },
         "册01_page0035_idx67": {
@@ -21494,7 +21494,7 @@
       }
     },
     "去": {
-      "updated_at": "2026-05-31T07:06:42.114Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0005_idx67": {
           "source": {
@@ -21580,12 +21580,12 @@
             "timestamp": "2026-05-31T07:06:39.791Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:06:39.791Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/去_册02_page0007_idx11.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/去_册02_page0007_idx11.png"
           }
         },
         "册02_page0005_idx287": {
@@ -21635,12 +21635,12 @@
             "timestamp": "2026-05-31T07:06:42.114Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:06:42.114Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/去_册02_page0005_idx287.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/去_册02_page0005_idx287.png"
           }
         },
         "册02_page0006_idx94": {
@@ -22032,7 +22032,7 @@
       }
     },
     "參": {
-      "updated_at": "2026-05-31T07:11:15.072Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0038_idx176": {
           "source": {
@@ -22118,12 +22118,12 @@
             "timestamp": "2026-05-31T07:11:15.072Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:15.072Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/參_册02_page0010_idx210.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/參_册02_page0010_idx210.png"
           }
         },
         "册01_page0019_idx325": {
@@ -22267,7 +22267,7 @@
       }
     },
     "及": {
-      "updated_at": "2026-05-31T07:09:23.754Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0016_idx30": {
           "source": {
@@ -22491,12 +22491,12 @@
             "timestamp": "2026-05-31T07:09:23.754Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:09:23.754Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/及_册02_page0024_idx52.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/及_册02_page0024_idx52.png"
           }
         },
         "册02_page0021_idx162": {
@@ -22914,18 +22914,18 @@
             "timestamp": "2026-05-31T07:09:23.103Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:09:23.103Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/及_册02_page0003_idx270.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/及_册02_page0003_idx270.png"
           }
         }
       }
     },
     "反": {
-      "updated_at": "2026-05-31T07:09:26.306Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0029_idx176": {
           "source": {
@@ -23011,12 +23011,12 @@
             "timestamp": "2026-05-31T07:09:26.306Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:09:26.306Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/反_册02_page0029_idx169.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/反_册02_page0029_idx169.png"
           }
         },
         "册02_page0017_idx327": {
@@ -23395,7 +23395,7 @@
       }
     },
     "句": {
-      "updated_at": "2026-05-31T07:09:58.159Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0037_idx334": {
           "source": {
@@ -23435,12 +23435,12 @@
             "timestamp": "2026-05-31T07:09:55.210Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-02T05:52:50.889194+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/句_册02_page0037_idx334.png",
-            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/句_册02_page0037_idx334.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册02_page0034_idx246": {
@@ -23665,12 +23665,12 @@
             "timestamp": "2026-05-31T07:09:57.426Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:09:57.426Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/句_册01_page0011_idx283.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/句_册01_page0011_idx283.png"
           }
         },
         "册01_page0013_idx123": {
@@ -24171,12 +24171,12 @@
             "timestamp": "2026-05-31T07:09:54.043Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:09:54.043Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/句_册01_page0011_idx51.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/句_册01_page0011_idx51.png"
           }
         },
         "册01_page0010_idx223": {
@@ -24226,18 +24226,18 @@
             "timestamp": "2026-05-31T07:09:58.159Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:09:58.159Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/句_册01_page0010_idx223.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/句_册01_page0010_idx223.png"
           }
         }
       }
     },
     "可": {
-      "updated_at": "2026-05-31T07:04:42.802Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0037_idx78": {
           "source": {
@@ -24415,12 +24415,12 @@
             "timestamp": "2026-05-31T07:04:40.194Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:04:40.194Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/可_册02_page0040_idx243.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/可_册02_page0040_idx243.png"
           }
         },
         "册01_page0004_idx59": {
@@ -24507,12 +24507,12 @@
             "timestamp": "2026-05-31T07:04:42.802Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:04:42.802Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/可_册01_page0004_idx63.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/可_册01_page0004_idx63.png"
           }
         },
         "册01_page0004_idx46": {
@@ -24904,7 +24904,7 @@
       }
     },
     "合": {
-      "updated_at": "2026-05-31T07:10:35.231Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0014_idx95": {
           "source": {
@@ -25266,12 +25266,12 @@
             "timestamp": "2026-05-31T07:10:33.356Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:10:33.356Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/合_册02_page0025_idx344.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/合_册02_page0025_idx344.png"
           }
         },
         "册02_page0008_idx153": {
@@ -25597,12 +25597,12 @@
             "timestamp": "2026-05-31T07:10:35.231Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:10:35.231Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/合_册01_page0013_idx352.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/合_册01_page0013_idx352.png"
           }
         },
         "册01_page0010_idx131": {
@@ -25654,7 +25654,7 @@
       }
     },
     "同": {
-      "updated_at": "2026-05-31T07:08:23.456Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0040_idx211": {
           "source": {
@@ -25740,12 +25740,12 @@
             "timestamp": "2026-05-31T07:08:23.456Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:08:23.456Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/同_册01_page0016_idx188.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/同_册01_page0016_idx188.png"
           }
         },
         "册01_page0016_idx179": {
@@ -27531,7 +27531,7 @@
       }
     },
     "和": {
-      "updated_at": "2026-05-31T07:10:26.802Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0003_idx218": {
           "source": {
@@ -27672,12 +27672,12 @@
             "timestamp": "2026-05-31T07:10:26.802Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:10:26.802Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/和_册02_page0037_idx23.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/和_册02_page0037_idx23.png"
           }
         },
         "册02_page0039_idx29": {
@@ -29486,7 +29486,7 @@
       }
     },
     "國": {
-      "updated_at": "2026-05-18T18:01:02.697Z",
+      "updated_at": "2026-06-04T03:41:54.930Z",
       "items": {
         "册01_page0034_idx127": {
           "source": {
@@ -29527,11 +29527,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:16:38.360809+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:41:54.858591+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/國_册01_page0034_idx127.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/國_册01_page0034_idx127.png"
           }
         },
         "册02_page0039_idx45": {
@@ -30190,7 +30190,7 @@
       }
     },
     "土": {
-      "updated_at": "2026-05-18T18:01:07.198Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0035_idx401": {
           "source": {
@@ -30226,14 +30226,14 @@
             ]
           },
           "filter": {
-            "status": "accepted",
+            "status": "pending",
             "timestamp": "2025-12-02T12:27:11.690198+00:00"
           },
           "review": {
-            "status": "dropped",
+            "status": "pending",
             "timestamp": "2025-12-02T12:27:11.690198+00:00",
             "method": null,
-            "decision": "drop",
+            "decision": "need",
             "confirmed_path": null,
             "segmented_path": null
           }
@@ -30931,7 +30931,7 @@
       }
     },
     "圭": {
-      "updated_at": "2026-05-18T18:01:07.531Z",
+      "updated_at": "2026-06-04T03:41:55.568Z",
       "items": {
         "册01_page0021_idx451": {
           "source": {
@@ -30972,17 +30972,17 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:16:54.077115+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:41:55.496475+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/圭_册01_page0021_idx451.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/圭_册01_page0021_idx451.png"
           }
         }
       }
     },
     "地": {
-      "updated_at": "2026-05-31T07:04:37.509Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0003_idx214": {
           "source": {
@@ -32373,18 +32373,18 @@
             "timestamp": "2026-05-31T07:04:37.509Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:04:37.509Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/地_册02_page0010_idx89.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/地_册02_page0010_idx89.png"
           }
         }
       }
     },
     "增": {
-      "updated_at": "2026-05-31T07:02:09.250Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0031_idx459": {
           "source": {
@@ -32617,12 +32617,12 @@
             "timestamp": "2026-05-31T07:02:09.250Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:02:09.250Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/增_册01_page0012_idx151.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/增_册01_page0012_idx151.png"
           }
         },
         "册01_page0012_idx166": {
@@ -34730,7 +34730,7 @@
       }
     },
     "外": {
-      "updated_at": "2026-05-31T07:10:52.613Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0035_idx148": {
           "source": {
@@ -35552,12 +35552,12 @@
             "timestamp": "2026-05-31T07:10:38.981Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:10:38.981Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/外_册02_page0010_idx304.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/外_册02_page0010_idx304.png"
           }
         },
         "册01_page0029_idx95": {
@@ -35802,7 +35802,7 @@
       }
     },
     "大": {
-      "updated_at": "2026-05-31T07:06:48.670Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0039_idx13": {
           "source": {
@@ -36311,12 +36311,12 @@
             "timestamp": "2026-05-31T07:06:48.670Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:06:48.670Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/大_册01_page0014_idx24.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/大_册01_page0014_idx24.png"
           }
         },
         "册02_page0022_idx295": {
@@ -36688,12 +36688,12 @@
             "timestamp": "2026-05-31T07:06:47.951Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:06:47.951Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/大_册01_page0015_idx121.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/大_册01_page0015_idx121.png"
           }
         },
         "册01_page0004_idx20": {
@@ -36993,7 +36993,7 @@
       }
     },
     "天": {
-      "updated_at": "2026-05-31T07:06:59.846Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0031_idx449": {
           "source": {
@@ -37226,12 +37226,12 @@
             "timestamp": "2026-05-31T07:06:54.762Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:06:54.762Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/天_册02_page0039_idx2.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/天_册02_page0039_idx2.png"
           }
         },
         "册02_page0039_idx9": {
@@ -37814,12 +37814,12 @@
             "timestamp": "2026-05-31T07:06:55.820Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-02T06:02:15.792873+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/天_册02_page0023_idx285.png",
-            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/天_册02_page0023_idx285.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册02_page0029_idx230": {
@@ -37860,12 +37860,12 @@
             "timestamp": "2026-05-31T07:06:59.132Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:06:59.132Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/天_册02_page0029_idx230.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/天_册02_page0029_idx230.png"
           }
         },
         "册02_page0007_idx279": {
@@ -37906,18 +37906,18 @@
             "timestamp": "2026-05-31T07:06:59.846Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:06:59.846Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/天_册02_page0007_idx279.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/天_册02_page0007_idx279.png"
           }
         }
       }
     },
     "太": {
-      "updated_at": "2026-05-18T18:01:58.470Z",
+      "updated_at": "2026-06-04T03:41:57.138Z",
       "items": {
         "册02_page0036_idx137": {
           "source": {
@@ -37958,11 +37958,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:18:36.102526+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:41:57.062401+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/太_册02_page0036_idx137.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/太_册02_page0036_idx137.png"
           }
         },
         "册02_page0013_idx5": {
@@ -38198,7 +38198,7 @@
       }
     },
     "夫": {
-      "updated_at": "2026-05-31T07:04:56.320Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0015_idx16": {
           "source": {
@@ -38422,12 +38422,12 @@
             "timestamp": "2026-05-31T07:04:53.938Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:04:53.938Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/夫_册01_page0016_idx46.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/夫_册01_page0016_idx46.png"
           }
         },
         "册01_page0028_idx158": {
@@ -38514,12 +38514,12 @@
             "timestamp": "2026-05-31T07:04:56.320Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:04:56.320Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/夫_册01_page0016_idx140.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/夫_册01_page0016_idx140.png"
           }
         },
         "册01_page0004_idx17": {
@@ -39662,7 +39662,7 @@
       }
     },
     "寸": {
-      "updated_at": "2026-05-31T07:11:35.430Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0015_idx24": {
           "source": {
@@ -39702,12 +39702,12 @@
             "timestamp": "2026-05-31T07:11:33.744Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-02T06:00:50.380271+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/寸_册02_page0015_idx24.png",
-            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/寸_册02_page0015_idx24.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册02_page0014_idx25": {
@@ -39950,12 +39950,12 @@
             "timestamp": "2026-05-31T07:11:35.430Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:35.430Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/寸_册02_page0005_idx284.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/寸_册02_page0005_idx284.png"
           }
         },
         "册02_page0038_idx223": {
@@ -40290,18 +40290,18 @@
             "timestamp": "2026-05-31T07:11:33.027Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:33.027Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/寸_册02_page0013_idx11.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/寸_册02_page0013_idx11.png"
           }
         }
       }
     },
     "小": {
-      "updated_at": "2026-05-31T07:14:14.998Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0015_idx57": {
           "source": {
@@ -40534,12 +40534,12 @@
             "timestamp": "2026-05-31T07:14:05.906Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:14:05.906Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/小_册02_page0039_idx32.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/小_册02_page0039_idx32.png"
           }
         },
         "册02_page0038_idx352": {
@@ -41488,7 +41488,7 @@
       }
     },
     "尤": {
-      "updated_at": "2026-05-18T18:02:58.165Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0016_idx534": {
           "source": {
@@ -41524,14 +41524,14 @@
             ]
           },
           "filter": {
-            "status": "accepted",
+            "status": "pending",
             "timestamp": "2025-11-11T15:18:43.500552+00:00"
           },
           "review": {
-            "status": "dropped",
+            "status": "pending",
             "timestamp": "2025-11-11T15:18:43.500552+00:00",
             "method": null,
-            "decision": "drop",
+            "decision": "need",
             "confirmed_path": null,
             "segmented_path": null
           }
@@ -41585,7 +41585,7 @@
       }
     },
     "尺": {
-      "updated_at": "2026-05-31T07:06:51.241Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0015_idx12": {
           "source": {
@@ -42167,12 +42167,12 @@
             "timestamp": "2026-05-31T07:06:51.241Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:06:51.241Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/尺_册01_page0034_idx33.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/尺_册01_page0034_idx33.png"
           }
         },
         "册02_page0015_idx30": {
@@ -44276,7 +44276,7 @@
       }
     },
     "平": {
-      "updated_at": "2026-05-31T07:05:31.318Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0007_idx325": {
           "source": {
@@ -44463,12 +44463,12 @@
             "timestamp": "2026-05-31T07:05:31.318Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:05:31.318Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/平_册01_page0014_idx48.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/平_册01_page0014_idx48.png"
           }
         },
         "册02_page0033_idx64": {
@@ -45597,7 +45597,7 @@
       }
     },
     "建": {
-      "updated_at": "2026-05-31T07:07:17.967Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0029_idx303": {
           "source": {
@@ -45784,12 +45784,12 @@
             "timestamp": "2026-05-31T07:07:17.967Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:07:17.967Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/建_册02_page0029_idx79.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/建_册02_page0029_idx79.png"
           }
         },
         "册01_page0010_idx175": {
@@ -46830,7 +46830,7 @@
       }
     },
     "心": {
-      "updated_at": "2026-05-18T18:03:52.638Z",
+      "updated_at": "2026-06-04T03:41:59.295Z",
       "items": {
         "册02_page0011_idx252": {
           "source": {
@@ -46880,11 +46880,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:20:54.607424+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:41:59.222246+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/心_册02_page0011_idx252.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/心_册02_page0011_idx252.png"
           }
         },
         "册02_page0009_idx115": {
@@ -47874,7 +47874,7 @@
       }
     },
     "志": {
-      "updated_at": "2026-05-31T07:07:27.488Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0040_idx89": {
           "source": {
@@ -47960,12 +47960,12 @@
             "timestamp": "2026-05-31T07:07:27.488Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:07:27.488Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/志_册02_page0040_idx52.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/志_册02_page0040_idx52.png"
           }
         },
         "册01_page0021_idx495": {
@@ -48684,7 +48684,7 @@
       }
     },
     "成": {
-      "updated_at": "2026-05-31T07:07:22.570Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0035_idx175": {
           "source": {
@@ -48770,12 +48770,12 @@
             "timestamp": "2026-05-31T07:07:20.804Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:07:20.804Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/成_册01_page0010_idx307.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/成_册01_page0010_idx307.png"
           }
         },
         "册01_page0016_idx45": {
@@ -48917,12 +48917,12 @@
             "timestamp": "2026-05-31T07:07:22.570Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:07:22.570Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/成_册01_page0010_idx140.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/成_册01_page0010_idx140.png"
           }
         },
         "册01_page0006_idx146": {
@@ -49632,7 +49632,7 @@
       }
     },
     "數": {
-      "updated_at": "2026-05-31T07:01:57.304Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0009_idx80": {
           "source": {
@@ -50251,12 +50251,12 @@
             "timestamp": "2026-05-31T07:01:55.890Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:01:55.890Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/數_册02_page0034_idx111.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/數_册02_page0034_idx111.png"
           }
         },
         "册02_page0009_idx44": {
@@ -50297,12 +50297,12 @@
             "timestamp": "2026-05-31T07:01:57.304Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:01:57.304Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/數_册02_page0009_idx44.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/數_册02_page0009_idx44.png"
           }
         },
         "册02_page0033_idx172": {
@@ -50620,7 +50620,7 @@
       }
     },
     "文": {
-      "updated_at": "2026-05-31T07:08:05.665Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0040_idx91": {
           "source": {
@@ -50660,12 +50660,12 @@
             "timestamp": "2026-05-31T07:08:04.758Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-02T05:56:36.675558+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/文_册02_page0040_idx91.png",
-            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/文_册02_page0040_idx91.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册01_page0036_idx47": {
@@ -50752,12 +50752,12 @@
             "timestamp": "2026-05-31T07:08:05.665Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:08:05.665Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/文_册02_page0040_idx135.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/文_册02_page0040_idx135.png"
           }
         },
         "册02_page0041_idx14": {
@@ -51773,12 +51773,12 @@
             "timestamp": "2026-05-31T07:08:03.735Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:08:03.735Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/文_册02_page0040_idx247.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/文_册02_page0040_idx247.png"
           }
         },
         "册01_page0015_idx260": {
@@ -51911,12 +51911,12 @@
             "timestamp": "2026-05-31T07:08:02.654Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:08:02.654Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/文_册02_page0040_idx270.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/文_册02_page0040_idx270.png"
           }
         },
         "册02_page0015_idx70": {
@@ -53743,7 +53743,7 @@
       }
     },
     "施": {
-      "updated_at": "2026-05-18T18:04:53.626Z",
+      "updated_at": "2026-06-04T03:42:02.460Z",
       "items": {
         "册01_page0019_idx604": {
           "source": {
@@ -53784,11 +53784,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:19:20.096042+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:42:02.387424+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/施_册01_page0019_idx604.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/施_册01_page0019_idx604.png"
           }
         },
         "册01_page0034_idx157": {
@@ -55086,7 +55086,7 @@
       }
     },
     "昌": {
-      "updated_at": "2026-05-18T18:05:11.917Z",
+      "updated_at": "2026-06-04T03:42:01.533Z",
       "items": {
         "册02_page0036_idx354": {
           "source": {
@@ -55126,10 +55126,10 @@
             "timestamp": "2025-11-11T15:19:35.900069+00:00"
           },
           "review": {
-            "status": "confirmed",
-            "timestamp": "2025-11-11T15:19:35.900069+00:00",
+            "status": "dropped",
+            "timestamp": "2026-06-04T03:42:01.454648+00:00",
             "method": "auto",
-            "decision": "need",
+            "decision": "drop",
             "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/昌_册02_page0036_idx354.png",
             "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/昌_册02_page0036_idx354.png"
           }
@@ -55275,7 +55275,7 @@
       }
     },
     "明": {
-      "updated_at": "2026-05-31T07:04:06.990Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0014_idx100": {
           "source": {
@@ -56741,12 +56741,12 @@
             "timestamp": "2026-05-31T07:04:06.990Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:04:06.990Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/明_册02_page0004_idx136.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/明_册02_page0004_idx136.png"
           }
         },
         "册02_page0005_idx41": {
@@ -56934,12 +56934,12 @@
             "timestamp": "2026-05-31T07:04:05.469Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:04:05.469Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/明_册02_page0029_idx167.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/明_册02_page0029_idx167.png"
           }
         },
         "册02_page0017_idx358": {
@@ -57824,7 +57824,7 @@
       }
     },
     "春": {
-      "updated_at": "2026-05-31T07:04:47.079Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0014_idx61": {
           "source": {
@@ -58287,12 +58287,12 @@
             "timestamp": "2026-05-31T07:04:45.778Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:04:45.778Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/春_册01_page0027_idx9.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/春_册01_page0027_idx9.png"
           }
         },
         "册01_page0026_idx271": {
@@ -58342,12 +58342,12 @@
             "timestamp": "2026-05-31T07:04:47.079Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:04:47.079Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/春_册01_page0026_idx271.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/春_册01_page0026_idx271.png"
           }
         }
       }
@@ -58542,7 +58542,7 @@
       }
     },
     "月": {
-      "updated_at": "2026-05-31T07:13:14.846Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0028_idx432": {
           "source": {
@@ -59262,12 +59262,12 @@
             "timestamp": "2026-05-31T07:13:14.846Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:13:14.846Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/月_册02_page0039_idx50.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/月_册02_page0039_idx50.png"
           }
         }
       }
@@ -59977,7 +59977,7 @@
       }
     },
     "未": {
-      "updated_at": "2026-05-31T07:10:21.763Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0009_idx283": {
           "source": {
@@ -60164,12 +60164,12 @@
             "timestamp": "2026-05-31T07:10:21.113Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:10:21.113Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/未_册02_page0029_idx144.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/未_册02_page0029_idx144.png"
           }
         },
         "册02_page0029_idx42": {
@@ -60256,12 +60256,12 @@
             "timestamp": "2026-05-31T07:10:21.763Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:10:21.763Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/未_册02_page0029_idx267.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/未_册02_page0029_idx267.png"
           }
         },
         "册02_page0029_idx54": {
@@ -60727,7 +60727,7 @@
       }
     },
     "本": {
-      "updated_at": "2026-05-31T07:12:26.852Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0040_idx198": {
           "source": {
@@ -61135,12 +61135,12 @@
             "timestamp": "2026-05-31T07:12:26.852Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:12:26.852Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/本_册02_page0040_idx207.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/本_册02_page0040_idx207.png"
           }
         },
         "册02_page0023_idx192": {
@@ -61707,7 +61707,7 @@
       }
     },
     "東": {
-      "updated_at": "2026-05-31T07:10:03.116Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0009_idx242": {
           "source": {
@@ -61802,12 +61802,12 @@
             "timestamp": "2026-05-31T07:10:03.116Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:10:03.116Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/東_册01_page0031_idx440.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/東_册01_page0031_idx440.png"
           }
         },
         "册02_page0009_idx265": {
@@ -61857,12 +61857,12 @@
             "timestamp": "2026-05-31T07:10:01.840Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:10:01.840Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/東_册02_page0009_idx265.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/東_册02_page0009_idx265.png"
           }
         },
         "册02_page0004_idx299": {
@@ -62300,7 +62300,7 @@
       }
     },
     "業": {
-      "updated_at": "2026-05-31T07:02:21.356Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0016_idx273": {
           "source": {
@@ -62726,12 +62726,12 @@
             "timestamp": "2026-05-31T07:02:11.725Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:02:11.725Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/業_册01_page0016_idx257.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/業_册01_page0016_idx257.png"
           }
         },
         "册01_page0004_idx2": {
@@ -63068,7 +63068,7 @@
       }
     },
     "正": {
-      "updated_at": "2026-05-31T07:12:20.835Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0039_idx74": {
           "source": {
@@ -63108,12 +63108,12 @@
             "timestamp": "2026-05-31T07:12:18.825Z"
           },
           "review": {
-            "status": "confirmed",
+            "status": "pending",
             "timestamp": "2025-11-02T05:59:40.777197+00:00",
             "method": "auto",
             "decision": "need",
-            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/正_册02_page0039_idx74.png",
-            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/正_册02_page0039_idx74.png"
+            "confirmed_path": null,
+            "segmented_path": null
           }
         },
         "册02_page0036_idx152": {
@@ -63871,12 +63871,12 @@
             "timestamp": "2026-05-31T07:12:17.622Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:12:17.622Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/正_册02_page0010_idx211.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/正_册02_page0010_idx211.png"
           }
         },
         "册02_page0007_idx294": {
@@ -63917,12 +63917,12 @@
             "timestamp": "2026-05-31T07:12:19.964Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:12:19.964Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/正_册02_page0007_idx294.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/正_册02_page0007_idx294.png"
           }
         },
         "册02_page0009_idx269": {
@@ -63972,18 +63972,18 @@
             "timestamp": "2026-05-31T07:12:20.835Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:12:20.835Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/正_册02_page0009_idx269.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/正_册02_page0009_idx269.png"
           }
         }
       }
     },
     "此": {
-      "updated_at": "2026-05-31T07:05:38.090Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0009_idx86": {
           "source": {
@@ -65108,12 +65108,12 @@
             "timestamp": "2026-05-31T07:05:34.929Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:05:34.929Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/此_册02_page0006_idx9.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/此_册02_page0006_idx9.png"
           }
         },
         "册01_page0015_idx270": {
@@ -65154,18 +65154,18 @@
             "timestamp": "2026-05-31T07:05:38.090Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:05:38.090Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/此_册01_page0015_idx270.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/此_册01_page0015_idx270.png"
           }
         }
       }
     },
     "武": {
-      "updated_at": "2026-05-18T18:06:39.809Z",
+      "updated_at": "2026-06-04T03:42:04.182Z",
       "items": {
         "册01_page0021_idx403": {
           "source": {
@@ -65206,11 +65206,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:20:01.564545+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:42:04.110081+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/武_册01_page0021_idx403.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/武_册01_page0021_idx403.png"
           }
         },
         "册01_page0005_idx57": {
@@ -65308,7 +65308,7 @@
       }
     },
     "母": {
-      "updated_at": "2026-05-31T07:12:04.558Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0023_idx27": {
           "source": {
@@ -65854,12 +65854,12 @@
             "timestamp": "2026-05-31T07:12:03.677Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:12:03.677Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/母_册02_page0023_idx31.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/母_册02_page0023_idx31.png"
           }
         },
         "册02_page0015_idx218": {
@@ -66212,12 +66212,12 @@
             "timestamp": "2026-05-31T07:12:04.558Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:12:04.558Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/母_册02_page0021_idx83.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/母_册02_page0021_idx83.png"
           }
         },
         "册01_page0038_idx218": {
@@ -67199,7 +67199,7 @@
       }
     },
     "氣": {
-      "updated_at": "2026-05-31T07:10:59.891Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0038_idx219": {
           "source": {
@@ -67561,12 +67561,12 @@
             "timestamp": "2026-05-31T07:10:59.891Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:10:59.891Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/氣_册02_page0013_idx6.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/氣_册02_page0013_idx6.png"
           }
         },
         "册02_page0013_idx7": {
@@ -67607,12 +67607,12 @@
             "timestamp": "2026-05-31T07:10:59.408Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:10:59.408Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/氣_册02_page0013_idx7.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/氣_册02_page0013_idx7.png"
           }
         },
         "册02_page0035_idx320": {
@@ -68340,7 +68340,7 @@
       }
     },
     "為": {
-      "updated_at": "2026-05-31T07:07:32.936Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0015_idx15": {
           "source": {
@@ -69235,12 +69235,12 @@
             "timestamp": "2026-05-31T07:07:32.156Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:07:32.156Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/為_册02_page0020_idx26.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/為_册02_page0020_idx26.png"
           }
         },
         "册02_page0026_idx98": {
@@ -69290,18 +69290,18 @@
             "timestamp": "2026-05-31T07:07:32.936Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:07:32.936Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/為_册02_page0026_idx98.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/為_册02_page0026_idx98.png"
           }
         }
       }
     },
     "焉": {
-      "updated_at": "2026-05-31T07:07:35.429Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0010_idx352": {
           "source": {
@@ -69396,12 +69396,12 @@
             "timestamp": "2026-05-31T07:07:35.029Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:07:35.029Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/焉_册01_page0032_idx207.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/焉_册01_page0032_idx207.png"
           }
         },
         "册01_page0004_idx257": {
@@ -69442,12 +69442,12 @@
             "timestamp": "2026-05-31T07:07:35.429Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:07:35.429Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/焉_册01_page0004_idx257.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/焉_册01_page0004_idx257.png"
           }
         },
         "册02_page0034_idx22": {
@@ -70060,7 +70060,7 @@
       }
     },
     "無": {
-      "updated_at": "2026-05-31T07:09:31.724Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0008_idx92": {
           "source": {
@@ -70302,12 +70302,12 @@
             "timestamp": "2026-05-31T07:09:30.623Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:09:30.623Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/無_册01_page0025_idx43.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/無_册01_page0025_idx43.png"
           }
         },
         "册01_page0018_idx81": {
@@ -70357,12 +70357,12 @@
             "timestamp": "2026-05-31T07:09:31.724Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:09:31.724Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/無_册01_page0018_idx81.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/無_册01_page0018_idx81.png"
           }
         },
         "册01_page0004_idx227": {
@@ -70745,7 +70745,7 @@
       }
     },
     "然": {
-      "updated_at": "2026-05-31T07:09:50.787Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0003_idx275": {
           "source": {
@@ -71383,12 +71383,12 @@
             "timestamp": "2026-05-31T07:09:50.787Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:09:50.787Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/然_册01_page0015_idx209.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/然_册01_page0015_idx209.png"
           }
         },
         "册01_page0011_idx137": {
@@ -71769,12 +71769,12 @@
             "timestamp": "2026-05-31T07:09:50.051Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:09:50.051Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/然_册01_page0025_idx234.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/然_册01_page0025_idx234.png"
           }
         },
         "册01_page0004_idx71": {
@@ -71918,7 +71918,7 @@
       }
     },
     "照": {
-      "updated_at": "2026-05-31T07:09:44.887Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0027_idx80": {
           "source": {
@@ -72390,12 +72390,12 @@
             "timestamp": "2026-05-31T07:09:35.356Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:09:35.356Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/照_册01_page0040_idx80.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/照_册01_page0040_idx80.png"
           }
         },
         "册01_page0031_idx67": {
@@ -72557,7 +72557,7 @@
       }
     },
     "牧": {
-      "updated_at": "2026-05-18T18:07:37.544Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0005_idx85": {
           "source": {
@@ -72593,14 +72593,14 @@
             ]
           },
           "filter": {
-            "status": "accepted",
+            "status": "pending",
             "timestamp": "2025-11-11T15:22:16.898630+00:00"
           },
           "review": {
-            "status": "dropped",
+            "status": "pending",
             "timestamp": "2025-11-11T15:22:16.898630+00:00",
             "method": null,
-            "decision": "drop",
+            "decision": "need",
             "confirmed_path": null,
             "segmented_path": null
           }
@@ -75226,7 +75226,7 @@
       }
     },
     "界": {
-      "updated_at": "2026-05-18T18:08:02.389Z",
+      "updated_at": "2026-06-04T03:42:06.014Z",
       "items": {
         "册02_page0036_idx530": {
           "source": {
@@ -75267,11 +75267,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:22:49.738673+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:42:05.941320+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/界_册02_page0036_idx530.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/界_册02_page0036_idx530.png"
           }
         },
         "册02_page0036_idx462": {
@@ -75323,7 +75323,7 @@
       }
     },
     "畢": {
-      "updated_at": "2026-05-18T18:08:04.642Z",
+      "updated_at": "2026-06-04T03:42:09.189Z",
       "items": {
         "册02_page0017_idx97": {
           "source": {
@@ -75364,11 +75364,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:23:07.914012+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:42:09.117801+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/畢_册02_page0017_idx97.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/畢_册02_page0017_idx97.png"
           }
         },
         "册02_page0026_idx326": {
@@ -75650,7 +75650,7 @@
       }
     },
     "畫": {
-      "updated_at": "2026-05-31T07:02:57.425Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0039_idx71": {
           "source": {
@@ -75920,12 +75920,12 @@
             "timestamp": "2026-05-31T07:02:57.425Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:02:57.425Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/畫_册02_page0024_idx177.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/畫_册02_page0024_idx177.png"
           }
         },
         "册01_page0027_idx18": {
@@ -76823,7 +76823,7 @@
       }
     },
     "癸": {
-      "updated_at": "2026-05-18T18:08:13.283Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0027_idx367": {
           "source": {
@@ -76859,14 +76859,14 @@
             ]
           },
           "filter": {
-            "status": "accepted",
+            "status": "pending",
             "timestamp": "2025-11-11T15:23:24.210605+00:00"
           },
           "review": {
-            "status": "dropped",
+            "status": "pending",
             "timestamp": "2025-11-11T15:23:24.210605+00:00",
             "method": null,
-            "decision": "drop",
+            "decision": "need",
             "confirmed_path": null,
             "segmented_path": null
           }
@@ -76966,7 +76966,7 @@
       }
     },
     "皆": {
-      "updated_at": "2026-05-31T07:01:48.956Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0040_idx257": {
           "source": {
@@ -77199,12 +77199,12 @@
             "timestamp": "2026-05-31T07:01:47.361Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:01:47.361Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/皆_册02_page0005_idx264.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/皆_册02_page0005_idx264.png"
           }
         },
         "册01_page0015_idx251": {
@@ -77245,12 +77245,12 @@
             "timestamp": "2026-05-31T07:01:48.956Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:01:48.956Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/皆_册01_page0015_idx251.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/皆_册01_page0015_idx251.png"
           }
         },
         "册02_page0040_idx151": {
@@ -77532,7 +77532,7 @@
       }
     },
     "目": {
-      "updated_at": "2026-05-31T07:12:36.996Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0040_idx150": {
           "source": {
@@ -77618,12 +77618,12 @@
             "timestamp": "2026-05-31T07:12:36.996Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:12:36.996Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/目_册02_page0040_idx137.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/目_册02_page0040_idx137.png"
           }
         },
         "册02_page0034_idx144": {
@@ -78032,12 +78032,12 @@
             "timestamp": "2026-05-31T07:12:36.852Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:12:36.852Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/目_册02_page0040_idx249.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/目_册02_page0040_idx249.png"
           }
         },
         "册02_page0022_idx339": {
@@ -80697,7 +80697,7 @@
       }
     },
     "省": {
-      "updated_at": "2026-05-31T07:11:11.170Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0034_idx300": {
           "source": {
@@ -80829,12 +80829,12 @@
             "timestamp": "2026-05-31T07:11:11.170Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:11.170Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/省_册02_page0032_idx2.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/省_册02_page0032_idx2.png"
           }
         },
         "册02_page0033_idx321": {
@@ -81033,7 +81033,7 @@
       }
     },
     "眾": {
-      "updated_at": "2025-10-29T01:51:58.971Z",
+      "updated_at": "2026-06-04T03:42:11.085Z",
       "items": {
         "册01_page0009_idx491": {
           "source": {
@@ -81074,11 +81074,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:25:00.845155+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:42:11.011766+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/眾_册01_page0009_idx491.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/眾_册01_page0009_idx491.png"
           }
         }
       }
@@ -81328,7 +81328,7 @@
       }
     },
     "章": {
-      "updated_at": "2026-05-31T07:01:18.045Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0026_idx478": {
           "source": {
@@ -81414,12 +81414,12 @@
             "timestamp": "2026-05-31T07:01:14.396Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:01:14.396Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/章_册02_page0039_idx148.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/章_册02_page0039_idx148.png"
           }
         },
         "册02_page0026_idx178": {
@@ -81515,12 +81515,12 @@
             "timestamp": "2026-05-31T07:01:18.045Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:01:18.045Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/章_册02_page0026_idx99.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/章_册02_page0026_idx99.png"
           }
         },
         "册02_page0017_idx352": {
@@ -82138,7 +82138,7 @@
       }
     },
     "累": {
-      "updated_at": "2026-05-31T07:01:43.627Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0004_idx157": {
           "source": {
@@ -82472,12 +82472,12 @@
             "timestamp": "2026-05-31T07:01:43.627Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:01:43.627Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/累_册01_page0015_idx274.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/累_册01_page0015_idx274.png"
           }
         },
         "册01_page0040_idx224": {
@@ -82718,7 +82718,7 @@
       }
     },
     "羊": {
-      "updated_at": "2026-05-18T18:09:07.909Z",
+      "updated_at": "2026-06-04T03:42:12.139Z",
       "items": {
         "册01_page0021_idx157": {
           "source": {
@@ -82759,17 +82759,17 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:25:09.043463+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:42:12.068378+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/羊_册01_page0021_idx157.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/羊_册01_page0021_idx157.png"
           }
         }
       }
     },
     "考": {
-      "updated_at": "2026-05-31T07:11:09.353Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0040_idx271": {
           "source": {
@@ -82855,12 +82855,12 @@
             "timestamp": "2026-05-31T07:11:09.353Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:09.353Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/考_册01_page0012_idx195.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/考_册01_page0012_idx195.png"
           }
         },
         "册01_page0013_idx222": {
@@ -83243,7 +83243,7 @@
       }
     },
     "而": {
-      "updated_at": "2026-05-31T07:02:47.986Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0028_idx431": {
           "source": {
@@ -83899,18 +83899,18 @@
             "timestamp": "2026-05-31T07:02:47.986Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:02:47.986Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/而_册02_page0040_idx303.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/而_册02_page0040_idx303.png"
           }
         }
       }
     },
     "自": {
-      "updated_at": "2026-05-31T07:12:34.437Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0040_idx42": {
           "source": {
@@ -84051,12 +84051,12 @@
             "timestamp": "2026-05-31T07:12:33.659Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:12:33.659Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/自_册01_page0013_idx127.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/自_册01_page0013_idx127.png"
           }
         },
         "册01_page0012_idx273": {
@@ -84465,12 +84465,12 @@
             "timestamp": "2026-05-31T07:12:34.437Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:12:34.437Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/自_册01_page0012_idx88.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/自_册01_page0012_idx88.png"
           }
         },
         "册01_page0031_idx53": {
@@ -84862,7 +84862,7 @@
       }
     },
     "至": {
-      "updated_at": "2026-05-31T07:00:53.560Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0015_idx174": {
           "source": {
@@ -85233,12 +85233,12 @@
             "timestamp": "2026-05-31T07:00:52.652Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:00:52.652Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/至_册02_page0035_idx213.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/至_册02_page0035_idx213.png"
           }
         },
         "册02_page0007_idx8": {
@@ -85527,18 +85527,18 @@
             "timestamp": "2026-05-31T07:00:53.560Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:00:53.560Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/至_册01_page0035_idx163.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/至_册01_page0035_idx163.png"
           }
         }
       }
     },
     "與": {
-      "updated_at": "2026-05-31T07:08:19.285Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0029_idx235": {
           "source": {
@@ -85955,12 +85955,12 @@
             "timestamp": "2026-05-31T07:08:18.496Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:08:18.496Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/與_册01_page0011_idx134.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/與_册01_page0011_idx134.png"
           }
         },
         "册02_page0005_idx127": {
@@ -86139,12 +86139,12 @@
             "timestamp": "2026-05-31T07:08:19.285Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:08:19.285Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/與_册01_page0012_idx42.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/與_册01_page0012_idx42.png"
           }
         }
       }
@@ -86256,7 +86256,7 @@
       }
     },
     "華": {
-      "updated_at": "2026-05-18T18:09:38.488Z",
+      "updated_at": "2026-06-04T03:42:14.248Z",
       "items": {
         "册02_page0033_idx307": {
           "source": {
@@ -86297,11 +86297,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:25:20.706299+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:42:14.177269+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/華_册02_page0033_idx307.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/華_册02_page0033_idx307.png"
           }
         },
         "册02_page0005_idx166": {
@@ -86606,7 +86606,7 @@
       }
     },
     "術": {
-      "updated_at": "2026-05-31T07:01:11.833Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0041_idx46": {
           "source": {
@@ -87253,12 +87253,12 @@
             "timestamp": "2026-05-31T07:01:11.833Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:01:11.833Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/術_册01_page0015_idx336.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/術_册01_page0015_idx336.png"
           }
         }
       }
@@ -87563,7 +87563,7 @@
       }
     },
     "西": {
-      "updated_at": "2026-05-31T07:08:53.965Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0003_idx199": {
           "source": {
@@ -87842,12 +87842,12 @@
             "timestamp": "2026-05-31T07:08:53.965Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:08:53.965Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/西_册02_page0005_idx82.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/西_册02_page0005_idx82.png"
           }
         },
         "册02_page0024_idx234": {
@@ -88026,18 +88026,18 @@
             "timestamp": "2026-05-31T07:08:52.890Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:08:52.890Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/西_册02_page0003_idx180.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/西_册02_page0003_idx180.png"
           }
         }
       }
     },
     "要": {
-      "updated_at": "2026-05-18T18:09:50.370Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0020_idx417": {
           "source": {
@@ -88073,14 +88073,14 @@
             ]
           },
           "filter": {
-            "status": "accepted",
+            "status": "pending",
             "timestamp": "2025-11-11T15:25:30.956430+00:00"
           },
           "review": {
-            "status": "dropped",
+            "status": "pending",
             "timestamp": "2025-11-11T15:25:30.956430+00:00",
             "method": null,
-            "decision": "drop",
+            "decision": "need",
             "confirmed_path": null,
             "segmented_path": null
           }
@@ -88088,7 +88088,7 @@
       }
     },
     "見": {
-      "updated_at": "2026-05-31T07:11:03.900Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0025_idx109": {
           "source": {
@@ -88505,12 +88505,12 @@
             "timestamp": "2026-05-31T07:11:03.900Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:03.900Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/見_册01_page0028_idx239.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/見_册01_page0028_idx239.png"
           }
         },
         "册01_page0015_idx306": {
@@ -88661,18 +88661,18 @@
             "timestamp": "2026-05-31T07:11:02.656Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:11:02.656Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/見_册02_page0025_idx47.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/見_册02_page0025_idx47.png"
           }
         }
       }
     },
     "識": {
-      "updated_at": "2026-05-31T07:07:25.259Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0005_idx279": {
           "source": {
@@ -89457,12 +89457,12 @@
             "timestamp": "2026-05-31T07:07:25.259Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:07:25.259Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/識_册02_page0005_idx189.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/識_册02_page0005_idx189.png"
           }
         },
         "册02_page0006_idx54": {
@@ -89698,7 +89698,7 @@
       }
     },
     "變": {
-      "updated_at": "2026-05-18T18:10:13.384Z",
+      "updated_at": "2026-06-04T03:42:16.407Z",
       "items": {
         "册01_page0024_idx28": {
           "source": {
@@ -89739,11 +89739,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:25:52.922379+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:42:16.332956+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/變_册01_page0024_idx28.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/變_册01_page0024_idx28.png"
           }
         },
         "册01_page0015_idx298": {
@@ -90228,7 +90228,7 @@
       }
     },
     "辰": {
-      "updated_at": "2026-05-18T18:10:39.774Z",
+      "updated_at": "2026-06-04T03:42:15.327Z",
       "items": {
         "册01_page0034_idx318": {
           "source": {
@@ -90269,11 +90269,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:26:07.748401+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:42:15.256736+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/辰_册01_page0034_idx318.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/辰_册01_page0034_idx318.png"
           }
         },
         "册01_page0034_idx135": {
@@ -90877,7 +90877,7 @@
       }
     },
     "道": {
-      "updated_at": "2026-05-31T07:07:03.563Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0006_idx179": {
           "source": {
@@ -90917,12 +90917,12 @@
             "timestamp": "2026-05-31T07:07:03.563Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:07:03.563Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/道_册02_page0006_idx179.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/道_册02_page0006_idx179.png"
           }
         },
         "册01_page0015_idx108": {
@@ -91579,18 +91579,18 @@
             "timestamp": "2026-05-31T07:07:02.863Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:07:02.863Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/道_册01_page0032_idx136.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/道_册01_page0032_idx136.png"
           }
         }
       }
     },
     "里": {
-      "updated_at": "2026-05-31T07:00:59.800Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0003_idx76": {
           "source": {
@@ -92237,12 +92237,12 @@
             "timestamp": "2026-05-31T07:00:58.244Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:00:58.244Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/里_册02_page0007_idx114.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/里_册02_page0007_idx114.png"
           }
         },
         "册01_page0036_idx233": {
@@ -92292,18 +92292,18 @@
             "timestamp": "2026-05-31T07:00:59.800Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:00:59.800Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/里_册01_page0036_idx233.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/里_册01_page0036_idx233.png"
           }
         }
       }
     },
     "量": {
-      "updated_at": "2026-05-31T07:03:00.222Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0033_idx473": {
           "source": {
@@ -92398,12 +92398,12 @@
             "timestamp": "2026-05-31T07:03:00.222Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:03:00.222Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/量_册01_page0010_idx332.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/量_册01_page0010_idx332.png"
           }
         },
         "册01_page0004_idx78": {
@@ -92685,7 +92685,7 @@
       }
     },
     "長": {
-      "updated_at": "2026-05-31T07:09:15.752Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0017_idx304": {
           "source": {
@@ -93295,12 +93295,12 @@
             "timestamp": "2026-05-31T07:09:15.752Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:09:15.752Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/長_册02_page0024_idx251.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/長_册02_page0024_idx251.png"
           }
         }
       }
@@ -94006,7 +94006,7 @@
       }
     },
     "風": {
-      "updated_at": "2026-05-31T07:10:56.113Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0040_idx170": {
           "source": {
@@ -94138,12 +94138,12 @@
             "timestamp": "2026-05-31T07:10:56.113Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:10:56.113Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/風_册02_page0040_idx116.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/風_册02_page0040_idx116.png"
           }
         },
         "册01_page0005_idx224": {
@@ -94701,7 +94701,7 @@
       }
     },
     "馬": {
-      "updated_at": "2026-05-18T18:11:45.529Z",
+      "updated_at": "2026-06-04T03:42:18.236Z",
       "items": {
         "册02_page0036_idx76": {
           "source": {
@@ -94742,11 +94742,11 @@
           },
           "review": {
             "status": "dropped",
-            "timestamp": "2025-11-11T15:26:36.071598+00:00",
-            "method": null,
+            "timestamp": "2026-06-04T03:42:18.165056+00:00",
+            "method": "auto",
             "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/馬_册02_page0036_idx76.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/馬_册02_page0036_idx76.png"
           }
         },
         "册02_page0023_idx22": {
@@ -95359,7 +95359,7 @@
       }
     },
     "體": {
-      "updated_at": "2026-05-31T07:01:07.190Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册01_page0004_idx34": {
           "source": {
@@ -97036,12 +97036,12 @@
             "timestamp": "2026-05-31T07:01:07.190Z"
           },
           "review": {
-            "status": "pending",
-            "timestamp": null,
-            "method": null,
+            "status": "confirmed",
+            "timestamp": "2026-05-31T07:01:07.190Z",
+            "method": "auto",
             "decision": "need",
-            "confirmed_path": null,
-            "segmented_path": null
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/體_册01_page0010_idx334.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/體_册01_page0010_idx334.png"
           }
         },
         "册01_page0019_idx303": {
@@ -97461,7 +97461,7 @@
       }
     },
     "鷹": {
-      "updated_at": "2026-05-18T18:12:11.277Z",
+      "updated_at": "2026-06-02T15:16:48.351Z",
       "items": {
         "册02_page0010_idx6": {
           "source": {
@@ -97501,12 +97501,12 @@
             "timestamp": "2025-11-11T15:26:54.222267+00:00"
           },
           "review": {
-            "status": "dropped",
+            "status": "confirmed",
             "timestamp": "2025-11-11T15:26:54.222267+00:00",
-            "method": null,
-            "decision": "drop",
-            "confirmed_path": null,
-            "segmented_path": null
+            "method": "auto",
+            "decision": "need",
+            "confirmed_path": "data/results/manual/confirmed/30_1213_周髀算经/鷹_册02_page0010_idx6.png",
+            "segmented_path": "data/results/manual/confirmed/30_1213_周髀算经/鷹_册02_page0010_idx6.png"
           }
         },
         "册02_page0018_idx348": {

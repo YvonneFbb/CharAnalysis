@@ -6,7 +6,7 @@
 并为每个小图添加淡色边框。
 
 数据来源（唯一）：data/results/manual/review_books/*.json
-  - 仅采集 items[*].review 中 status == "confirmed" 且 decision != "drop" 的实例
+  - 仅采集当前 final sample：items[*].filter.status == "accepted" 且非 drop 的实例
   - 使用 review.confirmed_path 加载图片（相对项目根目录）
 
 输出：data/exports/montage/{book}.png
@@ -47,7 +47,7 @@ from src.review.storage.review_books import iter_confirmed_items, list_review_bo
 
 
 def iter_confirmed_instances(book: str) -> List[Tuple[str, str, Path]]:
-    """返回该书所有已确认且非 drop 的 (char, instance_id, abs_image_path)。"""
+    """返回该书所有 final sample 且已物化图片的 (char, instance_id, abs_image_path)。"""
     out: List[Tuple[str, str, Path]] = []
     book_obj = read_review_book(book) or {}
     for ch, inst_id, item in iter_confirmed_items(book_obj):

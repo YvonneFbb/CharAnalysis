@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Collect final review results into a single analysis folder.
+Collect final accepted samples into a single analysis folder.
 
 Output structure (default: data/analysis):
   analysis/

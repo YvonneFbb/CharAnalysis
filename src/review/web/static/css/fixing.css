@@ -5,6 +5,9 @@
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
 .card { border: 1px solid #dfe6ec; border-radius: 6px; padding: 0; background: #fff; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 2px 4px rgba(15,35,67,0.08); transition: box-shadow 0.15s ease; }
 .card:hover { box-shadow: 0 4px 12px rgba(15,35,67,0.16); }
+.card-drop-toggle { position: absolute; top: 6px; left: 6px; z-index: 3; width: 18px; height: 18px; border: 1px solid rgba(47,53,66,0.22); border-radius: 999px; background: rgba(255,255,255,0.92); color: #6b737c; font-size: 10px; line-height: 16px; text-align: center; padding: 0; cursor: pointer; box-shadow: 0 1px 3px rgba(15,35,67,0.12); }
+.card-drop-toggle:hover { background: #fff; color: #3b4252; }
+.card-drop-toggle.is-dropped { background: rgba(91,100,112,0.92); border-color: rgba(91,100,112,0.92); color: #fff; }
 .thumb { width: 100%; display: block; background: #fff; border-radius: 4px; }
 .card.dropped { background: #f4f6f8; border-color: #d8dfe5; }
 .card.dropped .thumb { opacity: 0.35; filter: grayscale(0.95); }
@@ -21,11 +24,11 @@
 .status-confirmed { background: rgba(220, 245, 230, 0.95); color: #1f6a32; }
 .status-pending { background: rgba(255, 233, 194, 0.95); color: #7a5200; }
 .status-drop { background: rgba(230, 233, 236, 0.95); color: #5b6470; }
-.thumb-label { position: absolute; left: 6px; right: 6px; bottom: 6px; background: rgba(255,255,255,0.95); color: #2f3542; font-size: 12px; padding: 3px 6px; border-radius: 4px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 4px rgba(15,35,67,0.18); opacity: 0; transform: translateY(6px); transition: opacity 0.15s ease, transform 0.15s ease; pointer-events: none; }
+.thumb-label { position: absolute; left: 6px; right: 6px; bottom: 6px; background: rgba(255,255,255,0.95); color: #2f3542; font-size: 12px; padding: 5px 6px; border-radius: 4px; display: flex; flex-direction: column; align-items: stretch; gap: 4px; box-shadow: 0 2px 4px rgba(15,35,67,0.18); opacity: 0; transform: translateY(6px); transition: opacity 0.15s ease, transform 0.15s ease; pointer-events: none; }
 .card:hover .thumb-label { opacity: 1; transform: translateY(0); pointer-events: auto; }
-.thumb-label .char-name { font-weight: 600; cursor: pointer; }
-.thumb-actions { display: flex; gap: 4px; }
-.thumb-actions button { border: 1px solid #cfd8dc; background: #fff; color: #2f3542; padding: 1px 6px; border-radius: 3px; font-size: 11px; cursor: pointer; transition: all 0.15s ease; }
+.thumb-label .char-name { font-weight: 600; cursor: pointer; display: block; line-height: 1.1; text-align: left; }
+.thumb-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
+.thumb-actions button { min-width: 0; width: 100%; border: 1px solid #cfd8dc; background: #fff; color: #2f3542; padding: 2px 0; border-radius: 3px; font-size: 10px; line-height: 1.1; text-align: center; cursor: pointer; transition: all 0.15s ease; }
 .thumb-actions button:hover,
 .thumb-label .char-name:hover { background: #f1f5f8; }
 .meta { display:none; }

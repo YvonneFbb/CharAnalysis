@@ -80,6 +80,22 @@
       className: 'card',
       onclick: () => openSegmentModalForItem(item),
     });
+    applyCardState(card, item);
+
+    card.appendChild(el('button', {
+      className: `card-drop-toggle${isDroppedItem(item) ? ' is-dropped' : ''}`,
+      type: 'button',
+      text: isDroppedItem(item) ? '✓' : 'X',
+      title: isDroppedItem(item) ? '取消 Review reject' : '标记为 Review reject',
+      onclick: async event => {
+        event.stopPropagation();
+        try {
+          await toggleReviewDrop(item, card);
+        } catch (error) {
+          alert(`更新失败: ${error.message}`);
+        }
+      },
+    }));
 
     if (item.thumb || item.thumb_url) {
       card.appendChild(el('img', {
@@ -91,6 +107,56 @@
     }
     card.appendChild(renderCardLabel(item));
     return card;
+  }
+
+  function isDroppedItem(item) {
+    return (item && (item.decision === 'drop' || item.status === 'dropped'));
+  }
+
+  function applyCardState(card, item) {
+    if (!card) return;
+    card.classList.remove('dropped', 'pending', 'confirmed', 'accepted');
+    if (isDroppedItem(item)) {
+      card.classList.add('dropped');
+      return;
+    }
+    if ((item && item.status) === 'confirmed') {
+      card.classList.add('confirmed');
+      return;
+    }
+    if ((item && item.status) === 'accepted') {
+      card.classList.add('accepted');
+      return;
+    }
+    card.classList.add('pending');
+  }
+
+  async function toggleReviewDrop(item, card) {
+    const nextDecision = isDroppedItem(item) ? 'need' : 'drop';
+    const response = await fetch('/api/mark_segmentation_decision', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        book: item.book,
+        char: item.char,
+        instance_id: item.instance_id,
+        decision: nextDecision,
+      }),
+    });
+    const result = await response.json();
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || '更新失败');
+    }
+
+    item.decision = nextDecision;
+    item.status = nextDecision === 'drop' ? 'dropped' : 'confirmed';
+    applyCardState(card, item);
+    const toggle = card.querySelector('.card-drop-toggle');
+    if (toggle) {
+      toggle.classList.toggle('is-dropped', nextDecision === 'drop');
+      toggle.textContent = nextDecision === 'drop' ? '✓' : 'X';
+      toggle.title = nextDecision === 'drop' ? '取消 Review reject' : '标记为 Review reject';
+    }
   }
 
   function renderCardLabel(item) {
@@ -105,7 +171,8 @@
     });
     const reviewButton = el('button', {
       type: 'button',
-      text: 'Review',
+      text: '审',
+      title: 'Review 微调',
       onclick: event => {
         event.stopPropagation();
         openSegmentModalForItem(item);
@@ -113,7 +180,8 @@
     });
     const ocrButton = el('button', {
       type: 'button',
-      text: 'Filter',
+      text: '筛',
+      title: 'Filter 筛选',
       onclick: event => {
         event.stopPropagation();
         openFilterModalForChar(item.char);
@@ -121,7 +189,7 @@
     });
     return el('div', { className: 'thumb-label' }, [
       charName,
-      el('div', { className: 'thumb-actions' }, [reviewButton, ocrButton]),
+      el('div', { className: 'thumb-actions' }, [ocrButton, reviewButton]),
     ]);
   }
 
@@ -254,7 +322,6 @@
 
   function bindStaticControls() {
     qs('#reload-fixing-btn').addEventListener('click', reloadFixing);
-    qs('#open-ocr-modal-btn').addEventListener('click', () => openFilterModal());
     qs('#refresh-montage-btn').addEventListener('click', refreshMontage);
     qs('#refresh-ocr-frame-btn').addEventListener('click', refreshFilterFrame);
     qs('#close-ocr-modal-btn').addEventListener('click', closeFilterModal);
