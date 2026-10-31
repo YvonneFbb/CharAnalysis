@@ -1,0 +1,13 @@
+period,cap3,metric,region_a,region_b,shared_characters,n_a,n_b,difference_b_minus_a,p_exact_two_sided
+middle,False,aspect_ratio,两浙地区,江淮湖广,89,10,5,0.06643854113129966,0.0735930735930736
+middle,False,aspect_ratio,两浙地区,福建地区,89,10,3,0.10239971994323849,0.01048951048951049
+middle,False,aspect_ratio,江淮湖广,福建地区,89,5,3,0.03596117881193883,0.6071428571428571
+middle,False,face_ratio,两浙地区,江淮湖广,89,10,5,0.007000517611238544,0.5201465201465202
+middle,False,face_ratio,两浙地区,福建地区,89,10,3,0.02759985177244506,0.04895104895104895
+middle,False,face_ratio,江淮湖广,福建地区,89,5,3,0.020599334161206517,0.21428571428571427
+middle,False,black_white_ratio,两浙地区,江淮湖广,89,10,5,0.0022597885889923397,0.8717948717948718
+middle,False,black_white_ratio,两浙地区,福建地区,89,10,3,-0.017845595961526656,0.25524475524475526
+middle,False,black_white_ratio,江淮湖广,福建地区,89,5,3,-0.020105384550518995,0.42857142857142855
+late,False,aspect_ratio,两浙地区,福建地区,99,6,3,0.021828162770628157,0.5
+late,False,face_ratio,两浙地区,福建地区,99,6,3,0.028265515849073553,0.10714285714285714
+late,False,black_white_ratio,两浙地区,福建地区,99,6,3,0.04007327747290301,0.05952380952380952

@@ -1,0 +1,22 @@
+{
+  "books": 38,
+  "instances": 22468,
+  "book_characters": 9043,
+  "near_ou_books": 18,
+  "fujian_books": 6,
+  "near_ou_common": 109,
+  "fujian_common": 105,
+  "fixed_regional_common": 77,
+  "temporal_tests": 12,
+  "outputs": {
+    "temporal_book_values.csv": "20285fe6458a783ba20e2e2dc2919bb7c4d91f40950c339c1dde747866fca89e",
+    "temporal_trends.csv": "e54b772c04e07641a6359e0ea8e916a9a9baf06e9fa5e00832d3627210ba7256",
+    "regional_book_values.csv": "54f2bbdbeab90fa9e47de2dacec3342911b84a388feed2235d60a9fd07593794",
+    "regional_summaries.csv": "d21b731ac431721dd00b419c3f4d48b98e04f4ad50062ae1356fc3288f536f73",
+    "regional_pairwise_tests.csv": "06fe6dd8f7078cbbf9d7ea089115e462684a2de3bcbe11abc158142e2b8622c1",
+    "regional_fixed_77_contrasts.csv": "d06db304cfa016d6f68f54fc1387bbaaac8dc7867d0aa9fdde322dbebde448d7",
+    "dating_sensitivity.csv": "e5912461af05bfd894b50b3c4908c7995063e97b6e71d8d7f255768942dbc87b",
+    "cap3_temporal_trends.csv": "bbffc78f734abe36e16d17a0c48794b32bd73a723fe9b898999ac72790e24407",
+    "cap3_regional_fixed_contrasts.csv": "3b767ab67bc2699666f00c09a78572972266cf7bda41911988a72f1c5ec0886e"
+  }
+}

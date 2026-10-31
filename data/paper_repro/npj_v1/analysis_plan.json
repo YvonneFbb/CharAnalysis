@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "paper_title": "Quantifying Visual Change in Southern Song Woodblock Books through Regular Script Morphology",
+  "analysis_scope": "Body-text regular-script macro morphology, not complete page layout.",
+  "metric_definitions": {
+    "aspect_ratio": "height / width (segmented glyph image)",
+    "face_ratio": "(width + height) / (2 * book_reference_frame_Lb)",
+    "black_white_ratio": "thresholded black pixels / (Lb^2 - thresholded black pixels); historically called ink_coverage in code"
+  },
+  "book_reference_frame_Lb": "ceil(1.05 * nearest_rank_90th_percentile_of_glyph_long_sides), per book",
+  "threshold": 160,
+  "character_comparison": "intersection of shared character identities within EACH stated comparison",
+  "aggregation": "equal weight per book-character mean, then equal weight per book",
+  "trim_quantile": 0.05,
+  "trim_per_metric_per_book": true,
+  "dispersion": "population standard deviation across distinct character identities after trimming",
+  "temporal_groups": {
+    "liangzhe_near_ou_18": [
+      "01_1127_尚书正义",
+      "02_1127_长短经",
+      "03_1127_周易注疏",
+      "06_1139_文粹",
+      "08_1146_事类赋",
+      "12_1165_陈书",
+      "13_1165_诸史提要",
+      "14_1167_论衡",
+      "18_1171_韦苏州集",
+      "23_1191_鲍氏国策",
+      "24_1192_礼记正义",
+      "26_1195_中庸辑略",
+      "28_1200_春秋左传正义",
+      "31_1220_广韵",
+      "32_1220_渭南文集",
+      "34_1230_切韻指掌图",
+      "35_1257_通鑑纪事本末",
+      "36_1259_开庆四明续志"
+    ],
+    "fujian_6": [
+      "15_1169_钜宋广韵",
+      "17_1171_史记",
+      "22_1191_春秋公羊经传解诂",
+      "30_1213_周髀算经",
+      "33_1226_东汉会要",
+      "37_1267_邵子观物篇渔樵问对"
+    ]
+  },
+  "region_period_ranges": {
+    "early": [
+      1127,
+      1162
+    ],
+    "middle": [
+      1162,
+      1208
+    ],
+    "late": [
+      1208,
+      1274
+    ]
+  },
+  "region_comparisons": [
+    "middle",
+    "late"
+  ],
+  "fixed_common_pool_region_comparison": {
+    "regions": [
+      "两浙地区",
+      "福建地区"
+    ],
+    "periods": [
+      "middle",
+      "late"
+    ],
+    "description": "For historical CHANGE IN regional contrast, hold shared characters fixed across both periods."
+  },
+  "year_uncertainty": {
+    "primary": "year_nominal for matching legacy output; not a claim of precision",
+    "中庸辑略_scenarios": [
+      1195,
+      1196,
+      1224,
+      1249,
+      "exclude"
+    ]
+  },
+  "repeat_instance_policy": "all confirmed; 70 book-character groups have 4–5 instances. deterministic cap3 is a sensitivity analysis.",
+  "input_unit": "single confirmed glyph instance",
+  "published_unit": "edition-level mean/dispersion of common character-level representatives",
+  "exclusions": "No scanned pages, cropped character images, OCR boxes, review states or absolute paths in public dataset"
+}

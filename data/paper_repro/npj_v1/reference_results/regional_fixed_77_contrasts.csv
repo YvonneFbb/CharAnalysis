@@ -1,0 +1,4 @@
+cap3,metric,shared_characters,n_liangzhe_middle,n_liangzhe_late,n_fujian_middle,n_fujian_late,mid_fujian_minus_liangzhe,late_fujian_minus_liangzhe,change_in_gap,p_exact_exchangeable_within_region
+False,aspect_ratio,77,10,6,3,3,0.10006495565355866,0.022313024174398954,-0.07775193147915971,0.037868381618381616
+False,face_ratio,77,10,6,3,3,0.026081313743110845,0.026166425198186682,8.511145507583695e-05,0.996466033966034
+False,black_white_ratio,77,10,6,3,3,-0.02050051423713098,0.034071587748976645,0.054572101986107624,0.18755619380619382

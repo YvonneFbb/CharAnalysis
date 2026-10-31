@@ -1,0 +1,19 @@
+# Deny all by default: publication branch is numeric-only.
+*
+!.gitignore
+!README.md
+!requirements-repro.txt
+!src/
+!src/__init__.py
+!src/paper_repro/
+!src/paper_repro/__init__.py
+!src/paper_repro/reproduce.py
+!data/
+!data/paper_repro/
+!data/paper_repro/npj_v1/
+!data/paper_repro/npj_v1/README.md
+!data/paper_repro/npj_v1/*.csv
+!data/paper_repro/npj_v1/*.json
+!data/paper_repro/npj_v1/reference_results/
+!data/paper_repro/npj_v1/reference_results/*.csv
+!data/paper_repro/npj_v1/reference_results/*.json

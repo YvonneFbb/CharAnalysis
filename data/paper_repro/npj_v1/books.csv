@@ -1,0 +1,39 @@
+book_id,number,title_zh,year_nominal,year_min,year_max,date_status,date_note,date_source_url,period_nominal,region,province,place,style,genre,n_instances,n_characters,reference_frame_Lb_px,clipping_rate
+01_1127_尚书正义,1,尚书正义,1127,1127,1127,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,early,两浙地区,浙江,浙东路茶盐司,近欧型,经部,445,226,110,0.026966292134831461
+02_1127_长短经,2,长短经,1127,1127,1127,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,early,两浙地区,浙江,杭州净戒院,近欧型,子部,669,265,79,0.028400597907324365
+03_1127_周易注疏,3,周易注疏,1127,1127,1127,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,early,两浙地区,浙江,浙东路茶盐司,近欧型,经部,518,215,105,0.028957528957528959
+04_1131_资治通鉴,4,资治通鉴,1132,1132,1133,documented_range,绍兴二至三年（1132–1133），工作年份取区间起点；BookID 是旧稳定标识，不能解读为1131年。,https://www.nlcpress.com/ProductView.aspx?Id=5949,early,两浙地区,浙江,浙东路茶盐司,欧颜型,史部,714,256,72,0.03081232492997199
+05_1139_汉官仪,5,汉官仪,1139,1139,1139,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,early,两浙地区,浙江,临安府,近柳型,子部,314,136,84,0.038216560509554139
+06_1139_文粹,6,文粹,1139,1139,1139,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,early,两浙地区,浙江,临安府,近欧型,集部,845,303,54,0.042603550295857988
+07_1139_文选,7,文选,1139,1139,1139,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,early,两浙地区,/,/,欧颜型,集部,709,270,71,0.019746121297602257
+08_1146_事类赋,8,事类赋,1146,1146,1146,catalogue_year,绍兴十六年刻本；旧稿表格中有编号/年份残留。,https://commons.wikimedia.org/wiki/File:NLC892-412004000910-405165_%E4%BA%8B%E9%A1%9E%E8%B3%A6_%E4%B8%89%E5%8D%81%E5%8D%B7_%E5%85%A9%E6%B5%99%E6%9D%B1%E8%B7%AF%E8%8C%B6%E9%B9%BD%E5%8F%B8%E5%AE%8B%E7%B4%B9%E8%88%88%E5%8D%81%E5%85%AD%E5%B9%B4%E5%88%BB%E6%9C%AC_%E5%85%AB%E8%A1%8C%E5%8D%81%E4%B8%83%E5%AD%97_%E7%AC%AC10%E5%86%8A.pdf,early,两浙地区,浙江,浙东路茶盐司,近欧型,子部,613,244,99,0.024469820554649267
+09_1147_古三坟书,9,三古坟书,1147,1147,1147,catalogue_year,绍兴十七年婺州州学刻本；旧稿表格中的1142不采用。,https://www.nlc.cn/pcab/gjbhzs/jd/20170814_154336.shtml,early,两浙地区,浙江,婺州州学「金华」,近颜型,经部,370,166,83,0.024324324324324326
+10_1148_花间集,10,花间集,1148,1148,1148,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,early,江淮湖广,江苏,建康郡斋「南京」,近颜型,集部,451,203,86,0.017738359201773836
+11_1152_抱朴子,11,抱朴子,1152,1152,1152,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,early,两浙地区,浙江,临安府,欧颜型,子部,691,272,56,0.017366136034732273
+12_1165_陈书,12,陈书,1165,1165,1165,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,两浙地区,/,/,扁方欧体,史部,800,290,113,0.021250000000000002
+13_1165_诸史提要,13,诸史提要,1165,1165,1165,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,两浙地区,浙江,绍兴府,近欧型,史部,739,275,101,0.010825439783491205
+14_1167_论衡,14,论衡,1167,1167,1167,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,两浙地区,浙江,绍兴府,扁方欧体,子部,724,268,87,0.015193370165745856
+15_1169_钜宋广韵,15,钜宋广韵,1169,1169,1169,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,福建地区,福建,建宁府,欧颜型,经部,324,197,73,0.037037037037037035
+16_1170_洪氏集验方,16,洪氏集验方,1170,1170,1170,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,江淮湖广,安徽,当涂姑熟郡斋乾道,,子部,447,199,93,0.024608501118568233
+17_1171_史记,17,史记,1171,1171,1171,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,福建地区,福建,建阳府 蔡梦弼东塾,仿欧型,史部,705,266,71,0.0085106382978723406
+18_1171_韦苏州集,18,韦苏州集,1171,1171,1171,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,两浙地区,江苏,平江府,近欧型,集部,634,263,86,0.020504731861198739
+19_1175_新定三礼图,19,新定三礼图,1175,1175,1175,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,两浙地区,江苏,镇江府,欧颜型,经部,581,242,52,0.043029259896729774
+20_1176_大易粹言,20,大易粹言,1176,1176,1176,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,江淮湖广,安徽,舒州共史库「安庆」,,经部,493,207,97,0.02231237322515213
+21_1178_窦氏联珠集,21,窦氏联珠集,1178,1178,1178,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,江淮湖广,湖北,/,近褚型,集部,501,216,77,0.025948103792415168
+22_1191_春秋公羊经传解诂,22,春秋公羊经传解诂,1191,1191,1191,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,福建地区,福建,建阳府 万卷堂,,经部,545,220,78,0.042201834862385323
+23_1191_鲍氏国策,23,鲍氏国策,1191,1191,1191,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,两浙地区,浙江,会稽郡斋「绍兴」,"近欧型,逐步程式化",史部,637,250,84,0.0062794348508634227
+24_1192_礼记正义,24,礼记正义,1192,1192,1192,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,两浙地区,浙江,浙东路茶盐司,"近欧型,逐步程式化",经部,483,191,114,0.026915113871635612
+25_1193_春秋公羊经传解诂,25,春秋公羊经传解诂,1193,1193,1193,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,江淮湖广,江西,抚州公史库,近颜型,经部,557,224,86,0.025134649910233394
+26_1195_中庸辑略,26,中庸辑略,1195,1195,1251,disputed_disjoint_ranges,旧工作年份1195；传统目录范围1195–1224，张丽娟(2025)另考为约1248–1251。仅用于复现旧模型，不能当作精确刊年；需做替代日期/排除敏感性分析。,https://ccj.pku.edu.cn/article/info?id=798498133958725,middle,两浙地区,/,/,扁方欧体,经部,533,215,121,0.0056285178236397749
+27_1196_欧阳文忠公集,27,欧阳文忠公集,1196,1196,1196,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,江淮湖广,江西,/,北齐刻经体,集部,808,289,86,0.022277227722772276
+28_1200_春秋左传正义,28,春秋左传正义,1200,1200,1200,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,两浙地区,浙江,绍兴府,"近欧型,逐步程式化",经部,632,245,108,0.014240506329113924
+29_1207_昆山杂咏,29,昆山杂咏,1207,1207,1207,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,middle,两浙地区,江苏,昆山县斋,行楷,集部,590,242,89,0.030508474576271188
+30_1213_周髀算经,30,周髀算经,1213,1213,1213,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,late,福建地区,/,/,,子部,308,137,93,0.01948051948051948
+31_1220_广韵,31,广韵,1220,1220,1220,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,late,两浙地区,浙江,临安府,"近欧型,逐步程式化",经部,430,231,86,0.01627906976744186
+32_1220_渭南文集,32,渭南文集,1220,1220,1220,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,late,两浙地区,江苏,陆子口溧阳学宫,"近欧型,逐步程式化",集部,822,291,93,0.012165450121654502
+33_1226_东汉会要,33,东汉会要,1226,1226,1226,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,late,福建地区,福建,建宁府,欧柳型,史部,721,271,81,0.011095700416088766
+34_1230_切韻指掌图,34,切韻指掌图,1230,1230,1230,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,late,两浙地区,浙江,越州「绍兴」,扁方欧体,经部,373,218,91,0.026809651474530832
+35_1257_通鑑纪事本末,35,通鑑纪事本末,1257,1257,1257,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,late,两浙地区,浙江,延陵郡,扁方欧体,史部,755,269,94,0.039735099337748346
+36_1259_开庆四明续志,36,开庆四明续志,1259,1259,1259,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,late,两浙地区,,,扁方欧体,史部,754,283,87,0.019893899204244031
+37_1267_邵子观物篇渔樵问对,37,邵子观物篇渔樵问对,1267,1267,1267,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,late,福建地区,福建,漕治 吴坚,,子部,584,229,73,0.0085616438356164379
+38_1273_无文印,38,无文印,1273,1273,1273,unreviewed_working_year,Working metadata year; not independently bibliographically audited.,,late,两浙地区,/,/,书棚体,集部,649,259,49,0.01078582434514638
