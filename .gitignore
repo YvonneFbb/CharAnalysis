@@ -8,6 +8,10 @@
 !src/paper_repro/
 !src/paper_repro/__init__.py
 !src/paper_repro/reproduce.py
+!src/paper_repro/check_reference.py
+!.github/
+!.github/workflows/
+!.github/workflows/reproduce.yml
 !data/
 !data/paper_repro/
 !data/paper_repro/npj_v1/

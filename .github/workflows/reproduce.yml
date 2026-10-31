@@ -1,0 +1,30 @@
+name: Verify image-free paper reproduction
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout numeric-only branch
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numeric dependency
+        run: python -m pip install -r requirements-repro.txt
+      - name: Re-run frozen statistics from scalar measurements
+        run: python -m src.paper_repro.reproduce --data data/paper_repro/npj_v1 --out "$RUNNER_TEMP/reproduced"
+      - name: Compare with frozen reference tables
+        run: python -m src.paper_repro.check_reference --reference data/paper_repro/npj_v1/reference_results --actual "$RUNNER_TEMP/reproduced"
+      - name: Ensure private images and review files are absent
+        shell: bash
+        run: |
+          if git ls-files | grep -E '(^data/(raw|results|analysis|releases)/|/review_books/|/confirmed/|[.](png|jpe?g|pdf|docx)$)'; then
+            echo "Prohibited image or review artifact in the publication commit"
+            exit 1
+          fi
+          test "$(git rev-list --count HEAD)" -le 100

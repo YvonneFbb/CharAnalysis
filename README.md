@@ -11,7 +11,7 @@ From the repository root, using Python 3.10+:
     python -m pip install -r requirements-repro.txt
     python -m src.paper_repro.reproduce --data data/paper_repro/npj_v1
 
-All expected output tables are regenerated under data/paper_repro/npj_v1/reference_results/. The script verifies SHA-256 of input files and independently checks 22,468 numeric observations against the 9,043 book-character representatives.
+All expected output tables are regenerated under data/paper_repro/npj_v1/reference_results/. The script verifies SHA-256 of input files and independently checks 22,468 numeric observations against the 9,043 book-character representatives. A GitHub Actions workflow repeats the computation on a fresh Linux machine and compares numeric outputs to checked-in reference tables (cross-platform floating tolerance).
 
 The full schema, comparisons, metric formulas, date sensitivity, limits, and old/new version distinction are documented in data/paper_repro/npj_v1/README.md.
 
