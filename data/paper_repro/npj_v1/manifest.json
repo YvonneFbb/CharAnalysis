@@ -1,10 +1,10 @@
 {
   "version": "npj_v1_candidate",
-  "created_utc": "2026-10-31T07:56:26.163311+00:00",
+  "created_utc": "2026-10-31T08:03:45.933337+00:00",
   "input_manifest_sha256": "601a8c3659d875d9d981d47b2309d6eb18b20063ac5cd68e477d79f338c8305d",
   "input_manifest_generated_at": "2026-10-31T07:37:26.577222+00:00",
-  "source_image_hash_list_sha256": "e0166457dac17f28def213881f7e3899e87cfbfd1ad8fafea49f18b728b36356",
-  "script_sha256": "90f0a3ad39c710614c0cba030951488b006794f741c24b70fd03b786e3363e8f",
+  "source_image_hash_list_sha256": null,
+  "script_sha256": "fc70a2740d3046f9839248241d2bca9b37df035569fa739d773d08ce076a56a3",
   "counts": {
     "books": 38,
     "instances": 22468,
@@ -15,7 +15,7 @@
   },
   "research_limit": "Reproduces reported numerical analyses without redistributing copyrighted scan images. End-to-end image extraction additionally needs original restricted assets.",
   "file_sha256": {
-    "analysis_plan.json": "846e8578c3dabe89332cb6e63afbd907851a217bed755a96e62c0f15be21a883",
+    "analysis_plan.json": "9422f91a2074a95fcbcea055026e3d3ec4fda0c75f4d38a0c6e6fa3baf7fb833",
     "book_character_metrics.csv": "97c333cd0774161c7bd60999bf718dd09f89c7b933921843a85d10d72df937f3",
     "books.csv": "a20321b871a54af62e4446a22bd21ec4abf029cb4af83b93782f3c80094dede3",
     "exceptions_above3.csv": "7ddf792ca83f560a09520c7226ba5b08b4ccb01fea2950304701602529179f2e",

@@ -12,6 +12,10 @@
   "character_comparison": "intersection of shared character identities within EACH stated comparison",
   "aggregation": "equal weight per book-character mean, then equal weight per book",
   "trim_quantile": 0.05,
+  "spearman_mc_permutations": 5000,
+  "spearman_mc_seed": 20261031,
+  "bootstrap_replicates": 400,
+  "bootstrap_seed": 20261032,
   "trim_per_metric_per_book": true,
   "dispersion": "population standard deviation across distinct character identities after trimming",
   "temporal_groups": {

@@ -48,16 +48,6 @@ def checked_float(x: Any) -> float:
     return z
 
 
-def stable_seed(tag: str, x: list[float], y: list[float]) -> int:
-    h = hashlib.blake2b(digest_size=8)
-    h.update(tag.encode("utf-8"))
-    h.update(b"\0")
-    h.update(np.asarray(x, dtype=float).tobytes())
-    h.update(b"\0")
-    h.update(np.asarray(y, dtype=float).tobytes())
-    return int.from_bytes(h.digest(), "little", signed=False) & 0xFFFFFFFF
-
-
 def ranks(values: list[float] | np.ndarray) -> np.ndarray:
     v = np.asarray(values, dtype=float)
     order = np.argsort(v, kind="mergesort")
@@ -91,7 +81,7 @@ def permutation_spearman(x: list[float], y: list[float], rho: float) -> tuple[fl
             total += 1
         return hits / total, "exact_permutation"
     n_perm = 5000
-    rng = np.random.default_rng(stable_seed("rho_perm", x, y))
+    rng = np.random.default_rng(20261031)  # fixed across platforms; declared in analysis_plan.json
     ys = np.asarray(y, dtype=float)
     hits = 1
     for _ in range(n_perm):
@@ -109,7 +99,7 @@ def trend(x: list[float], y: list[float]) -> dict:
     # Theil-Sen: median of all pairwise slopes with distinct dates (not causal).
     slopes = [(y[j]-y[i])/(x[j]-x[i]) for i in range(len(x)) for j in range(i+1,len(x)) if x[j] != x[i]]
     slope = float(np.median(slopes)) if slopes else float("nan")
-    rng = np.random.default_rng(stable_seed("rho", x, y))
+    rng = np.random.default_rng(20261032)  # fixed bootstrap seed
     bootstrap = []
     for _ in range(400):
         ix = rng.integers(0, len(x), len(x))
